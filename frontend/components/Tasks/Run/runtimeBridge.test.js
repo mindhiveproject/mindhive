@@ -248,28 +248,24 @@ test('an uncaught error becomes a failure and ends the run', async () => {
   }
 });
 
-test('pause and abort reach the frame as window events', async () => {
+test('console output stays in the frame', async () => {
   const host = createHost();
+  const rejected = [];
   const frame = createFakeFrame(
     host,
     'nonce-4',
-    `window.received = [];
-     window.addEventListener("mindhive:pause", function (e) { window.received.push("pause:" + e.detail.paused); });
-     window.addEventListener("mindhive:abort", function () { window.received.push("abort"); });`
+    'for (var i = 0; i < 50; i += 1) console.log("frame", i);'
   );
-  const connection = connectTo(host, frame.frameWindow, 'nonce-4', {});
-  connection.setPaused(true);
+  const connection = connectTo(host, frame.frameWindow, 'nonce-4', {
+    onRejected: (reason) => rejected.push(reason),
+  });
   connection.start();
   try {
     await waitFor(() => connection.isConnected());
-    connection.setPaused(false);
-    connection.abort();
-    await waitFor(() => frame.run('window.received.length') === 3);
-    assert.deepEqual(JSON.parse(frame.run('JSON.stringify(window.received)')), [
-      'pause:true',
-      'pause:false',
-      'abort',
-    ]);
+    frame.run('console.warn("after connect"); console.error("still local");');
+    await sleep(20);
+    // A forwarded log would arrive as an unknown message type.
+    assert.deepEqual(rejected, []);
   } finally {
     connection.close();
     frame.stop();

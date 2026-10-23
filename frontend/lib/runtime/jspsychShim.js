@@ -85,11 +85,6 @@ function jsPsychShimSource() {
       });
     };
 
-    window.addEventListener("mindhive:abort", function () {
-      try {
-        if (typeof instance.abortExperiment === "function") instance.abortExperiment();
-      } catch (e) {}
-    });
     return instance;
   };
 })();

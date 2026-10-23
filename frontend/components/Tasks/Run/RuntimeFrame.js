@@ -37,7 +37,6 @@ function createNonce() {
  * @param {"JSPSYCH" | "P5"} runtime
  * @param {"persist" | "preview"} mode
  * @param {object} [params] - Task parameter values, sent once in `init`.
- * @param {boolean} [paused=false]
  * @param {string} [title] - Accessible name of the frame.
  * @param {boolean} [autoFocus=false] - Focus the frame once it has loaded, so
  *   keyboard responses reach the task without a click first.
@@ -46,7 +45,6 @@ function createNonce() {
  * @param {(marker: {label, value, time}) => void} [onMarker]
  * @param {(result: {aggregated, rows}) => void} [onFinish]
  * @param {(failure: {message, stack}) => void} [onFailure]
- * @param {(entry: {level, message}) => void} [onLog]
  * @param {(reason: string) => void} [onRejected] - A message was refused.
  */
 export default function RuntimeFrame({
@@ -56,7 +54,6 @@ export default function RuntimeFrame({
   runtime,
   mode,
   params,
-  paused = false,
   title = 'Task',
   autoFocus = false,
   onReady,
@@ -64,11 +61,9 @@ export default function RuntimeFrame({
   onMarker,
   onFinish,
   onFailure,
-  onLog,
   onRejected,
 }) {
   const frameRef = useRef(null);
-  const connectionRef = useRef(null);
 
   // A fresh nonce per rebuild, so a stale frame that hasn't been torn down
   // yet can't connect in place of the new one.
@@ -88,12 +83,10 @@ export default function RuntimeFrame({
     onMarker,
     onFinish,
     onFailure,
-    onLog,
     onRejected,
   });
   const initRef = useRef(null);
   initRef.current = { runtime, mode, params };
-  const pausedRef = useRef(paused);
 
   useEffect(() => {
     const connection = createRuntimeFrameConnection({
@@ -102,19 +95,9 @@ export default function RuntimeFrame({
       init: initRef.current,
       handlers: handlers.current,
     });
-    connection.setPaused(pausedRef.current);
     connection.start();
-    connectionRef.current = connection;
-    return () => {
-      connection.close();
-      connectionRef.current = null;
-    };
+    return () => connection.close();
   }, [nonce]);
-
-  useEffect(() => {
-    pausedRef.current = paused;
-    connectionRef.current?.setPaused(paused);
-  }, [paused]);
 
   return (
     <iframe

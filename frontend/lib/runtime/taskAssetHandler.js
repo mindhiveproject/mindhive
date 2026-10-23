@@ -145,6 +145,8 @@ function injectRuntime(html, options) {
  * @param {(assetRoot: string, id: string) => Promise<object>} deps.readManifest
  */
 function createTaskFileHandler({ assetRoot, verifyAssetToken, readManifest }) {
+  // Versions never change, so each manifest is read from disk once.
+  const manifests = new Map();
   return async function handler(req, res) {
     setCrossOriginHeaders(res);
     res.setHeader(
@@ -176,9 +178,12 @@ function createTaskFileHandler({ assetRoot, verifyAssetToken, readManifest }) {
       return res.status(400).json({ error: 'Invalid file path.' });
     }
 
-    let manifest;
+    let manifest = manifests.get(claims.assetId);
     try {
-      manifest = await readManifest(assetRoot, claims.assetId);
+      if (!manifest) {
+        manifest = await readManifest(assetRoot, claims.assetId);
+        manifests.set(claims.assetId, manifest);
+      }
     } catch {
       return res
         .status(404)

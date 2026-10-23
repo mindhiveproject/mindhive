@@ -32,6 +32,17 @@ const isOwner = ({ session, item }: any) =>
 // with their authors.
 const usedByATask = { tasks: { some: {} } };
 
+// A version some Task runs can't be deleted: the Task's relationship would
+// be set to null and the block would stop working. Upload a new version
+// instead; only an unused version (such as a failed upload) goes away.
+const canDelete = async ({ session, item, context }: any) => {
+  if (!isOwner({ session, item })) return false;
+  const uses = await context.sudo().query.Task.count({
+    where: { jsPsychExperiment: { id: { equals: String(item.id) } } },
+  });
+  return uses === 0;
+};
+
 const visibleExperiments = ({ session }: any) => {
   if (isAdmin({ session })) return true;
   if (!session?.itemId) {
@@ -66,7 +77,7 @@ export const JsPsychExperiment = list({
     item: {
       create: canManage,
       update: isOwner,
-      delete: isOwner,
+      delete: canDelete,
     },
   },
   fields: {

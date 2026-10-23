@@ -288,7 +288,6 @@ window.initJsPsych = function (options) {
   var rows = [];
   return {
     getProgress: function () { return { current_trial_global: rows.length }; },
-    abortExperiment: function () { window.aborted = true; },
     run: function (timeline) {
       timeline.forEach(function (trial, i) {
         options.on_trial_start({ type: { info: { name: "html-keyboard-response" } } });
@@ -339,7 +338,6 @@ function runShim(experiment) {
       Object.assign(context.MindHive.params, params);
       init(context.MindHive);
     },
-    abort: () => events.dispatchEvent(new Event('mindhive:abort')),
   };
 }
 
@@ -376,8 +374,6 @@ test('the shim saves rows and markers, waits for init, and finishes with the agg
     ],
   ]);
   assert.equal(shim.context.ownRows, 2);
-  shim.abort();
-  assert.equal(shim.context.aborted, true);
 });
 
 test('an experiment without on_finish finishes with an empty aggregate', async () => {

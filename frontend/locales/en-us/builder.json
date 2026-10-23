@@ -2838,11 +2838,6 @@
 		"pluginsAvailable": "{{count}} plugins available",
 		"pluginsExcluded": "Not available: plugins that need a camera, microphone or eye tracker"
 	},
-	"runtime": {
-		"choose": "What runs this block?",
-		"labjs": "A lab.js script",
-		"jspsych": "A jsPsych experiment"
-	},
 	"jsPsychVersion": {
 		"title": "Experiment version",
 		"current": "This block runs version {{version}}.",

@@ -4,8 +4,20 @@
 
 const crypto = require('crypto');
 
+let warnedMissingSecret = false;
+
 function assetTokenSecret() {
-  return process.env.RUNTIME_RUN_TOKEN_SECRET || process.env.SESSION_SECRET;
+  const secret =
+    process.env.RUNTIME_RUN_TOKEN_SECRET || process.env.SESSION_SECRET;
+  // Without it every jsPsych and p5 task answers "invalid link", which looks
+  // like a participant problem; say what is actually wrong, once.
+  if (!secret && !warnedMissingSecret) {
+    warnedMissingSecret = true;
+    console.error(
+      'RUNTIME_RUN_TOKEN_SECRET is not set: jsPsych and p5 task files cannot be served. Set it to the same value as in Keystone.'
+    );
+  }
+  return secret;
 }
 
 function assetSignature(payload, secret) {

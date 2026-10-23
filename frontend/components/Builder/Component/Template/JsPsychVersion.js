@@ -215,9 +215,15 @@ export default function JsPsychVersion({ task, user, allowUpload = false }) {
                 variant="filled"
                 disabled={updating}
                 onClick={async () => {
-                  await updateVersion();
-                  setConfirming(false);
-                  await refetch();
+                  try {
+                    await updateVersion();
+                    setConfirming(false);
+                  } catch {
+                    // updateError shows the server's reason (for example the
+                    // collecting-data lock) above the button.
+                  } finally {
+                    await refetch();
+                  }
                 }}
               >
                 {t("jsPsychVersion.confirm", {}, { default: "Update" })}

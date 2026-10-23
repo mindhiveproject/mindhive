@@ -12,16 +12,8 @@
 
 const PROTOCOL = 'mindhive-runtime/2';
 
-const FRAME_MESSAGE_TYPES = [
-  'ready',
-  'rows',
-  'marker',
-  'finish',
-  'failure',
-  'log',
-];
+const FRAME_MESSAGE_TYPES = ['ready', 'rows', 'marker', 'finish', 'failure'];
 const RUN_MODES = ['persist', 'preview'];
-const LOG_LEVELS = ['log', 'info', 'warn', 'error'];
 
 const MAX_ROWS_PER_MESSAGE = 10000;
 const MAX_LABEL_LENGTH = 256;
@@ -122,27 +114,17 @@ function validateFrameMessage(data) {
     };
   }
 
-  if (type === 'failure') {
-    if (typeof data.message !== 'string' || !data.message) {
-      return rejected('failure message must be a non-empty string');
-    }
-    return {
-      ok: true,
-      message: {
-        type,
-        message: truncate(data.message),
-        stack: typeof data.stack === 'string' ? truncate(data.stack) : '',
-      },
-    };
-  }
-
-  // log
-  if (!LOG_LEVELS.includes(data.level) || typeof data.message !== 'string') {
-    return rejected('log needs a known level and a string message');
+  // failure
+  if (typeof data.message !== 'string' || !data.message) {
+    return rejected('failure message must be a non-empty string');
   }
   return {
     ok: true,
-    message: { type, level: data.level, message: truncate(data.message) },
+    message: {
+      type,
+      message: truncate(data.message),
+      stack: typeof data.stack === 'string' ? truncate(data.stack) : '',
+    },
   };
 }
 
@@ -170,14 +152,6 @@ function initMessage({ runtime, mode, params = {} }) {
   return { protocol: PROTOCOL, type: 'init', runtime, mode, params };
 }
 
-function pauseMessage(paused) {
-  return { protocol: PROTOCOL, type: 'pause', paused: !!paused };
-}
-
-function abortMessage() {
-  return { protocol: PROTOCOL, type: 'abort' };
-}
-
 /**
  * The script a task document runs before any experiment code. It answers the
  * handshake and defines `window.MindHive`, which the jsPsych shim and the p5
@@ -192,9 +166,9 @@ function abortMessage() {
  *   MindHive.finish(aggregated, rows)
  *   MindHive.fail(message, stack)
  *
- * The parent's `pause` and `abort` arrive as `mindhive:pause` and
- * `mindhive:abort` window events. Messages sent before the port exists wait
- * in an outbox; only console output is capped there, never results.
+ * Messages sent before the port exists wait in an outbox, so no result is
+ * lost while the handshake completes. Console output stays in the frame:
+ * uncaught errors and rejections are what reach the parent, as failures.
  *
  * Plain ES5 on purpose: it is inlined into documents MindHive doesn't build.
  */
@@ -206,7 +180,6 @@ function frameClientSource(nonce) {
   var MAX_ROWS = ${MAX_ROWS_PER_MESSAGE};
   var port = null;
   var outbox = [];
-  var queuedLogs = 0;
   var finished = false;
   var initialized = false;
   var initCallbacks = [];
@@ -214,10 +187,6 @@ function frameClientSource(nonce) {
   function post(message) {
     var envelope = Object.assign({ protocol: PROTOCOL }, message);
     if (!port) {
-      if (message.type === "log") {
-        if (queuedLogs >= 200) return;
-        queuedLogs += 1;
-      }
       outbox.push(envelope);
       return;
     }
@@ -261,7 +230,6 @@ function frameClientSource(nonce) {
   var MindHive = {
     params: {},
     mode: null,
-    paused: false,
     onInit: function (callback) {
       if (initialized) callback(MindHive);
       else initCallbacks.push(callback);
@@ -319,12 +287,6 @@ function frameClientSource(nonce) {
       initCallbacks.splice(0).forEach(function (callback) {
         try { callback(MindHive); } catch (e) { reportError(e); }
       });
-    } else if (data.type === "pause") {
-      MindHive.paused = !!data.paused;
-      window.dispatchEvent(new CustomEvent("mindhive:pause", { detail: { paused: MindHive.paused } }));
-    } else if (data.type === "abort") {
-      finished = true;
-      window.dispatchEvent(new CustomEvent("mindhive:abort"));
     }
   }
 
@@ -351,24 +313,6 @@ function frameClientSource(nonce) {
   var helloTimer = setInterval(sayHello, 200);
   sayHello();
 
-  ["log", "info", "warn", "error"].forEach(function (level) {
-    var original = console[level];
-    console[level] = function () {
-      var args = Array.prototype.slice.call(arguments);
-      post({
-        type: "log",
-        level: level,
-        message: args
-          .map(function (a) {
-            if (typeof a === "string") return a;
-            try { return JSON.stringify(a); } catch (e) { return String(a); }
-          })
-          .join(" "),
-      });
-      return original.apply(console, arguments);
-    };
-  });
-
   function reportError(error) {
     MindHive.fail(
       (error && error.message) || String(error) || "Unknown error",
@@ -386,15 +330,12 @@ function frameClientSource(nonce) {
 }
 
 module.exports = {
-  LOG_LEVELS,
   MAX_ROWS_PER_MESSAGE,
   PROTOCOL,
   RUN_MODES,
-  abortMessage,
   connectMessage,
   frameClientSource,
   initMessage,
   isHelloMessage,
-  pauseMessage,
   validateFrameMessage,
 };

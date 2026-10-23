@@ -1,9 +1,7 @@
 const {
-  abortMessage,
   connectMessage,
   initMessage,
   isHelloMessage,
-  pauseMessage,
   validateFrameMessage,
 } = require('./runtimeProtocol');
 
@@ -27,7 +25,7 @@ async function defaultCreateTransport(port) {
  * @param {() => object | null} options.getFrameWindow - The frame's `contentWindow`.
  * @param {{runtime: string, mode: string, params?: object}} options.init
  * @param {object} options.handlers - `onReady`, `onRows`, `onMarker`,
- *   `onFinish`, `onFailure`, `onLog`, `onRejected`; read on every message,
+ *   `onFinish`, `onFailure`, `onRejected`; read on every message,
  *   so the caller may swap them.
  * @param {object} [options.host=window] - Where the frame's `hello` arrives.
  * @param {() => MessageChannel} [options.createChannel]
@@ -47,7 +45,6 @@ function createRuntimeFrameConnection({
   let state = 'idle';
   let transport = null;
   let port = null;
-  let paused = false;
   let done = false;
 
   function handler(name) {
@@ -61,7 +58,7 @@ function createRuntimeFrameConnection({
       return;
     }
     const { message } = result;
-    if (done && message.type !== 'log') {
+    if (done) {
       handler('onRejected')?.(`${message.type} after the run ended`);
       return;
     }
@@ -85,8 +82,6 @@ function createRuntimeFrameConnection({
         message: message.message,
         stack: message.stack,
       });
-    } else if (message.type === 'log') {
-      handler('onLog')?.({ level: message.level, message: message.message });
     }
   }
 
@@ -105,7 +100,6 @@ function createRuntimeFrameConnection({
     transport.onMessage(onFrameMessage);
     frameWindow.postMessage(connectMessage(nonce), '*', [channel.port2]);
     transport.send(firstMessage);
-    if (paused) transport.send(pauseMessage(true));
     state = 'connected';
   }
 
@@ -129,14 +123,6 @@ function createRuntimeFrameConnection({
       if (state !== 'idle') return;
       state = 'listening';
       host.addEventListener('message', onHello);
-    },
-    setPaused(next) {
-      paused = !!next;
-      transport?.send(pauseMessage(paused));
-    },
-    abort() {
-      done = true;
-      transport?.send(abortMessage());
     },
     isConnected() {
       return state === 'connected';

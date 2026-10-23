@@ -28,7 +28,29 @@ const TASK_QUERY = `
 
 const VERSION_QUERY = "id title version parameters createdAt";
 
-async function versionContext(context: any, taskId: string) {
+// Studies collecting data, cached briefly for the notice: every open jsPsych
+// block panel asks for its status. The update itself always reads them fresh,
+// so the lock can't be slipped past during the cache window.
+const COLLECTING_CACHE_MS = 15 * 1000;
+let collectingCache: { at: number; studies: any[] } | null = null;
+
+async function collectingStudies(context: any, { fresh = false } = {}) {
+  if (!fresh && collectingCache && Date.now() - collectingCache.at < COLLECTING_CACHE_MS) {
+    return collectingCache.studies;
+  }
+  const studies = await context.sudo().query.Study.findMany({
+    where: { status: { equals: "COLLECTING_DATA" } },
+    query: "id title flow",
+  });
+  collectingCache = { at: Date.now(), studies };
+  return studies;
+}
+
+async function versionContext(
+  context: any,
+  taskId: string,
+  { fresh = false } = {},
+) {
   const visible = await context.query.Task.findOne({
     where: { id: taskId },
     query: "id",
@@ -48,10 +70,7 @@ async function versionContext(context: any, taskId: string) {
     take: 1,
     query: VERSION_QUERY,
   });
-  const collecting = await context.sudo().query.Study.findMany({
-    where: { status: { equals: "COLLECTING_DATA" } },
-    query: "id title flow",
-  });
+  const collecting = await collectingStudies(context, { fresh });
   const lockingStudies = collecting
     .filter((study: any) => studyFlowUsesTask(study.flow, task.id))
     .map((study: any) => study.title || study.id);
@@ -106,7 +125,7 @@ export async function updateTaskRuntimeVersion(
   { taskId }: { taskId: string },
   context: any,
 ) {
-  const state = await versionContext(context, taskId);
+  const state = await versionContext(context, taskId, { fresh: true });
   if (!state.canEdit) {
     throw new Error("Only the block's author or a collaborator can update it");
   }
