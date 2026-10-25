@@ -137,18 +137,19 @@ const BLOCKS = [
     // Correlation (method "connectivity") always emits a single "synchrony"
     // stream off its node regardless of mode, so `stream` is left off here too.
     // In the default "paired" mode it correlates channel i of A with channel i
-    // of B, labelling each from A's channel names — Muse's first 4 electrodes,
-    // TP9/AF7/AF8/TP10 (muse-js's channelNames, AUX excluded by default).
+    // of B, labelling each "<A's channel name> synchrony" — Muse's first 4
+    // electrodes, TP9/AF7/AF8/TP10 (muse-js's channelNames, AUX excluded by
+    // default).
     outputs: [
       {
         node: "sync",
         modality: "eeg",
         valueType: "numeric",
         channels: [
-          { index: 0, label: "TP9", unit: "r" },
-          { index: 1, label: "AF7", unit: "r" },
-          { index: 2, label: "AF8", unit: "r" },
-          { index: 3, label: "TP10", unit: "r" },
+          { index: 0, label: "TP9 synchrony", unit: "r" },
+          { index: 1, label: "AF7 synchrony", unit: "r" },
+          { index: 2, label: "AF8 synchrony", unit: "r" },
+          { index: 3, label: "TP10 synchrony", unit: "r" },
         ],
       },
     ],
@@ -219,11 +220,13 @@ const BLOCKS = [
     inputs: [
       { id: "camera", receiver: "face_emotion", label: "Camera", required: true },
     ],
-    // FaceEmotionReceiver emits a single stream ("expressions") per node, so
-    // `stream` is left off — findOutput() matches on node alone in that case.
+    // The receiver is also asked for "face_box" and "landmarks" (the preview
+    // overlay's geometry, see receivers.js), so the node emits several streams
+    // and the expressions have to be picked out by name.
     outputs: [
       {
         node: "camera",
+        stream: "expressions",
         modality: "video",
         valueType: "numeric",
         channels: [
