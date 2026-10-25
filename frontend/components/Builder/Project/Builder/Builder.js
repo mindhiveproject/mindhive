@@ -29,8 +29,7 @@ export default function Builder({
   handleMultipleUpdate,
   engine,
   addFunctions,
-  hasStudyChanged,
-  setHasStudyChanged,
+  markStudyChanged,
   isCanvasLocked,
   canUndo,
   undoCanvas,
@@ -170,7 +169,7 @@ export default function Builder({
       }
     });
     engine.repaintCanvas();
-    setHasStudyChanged(true);
+    markStudyChanged();
   };
 
   const openStudyPreview = () => {
@@ -270,7 +269,6 @@ export default function Builder({
               study={study}
               handleChange={handleChange}
               handleMultipleUpdate={handleMultipleUpdate}
-              hasStudyChanged={hasStudyChanged}
               isCanvasLocked={isCanvasLocked}
               tab={menuTab}
               setTab={setMenuTab}
@@ -301,7 +299,7 @@ export default function Builder({
               node={node}
               engine={engine}
               close={() => closeDesignSettings()}
-              setHasStudyChanged={setHasStudyChanged}
+              markStudyChanged={markStudyChanged}
               study={study}
             />
           )}

@@ -1,6 +1,8 @@
-// Stay under Keystone's 10mb GraphQL bodyParser. Raw Lab.js rows remain on
-// the filesystem; only a size-safe FINAL payload is forwarded to ingest.
-const GRAPHQL_INGEST_BUDGET_BYTES = 8 * 1024 * 1024;
+const {
+  GRAPHQL_INGEST_BUDGET_BYTES,
+  finalIngestPayload,
+  stampRunMetadata,
+} = require('./runResultStore');
 
 function aggregateLabJsRows(data) {
   return (Array.isArray(data) ? data : [])
@@ -16,34 +18,12 @@ function neutralLabJsFinal(data) {
 
 function labJsGraphqlFinalPayload(data) {
   const finalResult = neutralLabJsFinal(data);
-  const serialized = JSON.stringify({
-    data: finalResult.data,
-    aggregated: finalResult.aggregated,
-  });
-  if (Buffer.byteLength(serialized, 'utf8') <= GRAPHQL_INGEST_BUDGET_BYTES) {
-    return finalResult;
-  }
-  return { data: [], aggregated: finalResult.aggregated };
+  return finalIngestPayload(finalResult.data, finalResult.aggregated);
 }
 
-function stampLabJsMetadata(runContext, metadata) {
-  return {
-    ...(metadata && typeof metadata === 'object' && !Array.isArray(metadata)
-      ? metadata
-      : {}),
-    id: runContext.datasetToken,
-    runtimeType: runContext.runtimeType,
-    runtimeAssetId: runContext.assetId,
-    runtimeAssetVersion: runContext.assetVersion,
-    testVersion: runContext.testVersion,
-    studyVersion: runContext.studyVersion,
-    study: runContext.studyId,
-    template: runContext.templateId,
-    task: runContext.taskId,
-    type: runContext.participantType,
-    publicId: runContext.participantPublicId,
-  };
-}
+// Kept under its Lab.js name for /api/save; the stamp is the same for every
+// runtime.
+const stampLabJsMetadata = stampRunMetadata;
 
 module.exports = {
   GRAPHQL_INGEST_BUDGET_BYTES,

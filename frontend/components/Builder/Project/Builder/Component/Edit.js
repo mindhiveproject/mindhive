@@ -3,12 +3,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import debounce from "lodash.debounce";
 
 import useForm from "../../../../../lib/useForm";
+import { runtimeAssetVariables } from "../../../../../lib/runtime/runtimeAsset";
 
 import { CREATE_TASK, UPDATE_TASK } from "../../../../Mutations/Task";
 
 import ComponentForm from "../../../Component/Form";
 
 import { MY_TASK, TASK_TO_EDIT, TASK_TO_PARTICIPATE } from "../../../../Queries/Task";
+import { cleanI18nContent } from "../../../../../lib/i18nContent";
 
 function valueFromEvent(e) {
   let { value, name, type } = e.target;
@@ -77,7 +79,7 @@ export default function EditComponent({
             link: current?.link,
             parameters: current?.parameters,
             settings: current?.settings,
-            i18nContent: current?.i18nContent,
+            i18nContent: cleanI18nContent(current),
             collaborators,
           },
           refetchQueries: [
@@ -96,13 +98,13 @@ export default function EditComponent({
             title: current?.title,
             description: current?.description,
             descriptionForParticipants: current?.descriptionForParticipants,
-            templateId: current?.templateId,
+            ...runtimeAssetVariables(current),
             taskType: current?.taskType,
             isExternal: current?.isExternal,
             link: current?.link,
             parameters: current?.parameters,
             settings: current?.settings,
-            i18nContent: current?.i18nContent,
+            i18nContent: cleanI18nContent(current),
             collaborators,
           },
         });

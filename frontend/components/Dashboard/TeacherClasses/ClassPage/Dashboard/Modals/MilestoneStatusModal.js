@@ -1,15 +1,19 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 
-import { GET_STUDENTS_DASHBOARD_DATA } from "../../../../../Queries/Classes";
+import { DASHBOARD_PROJECT_CARDS_QUERY } from "../../../../../Queries/Classes";
 import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 import { UPDATE_STUDY } from "../../../../../Mutations/Study";
 import {
   buildDualWriteUpdate,
   readMilestoneStatus,
 } from "../../../../../../lib/milestoneStatus";
+import {
+  actionCardMatchesReviewStep,
+  isActionCard,
+} from "../../../../../../lib/milestones";
 
 import Button from "../../../../../DesignSystem/Button";
 import Chip from "../../../../../DesignSystem/Chip";
@@ -17,6 +21,7 @@ import MessageCard from "../../../../../DesignSystem/MessageCard";
 import Modal from "../../../../../DesignSystem/Modal";
 import ToggleSwitch from "../../../../../DesignSystem/ToggleSwitch";
 import DashboardAssetIcon from "../DashboardAssetIcon";
+import { classDashboardRefetchQueries } from "../useClassDashboardData";
 import {
   STATUS_ICON_SRC,
   canReopenMilestone,
@@ -50,9 +55,7 @@ export default function MilestoneStatusModal({
       ?.status || "NOT_STARTED";
   const canReopen = canReopenMilestone(displayStatus, isStudy);
 
-  const refetchQueries = [
-    { query: GET_STUDENTS_DASHBOARD_DATA, variables: { classId } },
-  ];
+  const refetchQueries = classDashboardRefetchQueries(classId);
   const [updateBoard] = useMutation(UPDATE_PROJECT_BOARD, { refetchQueries });
   const [updateStudy] = useMutation(UPDATE_STUDY, { refetchQueries });
 
@@ -111,6 +114,29 @@ export default function MilestoneStatusModal({
     if (ok) onClose?.();
   };
 
+  // The student's own action card for this milestone, opened in a new tab so
+  // the teacher can submit it from there; falls back to the board itself.
+  // The dashboard loads cards without their milestones, so fetch them here.
+  const { data: cardsData } = useQuery(DASHBOARD_PROJECT_CARDS_QUERY, {
+    variables: { id: data?.projectId },
+    skip: !open || !data?.projectId,
+  });
+  const milestoneCardId = (cardsData?.proposalBoard?.sections || [])
+    .flatMap((section) => section?.cards || [])
+    .find(
+      (card) =>
+        isActionCard(card) &&
+        ((milestone?.id && card?.milestone?.id === milestone.id) ||
+          actionCardMatchesReviewStep(card, milestone?.key, [milestone]))
+    )?.id;
+
+  const goToMilestoneCard = () => {
+    if (!data?.projectId) return;
+    const params = new URLSearchParams({ selector: data.projectId });
+    if (milestoneCardId) params.set("card", milestoneCardId);
+    window.open(`/builder/projects?${params}`, "_blank");
+  };
+
   const busy = Boolean(pending);
   const vars = {
     stage,
@@ -163,20 +189,40 @@ export default function MilestoneStatusModal({
           />
         </>
       ) : (
-        <MessageCard
-          variant="neutral"
-          message={
-            isStudy
-              ? t("dashboard.studyNotSubmittedYet", vars, {
-                  default:
-                    "{{student}} hasn't submitted their study for data collection yet, so it's still editable.",
-                })
-              : t("dashboard.notSubmittedYet", vars, {
-                  default:
-                    "{{student}} hasn't submitted {{stage}} yet. Once they do, you can reopen it here for edits.",
-                })
-          }
-        />
+        <>
+          <MessageCard
+            variant="neutral"
+            message={
+              isStudy
+                ? t("dashboard.studyNotSubmittedYet", vars, {
+                    default:
+                      "{{student}} hasn't submitted their study for data collection yet, so it's still editable.",
+                  })
+                : t("dashboard.notSubmittedYet", vars, {
+                    default:
+                      "{{student}} hasn't submitted {{stage}} yet. Once they do, you can reopen it here for edits.",
+                  })
+            }
+          />
+          {isStudy ? null : (
+            <MessageCard
+              variant="information"
+              message={t("dashboard.submitFromBoardInfo", vars, {
+                default:
+                  "Go to {{student}}'s {{stage}} milestone to submit it.",
+              })}
+              action={
+                data?.projectId ? (
+                  <Button variant="outline" onClick={goToMilestoneCard}>
+                    {t("dashboard.goToMilestone", {}, {
+                      default: "Go to milestone",
+                    })}
+                  </Button>
+                ) : null
+              }
+            />
+          )}
+        </>
       )}
 
       {failed ? (

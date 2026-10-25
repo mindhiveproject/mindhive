@@ -1,8 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import Link from "next/link";
-import styled from "styled-components";
-import TipTapEditor from "../../../../TipTap/Main";
+import { assignmentMediaLibraryProps } from "../../../../Mutations/MediaAsset";
 
 import useTranslation from "next-translate/useTranslation";
 import useForm from "../../../../../lib/useForm";
@@ -10,51 +8,16 @@ import useForm from "../../../../../lib/useForm";
 import { GET_CLASS_ASSIGNMENTS, GET_ASSIGNMENT } from "../../../../Queries/Assignment";
 import { CREATE_ASSIGNMENT } from "../../../../Mutations/Assignment";
 import Button from "../../../../DesignSystem/Button";
+import { EditorPage, EditorHeader } from "../ContentEditorLayout";
+import AssignmentFields from "./AssignmentFields";
 
-const TopSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 32px;
-`;
-
-const HeaderTitle = styled.h1`
-  margin: 0;
-  font: var(--MH-Type-Heading-Small);
-  letter-spacing: 0;
-  color: #1a1a1a;
-`;
-
-const FormContainer = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
-`;
-
-const FormSection = styled.div`
-  margin-bottom: 32px;
-  
-  .consentSelector p {
-    display: none;
-  }
-`;
-
-const FormLabel = styled.label`
-  display: block;
-  margin-bottom: 8px;
-  font: var(--MH-Type-Label-Base);
-  letter-spacing: 0;
-  color: #1a1a1a;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  gap: 16px;
-  justify-content: flex-end;
-  margin-top: 32px;
-`;
+const FORM_ID = "copy-assignment-form";
 
 export default function CopyAssignment({ code, myclass, user }) {
+  const mediaLibraryProps = assignmentMediaLibraryProps({
+    userId: user?.id,
+    assignmentId: null,
+  });
   const { t } = useTranslation("classes");
   const router = useRouter();
 
@@ -87,6 +50,12 @@ export default function CopyAssignment({ code, myclass, user }) {
     ],
   });
 
+  const goBack = () =>
+    router.push({
+      pathname: `/dashboard/myclasses/${myclass?.code}`,
+      query: { page: "assignments", action: "add" },
+    });
+
   async function handleSave(e) {
     e.preventDefault();
     await createAssignment();
@@ -99,97 +68,30 @@ export default function CopyAssignment({ code, myclass, user }) {
     });
   }
 
-  // update content in the local state
-  const handleContentChange = (content) => {
-    handleChange({ target: { name: "content", value: content } });
-  };
-
-  // update title in the local state
-  const handleTitleChange = (content) => {
-    handleChange({ target: { name: "title", value: content } });
-  };
-
-  // update placeholder in the local state
-  const handlePlaceholderChange = (content) => {
-    handleChange({ target: { name: "placeholder", value: content } });
-  };
-
-  if (queryLoading) return <div>Loading...</div>;
-  if (!assignment) return <div>Assignment not found</div>;
+  if (queryLoading) return <div>{t("common.loading", {}, { default: "Loading…" })}</div>;
+  if (!assignment) return <div>{t("assignment.notFound", {}, { default: "Assignment not found" })}</div>;
 
   return (
-    <FormContainer>
-      <TopSection>
-        <Link
-          href={{
-            pathname: `/dashboard/myclasses/${myclass?.code}`,
-            query: {
-              page: "assignments",
-              action: "add",
-            },
-          }}
-          style={{ textDecoration: 'none' }}
-        >
-          <Button variant="outline">{t("assignment.goBack", {}, { default: "Go back" })}</Button>
-        </Link>
-        <HeaderTitle>Link a Copy</HeaderTitle>
-      </TopSection>
-
-      <form onSubmit={handleSave}>
-        <FormSection>
-          <FormLabel htmlFor="title">
-            {t("assignment.title")}
-          </FormLabel>
-          <TipTapEditor 
-            content={inputs?.title || ""} 
-            onUpdate={handleTitleChange}
-            isEditable={true}
-            toolbarVisible={false}
-          />
-        </FormSection>
-
-        <FormSection>
-          <FormLabel>
-            Instruction for your students:
-          </FormLabel>
-          <TipTapEditor
-            content={inputs?.content || ""}
-            onUpdate={handleContentChange}
-            isEditable={true}
-            toolbarVisible={true}
-          />
-        </FormSection>
-
-        <FormSection>
-          <FormLabel>
-            Placeholder for your students:
-          </FormLabel>
-          <TipTapEditor
-            content={inputs?.placeholder || ""}
-            onUpdate={handlePlaceholderChange}
-            isEditable={true}
-            toolbarVisible={true}
-          />
-        </FormSection>
-
-        <ButtonContainer>
-          <Link
-            href={{
-              pathname: `/dashboard/myclasses/${myclass?.code}`,
-              query: {
-                page: "assignments",
-                action: "add",
-              },
-            }}
-            style={{ textDecoration: 'none' }}
-          >
-            <Button variant="outline" type="button">{t("cancel", {}, { default: "Cancel" })}</Button>
-          </Link>
-          <Button variant="filled" type="submit" disabled={loading}>
-            {loading ? t("assignment.creating", {}, { default: "Creating..." }) : t("assignment.saveLink", {}, { default: "Save and Link" })}
+    <EditorPage>
+      <EditorHeader
+        title={t("assignment.linkCopy", {}, { default: "Link a copy" })}
+        onClose={goBack}
+        closeLabel={t("assignment.goBack", {}, { default: "Go back" })}
+        actions={
+          <Button variant="filled" type="submit" form={FORM_ID} disabled={loading}>
+            {loading
+              ? t("assignment.creating", {}, { default: "Creating..." })
+              : t("assignment.saveLink", {}, { default: "Save and Link" })}
           </Button>
-        </ButtonContainer>
+        }
+      />
+      <form id={FORM_ID} onSubmit={handleSave}>
+        <AssignmentFields
+          inputs={inputs}
+          handleChange={handleChange}
+          mediaLibraryProps={mediaLibraryProps}
+        />
       </form>
-    </FormContainer>
+    </EditorPage>
   );
 }

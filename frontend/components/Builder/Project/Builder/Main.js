@@ -7,7 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 import useForm from "../../../../lib/useForm";
 import useStudyVersionSnapshot from "../../../../lib/useStudyVersionSnapshot";
 
-import { CREATE_STUDY, UPDATE_STUDY } from "../../../Mutations/Study";
+import { CREATE_STUDY, SAVE_STUDY_DESIGN } from "../../../Mutations/Study";
 import { UPDATE_PROJECT_BOARD } from "../../../Mutations/Proposal";
 import { GET_PROJECT_STUDY } from "../../../Queries/Proposal";
 import { MY_STUDIES, MY_STUDY } from "../../../Queries/Study";
@@ -57,13 +57,12 @@ export default function Builder({ query, user, tab }) {
 
   const [updateProject] = useMutation(UPDATE_PROJECT_BOARD);
 
-  const [updateStudy] = useMutation(UPDATE_STUDY, {
+  // no refetch: the mutation returns the saved fields, which keeps the cached
+  // study current after every auto-save
+  const [updateStudy] = useMutation(SAVE_STUDY_DESIGN, {
     variables: {
       id: study?.id,
     },
-    refetchQueries: projectMode
-      ? [{ query: GET_PROJECT_STUDY, variables: { id: selector } }]
-      : [{ query: MY_STUDY, variables: { id: selector } }],
   });
 
   const snapshotStudy = useStudyVersionSnapshot({ user });
@@ -142,6 +141,7 @@ export default function Builder({ query, user, tab }) {
     descriptionInProposalCardId,
     tags,
     status,
+    createVersion = false,
   }) => {
     const shouldCreate =
       selector === "add" || area === "cloneofstudy" || (projectMode && !study?.id);
@@ -207,15 +207,19 @@ export default function Builder({ query, user, tab }) {
       return;
     }
 
+    // auto-saves only update the study; a version is stored when the user
+    // asks for one with the Save version button
     let newVersionId = null;
-    try {
-      newVersionId = await snapshotStudy({
-        studyId: study?.id,
-        diagram,
-        flow,
-      });
-    } catch (snapshotError) {
-      console.error("The study version could not be stored", snapshotError);
+    if (createVersion) {
+      try {
+        newVersionId = await snapshotStudy({
+          studyId: study?.id,
+          diagram,
+          flow,
+        });
+      } catch (snapshotError) {
+        console.error("The study version could not be stored", snapshotError);
+      }
     }
 
     const shouldAdvanceCollectionVersion =
@@ -238,6 +242,7 @@ export default function Builder({ query, user, tab }) {
         },
       },
     });
+    return { versionCreated: !!newVersionId };
   };
 
   if (!selector) {

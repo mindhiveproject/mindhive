@@ -6,6 +6,7 @@ export default function Parameters({
   study,
   handleChange,
   handleMultipleUpdate,
+  isLocked,
 }) {
   const { t } = useTranslation("builder");
 
@@ -66,15 +67,18 @@ export default function Parameters({
     user.permissions.map((p) => p.name).includes("STUDENT");
 
   return (
-    <div>
-      <h2>{t('parameters.participationSettings')}</h2>
+    <div className="settingsSection">
+      <div className="settingsSectionHeader">
+        <h2>{t("parameters.participationSettings")}</h2>
+      </div>
 
-      <div>
+      <div className="settingsList">
         {Object.keys(settings)
           .filter((name) => !isStudent || settingsOnlyStudents.includes(name))
-          .map((name, i) => (
+          .map((name) => (
             <SettingsBlock
-              key={i}
+              key={name}
+              user={user}
               study={study}
               handleChange={handleChange}
               handleSettingsChange={handleSettingsChange}
@@ -82,6 +86,7 @@ export default function Parameters({
               value={settings?.[name]}
               isReverse={reverseScales.includes(name)}
               hasIRBAccess={hasIRBAccess}
+              isLocked={isLocked}
             />
           ))}
       </div>

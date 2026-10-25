@@ -13,6 +13,7 @@ import { CREATE_HOMEWORK } from "../../Mutations/Homework";
 import { ReadOnlyTipTap } from "../../TipTap/ReadOnlyTipTap"
 import ReactHtmlParser from "react-html-parser";
 import TipTapEditor from "../../TipTap/Main";
+import { assignmentMediaLibraryProps } from "../../Mutations/MediaAsset";
 import useForm from "../../../lib/useForm";
 
 import HomeworkTab from "./Tab";
@@ -324,6 +325,10 @@ export default function AssignmentMain({ query, user }) {
                 <TipTapEditor
                   content={homeworkContent.current || inputs.placeholder}
                   onUpdate={(newContent) => updateHomeworkContent(newContent)}
+                  {...assignmentMediaLibraryProps({
+                    userId: user?.id,
+                    assignmentId: assignment?.id,
+                  })}
                 />
               </EditorWrapper>
             </div>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
@@ -59,7 +59,6 @@ export default function StudyVersion({
   study,
   handleMultipleUpdate,
   addFunctions,
-  hasStudyChanged,
 }) {
   const { t } = useTranslation("builder");
   const apolloClient = useApolloClient();
@@ -68,13 +67,6 @@ export default function StudyVersion({
   const [busyVersionId, setBusyVersionId] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
-  // the version that has been put on the canvas and is not saved yet
-  const [loadedVersion, setLoadedVersion] = useState(null);
-
-  useEffect(() => {
-    // the study has been saved, so the loaded version is the study design now
-    if (!hasStudyChanged) setLoadedVersion(null);
-  }, [hasStudyChanged]);
 
   const studyId = study?.id;
 
@@ -125,21 +117,22 @@ export default function StudyVersion({
     }).catch((error) => alert(error?.message));
 
   // Put an older snapshot back on the canvas. The snapshot itself is never
-  // rewritten: saving afterwards stores the restored design as a new version.
+  // rewritten: the restored design is auto-saved to the study, and saving a
+  // version afterwards stores it as a new version.
   const loadVersion = async (version) => {
-    if (hasStudyChanged) {
-      const shouldLoad = confirm(
-        t(
-          "version.confirmLoadUnsaved",
-          {},
-          {
-            default:
-              "You have unsaved changes on the canvas. They will be replaced by this version. Save the study first if you want to keep them. Load this version anyway?",
-          }
-        )
-      );
-      if (!shouldLoad) return;
-    }
+    // the canvas is auto-saved, so what it holds now is only kept if it has
+    // been saved as a version
+    const shouldLoad = confirm(
+      t(
+        "version.confirmLoad",
+        { versionName: version?.name || "" },
+        {
+          default:
+            "{{versionName}} will replace the design on the canvas. The current design is only kept if you have saved it as a version. Load this version anyway?",
+        }
+      )
+    );
+    if (!shouldLoad) return;
 
     setBusyVersionId(version?.id);
     try {
@@ -170,9 +163,7 @@ export default function StudyVersion({
       // reading the study flow back from it right now would return the starting
       // point only. The version carries the flow as it was when it was saved,
       // which is what the study state gets. Both updates also mark the study as
-      // changed, so the restored design is stored as a new version on save.
-      setLoadedVersion(version);
-
+      // changed, so the restored design is auto-saved.
       if (flow) {
         handleMultipleUpdate({ diagram, flow });
       } else {
@@ -319,7 +310,7 @@ export default function StudyVersion({
               {},
               {
                 default:
-                  "Every time you save a changed study design, it is stored here as a version.",
+                  "Your changes are saved automatically. Click Save version to store the current design here as a version.",
               }
             )}
           </p>
@@ -340,19 +331,6 @@ export default function StudyVersion({
                     { default: "A version that is no longer available" }
                   )}
               </strong>
-            </p>
-          )}
-
-          {loadedVersion && hasStudyChanged && (
-            <p className="versionLoadedNote">
-              {t(
-                "version.loadedNote",
-                { versionName: loadedVersion?.name || "" },
-                {
-                  default:
-                    "{{versionName}} is on the canvas but not saved yet. Save the study to keep it.",
-                }
-              )}
             </p>
           )}
 
@@ -384,7 +362,7 @@ export default function StudyVersion({
                 {},
                 {
                   default:
-                    "No version has been saved yet. Save the study to store the first version of your design.",
+                    "No version has been saved yet. Click Save version to store the first version of your design.",
                 }
               )}
             </p>

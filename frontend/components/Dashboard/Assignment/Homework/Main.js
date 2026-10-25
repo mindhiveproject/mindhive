@@ -49,6 +49,7 @@ export default function Homework({
       <Editor
         user={user}
         assignmentCode={assignmentCode}
+        assignmentId={homework?.assignment?.id}
         homeworkCode={homeworkCode}
         btnName={btnName}
         inputs={inputs}

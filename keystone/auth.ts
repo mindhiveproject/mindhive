@@ -204,7 +204,7 @@ const { withAuth } = createAuth({
 const sessionMaxAge = 60 * 60 * 24 * 30;
 
 // you can find out more at https://keystonejs.com/docs/apis/session#session-api
-const session = statelessSessions({
+const baseSession = statelessSessions({
   maxAge: sessionMaxAge,
   secret: sessionSecret!,
   // Issue #16: explicit cookie security flags.
@@ -220,5 +220,29 @@ const session = statelessSessions({
       ? process.env.SESSION_COOKIE_DOMAIN || ".mindhive.science"
       : undefined,
 });
+
+// Records when each account last signed in, for the two-year de-identification
+// rule. Every sign-in starts a session here: password sign-in, and Google
+// sign-in, which ends in the same password sign-in. Sessions last 30 days and
+// are not renewed, so an active account signs in at least monthly. A failed
+// write is logged and never blocks the sign-in.
+const session: typeof baseSession = {
+  ...baseSession,
+  async start(args) {
+    const token = await baseSession.start(args);
+    const data = args.data as { listKey?: string; itemId?: string } | undefined;
+    if (token && data?.listKey === "Profile" && data.itemId) {
+      try {
+        await args.context.prisma.profile.update({
+          where: { id: String(data.itemId) },
+          data: { lastSignInAt: new Date() },
+        });
+      } catch (error: any) {
+        console.error(`[lastSignInAt] sign-in not recorded: ${error?.message}`);
+      }
+    }
+    return token;
+  },
+};
 
 export { withAuth, session };

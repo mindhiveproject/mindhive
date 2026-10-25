@@ -513,5 +513,12 @@
 	"userPath": {
 		"guestMessage": "您以访客身份参与。您的公开可读 ID 是 {{id} }",
 		"startNextTask": "开始下一个任务"
+	},
+	"blockTags": {
+		"createdByYou": "Created by you",
+		"collaborator": "Collaborator",
+		"runtimeLabjs": "Lab.js",
+		"runtimeJspsych": "jsPsych",
+		"runtimeP5": "p5.js"
 	}
 }

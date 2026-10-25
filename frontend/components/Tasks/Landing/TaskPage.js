@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { StyledContent } from "../../styles/StyledTaskPage";
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
+import { getLocalizedField } from "../../../lib/i18nContent";
 
 export default function TaskPage({ user, task }) {
   const [active, setActive] = useState(false);
@@ -61,7 +62,7 @@ export default function TaskPage({ user, task }) {
     <StyledContent>
       <Head>
         <title>
-          MindHive | {task?.i18nContent?.[locale]?.title || task?.title}
+          MindHive | {getLocalizedField(task, "title", locale)}
         </title>
       </Head>
 

@@ -5,6 +5,9 @@ import ReactHtmlParser from "react-html-parser";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import { getTaskTypeLabelColors } from "../../../../../lib/taskTypeColors";
+import { assetParameterDefinitions } from "../../../../../lib/runtime/runtimeAsset";
+import JsPsychVersion from "../../../Component/Template/JsPsychVersion";
+import { getLocalizedField } from "../../../../../lib/i18nContent";
 
 function plainText(value) {
   if (value == null) return "";
@@ -14,7 +17,13 @@ function plainText(value) {
     .trim();
 }
 
-export default function Viewer({ task, close, openEditor, openPreview }) {
+export default function Viewer({
+  task,
+  user,
+  close,
+  openEditor,
+  openPreview,
+}) {
   const { t } = useTranslation("builder");
   const router = useRouter();
   const { locale } = router;
@@ -22,16 +31,15 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
   const settings = task?.i18nContent?.[locale]?.settings || task?.settings;
   const resources =
     (settings?.resources && JSON.parse(settings?.resources)) || [];
-  const title = task?.i18nContent?.[locale]?.title || task?.title;
+  const title = getLocalizedField(task, "title", locale);
   const description =
-    task?.i18nContent?.[locale]?.description || task?.description;
+    getLocalizedField(task, "description", locale);
   const backgroundHtml = settings?.background;
   const backgroundText = plainText(backgroundHtml) || description;
 
   const parameters =
     task?.parameters?.filter((p) => p?.type !== "survey") ||
-    task?.template?.parameters ||
-    [];
+    assetParameterDefinitions(task);
 
   const surveyItems =
     task?.parameters
@@ -113,6 +121,11 @@ export default function Viewer({ task, close, openEditor, openPreview }) {
         </div>
       </div>
       <div className="blockPanelBody">
+        {task?.runtimeType === "JSPSYCH" && task?.id && (
+          <section className="blockPanelSection">
+            <JsPsychVersion task={task} user={user} />
+          </section>
+        )}
         {backgroundText && (
           <section className="blockPanelSection">
             <h2>{t("viewer.background", {}, { default: "Background" })}</h2>

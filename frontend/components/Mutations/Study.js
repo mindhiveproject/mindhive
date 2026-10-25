@@ -19,6 +19,37 @@ export const UPDATE_STUDY = gql`
   }
 `;
 
+// save the study design from the builder. The saved fields are returned, so
+// the cached study stays current without refetching it after every auto-save
+export const SAVE_STUDY_DESIGN = gql`
+  mutation SAVE_STUDY_DESIGN($id: ID!, $input: StudyUpdateInput!) {
+    updateStudy(where: { id: $id }, data: $input) {
+      id
+      diagram
+      flow
+      status
+      currentVersion
+      updatedAt
+      tags {
+        id
+        title
+      }
+      descriptionInProposalCard {
+        id
+        title
+        description
+        section {
+          id
+          board {
+            id
+            title
+          }
+        }
+      }
+    }
+  }
+`;
+
 // count the between-subjects conditions a participant was assigned to
 // (participants cannot update the study itself)
 export const RECORD_STUDY_CONDITIONS = gql`

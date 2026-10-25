@@ -4,6 +4,7 @@ import SurveyBuilder from "./Types/SurveyBuilder";
 import ArrayParameter from "./Types/Array";
 import useTranslation from "next-translate/useTranslation";
 import Chip from "../../../DesignSystem/Chip";
+import { assetParameterDefinitions } from "../../../../lib/runtime/runtimeAsset";
 
 function isEmptySurveyValue(value) {
   if (value == null || value === "") return true;
@@ -19,7 +20,8 @@ export default function TaskParameters({
   isInStudyBuilder,
 }) {
   const { t } = useTranslation("builder");
-  const templateParameters = task?.template?.parameters || [];
+  // The runtime asset's definitions: a Lab.js template or a jsPsych version.
+  const templateParameters = assetParameterDefinitions(task);
   const rawParameters = task?.parameters?.length
     ? task.parameters
     : templateParameters;
@@ -63,7 +65,7 @@ export default function TaskParameters({
     handleChange({
       target: {
         name: "parameters",
-        value: task?.template?.parameters,
+        value: templateParameters,
       },
     });
   };

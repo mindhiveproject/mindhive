@@ -50,6 +50,7 @@ import { AddIcon } from "../../DesignSystem/Icons";
 import DropdownMenu from "../../DesignSystem/DropdownMenu";
 import Modal from "../../DesignSystem/Modal";
 import { BOARD_REVIEW_FORM_DEFINITIONS } from "../../Queries/FormDefinition";
+import CardColumns from "./CardColumns";
 
 const CAPABILITY_REVIEW = "review";
 const CAPABILITY_DATA_COLLECTION = "data_collection";
@@ -902,7 +903,7 @@ export default function MilestoneCardBuilder({
 
   return (
     <div className="post milestoneCardEditorPost">
-      <div className="proposalCardBoard">
+      <CardColumns>
         <div className="textBoard">
           <section style={sectionStyle}>
             <p style={questionLabelStyle}>
@@ -1659,7 +1660,7 @@ export default function MilestoneCardBuilder({
             ) : null}
           </div>
         )}
-      </div>
+      </CardColumns>
 
       <Modal
         open={confirmDataCollectionOpen}

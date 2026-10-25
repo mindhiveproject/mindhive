@@ -1531,6 +1531,26 @@ export const StyledProposal = styled.div`
       overflow-y: visible;
     }
 
+    /* Resizable columns (CardColumns): the split pane sizes both columns, so
+       they drop their own width caps and fill their pane. */
+    .proposalCardBoard.proposalCardBoardSplit {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      & > .DesignSystem-SplitPane {
+        flex: 1 1 auto;
+        height: auto;
+      }
+      .DesignSystem-SplitPane-Start > .textBoard {
+        width: auto;
+      }
+      .DesignSystem-SplitPane-End > .infoBoard,
+      .DesignSystem-SplitPane-End > .milestoneReviewFormEditorPanel {
+        width: auto;
+        max-width: none;
+      }
+    }
+
     label {
       display: block;
       font: var(--MH-Type-Label-Base);
@@ -1657,15 +1677,20 @@ export const StyledProposal = styled.div`
       padding: 24px 24px 24px 24px;
       flex-direction: column;
       justify-content: flex-start;
-      align-items: flex-start;
+      align-items: center;
       gap: 10px;
       flex: 1 0 0;
       width: 100%;
       min-width: 0;
       overflow-y: visible;
 
-      & > div {
+      /* Every block shares the TipTap editor's width cap (.tiptapEditorHost)
+         and is centered in the column, in both edit and view mode. */
+      & > * {
         width: 100%;
+        max-width: 900px;
+        box-sizing: border-box;
+        align-self: center;
       }
       & > label {
         width: 100%;

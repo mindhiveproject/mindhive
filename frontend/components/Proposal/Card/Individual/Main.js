@@ -13,6 +13,7 @@ import useForm from "../../../../lib/useForm";
 
 import Status from "../Forms/Status";
 import Button from "../../../DesignSystem/Button";
+import CardColumns from "../CardColumns";
 
 export default function IndividualCard({
   user,
@@ -115,7 +116,7 @@ export default function IndividualCard({
         </div>
       </div>
 
-      <div className="proposalCardBoard">
+      <CardColumns>
         <div className="textBoard">
           <div className="cardHeader">{proposalCard?.title}</div>
           <div className="cardDescription">
@@ -173,7 +174,7 @@ export default function IndividualCard({
             </div>
           </div>
         )}
-      </div>
+      </CardColumns>
     </div>
   );
 }

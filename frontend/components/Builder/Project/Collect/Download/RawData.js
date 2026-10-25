@@ -3,6 +3,10 @@ import { Icon } from "semantic-ui-react";
 
 import { saveAs } from "file-saver";
 import csvWithPlainNumbers from "../../../../../lib/csvWithPlainNumbers";
+import { flattenRuntimeRow } from "../../../../../lib/runtime/flattenRow";
+
+// Columns this export sets on every row, after the row's own fields.
+const EXPORT_COLUMNS = ["url", "meta", "subtitle", "condition", "dataPolicy"];
 import useTranslation from "next-translate/useTranslation";
 
 import buildAggregateColumns from "../../../../../lib/yqParticipantAggregates";
@@ -40,7 +44,11 @@ export default function DownloadRawData({
       .filter((result) => result?.data)
       .map((result) =>
         result?.data.map((line) => ({
-          ...line,
+          // jsPsych and p5 rows can hold objects; CSV needs flat columns
+          ...flattenRuntimeRow(line, result?.metadata?.runtimeType, [
+            ...Object.keys(result?.metadata || {}),
+            ...EXPORT_COLUMNS,
+          ]),
           url: JSON.stringify(line?.url),
           meta: JSON.stringify(line?.meta),
           ...result?.metadata,

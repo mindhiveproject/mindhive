@@ -5,11 +5,11 @@ import useTranslation from "next-translate/useTranslation";
 import { NodesTypesContainer } from "../../Diagram/nodes-types-container/NodesTypesContainer";
 import { NodeTypeLabel } from "../../Diagram/node-type-label/NodeTypeLabel";
 
-import Chip from "../../../../../DesignSystem/Chip";
 import IconButton from "../../../../../DesignSystem/IconButton";
 import { TASK_TYPE_COLORS } from "../../../../../../lib/taskTypeColors";
 import TaskModal from "../Task/Modal";
 import ManageFavorite from "../../../../../User/ManageFavorite";
+import BlockTags from "../../../../../Tasks/Bank/BlockTags";
 
 const SECONDARY_ICON_STYLE = {
   background: "#F3F3F3",
@@ -101,13 +101,7 @@ export default function Card({
                 name={component?.title}
               />
             </NodesTypesContainer>
-            {component?.public === false && (
-              <Chip
-                variant="static"
-                tone="neutral"
-                label={t("selector.customChip", {}, { default: "Custom" })}
-              />
-            )}
+            <BlockTags task={component} user={user} />
           </div>
           <div className="blockCardActions">
             {!isSurveyBuilder && (

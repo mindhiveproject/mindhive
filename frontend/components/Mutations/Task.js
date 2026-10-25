@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 // create new task
 export const CREATE_TASK = gql`
@@ -6,7 +6,10 @@ export const CREATE_TASK = gql`
     $title: String!
     $description: String
     $descriptionForParticipants: String
-    $templateId: ID
+    $runtimeType: TaskRuntimeTypeType
+    $templateRelation: TemplateRelateToOneForCreateInput
+    $visualRelation: VisualRelateToOneForCreateInput
+    $jsPsychExperimentRelation: JsPsychExperimentRelateToOneForCreateInput
     $taskType: TaskTaskTypeType
     $isExternal: Boolean
     $link: String
@@ -17,7 +20,10 @@ export const CREATE_TASK = gql`
   ) {
     createTask(
       data: {
-        template: { connect: { id: $templateId } }
+        runtimeType: $runtimeType
+        template: $templateRelation
+        visual: $visualRelation
+        jsPsychExperiment: $jsPsychExperimentRelation
         title: $title
         description: $description
         descriptionForParticipants: $descriptionForParticipants

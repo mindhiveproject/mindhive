@@ -513,5 +513,12 @@
 	"userPath": {
 		"guestMessage": "Participas como invitado. Tu ID público legible es {{id}}",
 		"startNextTask": "Iniciar la siguiente tarea"
+	},
+	"blockTags": {
+		"createdByYou": "Created by you",
+		"collaborator": "Collaborator",
+		"runtimeLabjs": "Lab.js",
+		"runtimeJspsych": "jsPsych",
+		"runtimeP5": "p5.js"
 	}
 }

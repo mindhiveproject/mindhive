@@ -1,97 +1,27 @@
 import path from 'path';
-import fs from 'fs';
-import jsonfile from 'jsonfile';
-import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { saveDataLimiter } from '../../lib/api/rateLimit';
 import { validatePathSegment, assertWithinBase } from '../../lib/api/paths';
-import { serverGraphqlUrl } from '../../lib/api/graphql';
+import { backendGraphql } from '../../lib/api/graphql';
 
 const {
   labJsGraphqlFinalPayload,
   stampLabJsMetadata,
 } = require('../../lib/runtime/labJsCompatibility');
+// Shared with /api/runtime/save, which sends the same INGEST_FINAL_MUTATION
+// and INGEST_COMPLETE_MUTATION for jsPsych and p5 runs.
+const {
+  ingestFinalAndComplete,
+  loadRunContext,
+  runDirectory,
+  writeRawResult,
+} = require('../../lib/runtime/runResultStore');
 
 export const config = {
   api: {
     bodyParser: { sizeLimit: '50mb' },
   },
 };
-
-const RUN_CONTEXT_QUERY = `
-  query RuntimeRunContext($runToken: String!) {
-    runtimeRunContext(runToken: $runToken) {
-      datasetToken
-      date
-      runtimeType
-      testVersion
-      studyVersion
-      assetId
-      assetVersion
-      participantType
-      participantPublicId
-      studyId
-      taskId
-      templateId
-    }
-  }
-`;
-
-const INGEST_FINAL_MUTATION = `
-  mutation IngestLabJsFinal(
-    $runToken: String!
-    $data: JSON
-    $aggregated: JSON
-  ) {
-    ingestRunMessage(
-      runToken: $runToken
-      sequence: 1
-      messageType: FINAL
-      data: $data
-      aggregated: $aggregated
-    ) {
-      accepted
-      duplicate
-      datasetToken
-    }
-  }
-`;
-
-const INGEST_COMPLETE_MUTATION = `
-  mutation IngestLabJsComplete($runToken: String!) {
-    ingestRunMessage(
-      runToken: $runToken
-      sequence: 2
-      messageType: COMPLETE
-    ) {
-      accepted
-      duplicate
-      datasetToken
-    }
-  }
-`;
-
-async function backendGraphql(
-  query: string,
-  variables: Record<string, unknown>
-) {
-  const response = await axios.post(
-    serverGraphqlUrl,
-    { query, variables },
-    {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }
-  );
-  if (response.data?.errors?.length) {
-    throw new Error(
-      response.data.errors[0].message || 'Runtime request failed'
-    );
-  }
-  return response.data.data;
-}
 
 export default async function handler(
   req: NextApiRequest,
@@ -129,68 +59,44 @@ export default async function handler(
 
   let runContext;
   try {
-    const result = await backendGraphql(RUN_CONTEXT_QUERY, { runToken });
-    runContext = result.runtimeRunContext;
+    runContext = await loadRunContext(backendGraphql, runToken);
   } catch {
     return res
       .status(401)
       .json({ error: 'The run token is invalid or expired.' });
   }
 
-  // The folder is the Dataset's own date, which is what every reader rebuilds
-  // the path from — not this request's clock, which disagrees with it on
-  // padding and across midnight.
-  const { datasetToken, date } = runContext;
-  const [year, month, day] = String(date ?? '').split('-');
+  let dir;
   try {
-    validatePathSegment(datasetToken, 'dataset token');
-    validatePathSegment(year, 'year');
-    validatePathSegment(month, 'month');
-    validatePathSegment(day, 'day');
+    dir = runDirectory({
+      dataRoot: path.resolve(process.cwd(), 'data'),
+      runContext,
+      validatePathSegment,
+      assertWithinBase,
+    });
   } catch {
     return res.status(401).json({ error: 'The run token is invalid.' });
   }
 
-  const dirData = path.resolve(process.cwd(), 'data');
-  const dir = path.resolve(dirData, year, month, day, datasetToken);
-  try {
-    assertWithinBase(dir, dirData);
-  } catch {
-    return res.status(400).json({ error: 'Invalid data path.' });
-  }
-  const filePath = path.join(dir, `${payload}.json`);
   const storedBody = {
     ...req.body,
     metadata: stampLabJsMetadata(runContext, metadata),
   };
-
   try {
-    await fs.promises.mkdir(dir, { recursive: true });
-    if (payload === 'modified') {
-      await jsonfile.writeFile(filePath, storedBody);
-    } else {
-      await jsonfile.writeFile(filePath, storedBody, {
-        flag: payload === 'full' ? 'wx' : 'a',
-        EOL: ',\n',
-      } as any);
-    }
-  } catch (error: any) {
-    if (!(payload === 'full' && error?.code === 'EEXIST')) {
-      return res
-        .status(500)
-        .json({ error: 'The raw result could not be stored.' });
-    }
+    await writeRawResult({ dir, payload, body: storedBody });
+  } catch {
+    return res
+      .status(500)
+      .json({ error: 'The raw result could not be stored.' });
   }
 
   if (payload === 'full') {
-    const finalResult = labJsGraphqlFinalPayload(data);
     try {
-      await backendGraphql(INGEST_FINAL_MUTATION, {
+      await ingestFinalAndComplete(
+        backendGraphql,
         runToken,
-        data: finalResult.data,
-        aggregated: finalResult.aggregated,
-      });
-      await backendGraphql(INGEST_COMPLETE_MUTATION, { runToken });
+        labJsGraphqlFinalPayload(data)
+      );
     } catch (error: any) {
       return res.status(409).json({
         error: error.message || 'The final runtime result could not be stored.',

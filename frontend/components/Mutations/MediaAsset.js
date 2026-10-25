@@ -159,6 +159,22 @@ export function mediaCreateHasOwnerFromSource(mediaLibrarySource) {
   );
 }
 
+/**
+ * TipTap media-library props for assignment and homework editors. Uploads are
+ * attributed to the assignment when it exists (saved), otherwise to the
+ * user's profile (e.g. creating or copying an assignment that has no id yet).
+ * Without a user the editor falls back to the URL-only image button.
+ */
+export function assignmentMediaLibraryProps({ userId, assignmentId }) {
+  if (!userId) return { mediaLibraryId: null, mediaLibrarySource: null };
+  return {
+    mediaLibraryId: userId,
+    mediaLibrarySource: assignmentId
+      ? { sourceType: "assignment", sourceId: assignmentId, createdWith: "upload" }
+      : { sourceType: "profile", sourceId: userId, createdWith: "upload" },
+  };
+}
+
 export function buildMediaAssetCreateData({
   scopeId,
   fileName,

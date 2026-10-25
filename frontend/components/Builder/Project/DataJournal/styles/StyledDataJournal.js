@@ -627,6 +627,9 @@ export const StyledComponentEditor = styled.div`
     .editorContainer {
       margin-top: 0;
     }
+    .tiptapEditorHost {
+      max-width: 100%;
+    }
     .tiptapEditor .ProseMirror {
       border: none;
       border-radius: 0;
@@ -1279,6 +1282,9 @@ export const StyledDataWorkspace = styled.div`
     }
     .paragraph .editorContainer {
       margin-top: 0;
+    }
+    .paragraph .tiptapEditorHost {
+      max-width: 100%;
     }
     .paragraph .tiptapEditor .ProseMirror {
       border: none;

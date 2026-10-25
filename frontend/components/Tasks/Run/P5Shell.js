@@ -1,26 +1,38 @@
-import { useEffect } from 'react';
+import { useCallback, useMemo } from 'react';
 import useTranslation from 'next-translate/useTranslation';
-import { createShellLifecycle } from './shellLifecycle';
+import RuntimeTaskShell, { parameterValues } from './RuntimeTaskShell';
 
-export default function P5Shell({ task, onLifecycle }) {
+// A sketch draws on a canvas; it needs scripts and nothing more.
+const SANDBOX = 'allow-scripts';
+
+/**
+ * Runs a p5 task: the visual's code comes from the visual task route, built
+ * into a document with the pinned p5 (see RuntimeTaskShell for saving and
+ * finishing). The visual itself may be private: the route gets its code from
+ * Keystone with the asset token, so this page never reads it.
+ *
+ * @param {object} task - From TASK_TO_PARTICIPATE.
+ * @param {string} assetToken - A p5 asset token for this task's visual.
+ */
+export default function P5Shell({ task, assetToken, ...run }) {
   const { t } = useTranslation('common');
-
-  useEffect(() => {
-    const lifecycle = createShellLifecycle('P5', task.visual.id, onLifecycle);
-    lifecycle.mount();
-    return () => lifecycle.cleanup();
-  }, [onLifecycle, task.visual.id]);
-
+  // Defaults the task doesn't set come from the sketch's declareParameters.
+  const params = useMemo(() => parameterValues(task?.parameters), [task]);
+  const buildSrc = useCallback(
+    (nonce) =>
+      `/api/runtime/visual/${encodeURIComponent(
+        assetToken
+      )}?n=${encodeURIComponent(nonce)}`,
+    [assetToken]
+  );
   return (
-    <div data-runtime-shell="P5" role="status">
-      {t(
-        'runtime.p5Shell',
-        {},
-        {
-          default:
-            'This p5.js task is configured, but execution is not enabled yet.',
-        }
-      )}
-    </div>
+    <RuntimeTaskShell
+      {...run}
+      runtime="P5"
+      buildSrc={buildSrc}
+      sandbox={SANDBOX}
+      params={params}
+      title={t('runtime.p5FrameTitle', {}, { default: 'p5 task' })}
+    />
   );
 }

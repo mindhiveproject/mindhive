@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_HOMEWORK_BY_ID } from "../../../../../../Queries/Homework";
 
-import ReactHtmlParser from "react-html-parser";
+import parseSafeHtml from "../../../../../../../lib/safeHtml";
 import useForm from "../../../../../../../lib/useForm";
 import { UPDATE_HOMEWORK } from "../../../../../../Mutations/Homework";
 

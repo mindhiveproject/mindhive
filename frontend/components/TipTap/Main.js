@@ -200,8 +200,6 @@ function TipTapEditorInner({
   usedInVizSectionIds = null,
   /** When set, shown over the editor while the document is empty (pointer-events: none). */
   emptyInvite = null,
-  floatingToolbarTop = null,
-  floatingToolbarAutoOffset = false,
   /** { x, y } client coordinates (or true for the end): focus there once the editor is editable. */
   focusRequest = null,
   collaborationUser = null,
@@ -212,11 +210,13 @@ function TipTapEditorInner({
   const { t } = useTranslation("builder");
   const apolloClient = useApolloClient();
   const [isFocused, setIsFocused] = useState(false);
+  // Opening a toolbar menu moves focus into it (blurring the editor); keep the
+  // toolbar shown meanwhile so the menu isn't hidden along with it.
+  const [toolbarMenuOpen, setToolbarMenuOpen] = useState(false);
   const [docEmpty, setDocEmpty] = useState(true);
   const [mediaLibraryModalOpen, setMediaLibraryModalOpen] = useState(false);
-  const [computedFloatingToolbarTop, setComputedFloatingToolbarTop] = useState(null);
   const editorRef = useRef(null);
-  const editorHostRef = useRef(null);
+  const toolbarRef = useRef(null);
   const onUpdateRef = useRef(onUpdate);
   const onBlurCallbackRef = useRef(onBlurCallback);
   onUpdateRef.current = onUpdate;
@@ -484,8 +484,13 @@ function TipTapEditorInner({
   }, [editor, emptyInvite]);
 
 
-  const Toolbar = () => {
-    if (!editor || !toolbarVisible || !isFocused) return null;
+  // The toolbar is always laid out inside the editor box (its space is reserved
+  // by padding on .ProseMirror) and only fades in on focus, so focusing never
+  // shifts the layout.
+  const renderToolbar = () => {
+    if (!editor || !toolbarVisible) return null;
+
+    const toolbarShown = (isFocused || toolbarMenuOpen) && editor.isEditable;
 
     const handleStyleClick = (command, e) => {
       e.preventDefault();
@@ -564,15 +569,7 @@ function TipTapEditorInner({
 
       return (
         <>
-          <div
-            style={{
-              width: "1px",
-              background: "#D3E0E3",
-              height: "32px",
-              alignSelf: "center",
-              margin: "0 4px",
-            }}
-          />
+          <div className="toolbarDivider" />
           <div
             className="toolbarGroup specialButtonGroup"
             style={{ marginLeft: "auto" }}
@@ -703,8 +700,12 @@ function TipTapEditorInner({
     // Limited toolbar mode - only show: bold, italic, underline, link, bullet list, ordered list
     if (limitedToolbar) {
       return (
-        <div className={`floatingToolbar ${isFocused ? "visible" : ""}`}>
-          <div className="toolbar">
+        <div
+          ref={toolbarRef}
+          className={`inlineToolbar ${toolbarShown ? "visible" : ""}`}
+          aria-hidden={!toolbarShown}
+        >
+          <div className="toolbar" onMouseDown={(e) => e.preventDefault()}>
             <div
               className="toolbarGroup"
               onMouseDown={(e) => {
@@ -789,8 +790,12 @@ function TipTapEditorInner({
 
     // Full toolbar mode
     return (
-      <div className={`floatingToolbar ${isFocused ? "visible" : ""}`}>
-        <div className="toolbar">
+      <div
+        ref={toolbarRef}
+        className={`inlineToolbar ${toolbarShown ? "visible" : ""}`}
+        aria-hidden={!toolbarShown}
+      >
+        <div className="toolbar" onMouseDown={(e) => e.preventDefault()}>
           <div
             className="toolbarGroup"
             onMouseDown={(e) => {
@@ -815,15 +820,7 @@ function TipTapEditorInner({
               ariaLabel={t("tiptap.toolbar.redo", {}, { default: "Redo" })}
             />
           </div>
-          <div
-            style={{
-              width: "1px",
-              background: "#D3E0E3",
-              height: "32px",
-              alignSelf: "center",
-              margin: "0 4px",
-            }}
-          />
+          <div className="toolbarDivider" />
           <div
             className="toolbarGroup"
             onMouseDown={(e) => {
@@ -881,15 +878,7 @@ function TipTapEditorInner({
               ariaLabel={t("tiptap.toolbar.insertLink", {}, { default: "Insert/edit link" })}
             />
             </div>
-          <div
-            style={{
-              width: "1px",
-              background: "#D3E0E3",
-              height: "32px",
-              alignSelf: "center",
-              margin: "0 4px",
-            }}
-          />
+          <div className="toolbarDivider" />
           <div
             className="toolbarGroup"
             onMouseDown={(e) => {
@@ -925,15 +914,7 @@ function TipTapEditorInner({
               ariaLabel={t("tiptap.toolbar.toggleBlockquote", {}, { default: "Toggle blockquote" })}
             />
           </div>
-          <div
-            style={{
-              width: "1px",
-              background: "#D3E0E3",
-              height: "32px",
-              alignSelf: "center",
-              margin: "0 4px",
-            }}
-          />
+          <div className="toolbarDivider" />
           <div
             className="toolbarGroup"
             onMouseDown={(e) => {
@@ -983,6 +964,7 @@ function TipTapEditorInner({
             <DropdownMenu
               ariaLabel={t("tiptap.toolbar.tableOptions", {}, { default: "Table options" })}
               items={tableMenuItems}
+              onOpenChange={setToolbarMenuOpen}
               renderTrigger={({ onClick, open, ariaLabel: triggerAriaLabel }) => (
                 <TipTapToolbarButton
                   icon={<TipTapToolbarIcon file="table" />}
@@ -1011,54 +993,32 @@ function TipTapEditorInner({
     editor.chain().focus().run();
   };
 
+  // Reserve exactly the toolbar's height (it wraps on narrow editors) so the
+  // text never sits under it.
   useEffect(() => {
-    if (!floatingToolbarAutoOffset || !toolbarVisible) return;
-
-    const resolveToolbarTop = (width) => {
-      if (width <= TOOLBAR_WIDTH_BREAKPOINTS.narrowMax) {
-        return TOOLBAR_TOP_BY_WIDTH.narrow;
-      }
-      if (width <= TOOLBAR_WIDTH_BREAKPOINTS.mediumMax) {
-        return TOOLBAR_TOP_BY_WIDTH.medium;
-      }
-      return TOOLBAR_TOP_BY_WIDTH.wide;
-    };
-
-    const updateOffsetFromWidth = () => {
-      const hostWidth = editorHostRef.current?.getBoundingClientRect?.().width;
-      const width = hostWidth || window.innerWidth;
-      setComputedFloatingToolbarTop(resolveToolbarTop(width));
-    };
-
-    updateOffsetFromWidth();
-    window.addEventListener("resize", updateOffsetFromWidth);
-
-    return () => {
-      window.removeEventListener("resize", updateOffsetFromWidth);
-    };
-  }, [floatingToolbarAutoOffset, toolbarVisible]);
+    const toolbarEl = toolbarRef.current;
+    const hostEl = editorRef.current;
+    if (!toolbarEl || !hostEl || typeof ResizeObserver === "undefined") return undefined;
+    const sync = () =>
+      hostEl.style.setProperty("--tiptap-toolbar-height", `${toolbarEl.offsetHeight}px`);
+    sync();
+    const observer = new ResizeObserver(sync);
+    observer.observe(toolbarEl);
+    return () => observer.disconnect();
+  }, [editor, toolbarVisible, limitedToolbar]);
 
   return (
     <>
       <StyledTipTap
         ref={editorRef}
-        style={{
-          ...(floatingToolbarTop
-            ? { "--tiptap-floating-toolbar-top": floatingToolbarTop }
-            : {}),
-          ...(floatingToolbarAutoOffset && computedFloatingToolbarTop
-            ? {
-                "--tiptap-floating-toolbar-top": computedFloatingToolbarTop,
-              }
-            : {}),
-        }}
+        className={toolbarVisible ? "hasInlineToolbar" : undefined}
       >
         <div className="editorContainer">
           <div
-            ref={editorHostRef}
             className="tiptapEditorHost"
             onMouseDown={handleEditorHostMouseDown}
           >
+            {renderToolbar()}
             <EditorContent
               editor={editor}
               className="tiptapEditor"
@@ -1071,7 +1031,6 @@ function TipTapEditorInner({
               </div>
             ) : null}
           </div>
-          <Toolbar />
         </div>
       </StyledTipTap>
       {mediaLibraryId && (

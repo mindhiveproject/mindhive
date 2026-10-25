@@ -945,6 +945,7 @@ export const CLASS_PROJECTS_QUERY = gql`
       }
       study {
         id
+        title
       }
       createdAt
       updatedAt
@@ -1031,6 +1032,7 @@ export const GET_PROJECT_STUDY = gql`
         status
         currentVersion
         dataCollectionStatus
+        updatedAt
       }
     }
   }

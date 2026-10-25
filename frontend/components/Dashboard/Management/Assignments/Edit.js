@@ -49,7 +49,12 @@ export default function EditAssignment({ user, id }) {
 
   return (
     <div>
-      <AssignmentForm inputs={inputs} handleChange={handleChange} />
+      <AssignmentForm
+        inputs={inputs}
+        handleChange={handleChange}
+        user={user}
+        assignmentId={id}
+      />
       <Button variant="filled" type="button" onClick={handleSave}>
         {t("management.save", {}, { default: "Save" })}
       </Button>

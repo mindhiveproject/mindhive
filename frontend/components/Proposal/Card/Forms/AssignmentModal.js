@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import TipTapEditor from "../../../TipTap/Main";
+import { assignmentMediaLibraryProps } from "../../../Mutations/MediaAsset";
 import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
@@ -69,6 +70,11 @@ export default function AssignmentModal({
   });
   const assignment = data?.assignments?.[0];
   const actions = getLinkedItemActions(assignment, "assignment", user);
+  // A copy has no id until saved; don't attribute its media to the original.
+  const mediaLibraryProps = assignmentMediaLibraryProps({
+    userId: user?.id,
+    assignmentId: mode === "copy" ? null : assignmentId,
+  });
 
   // Each opening starts from the caller's mode and the saved content.
   useEffect(() => {
@@ -210,6 +216,7 @@ export default function AssignmentModal({
         content={form.content}
         placeholder={t("assignment.instructionsPlaceholder", "Enter assignment instructions...")}
         onUpdate={(value) => setField("content", value)}
+        {...mediaLibraryProps}
       />
       <p style={SECTION_LABEL_STYLE}>
         {t("assignment.placeholderInstructions", "Placeholder for your students:")}
@@ -218,6 +225,7 @@ export default function AssignmentModal({
         content={form.placeholder}
         placeholder={t("assignment.placeholderPlaceholder", "Enter placeholder...")}
         onUpdate={(value) => setField("placeholder", value)}
+        {...mediaLibraryProps}
       />
     </div>
   );

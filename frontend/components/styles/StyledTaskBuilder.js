@@ -332,7 +332,7 @@ const StyledTaskBuilder = styled.div`
     letter-spacing: 0;
   }
 
-  /* ── Page Settings Panel ── */
+  /* ── Participant page settings Panel ── */
   .pageSettingsPanel {
     display: flex;
     flex-wrap: wrap;

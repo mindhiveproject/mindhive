@@ -1,7 +1,12 @@
 import CollectivePresentation from "./Collective";
 import IndividualPresentationMain from "./Individual/Main";
 
-export default function StudyDetails({ project, status, actionCardType }) {
+export default function StudyDetails({
+  project,
+  status,
+  actionCardType,
+  milestone,
+}) {
   // check all cards whether there is an individual card
   const proposal = project || { sections: [] };
   const { sections } = proposal;
@@ -26,6 +31,7 @@ export default function StudyDetails({ project, status, actionCardType }) {
         project={project}
         status={status}
         actionCardType={actionCardType}
+        milestone={milestone}
       />
     );
   }

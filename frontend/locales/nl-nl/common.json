@@ -513,5 +513,12 @@
 	"userPath": {
 		"guestMessage": "Je neemt deel als gast. Je openbare, leesbare ID is {{id}}",
 		"startNextTask": "Start de volgende taak"
+	},
+	"blockTags": {
+		"createdByYou": "Created by you",
+		"collaborator": "Collaborator",
+		"runtimeLabjs": "Lab.js",
+		"runtimeJspsych": "jsPsych",
+		"runtimeP5": "p5.js"
 	}
 }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useMemo } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import absoluteUrl from "next-absolute-url";
 import useTranslation from "next-translate/useTranslation";
@@ -22,6 +23,8 @@ import DropdownMenu from "../../../DesignSystem/DropdownMenu";
 import Button from "../../../DesignSystem/Button";
 import IconButton from "../../../DesignSystem/IconButton";
 import CopyButton from "../../../DesignSystem/CopyButton";
+import Chip from "../../../DesignSystem/Chip";
+import { getClassTemplateBoards } from "../../../../lib/classTemplateBoards";
 import { useClassTablePrefs } from "./useClassTablePrefs";
 
 export default function ClassStudents({ myclass, user, query }) {
@@ -57,6 +60,49 @@ export default function ClassStudents({ myclass, user, query }) {
   });
 
   const studentSignupLink = `${origin}/signup/student?code=${myclass.code}`;
+
+  const classTemplateBoardsById = useMemo(() => {
+    const map = new Map();
+    for (const board of getClassTemplateBoards(myclass)) {
+      if (board?.id) map.set(board.id, board);
+    }
+    return map;
+  }, [myclass]);
+
+  // Main projects in this class → parent template boards (deduped by template id).
+  const getStudentMainProjectTemplates = (student) => {
+    const mainProjects = (student?.collaboratorInProposal || []).filter(
+      (project) =>
+        project?.usedInClass?.id === myclass?.id && project?.isMain
+    );
+
+    const byKey = new Map();
+    for (const project of mainProjects) {
+      const clonedFrom = project?.clonedFrom;
+      const templateId = clonedFrom?.id;
+      const isAssociatedWithClass = Boolean(
+        templateId && classTemplateBoardsById.has(templateId)
+      );
+
+      // Prefer the class template title when associated; otherwise the parent
+      // board title (or the project title when there is no parent).
+      const title = isAssociatedWithClass
+        ? classTemplateBoardsById.get(templateId)?.title || clonedFrom?.title
+        : clonedFrom?.title || project?.title;
+
+      const key = templateId || `project:${project?.id}`;
+      if (byKey.has(key)) continue;
+
+      byKey.set(key, {
+        id: key,
+        title: title || "",
+        isAssociatedWithClass,
+        hasParentTemplate: Boolean(templateId),
+      });
+    }
+
+    return [...byKey.values()];
+  };
 
   const getStudentActionItems = (student) => {
     const items = [
@@ -155,6 +201,60 @@ export default function ClassStudents({ myclass, user, query }) {
     );
   };
 
+  const TemplateBoardRenderer = (params) => {
+    const student = params?.data;
+    if (!student) return null;
+
+    const templates = getStudentMainProjectTemplates(student);
+    if (!templates.length) return "—";
+
+    return (
+      <span
+        style={{
+          display: "inline-flex",
+          flexWrap: "wrap",
+          gap: 4,
+          alignItems: "center",
+          maxWidth: "100%",
+        }}
+      >
+        {templates.map((item) => {
+          if (item.isAssociatedWithClass) {
+            return (
+              <Chip
+                key={item.id}
+                variant="static"
+                tone="neutral"
+                label={item.title}
+              />
+            );
+          }
+
+          const label = item.hasParentTemplate && item.title
+            ? t(
+                "studentsTab.templateNotInClass",
+                { title: item.title },
+                { default: "{{title}} (not in class)" }
+              )
+            : t(
+                "studentsTab.noTemplateNotInClass",
+                {},
+                { default: "Not linked to class template" }
+              );
+
+          return (
+            <Chip
+              key={item.id}
+              variant="static"
+              tone="warning"
+              label={label}
+            />
+          );
+        })}
+      </span>
+    );
+  };
+
   const columnDefs = [
     {
       field: "username",
@@ -172,6 +272,43 @@ export default function ClassStudents({ myclass, user, query }) {
       sortable: true,
       flex: 1,
       minWidth: 200,
+    },
+    {
+      colId: "templateBoard",
+      headerName: t("studentsTab.templateBoard", {}, {
+        default: "Template board",
+      }),
+      cellRenderer: TemplateBoardRenderer,
+      valueGetter: (params) => {
+        const templates = getStudentMainProjectTemplates(params?.data);
+        return templates
+          .map((item) => {
+            if (item.isAssociatedWithClass) return item.title;
+            if (item.hasParentTemplate && item.title) {
+              return t(
+                "studentsTab.templateNotInClass",
+                { title: item.title },
+                { default: "{{title}} (not in class)" }
+              );
+            }
+            return t(
+              "studentsTab.noTemplateNotInClass",
+              {},
+              { default: "Not linked to class template" }
+            );
+          })
+          .filter(Boolean)
+          .join(", ");
+      },
+      filter: "agTextColumnFilter",
+      sortable: true,
+      flex: 1,
+      minWidth: 180,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        overflow: "visible",
+      },
     },
     {
       field: "actions",
@@ -198,7 +335,7 @@ export default function ClassStudents({ myclass, user, query }) {
     <div className="classTabPage students">
       <section className="classTabSection">
         <div className="classTabSectionHeader">
-          <h3>{t("studentsTab.tab", {}, { default: "Students" })}</h3>
+          <h3>{t("studentsTab.tab", {}, { default: "Student roster" })}</h3>
           <p>{t("studentsTab.shareMessage")}</p>
         </div>
         <div className="classTabInformationBlock">

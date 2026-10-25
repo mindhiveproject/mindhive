@@ -2,11 +2,15 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import useTranslation from 'next-translate/useTranslation';
 import { TASK_TO_PARTICIPATE } from '../../Queries/Task';
-import { START_RUN } from '../../Mutations/Runtime';
+import {
+  RUNTIME_ASSET_PREVIEW_TOKEN,
+  START_RUN,
+} from '../../Mutations/Runtime';
 import DynamicExperimentWindow from '../../Labjs/Run/Wrapper';
 import Labjs from '../../Global/Labjs';
 import P5Shell from './P5Shell';
 import JsPsychShell from './JsPsychShell';
+import ExternalTaskShell from './ExternalTaskShell';
 import { resolveRuntimeConfiguration } from './runtimeConfig';
 
 export default function TaskRun({
@@ -37,13 +41,36 @@ export default function TaskRun({
   const resolved = useMemo(() => {
     if (!task) return null;
     try {
-      return resolveRuntimeConfiguration(task);
+      // A participant can't read a private visual, so a p5 task's visual
+      // may come back empty. startRun (or the preview token) checks it with
+      // full access instead, and the frame gets its code through the token.
+      return resolveRuntimeConfiguration(
+        task.runtimeType === 'P5' && !task.visual
+          ? { ...task, visual: { id: null } }
+          : task
+      );
     } catch (configurationError) {
       return { error: configurationError };
     }
   }, [task]);
   const needsPersistedRun =
-    !!isSavingData && resolved?.runtimeType === 'LABJS' && !resolved.error;
+    !!isSavingData &&
+    ['LABJS', 'JSPSYCH', 'P5'].includes(resolved?.runtimeType) &&
+    !resolved.error;
+  // A framed preview runs without a run, but its asset still needs a token.
+  const needsPreviewToken =
+    !isSavingData &&
+    ['JSPSYCH', 'P5'].includes(resolved?.runtimeType) &&
+    !resolved.error;
+  const { data: previewData, error: previewError } = useQuery(
+    RUNTIME_ASSET_PREVIEW_TOKEN,
+    {
+      variables: { taskId: task?.id },
+      skip: !needsPreviewToken || !task?.id,
+      fetchPolicy: 'no-cache',
+    }
+  );
+  const previewToken = previewData?.runtimeAssetPreviewToken;
   const startKey =
     needsPersistedRun && task && study?.id
       ? `${task.id}:${study.id}:${testVersion ?? ''}`
@@ -113,7 +140,19 @@ export default function TaskRun({
     };
   }, [resolved?.runtimeType, task?.id, task?.template?.slug]);
 
-  const combinedError = queryError || resolved?.error || startError;
+  const combinedError =
+    queryError || resolved?.error || startError || previewError;
+  // An external task has no runtime asset: it is a link to another site.
+  if (task?.isExternal) {
+    return (
+      <ExternalTaskShell
+        task={task}
+        onFinish={onFinish}
+        currentStep={currentStep}
+        isTaskRetaken={isTaskRetaken}
+      />
+    );
+  }
   if (combinedError) {
     return (
       <div role="alert">
@@ -128,7 +167,13 @@ export default function TaskRun({
       </div>
     );
   }
-  if (loading || !task || !resolved || (needsPersistedRun && !runContext)) {
+  if (
+    loading ||
+    !task ||
+    !resolved ||
+    (needsPersistedRun && !runContext) ||
+    (needsPreviewToken && !previewToken)
+  ) {
     return (
       <div role="status">
         {t('runtime.starting', {}, { default: 'Starting task…' })}
@@ -136,9 +181,31 @@ export default function TaskRun({
     );
   }
 
-  if (resolved.runtimeType === 'P5') return <P5Shell task={task} />;
+  if (resolved.runtimeType === 'P5') {
+    return (
+      <P5Shell
+        task={task}
+        runContext={runContext}
+        assetToken={runContext?.assetToken || previewToken}
+        isSavingData={isSavingData}
+        onFinish={onFinish}
+        currentStep={currentStep}
+        isTaskRetaken={isTaskRetaken}
+      />
+    );
+  }
   if (resolved.runtimeType === 'JSPSYCH') {
-    return <JsPsychShell runContext={runContext} />;
+    return (
+      <JsPsychShell
+        task={task}
+        runContext={runContext}
+        assetToken={runContext?.assetToken || previewToken}
+        isSavingData={isSavingData}
+        onFinish={onFinish}
+        currentStep={currentStep}
+        isTaskRetaken={isTaskRetaken}
+      />
+    );
   }
   if (!script) {
     return (

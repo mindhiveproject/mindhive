@@ -6,6 +6,7 @@ const {
   findTaskVersion,
   resolveRuntimeConfiguration,
   signRunClaims,
+  validateParameterDefinitions,
   validateRunMessage,
   verifyRunToken,
 } = require("./runtimeCore");
@@ -55,6 +56,48 @@ test("requires complete jsPsych package metadata", () => {
         },
       }),
     /declared in manifest.files/
+  );
+});
+
+test("a jsPsych run records the pinned row id; other runtimes keep their label", () => {
+  const jsPsych = resolveRuntimeConfiguration({
+    runtimeType: "JSPSYCH",
+    jsPsychExperiment: {
+      ...authoredAsset,
+      archive: { filename: "experiment.zip" },
+      entryPoint: "index.html",
+      manifest: { files: ["index.html"] },
+    },
+  });
+  assert.equal(jsPsych.assetVersion, "asset-1");
+  assert.equal(
+    resolveRuntimeConfiguration({ template: authoredAsset }).assetVersion,
+    "7"
+  );
+});
+
+test("parameter definitions follow the Template.parameters format", () => {
+  assert.doesNotThrow(() => validateParameterDefinitions(undefined));
+  assert.doesNotThrow(() =>
+    validateParameterDefinitions([
+      { name: "trials", type: "number", value: 20, help: "How many" },
+      { name: "hand", type: "select", value: "left", options: ["left", "right"] },
+    ])
+  );
+  assert.throws(() => validateParameterDefinitions({}), /list of definitions/);
+  assert.throws(() => validateParameterDefinitions([{ type: "text" }]), /needs a name/);
+  assert.throws(
+    () => validateParameterDefinitions([{ name: "a" }, { name: "a" }]),
+    /Duplicate parameter name: a/
+  );
+  assert.doesNotThrow(() =>
+    validateParameterDefinitions([
+      { name: "sections", type: "select", value: "Both", options: "Both\nFree play only" },
+    ])
+  );
+  assert.throws(
+    () => validateParameterDefinitions([{ name: "a", options: 3 }]),
+    /options must be text or a list/
   );
 });
 
@@ -206,4 +249,87 @@ test("test version is derived from unchanged nested study flow", () => {
   ];
   assert.equal(findTaskVersion(flow, "task-1", "v2"), "v2");
   assert.throws(() => findTaskVersion(flow, "task-1", "v3"), /not part/);
+});
+
+test("asset tokens name one asset, expire, and are not run tokens", () => {
+  const { signAssetToken, verifyAssetToken } = require("./runtimeCore");
+  const secret = "test-secret";
+  const token = signAssetToken("version-7", secret, 1000);
+  assert.equal(verifyAssetToken(token, secret, 2000).assetId, "version-7");
+  assert.throws(() => verifyAssetToken(token, "other", 2000), /Invalid asset token/);
+  assert.throws(
+    () => verifyAssetToken(token, secret, 1000 + 13 * 60 * 60 * 1000),
+    /Expired/
+  );
+  const runToken = signRunClaims(
+    { datasetId: "d", datasetToken: "t", assetId: "version-7" },
+    secret,
+    1000
+  );
+  assert.throws(() => verifyAssetToken(runToken, secret, 2000), /Invalid asset token/);
+  assert.throws(() => verifyRunToken(token, secret, 2000));
+});
+
+test("an asset token says which runtime's route may use it", () => {
+  const { signAssetToken, verifyAssetToken } = require("./runtimeCore");
+  const token = signAssetToken("visual-1", "secret", 1000, "P5");
+  assert.equal(verifyAssetToken(token, "secret", 2000).runtime, "P5");
+  assert.equal(
+    verifyAssetToken(signAssetToken("v", "secret", 1000), "secret", 2000).runtime,
+    undefined
+  );
+});
+
+test("a version update merges parameters by name", () => {
+  const { mergeParameters } = require("./runtimeCore");
+  const previous = [
+    { name: "trials", type: "number", value: 10 },
+    { name: "hand", type: "select", value: "left", options: ["left", "right"] },
+    { name: "speed", type: "number", value: 1 },
+    { name: "label", type: "text", value: "A" },
+  ];
+  const next = [
+    { name: "trials", type: "number", value: 20 },
+    { name: "hand", type: "select", value: "left", options: ["left", "right", "both"] },
+    { name: "label", type: "textarea", value: "B" },
+    { name: "feedback", type: "select", value: "on", options: ["on", "off"] },
+  ];
+  const current = [
+    { name: "trials", type: "number", value: 40 },
+    { name: "hand", type: "select", value: "right", options: ["left", "right"] },
+    { name: "speed", type: "number", value: 2 },
+    { name: "label", type: "text", value: "mine" },
+  ];
+  const merged = mergeParameters(current, previous, next);
+  assert.deepEqual(
+    merged.parameters.map((p) => [p.name, p.value]),
+    [["trials", 40], ["hand", "left"], ["label", "B"], ["feedback", "on"]]
+  );
+  assert.deepEqual(merged.added, ["feedback"]);
+  assert.deepEqual(merged.removed, ["speed"]);
+  assert.deepEqual(merged.reset, ["hand", "label"]);
+  assert.deepEqual(merged.parameters[1].options, ["left", "right", "both"]);
+});
+
+test("a task on the old defaults is merged against those defaults", () => {
+  const { mergeParameters } = require("./runtimeCore");
+  const previous = [{ name: "trials", type: "number", value: 10 }];
+  const next = [{ name: "trials", type: "number", value: 20 }];
+  const merged = mergeParameters(null, previous, next);
+  assert.deepEqual(merged.parameters, [{ name: "trials", type: "number", value: 10 }]);
+  assert.deepEqual([merged.added, merged.removed, merged.reset], [[], [], []]);
+});
+
+test("a study flow uses a task directly or inside a condition", () => {
+  const { studyFlowUsesTask } = require("./runtimeCore");
+  const flow = [
+    { type: "my-anchor" },
+    { type: "my-node", componentID: "a" },
+    { type: "my-condition", conditions: [{ flow: [{ type: "my-node", componentID: "b" }] }] },
+  ];
+  assert.equal(studyFlowUsesTask(flow, "a"), true);
+  assert.equal(studyFlowUsesTask(flow, "b"), true);
+  assert.equal(studyFlowUsesTask(JSON.stringify(flow), "b"), true);
+  assert.equal(studyFlowUsesTask(flow, "c"), false);
+  assert.equal(studyFlowUsesTask("not json", "a"), false);
 });

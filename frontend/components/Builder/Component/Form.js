@@ -14,7 +14,10 @@ import Parameters from "./Parameters/Main";
 import Sharing from "./Sharing";
 
 import Template from "./Template/Main";
+import JsPsychArchive from "./Template/JsPsychArchive";
+import JsPsychVersion from "./Template/JsPsychVersion";
 import TaskPreview from "../../Tasks/Preview/Main";
+import { getLocalizedField } from "../../../lib/i18nContent";
 
 export default function ComponentForm({
   user,
@@ -33,7 +36,7 @@ export default function ComponentForm({
   const { t } = useTranslation("builder");
   const router = useRouter();
   const { locale } = router;
-  const title = inputs?.i18nContent?.[locale]?.title || inputs?.title;
+  const title = getLocalizedField(inputs, "title", locale);
   const taskType = inputs?.taskType?.toLowerCase();
 
   const [tab, setTab] = useState(
@@ -94,7 +97,20 @@ export default function ComponentForm({
         />
       )}
 
-      {tab === "template" && (
+      {tab === "template" && inputs?.runtimeType === "JSPSYCH" && inputs?.id && (
+        <JsPsychVersion task={inputs} user={user} allowUpload />
+      )}
+
+      {tab === "template" && inputs?.runtimeType === "JSPSYCH" && !inputs?.id && (
+        <JsPsychArchive
+          jsPsych={inputs?.jsPsych}
+          handleMultipleUpdate={handleMultipleUpdate}
+          loading={loading}
+          error={error}
+        />
+      )}
+
+      {tab === "template" && inputs?.runtimeType !== "JSPSYCH" && (
         <Template
           template={inputs?.template}
           handleChange={handleChange}

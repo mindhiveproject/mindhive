@@ -25,8 +25,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Invalid path parameters." });
   }
 
-  // Read the json data file data.json
-  const fileContents = await fs.readFile(filePath, "utf8");
+  let fileContents;
+  try {
+    fileContents = await fs.readFile(filePath, "utf8");
+  } catch (e) {
+    if (e?.code === "ENOENT") {
+      return res.status(404).json({ error: "Data file not found." });
+    }
+    return res.status(500).json({ error: "The data file could not be read." });
+  }
 
   // Return the content of the data file in json format
   res.status(200).json(fileContents);

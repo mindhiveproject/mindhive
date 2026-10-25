@@ -178,6 +178,18 @@ export const Profile = list({
     dateCreated: timestamp({
       defaultValue: { kind: "now" },
     }),
+    // Retention: an account with no sign-in for two years is de-identified
+    // (DOE data agreement). lastSignInAt is written by the session strategy
+    // in auth.ts and deidentifiedAt by the de-identification job, both through
+    // Prisma, so neither can be set through the API.
+    lastSignInAt: timestamp({
+      isIndexed: true,
+      access: { ...ownerOnlyRead, create: () => false, update: () => false },
+    }),
+    deidentifiedAt: timestamp({
+      isIndexed: true,
+      access: { ...ownerOnlyRead, create: () => false, update: () => false },
+    }),
     language: select({
       options: [
         { label: "English (American)", value: "EN-US" },

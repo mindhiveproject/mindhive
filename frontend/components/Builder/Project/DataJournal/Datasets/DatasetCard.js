@@ -124,7 +124,13 @@ export default function DatasetCard({
     if (deleteDisabled) return;
     await deleteDatasource({
       variables: { id: datasource.id },
-      refetchQueries: ["GET_DATASOURCES"],
+      // The datasource may be connected to journals, so refresh the journal
+      // queries (grid data + side-nav counts) as well.
+      refetchQueries: [
+        "GET_DATASOURCES",
+        "GET_DATA_JOURNAL",
+        "GET_DATA_JOURNALS",
+      ],
     });
     setDeleteConfirmOpen(false);
   };

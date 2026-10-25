@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ReactHTMLParser from "react-html-parser";
+import parseSafeHtml from "../../../../../../lib/safeHtml";
 import { useMutation } from "@apollo/client";
 import sortBy from "lodash/sortBy";
 import { Container } from "react-smooth-dnd";
@@ -329,7 +329,7 @@ const Section = ({
     <div className="section" id="section">
       <div className="column-drag-handle">
         <div className="firstLine">
-          <div className="sectionTitle">{ReactHTMLParser(section.title)}</div>
+          <div className="sectionTitle">{parseSafeHtml(section.title)}</div>
           {!isPreview && settings?.allowAddingCards && (
             <img
               src="/assets/icons/proposal/edit.svg"

@@ -5,6 +5,7 @@ import {
   buildFavoriteTasksWhere,
 } from "../../../../../Queries/Task";
 import Card from "./Card";
+import { getLocalizedField } from "../../../../../../lib/i18nContent";
 
 export default function FavoriteBlocks({
   user,
@@ -28,29 +29,6 @@ export default function FavoriteBlocks({
     skip: !user?.id || !componentType,
   });
 
-  const getLocalizedField = (component, fieldName) => {
-    // If no i18nContent, return original field value
-    if (!component.i18nContent || !component[fieldName]) {
-      return component[fieldName];
-    }
-
-    // Try to get localized content for current locale
-    const localizedContent = component.i18nContent[currentLocale];
-    if (localizedContent && localizedContent[fieldName] !== undefined) {
-      return localizedContent[fieldName];
-    }
-
-    // Fallback to en-us if current locale not found
-    if (currentLocale !== 'en-us') {
-      const fallbackContent = component.i18nContent['en-us'];
-      if (fallbackContent && fallbackContent[fieldName] !== undefined) {
-        return fallbackContent[fieldName];
-      }
-    }
-
-    // Final fallback to original field value
-    return component[fieldName];
-  };
 
   const processComponentsWithI18n = (components) => {
     const i18nFields = [
@@ -68,7 +46,7 @@ export default function FavoriteBlocks({
       const localizedComponent = { ...component };
       
       i18nFields.forEach(fieldName => {
-        localizedComponent[fieldName] = getLocalizedField(component, fieldName);
+        localizedComponent[fieldName] = getLocalizedField(component, fieldName, currentLocale);
       });
 
       return localizedComponent;

@@ -1,4 +1,4 @@
-import ReactHtmlParser from "react-html-parser";
+import parseSafeHtml from "../../../../../../lib/safeHtml";
 import { Draggable } from "react-smooth-dnd";
 import useTranslation from "next-translate/useTranslation";
 
@@ -85,7 +85,7 @@ export default function Card({
             <div className="card-right-side">
               <div className="card-title">
                 <div>
-                  <div>{ReactHtmlParser(card.title)}</div>
+                  <div>{parseSafeHtml(card.title)}</div>
                 </div>
               </div>
             </div>

@@ -513,5 +513,12 @@
 	"userPath": {
 		"guestMessage": "Вы участвуете как гость. Ваш общедоступный идентификатор: {{id}}",
 		"startNextTask": "Начать следующую задачу"
+	},
+	"blockTags": {
+		"createdByYou": "Created by you",
+		"collaborator": "Collaborator",
+		"runtimeLabjs": "Lab.js",
+		"runtimeJspsych": "jsPsych",
+		"runtimeP5": "p5.js"
 	}
 }

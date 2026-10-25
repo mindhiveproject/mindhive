@@ -38,7 +38,13 @@ export default function AddDataset({
   const [createDatasource, { loading, error }] = useMutation(
     CREATE_DATASOURCE,
     {
-      refetchQueries: ["GET_DATASOURCES"],
+      // The new datasource is connected to the selected journal, so the
+      // journal queries (grid data + side-nav counts) must refresh too.
+      refetchQueries: [
+        "GET_DATASOURCES",
+        "GET_DATA_JOURNAL",
+        "GET_DATA_JOURNALS",
+      ],
       awaitRefetchQueries: true,
       onError: (mutationError) => {
         console.error("Mutation error:", mutationError);

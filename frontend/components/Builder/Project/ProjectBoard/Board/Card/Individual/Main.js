@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useRef } from "react";
-import ReactHtmlParser from "react-html-parser";
+import parseSafeHtml from "../../../../../../../lib/safeHtml";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_MY_HOMEWORK_FOR_PROPOSAL_CARD } from "../../../../../../Queries/Homework";
@@ -15,6 +15,7 @@ import Navigation from "../../../../Navigation/Main";
 import { StyledProposal } from "../../../../../../styles/StyledProposal";
 import Button from "../../../../../../DesignSystem/Button";
 import Status from "../../../../../../Dashboard/TeacherClasses/ClassPage/Assignments/Homework/Status";
+import CardColumns from "../../../../../../Proposal/Card/CardColumns";
 
 export default function IndividualCard({
   query,
@@ -138,11 +139,11 @@ export default function IndividualCard({
             </div>
           </div>
 
-          <div className="proposalCardBoard">
+          <CardColumns>
             <div className="textBoard">
               <div className="cardHeader">{proposalCard?.title}</div>
               <div className="cardDescription">
-                {ReactHtmlParser(proposalCard?.description)}
+                {parseSafeHtml(proposalCard?.description)}
               </div>
 
               {!isPreview && (
@@ -192,7 +193,7 @@ export default function IndividualCard({
                 </div>
               </div>
             )}
-          </div>
+          </CardColumns>
         </div>
       </StyledProposal>
     </>

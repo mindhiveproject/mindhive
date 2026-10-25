@@ -2,6 +2,7 @@ import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import Button from "../../DesignSystem/Button";
+import { getLocalizedField } from "../../../lib/i18nContent";
 
 const itemsInternalTask = [
   {
@@ -94,7 +95,7 @@ export default function Navigation({
 
           <div>
             <span className="studyTitle">
-              {task?.i18nContent?.[locale]?.title || task?.title}
+              {getLocalizedField(task, "title", locale)}
             </span>
           </div>
         </div>

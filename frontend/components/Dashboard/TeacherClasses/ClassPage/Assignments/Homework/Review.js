@@ -9,6 +9,7 @@ import styled from "styled-components";
 
 import Chip from "../../../../../DesignSystem/Chip";
 import TipTapEditor from "../../../../../TipTap/Main";
+import { assignmentMediaLibraryProps } from "../../../../../Mutations/MediaAsset";
 import { StyledTipTap } from "../../../../../TipTap/StyledTipTap";
 import { ReadOnlyTipTap } from "../../../../../TipTap/ReadOnlyTipTap";
 
@@ -175,6 +176,10 @@ export default function ReviewHomework({
     skip: !code,
   });
   const assignment = assignmentData?.assignment || {};
+  const mediaLibraryProps = assignmentMediaLibraryProps({
+    userId: user?.id,
+    assignmentId: assignment?.id,
+  });
 
   // Strip HTML from title
   const stripHtml = (html) => {
@@ -287,6 +292,7 @@ export default function ReviewHomework({
             onUpdate={(newContent) => {
               handleChange({ target: { name: "content", value: newContent } });
             }}
+            {...mediaLibraryProps}
           />
         </StyledTipTap>
       </Section>
@@ -323,6 +329,7 @@ export default function ReviewHomework({
               isEditable={true}
               toolbarVisible={true}
               limitedToolbar={true}
+              {...mediaLibraryProps}
             />
           </CommentsEditorWrapper>
         </CommentsSection>

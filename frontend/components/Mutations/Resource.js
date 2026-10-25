@@ -61,7 +61,15 @@ export const UPDATE_RESOURCE = gql`
         classes: $classes
       }
     ) {
+      # Return the edited fields so Apollo's cached Resource (read cache-first
+      # by GET_RESOURCE) doesn't keep pre-save content.
       id
+      title
+      description
+      content
+      settings
+      isPublic
+      updatedAt
     }
   }
 `;

@@ -51,3 +51,6 @@ export function createRateLimiter({ windowMs, max }: { windowMs: number; max: nu
 
 export const generalApiLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 100 });
 export const saveDataLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 300 });
+// jsPsych and p5 runs post a batch every few seconds while they run, and a
+// classroom shares one address, so this route gets more room than /api/save.
+export const runtimeSaveLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 1200 });

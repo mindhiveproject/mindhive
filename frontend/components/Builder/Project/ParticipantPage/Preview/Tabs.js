@@ -9,117 +9,92 @@ export default function Tabs({
   deleteParameter,
 }) {
   const { t } = useTranslation("builder");
-  const [tab, setTab] = useState("what");
+  const [tab, setTab] = useState(null);
+
+  // Default Who/What/Why tabs were removed (Notion, Feb 7 2025): only custom tabs.
+  const tabs = study?.info?.filter((p) => p.name.startsWith("tab")) || [];
+  const activeTab = tabs.find((atab) => atab.name === tab) || tabs[0];
 
   const addTab = () => {
-    const existingTabs =
-      study?.info?.filter((p) => p.name.startsWith("tab")) || [];
-    const counter = existingTabs.length;
-    const name = `tab-${counter + Date.now()}`;
+    const name = `tab-${tabs.length + Date.now()}`;
     handleParameterChange(
       {
         target: {
           name,
           type: "text",
-          value: t('tabs.newTab'),
+          value: t("tabs.newTab"),
           className: "header",
         },
       },
       "header"
     );
+    setTab(name);
   };
-
-  const deleteTab = (name) => {
-    deleteParameter(name);
-  };
-
-  const additionalTabs =
-    study?.info?.filter((p) => p.name.startsWith("tab")) || [];
-
-  const tabs = [
-    // remove default tabs
-    // Notion TICKET (February 7, 2025 4:26 PM) "Remove default Who/What/Why tab and only have "Add tab button""
-    // {
-    //   name: "what",
-    //   header: "What",
-    // },
-    // {
-    //   name: "who",
-    //   header: "Who",
-    // },
-    // {
-    //   name: "why",
-    //   header: "Why",
-    // },
-    // {
-    //   name: "how",
-    //   header: "How",
-    // },
-    ...additionalTabs,
-  ];
 
   return (
-    <>
-      <div className="infoTabsContainer">
-        <div className="menu">
-          {tabs.map((atab, num) => (
-            <div
-              key={num}
+    <div className="infoTabsContainer">
+      <div className="infoTabsMenu" role="tablist">
+        {tabs.map((atab) => (
+          <div
+            key={atab.name}
+            role="tab"
+            aria-selected={activeTab?.name === atab.name}
+            onClick={() => setTab(atab.name)}
+            className={
+              activeTab?.name === atab.name
+                ? "infoTab infoTab--active"
+                : "infoTab"
+            }
+          >
+            <input
+              type="text"
+              id={atab.name}
               name={atab.name}
-              active={tab === atab.name}
-              onClick={() => setTab(atab.name)}
-              className={
-                tab === atab.name ? "menuTitle selectedMenuTitle" : "menuTitle"
-              }
+              value={atab.header || ""}
+              onChange={handleParameterChange}
+              onFocus={() => setTab(atab.name)}
+              size={Math.max((atab.header || "").length, 4)}
+              className="header editable"
+            />
+            <button
+              type="button"
+              className="infoTabDelete"
+              aria-label={t("tabs.deleteTab", {}, { default: "Delete tab" })}
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteParameter(atab.name);
+              }}
             >
-              {atab.name.startsWith("tab") ? (
-                <div className="tabHeaderContainer">
-                  <input
-                    type="text"
-                    id={atab.name}
-                    name={atab.name}
-                    value={atab.header}
-                    onChange={handleParameterChange}
-                    className="header"
-                  />
-                  <span
-                    onClick={() => {
-                      deleteTab(atab.name);
-                    }}
-                  >
-                    &times;
-                  </span>
-                </div>
-              ) : (
-                <p>{atab.header}</p>
-              )}
-            </div>
-          ))}
-        </div>
-        <button
-          onClick={() => {
-            addTab();
-          }}
-        >
-          {t('tabs.addTab')}
+              &times;
+            </button>
+          </div>
+        ))}
+        <button type="button" className="infoTabAdd" onClick={addTab}>
+          + {t("tabs.addTab")}
         </button>
       </div>
 
-      {tabs.map((atab, num) => (
-        <div key={num}>
-          {tab === atab.name && (
-            <div>
-              <textarea
-                name={atab.name}
-                value={infoBlocks[atab.name]}
-                onChange={handleParameterChange}
-                className="text"
-                rows="10"
-              />
-            </div>
-          )}
-        </div>
-      ))}
-    </>
+      {activeTab ? (
+        <textarea
+          key={activeTab.name}
+          name={activeTab.name}
+          aria-label={activeTab.header}
+          placeholder={t("tabs.contentPlaceholder", {}, {
+            default: "Write what participants should know…",
+          })}
+          value={infoBlocks[activeTab.name] || ""}
+          onChange={handleParameterChange}
+          className="text editable infoTabContent"
+          rows={4}
+        />
+      ) : (
+        <p className="infoTabsEmpty">
+          {t("tabs.empty", {}, {
+            default:
+              "Add tabs to tell participants more about your study (what, who, why…).",
+          })}
+        </p>
+      )}
+    </div>
   );
 }

@@ -283,6 +283,7 @@
 				"create": "Создать набор данных"
 			},
 			"dataSourceLabel": "Источник данных",
+			"errorUploadingFile": "Error uploading file:",
 			"errorCreatingDataset": "Ошибка при создании набора данных:",
 			"errorLoadingStudy": "Исследование ошибок загрузки:",
 			"loadingDataSources": "Загрузка источников данных…",
@@ -2555,5 +2556,20 @@
 	},
 	"visualize": "Визуализируйте",
 	"visualsComingSoon": "",
-	"whatWouldYouLikeToDevelop": "Что бы вы хотели развить?"
+	"whatWouldYouLikeToDevelop": "Что бы вы хотели развить?",
+	"createFromJsPsych": "",
+	"createFromJsPsychDescription": "",
+	"jsPsych": {
+		"title": "",
+		"description": "",
+		"archive": "",
+		"refused": "",
+		"envelopeTitle": "",
+		"ruleEntry": "",
+		"ruleNoBundle": "",
+		"ruleParams": "",
+		"ruleAggregate": "",
+		"pluginsAvailable": "",
+		"pluginsExcluded": ""
+	}
 }

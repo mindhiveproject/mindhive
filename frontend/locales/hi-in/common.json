@@ -513,5 +513,12 @@
 	"userPath": {
 		"guestMessage": "आप अतिथि के रूप में भाग ले रहे हैं। आपकी सार्वजनिक पठनीय आईडी {{id}} है",
 		"startNextTask": "अगला कार्य प्रारंभ करें"
+	},
+	"blockTags": {
+		"createdByYou": "Created by you",
+		"collaborator": "Collaborator",
+		"runtimeLabjs": "Lab.js",
+		"runtimeJspsych": "jsPsych",
+		"runtimeP5": "p5.js"
 	}
 }

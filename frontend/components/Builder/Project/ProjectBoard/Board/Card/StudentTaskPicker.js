@@ -11,6 +11,7 @@ import {
 } from "../../../../../../lib/studentTaskSelection";
 import DropdownSelect from "../../../../../DesignSystem/DropdownSelect";
 import { StarFilledIcon } from "../../../../../DesignSystem/Icons";
+import { getLocalizedField } from "../../../../../../lib/i18nContent";
 
 // Tasks and surveys the students picked for their copy of a card, when the
 // teacher turned on settings.studentTaskSelection on the template card.
@@ -48,7 +49,7 @@ export default function StudentTaskPicker({
   );
 
   const taskTitle = (task) =>
-    task?.i18nContent?.[locale]?.title || task?.title || "";
+    getLocalizedField(task, "title", locale) || "";
 
   // Teacher-linked tasks are already on the card, so they aren't offered.
   const selectableTasks = (data?.tasks || []).filter(
