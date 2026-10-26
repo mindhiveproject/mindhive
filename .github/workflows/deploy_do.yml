@@ -1,0 +1,173 @@
+name: Deploy to DO
+
+# Builds the frontend on GitHub's runner (the droplet runs out of memory doing
+# it) and releases it to the droplet together with the Keystone backend.
+# Full runbook: docs/deployment.md.
+#
+# Setup — repository secrets:
+#   DEPLOY_SSH_KEY       private half of a key in yury's ~/.ssh/authorized_keys
+#   DEPLOY_HOST          the droplet's IP address
+#   DEPLOY_KNOWN_HOSTS   output of `ssh-keyscan <droplet-ip>`
+# repository variables:
+#   DEPLOY_ENABLED       "true" to deploy; anything else only runs the build
+#   PM2_APPS             MindHive pm2 apps to reload, space separated
+#                        (see `pm2 ls` on the droplet), e.g.
+#                        "mindhive-frontend mindhive-collab keystone"
+#   NEXT_PUBLIC_*        build-time frontend values (see frontend/.env.example);
+#                        the client-visible keys may be secrets instead
+#
+# Until DEPLOY_ENABLED is set, pushes to main only check that the frontend
+# builds, so merging this file never touches the droplet.
+
+on:
+  # push:
+  #   branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Deploys queue instead of overlapping; a running deploy is never canceled.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 18.18.0
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      # NEXT_PUBLIC_* values are inlined into the bundle at build time, so they
+      # must be set here; the droplet's frontend/.env only reaches server code.
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_BACKEND_URL: ${{ vars.NEXT_PUBLIC_BACKEND_URL }}
+          NEXT_PUBLIC_COLLAB_URL: ${{ vars.NEXT_PUBLIC_COLLAB_URL }}
+          NEXT_PUBLIC_RESEARCH_EXPORT_ENDPOINT: ${{ vars.NEXT_PUBLIC_RESEARCH_EXPORT_ENDPOINT }}
+          NEXT_PUBLIC_USE_CUSTOMIZABLE_FORMS: ${{ vars.NEXT_PUBLIC_USE_CUSTOMIZABLE_FORMS }}
+          NEXT_PUBLIC_NOTION_TEACHERS_PAGE_ID: ${{ vars.NEXT_PUBLIC_NOTION_TEACHERS_PAGE_ID }}
+          NEXT_PUBLIC_TURNSTILE_SITEKEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITEKEY }}
+          NEXT_PUBLIC_GOOGLE_SHEETS_SPREADSHEET_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_SHEETS_SPREADSHEET_ID }}
+          NEXT_PUBLIC_GOOGLE_SHEETS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_SHEETS_API_KEY }}
+          NEXT_PUBLIC_OPENAI_KEY: ${{ secrets.NEXT_PUBLIC_OPENAI_KEY }}
+          NEXT_PUBLIC_EMOTIV_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_EMOTIV_CLIENT_ID }}
+          NEXT_PUBLIC_EMOTIV_CLIENT_SECRET: ${{ secrets.NEXT_PUBLIC_EMOTIV_CLIENT_SECRET }}
+
+      - name: Package build output
+        run: tar --exclude='.next/cache' -czf ../next-build.tgz .next
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: next-build
+          path: next-build.tgz
+          retention-days: 7
+
+  deploy:
+    needs: build-frontend
+    if: vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          name: next-build
+
+      - name: Set up SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Upload build
+        run: scp next-build.tgz "yury@${{ secrets.DEPLOY_HOST }}:/tmp/next-build.tgz"
+
+      # Everything that can fail (installs, backend build, migration) runs
+      # before the swap, so a failed deploy leaves the live site untouched.
+      - name: Release on the droplet
+        env:
+          PM2_APPS: ${{ vars.PM2_APPS }}
+        run: |
+          ssh "yury@${{ secrets.DEPLOY_HOST }}" bash -s -- "$GITHUB_SHA" "$PM2_APPS" <<'EOF'
+          set -eo pipefail
+          SHA="$1"
+          PM2_APPS="${2:?set the PM2_APPS repository variable}"
+          export NVM_DIR="$HOME/.nvm"
+          . "$NVM_DIR/nvm.sh"   # before set -u: nvm.sh trips over unset variables
+          set -u
+          nvm use 18.18.0
+          LOW_PRIORITY=(nice -n 19 ionice -c 2 -n 7)
+
+          # npm ci deletes node_modules under the running apps, so only
+          # reinstall when the lockfile actually changed.
+          install_if_lock_changed() {
+            local stamp=node_modules/.deploy-lock-hash hash
+            hash=$(sha256sum package-lock.json | cut -d' ' -f1)
+            if [[ -f $stamp && $(cat "$stamp") == "$hash" ]]; then
+              echo "Dependencies unchanged in $PWD"
+              return 0
+            fi
+            "${LOW_PRIORITY[@]}" npm ci
+            echo "$hash" > "$stamp"
+          }
+
+          cd /home/yury/mindhive
+          git fetch --quiet origin
+          # -B keeps the checkout on main, so scripts/deploy.sh --pull still works.
+          git checkout -B main "$SHA"
+
+          cd frontend
+          # Plain npm ci, not --omit=dev: next.config.js requires
+          # next-translate-plugin, which is a devDependency.
+          install_if_lock_changed
+          rm -rf .next-build && mkdir .next-build
+          tar -xzf /tmp/next-build.tgz -C .next-build --strip-components=1
+
+          cd ../keystone
+          install_if_lock_changed
+          "${LOW_PRIORITY[@]}" npm run build
+          # db push without --accept-data-loss: a destructive schema change
+          # fails here instead of silently dropping data.
+          npm run migrate
+
+          # Same folder names as scripts/deploy.sh, so rollback works the same.
+          cd ../frontend
+          rm -rf .next-prev
+          if [[ -d .next ]]; then mv .next .next-prev; fi
+          mv .next-build .next
+
+          # Only MindHive's apps; `reload all` would also restart YouQuantified.
+          pm2 reload $PM2_APPS
+          pm2 save
+          rm -f /tmp/next-build.tgz
+          echo "Deployed $(git rev-parse --short HEAD)"
+          EOF
+
+      - name: Health check
+        run: |
+          for i in $(seq 1 10); do
+            if curl -fsS -o /dev/null https://mindhive.science \
+              && curl -fsS -o /dev/null -X POST -H 'content-type: application/json' \
+                --data '{"query":"{__typename}"}' https://backend.mindhive.science/api/graphql; then
+              echo "Frontend and backend are up"
+              exit 0
+            fi
+            sleep 6
+          done
+          echo "::error::Site did not come back up after the deploy"
+          exit 1
