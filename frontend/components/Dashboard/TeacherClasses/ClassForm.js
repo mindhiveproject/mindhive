@@ -94,6 +94,54 @@ export default function ClassForm({
               </div>
             </div>
 
+            <div className="classFormField">
+              <label htmlFor="class-doe">
+                <div className="checkboxField">
+                  <input
+                    id="class-doe"
+                    type="checkbox"
+                    name="isDoe"
+                    checked={!!inputs?.isDoe}
+                    onChange={handleChange}
+                    disabled={loading}
+                  />
+                  <span>
+                    {t("classForm.doe", {}, {
+                      default:
+                        "This class is in an NYC public school (NYC DOE)",
+                    })}
+                  </span>
+                </div>
+              </label>
+            </div>
+
+            {inputs?.isDoe && (
+              <div className="classFormField">
+                <label htmlFor="class-school">
+                  {t("classForm.school", {}, {
+                    default: "School code (DBN)",
+                  })}
+                </label>
+                <input
+                  id="class-school"
+                  type="text"
+                  name="school"
+                  placeholder="02M475"
+                  maxLength={6}
+                  style={{ width: "100%", maxWidth: "400px" }}
+                  value={inputs?.school ?? ""}
+                  onChange={handleChange}
+                  disabled={loading}
+                />
+                <p>
+                  {t("classForm.schoolHint", {}, {
+                    default:
+                      "Your school's six-character DOE code, for example 02M475. MindHive uses it only to manage your school's data under its agreement with NYC DOE.",
+                  })}
+                </p>
+              </div>
+            )}
+
             <div className="submitButton">
               <Button type="submit">
                 {submitBtnName}

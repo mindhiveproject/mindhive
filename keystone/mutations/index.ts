@@ -46,6 +46,7 @@ import unfollowUser from "./unfollowUser";
 import joinClass from "./joinClass";
 import toggleReviewUpvote from "./toggleReviewUpvote";
 import classJoinPreview from "./classJoinPreview";
+import doeDataSummary from "./doeDataSummary";
 import {
   recordStudyConditions,
   updateGuestStudiesInfo,
@@ -599,6 +600,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         networkInviteContext(token: String!): NetworkInviteContext
         # Title and teacher of a class, by join code. Public; no roster.
         classJoinPreview(code: String!): ClassJoinPreview
+        # Counts of DOE data in a scope: all DOE classes, one school (DBN)
+        # or one person. canManageUsers only; no names or ids.
+        doeDataSummary(school: String, profileId: ID): JSON
         # Connect Bank people search. Case-insensitive on Postgres via
         # Prisma mode; plain contains on local SQLite (ASCII CI).
         searchConnectUsers(
@@ -650,6 +654,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         resolveMilestonesForBoard,
         networkInviteContext,
         classJoinPreview,
+        doeDataSummary,
         searchConnectUsers,
         searchConnectUsersCount,
       },

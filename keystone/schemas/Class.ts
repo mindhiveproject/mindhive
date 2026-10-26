@@ -14,7 +14,13 @@ import {
   relationshipConnectIds,
   syncClassStaffAsRoundReviewers,
 } from "../lib/classStaff";
-import { classQueryFilter, classStaffFilter, isSignedIn } from "../access";
+import {
+  classQueryFilter,
+  classStaffFilter,
+  isAdmin,
+  isSignedIn,
+} from "../access";
+import { DOE_DATA_OWNER, isDoeStaffEmail, normalizeDbn } from "../lib/doe/doe";
 
 export const Class = list({
   access: {
@@ -45,6 +51,55 @@ export const Class = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+    // DOE data agreement: a class run in an NYC public school holds DOE data,
+    // which lib/doe/findDoeData finds for de-identification and deletion.
+    // Defaults to NYC DOE when the creator signs in with a DOE staff address.
+    // Class staff may mark a class as DOE later, but only an admin may unmark
+    // it, since that takes its data out of the agreement's protections.
+    dataOwner: select({
+      type: "string",
+      options: [{ label: "NYC DOE", value: DOE_DATA_OWNER }],
+      db: { isNullable: true },
+      isIndexed: true,
+      isFilterable: true,
+      access: {
+        update: ({ session, inputData }) =>
+          isAdmin({ session }) || inputData?.dataOwner === DOE_DATA_OWNER,
+      },
+      hooks: {
+        async resolveInput({ operation, resolvedData, inputData, context }) {
+          if (operation !== "create" || inputData.dataOwner !== undefined) {
+            return resolvedData.dataOwner;
+          }
+          const me = context.session?.itemId;
+          if (!me) return resolvedData.dataOwner;
+          const profile = await context.sudo().db.Profile.findOne({
+            where: { id: String(me) },
+          });
+          return isDoeStaffEmail(profile?.email) ? DOE_DATA_OWNER : null;
+        },
+      },
+    }),
+    // The school's DOE code (DBN), e.g. 02M475, for deletion when one school
+    // stops using MindHive.
+    school: text({
+      isIndexed: true,
+      isFilterable: true,
+      hooks: {
+        resolveInput({ resolvedData }) {
+          if (resolvedData.school === undefined) return undefined;
+          return normalizeDbn(resolvedData.school);
+        },
+        validateInput({ resolvedData, addValidationError }) {
+          const dbn = resolvedData.school;
+          if (dbn && !/^\d{2}[MXKQR]\d{3}$/.test(dbn)) {
+            addValidationError(
+              "School code must be a DOE DBN such as 02M475."
+            );
+          }
+        },
+      },
+    }),
     settings: json(),
     mentors: relationship({
       ref: "Profile.mentorIn",
