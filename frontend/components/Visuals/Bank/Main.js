@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
+import Chip from "../../DesignSystem/Chip";
 import Input from "../../DesignSystem/Input";
 import VisualCard from "./VisualCard";
 
@@ -45,29 +46,44 @@ const EMPTY_STYLE = {
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
+// Same three views as the task and survey banks, with "favorited" the default
+// since the bank is mostly for getting back to what you've starred.
+const FILTERS = [
+  { key: "favorited", labelKey: "filterFavorited", default: "Favorited" },
+  { key: "public", labelKey: "filterPublic", default: "Public" },
+  { key: "mine", labelKey: "filterCreatedByMe", default: "Created by me" },
+];
+
+function whereFor(filter, userId) {
+  if (filter === "favorited")
+    return { likes: { some: { id: { equals: userId } } } };
+  // Public here is what an admin has published, the same gate the study
+  // builder uses.
+  if (filter === "public") return { published: { equals: true } };
+  return {
+    OR: [
+      { author: { id: { equals: userId } } },
+      { collaborators: { some: { id: { equals: userId } } } },
+      { viewers: { some: { id: { equals: userId } } } },
+    ],
+  };
+}
+
 /**
  * The visuals bank at `/dashboard/develop/visuals`.
  *
- * Scoped to visuals the signed-in user has a hand in — authored, invited to
- * edit, or invited to view. The Visual list's own access filter already hides
- * everything else, but asking for the narrower set keeps the bank from filling
- * up with every public visual on the platform.
+ * Each chip asks for the narrower set rather than relying on the Visual list's
+ * access filter alone, which would otherwise return every public visual on the
+ * platform.
  */
 export default function VisualsBank({ user }) {
   const { t } = useTranslation("visuals");
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("favorited");
 
   const { data, loading, refetch } = useQuery(MY_VISUALS, {
-    variables: {
-      where: {
-        OR: [
-          { author: { id: { equals: user?.id } } },
-          { collaborators: { some: { id: { equals: user?.id } } } },
-          { viewers: { some: { id: { equals: user?.id } } } },
-        ],
-      },
-    },
+    variables: { where: whereFor(filter, user?.id) },
     skip: !user?.id,
     fetchPolicy: "cache-and-network",
   });
@@ -124,14 +140,33 @@ export default function VisualsBank({ user }) {
         </div>
       </div>
 
+      <div
+        style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}
+      >
+        {FILTERS.map((f) => {
+          const isSelected = filter === f.key;
+          return (
+            <Chip
+              key={f.key}
+              label={t(f.labelKey, {}, { default: f.default })}
+              selected={isSelected}
+              onClick={() => setFilter(f.key)}
+              // The active non-default chip clears back to the default view.
+              onClose={
+                isSelected && f.key !== "favorited"
+                  ? () => setFilter("favorited")
+                  : undefined
+              }
+            />
+          );
+        })}
+      </div>
+
       {loading && !data ? (
         <p style={EMPTY_STYLE}>{t("loading", "Loading…")}</p>
       ) : visuals.length === 0 ? (
         <p style={EMPTY_STYLE}>
-          {t(
-            "noVisuals",
-            "No visuals yet. Create one to start writing a p5 sketch driven by live data."
-          )}
+          {t("noVisuals", "No visuals to show.")}
         </p>
       ) : (
         <div style={GRID_STYLE}>

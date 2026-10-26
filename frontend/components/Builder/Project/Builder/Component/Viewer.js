@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { getTaskTypeLabelColors } from "../../../../../lib/taskTypeColors";
 import { assetParameterDefinitions } from "../../../../../lib/runtime/runtimeAsset";
 import JsPsychVersion from "../../../Component/Template/JsPsychVersion";
+import VisualDevices from "./VisualDevices";
 import { getLocalizedField } from "../../../../../lib/i18nContent";
 
 function plainText(value) {
@@ -20,6 +21,7 @@ function plainText(value) {
 export default function Viewer({
   task,
   user,
+  study,
   close,
   openEditor,
   openPreview,
@@ -125,6 +127,9 @@ export default function Viewer({
           <section className="blockPanelSection">
             <JsPsychVersion task={task} user={user} />
           </section>
+        )}
+        {task?.runtimeType === "P5" && (
+          <VisualDevices visual={task.visual} study={study} />
         )}
         {backgroundText && (
           <section className="blockPanelSection">

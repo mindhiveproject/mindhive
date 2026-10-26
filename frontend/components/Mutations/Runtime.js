@@ -32,6 +32,14 @@ export const RUNTIME_ASSET_PREVIEW_TOKEN = gql`
   }
 `;
 
+// A p5 task's parameter bindings and data sources, by its asset token: the
+// participant may not be able to read the visual itself.
+export const RUNTIME_VISUAL_CONFIG = gql`
+  query RUNTIME_VISUAL_CONFIG($assetToken: String!) {
+    runtimeVisualConfig(assetToken: $assetToken)
+  }
+`;
+
 export const UPDATE_RUN_DATA_POLICY = gql`
   mutation UPDATE_RUN_DATA_POLICY($runToken: String!, $dataPolicy: String!) {
     updateRunDataPolicy(runToken: $runToken, dataPolicy: $dataPolicy)

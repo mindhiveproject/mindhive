@@ -95,6 +95,7 @@ import {
   ingestRunMessage,
   runtimeAssetPreviewToken,
   runtimeRunContext,
+  runtimeVisualConfig,
   runtimeVisualSource,
   startRun,
   updateRunDataPolicy,
@@ -577,6 +578,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         runtimeVersionStatus(taskId: ID!): RuntimeVersionStatus!
         # A p5 task's code, for the frontend task route; needs a p5 asset token.
         runtimeVisualSource(assetToken: String!): [RuntimeVisualFile!]!
+        # A p5 task's parameter bindings and data sources; same token.
+        runtimeVisualConfig(assetToken: String!): JSON!
         """
         One ticket, for a CLI or agent with no session. Shared-secret
         authenticated, read-only, single-id. See mutations/ticketForAgent.ts.
@@ -646,6 +649,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         runtimeRunContext,
         runtimeAssetPreviewToken,
         runtimeVisualSource,
+        runtimeVisualConfig,
         runtimeVersionStatus,
         ticketForAgent,
         supportTicketPreviews,

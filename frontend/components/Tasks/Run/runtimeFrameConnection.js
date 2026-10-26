@@ -24,9 +24,9 @@ async function defaultCreateTransport(port) {
  * @param {string} options.nonce - Per-frame secret built into its document.
  * @param {() => object | null} options.getFrameWindow - The frame's `contentWindow`.
  * @param {{runtime: string, mode: string, params?: object}} options.init
- * @param {object} options.handlers - `onReady`, `onRows`, `onMarker`,
- *   `onFinish`, `onFailure`, `onRejected`; read on every message,
- *   so the caller may swap them.
+ * @param {object} options.handlers - `onConnected`, `onReady`, `onDeclare`,
+ *   `onRows`, `onMarker`, `onFinish`, `onFailure`, `onRejected`; read on
+ *   every message, so the caller may swap them.
  * @param {object} [options.host=window] - Where the frame's `hello` arrives.
  * @param {() => MessageChannel} [options.createChannel]
  * @param {(port: MessagePort) => Promise<object>} [options.createTransport]
@@ -63,7 +63,9 @@ function createRuntimeFrameConnection({
       return;
     }
     if (message.type === 'ready') handler('onReady')?.();
-    else if (message.type === 'rows') handler('onRows')?.(message.rows);
+    else if (message.type === 'declare') {
+      handler('onDeclare')?.(message.parameters);
+    } else if (message.type === 'rows') handler('onRows')?.(message.rows);
     else if (message.type === 'marker') {
       handler('onMarker')?.({
         label: message.label,
@@ -101,6 +103,7 @@ function createRuntimeFrameConnection({
     frameWindow.postMessage(connectMessage(nonce), '*', [channel.port2]);
     transport.send(firstMessage);
     state = 'connected';
+    handler('onConnected')?.();
   }
 
   // The frame keeps saying hello until it is answered, so only the first one
@@ -126,6 +129,10 @@ function createRuntimeFrameConnection({
     },
     isConnected() {
       return state === 'connected';
+    },
+    /** Sends to the frame; dropped until the handshake is done. */
+    send(message) {
+      if (state === 'connected') transport.send(message);
     },
     close() {
       if (state === 'closed') return;

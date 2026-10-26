@@ -142,7 +142,7 @@
 	"notFound": "This visual could not be opened.",
 	"notShared": "This visual isn't available to you.",
 	"notStreaming": "Not streaming",
-	"noVisuals": "No visuals yet. Create one to start writing a p5 sketch driven by live data.",
+	"noVisuals": "No visuals to show.",
 	"numberedList": "Numbered list",
 	"onlyNumbersMap": "Only number parameters can be mapped to a device output for now.",
 	"openMenu": "Open menu",
@@ -207,5 +207,12 @@
 	"visualMenu": "Visual Menu",
 	"visualSettings": "Visual Settings",
 	"waitingForSketch": "Waiting for the sketch to declare its parameters…",
-	"whoCanView": "Who can view"
+	"whoCanView": "Who can view",
+	"includeInStudies": "Include in studies",
+	"includeInStudiesHelp": "Lets researchers add this visual as a step in their study. Its data sources come from the devices linked to the study.",
+	"filterFavorited": "Favorited",
+	"filterPublic": "Public",
+	"filterCreatedByMe": "Created by me",
+	"published": "Published",
+	"publishedHelp": "Makes this visual visible to everyone and, when included in studies, available to every researcher. Unpublished visuals stay personal."
 }

@@ -59,17 +59,35 @@ const ROW_SUBTITLE_STYLE = {
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
+const SUGGESTIONS_HEADER_STYLE = {
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+  marginTop: 8,
+};
+
+const SUGGESTIONS_TEXT_STYLE = {
+  flex: 1,
+  margin: 0,
+  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
+};
+
 /**
  * The persistent "External data sources" card, pinned to the bottom-left of
  * the study builder canvas (Figma node 445-3380). Linking real-time data
  * sources into a study is a big, easy-to-forget commitment, so this stays
  * visible instead of being tucked behind a menu tab. Built on the
  * DesignSystem `Panel` shell shared with the study run's data preview panel
- * and the visual builder's work panels.
+ * and the visual builder's work panels. Devices that visual blocks on the
+ * canvas need but the study hasn't linked are listed under the linked ones,
+ * each linkable in one click.
  */
 export default function DataSourcesPanel({
   sources,
+  suggestions,
+  isLinking,
   selectedSourceId,
+  onLinkSuggestions,
   onOpenLink,
   onOpenSettings,
 }) {
@@ -90,7 +108,7 @@ export default function DataSourcesPanel({
       style={ROOT_STYLE}
       bodyStyle={{ padding: "0 16px 16px", gap: 8 }}
     >
-      {sources.length === 0 ? (
+      {sources.length === 0 && suggestions.length === 0 ? (
         <p className="MH-Type-Body-Base " style={EMPTY_STYLE}>
           {t("dataSources.panelEmpty", {}, {
             default: "No data sources linked to this study yet.",
@@ -123,6 +141,45 @@ export default function DataSourcesPanel({
             />
           </div>
         ))
+      )}
+      {suggestions.length > 0 && (
+        <>
+          <div style={SUGGESTIONS_HEADER_STYLE}>
+            <p className="MH-Type-Body-Base" style={SUGGESTIONS_TEXT_STYLE}>
+              {t("dataSources.needed.heading", {}, {
+                default: "Visuals in this study need these devices",
+              })}
+            </p>
+            {suggestions.length > 1 && (
+              <Button
+                variant="tonal"
+                disabled={isLinking}
+                onClick={() => onLinkSuggestions(suggestions)}
+              >
+                {t("dataSources.needed.linkAll", {}, { default: "Link all" })}
+              </Button>
+            )}
+          </div>
+          {suggestions.map((suggestion) => (
+            <div key={suggestion.key} style={ROW_STYLE}>
+              <div style={ROW_TEXT_STYLE}>
+                <p className="MH-Type-Title-Base" style={ROW_TITLE_STYLE}>
+                  {suggestion.source.label || suggestion.source.block.title}
+                </p>
+                <p className="MH-Type-Body-Base" style={ROW_SUBTITLE_STYLE}>
+                  {suggestion.visualTitles.join(", ")}
+                </p>
+              </div>
+              <Button
+                variant="text"
+                disabled={isLinking}
+                onClick={() => onLinkSuggestions([suggestion])}
+              >
+                {t("dataSources.linkLabel", {}, { default: "Link" })}
+              </Button>
+            </div>
+          ))}
+        </>
       )}
     </Panel>
   );

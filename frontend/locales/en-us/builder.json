@@ -1268,6 +1268,10 @@
 			"warning": "Proceed only if you know what you're doing or if you need external data sources in your study."
 		},
 		"more": "More",
+		"needed": {
+			"heading": "Visuals in this study need these devices",
+			"linkAll": "Link all"
+		},
 		"panelEmpty": "No data sources linked to this study yet.",
 		"panelSubtitle": "This study collects data from external devices",
 		"panelTitle": "External data sources",
@@ -2337,6 +2341,11 @@
 		"sectionTitlePlaceholder": "Enter section title"
 	},
 	"selector": {
+		"visuals": {
+			"description": "Want participants to <strong>see their own data</strong> as part of the study? Add a visual that reacts to the devices linked to your study",
+			"empty": "No visuals to show.",
+			"title": "Visuals"
+		},
 		"addBlockAria": "Add block",
 		"addFavoriteAria": "Add to favorites",
 		"basicBlocks": {
@@ -2797,6 +2806,12 @@
 		"saving": "Saving…"
 	},
 	"viewer": {
+		"devices": "Devices",
+		"devicesLinked": "Every device this visual reads from is linked to your study.",
+		"devicesToLink": "This visual reacts to data from these devices. Link them to your study so participants connect them before the study starts.",
+		"deviceLinked": "Linked",
+		"linkAllDevices": "Link all",
+		"linkDevice": "Link to study",
 		"afterParticipation": "What participants see after taking the {{taskType}}",
 		"aggregateVariables": "Aggregate Variables",
 		"aggregateVariablesDesc": "These data are automatically written to a csv file upon completion of the {{taskType}}",

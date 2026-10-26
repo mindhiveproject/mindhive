@@ -216,6 +216,14 @@ export default function Builder({
     !engine.model
       .getNodes()
       .filter((n) => n?.options?.type === "my-anchor").length;
+  // Only task nodes carry a componentID.
+  const canvasTaskIds = [
+    ...new Set(
+      (engine?.model?.getNodes() || [])
+        .map((n) => n?.options?.componentID)
+        .filter(Boolean)
+    ),
+  ].sort();
 
   return (
     <StyledCanvasBuilder>
@@ -317,6 +325,7 @@ export default function Builder({
           <DataSources
             study={study}
             user={user}
+            canvasTaskIds={canvasTaskIds}
             dataSourceSettingsId={dataSourceSettingsId}
             onOpenSettings={openDataSourceSettings}
           />

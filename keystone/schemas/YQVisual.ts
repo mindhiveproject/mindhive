@@ -281,5 +281,54 @@ export const Visual = list({
       ],
       defaultValue: "sandbox",
     }),
+    // Offers an authored visual to the study builder as a step. Only means
+    // something in Authored mode; the hook below keeps the Task it runs as.
+    includeInStudies: checkbox(),
+  },
+  hooks: {
+    // A study step is a Task — the flow, startRun, Datasets and Collect all
+    // key on one — so a visual offered to studies runs through a p5 Task
+    // pointing back at it. Keep one, named after the visual, for the study
+    // builder to add.
+    async afterOperation({ operation, inputData, item, context }) {
+      if (operation === "delete" || !item?.includeInStudies) return;
+      // A like toggle is an update too, by anyone who can see the visual.
+      if (
+        operation === "update" &&
+        !["includeInStudies", "title", "description"].some(
+          (key) => key in (inputData ?? {})
+        )
+      ) {
+        return;
+      }
+      const sudo = context.sudo();
+      const [task] = await sudo.query.Task.findMany({
+        where: {
+          visual: { id: { equals: String(item.id) } },
+          runtimeType: { equals: "P5" },
+        },
+        orderBy: [{ createdAt: "asc" }],
+        take: 1,
+        query: "id title description",
+      });
+      const description = item.description || "";
+      if (!task) {
+        // As the editor rather than sudo: Task's author hook reads the session.
+        await context.query.Task.createOne({
+          data: {
+            title: item.title,
+            description,
+            taskType: "TASK",
+            runtimeType: "P5",
+            visual: { connect: { id: String(item.id) } },
+          },
+        });
+      } else if (task.title !== item.title || task.description !== description) {
+        await sudo.query.Task.updateOne({
+          where: { id: task.id },
+          data: { title: item.title, description },
+        });
+      }
+    },
   },
 });

@@ -58,6 +58,7 @@ export const VISUAL = gql`
       privacy
       published
       participationMode
+      includeInStudies
       docs
       docsVisible
       parameters
@@ -95,15 +96,54 @@ export const VISUAL = gql`
 `;
 
 // Powers the collaborator search in the Settings tab's Editing section.
-//
-// No `mode: insensitive` — this Keystone runs on SQLite, whose Prisma connector
-// doesn't offer the case-insensitive filter, so `StringFilter` has no such field
-// and asking for it fails validation of the whole document.
 export const SEARCH_PROFILES = gql`
   query SEARCH_PROFILES($search: String!) {
     profiles(where: { username: { contains: $search } }, take: 8) {
       id
       username
+    }
+  }
+`;
+
+// Authored visuals offered to studies, for the study builder's block bank. The
+// caller narrows it: published ones and your own, or the ones you've starred.
+// Each runs as the p5 Task the Visual hook keeps for it, which is what a flow
+// node points at; the data sources are shown so a researcher knows which
+// devices the study has to link.
+export const STUDY_VISUALS = gql`
+  query STUDY_VISUALS($where: VisualWhereInput) {
+    visuals(where: $where, orderBy: [{ title: asc }]) {
+      id
+      title
+      description
+      author {
+        id
+      }
+      tasks(
+        where: { runtimeType: { equals: P5 } }
+        orderBy: [{ createdAt: asc }]
+        take: 1
+      ) {
+        id
+        title
+        description
+        taskType
+        runtimeType
+        author {
+          id
+        }
+        collaborators {
+          id
+        }
+      }
+      dataSources(orderBy: [{ order: asc }]) {
+        id
+        label
+        block {
+          id
+          title
+        }
+      }
     }
   }
 `;

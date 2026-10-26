@@ -108,6 +108,7 @@ export default function Wrapper({
     <Viewer
       task={task}
       user={user}
+      study={study}
       close={close}
       openEditor={openEditor}
       openPreview={() => onOpenPreview?.()}

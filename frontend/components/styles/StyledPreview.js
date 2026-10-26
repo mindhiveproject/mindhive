@@ -7,7 +7,10 @@ export const StyledPreview = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 5;
+  /* Above the page's own chrome (builder actions and panels sit at 10, the
+     sticky navs up to 100), below the Help Center and ticket launchers
+     (999+) and every DesignSystem overlay (10000+). */
+  z-index: 900;
 
   button {
     color: revert;

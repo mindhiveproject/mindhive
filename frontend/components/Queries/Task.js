@@ -346,6 +346,16 @@ export const TASK_TO_EDIT = gql`
       visual {
         id
         title
+        dataSources(orderBy: [{ order: asc }]) {
+          id
+          label
+          inputBindings
+          block {
+            id
+            title
+            requirementLabel
+          }
+        }
       }
       jsPsychExperiment {
         id

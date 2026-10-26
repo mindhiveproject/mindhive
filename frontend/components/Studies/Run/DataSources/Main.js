@@ -25,6 +25,15 @@ import PreviewPanel from "./PreviewPanel";
  */
 export const DataSourceFlushContext = createContext(null);
 
+/**
+ * The study's live data sources, for a task that reads them (a p5 visual
+ * mapping its parameters onto a device) or marks events on them: the active
+ * rows, their runtime apis by row id, and `mark(label, time)`, which passes an
+ * event to every connected marker input so it is recorded on the devices'
+ * clock. Null outside a study run.
+ */
+export const StudySourcesContext = createContext(null);
+
 function isActiveForStep(scope, stepId) {
   if (!scope || scope === "study") return true;
   if (Array.isArray(scope?.steps)) return scope.steps.includes(stepId);
@@ -98,6 +107,22 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
 
   const [gatePassed, setGatePassed] = useState(false);
   const [previewRowId, setPreviewRowId] = useState(null);
+
+  const studySources = useMemo(
+    () => ({
+      rows: activeRows,
+      apis,
+      mark: (label, timestamp) => {
+        activeRows.forEach((row) => {
+          (row.block.inputs || []).forEach((input) => {
+            if (input.receiver !== "marker") return;
+            apis[row.id]?.getReceiver(input.id)?.mark(label, { timestamp });
+          });
+        });
+      },
+    }),
+    [activeRows, apis]
+  );
 
   const recorderRef = useRef(null);
   if (!recorderRef.current) recorderRef.current = new AggregateRecorder();
@@ -230,7 +255,9 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
   if (!activeRows.length) {
     return (
       <DataSourceFlushContext.Provider value={flush}>
-        {children}
+        <StudySourcesContext.Provider value={studySources}>
+          {children}
+        </StudySourcesContext.Provider>
       </DataSourceFlushContext.Provider>
     );
   }
@@ -246,39 +273,41 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
 
   return (
     <DataSourceFlushContext.Provider value={flush}>
-      {!released &&
-        activeRows.map((row) => (
-          <SourceRuntime key={row.id} row={row} onStatus={onStatus} />
-        ))}
+      <StudySourcesContext.Provider value={studySources}>
+        {!released &&
+          activeRows.map((row) => (
+            <SourceRuntime key={row.id} row={row} onStatus={onStatus} />
+          ))}
 
-      {!gatePassed ? (
-        <ConnectScreen
-          study={study}
-          rows={activeRows}
-          apis={apis}
-          allRequiredConnected={allRequiredConnected}
-          onContinue={() => setGatePassed(true)}
-          onPreview={togglePreview}
-          onLeave={() => defaultLeave(study, user)}
-        />
-      ) : released ? (
-        children
-      ) : (
-        <>
-          <StatusBar
+        {!gatePassed ? (
+          <ConnectScreen
             study={study}
             rows={activeRows}
             apis={apis}
-            activeRowId={previewRowId}
-            onOpenPreview={togglePreview}
+            allRequiredConnected={allRequiredConnected}
+            onContinue={() => setGatePassed(true)}
+            onPreview={togglePreview}
+            onLeave={() => defaultLeave(study, user)}
           />
-          {children}
-        </>
-      )}
+        ) : released ? (
+          children
+        ) : (
+          <>
+            <StatusBar
+              study={study}
+              rows={activeRows}
+              apis={apis}
+              activeRowId={previewRowId}
+              onOpenPreview={togglePreview}
+            />
+            {children}
+          </>
+        )}
 
-      {!released && previewRow && apis[previewRow.id] && canViewSignal(previewRow) && (
-        <PreviewPanel row={previewRow} api={apis[previewRow.id]} onClose={() => setPreviewRowId(null)} />
-      )}
+        {!released && previewRow && apis[previewRow.id] && canViewSignal(previewRow) && (
+          <PreviewPanel row={previewRow} api={apis[previewRow.id]} onClose={() => setPreviewRowId(null)} />
+        )}
+      </StudySourcesContext.Provider>
     </DataSourceFlushContext.Provider>
   );
 }

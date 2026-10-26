@@ -18,6 +18,7 @@ export const UPDATE_VISUAL = gql`
       privacy
       published
       participationMode
+      includeInStudies
       docs
       docsVisible
       parameters

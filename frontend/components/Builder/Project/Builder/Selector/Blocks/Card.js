@@ -43,6 +43,7 @@ export default function Card({
   search,
   componentType,
   isSurveyBuilder = false,
+  children,
 }) {
   const { t } = useTranslation("builder");
   const [showModal, setShowModal] = useState(false);
@@ -102,6 +103,7 @@ export default function Card({
               />
             </NodesTypesContainer>
             <BlockTags task={component} user={user} />
+            {children}
           </div>
           <div className="blockCardActions">
             {!isSurveyBuilder && (
