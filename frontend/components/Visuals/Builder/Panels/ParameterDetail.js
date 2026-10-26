@@ -26,10 +26,12 @@ import {
   bindingFor,
   isNumeric,
   isStreamMappable,
+  isWholeNumber,
   kindOf,
   labelFor,
   normalizeDeclarations,
   retype,
+  wholeNumberFields,
 } from "../../Helpers/bindings";
 import {
   keyFromName,
@@ -466,6 +468,33 @@ export default function ParameterDetailPanel({ paramKey, initialTab, focusName }
                   onChange={onKind}
                 />
               </div>
+              {shown.type === "number" ? (
+                <div style={TOGGLE_ROW_STYLE}>
+                  <div style={{ flex: "1 1 auto", minWidth: 0 }}>
+                    <p style={{ ...LABEL_STYLE, margin: 0 }}>
+                      {t("wholeNumbersOnly", "Whole Numbers Only")}
+                    </p>
+                    <p style={{ ...HELP_STYLE, margin: 0 }}>
+                      {t(
+                        "wholeNumbersOnlyHelp",
+                        "Steps by 1, with no decimals."
+                      )}
+                    </p>
+                  </div>
+                  <Checkbox
+                    tone="accent"
+                    checked={isWholeNumber(shown)}
+                    disabled={!editable}
+                    ariaLabel={t("wholeNumbersOnly", "Whole Numbers Only")}
+                    onChange={(next) =>
+                      setFields((current) => ({
+                        ...current,
+                        ...wholeNumberFields(shown, next),
+                      }))
+                    }
+                  />
+                </div>
+              ) : null}
               <ValueControl
                 label={t("defaultValue", "Default Value")}
                 declaration={shown}
@@ -492,7 +521,36 @@ export default function ParameterDetailPanel({ paramKey, initialTab, focusName }
               </div>
 
               {/* Ranging means something for numbers and vectors alike. Normalize
-                  and Clamp shape a stream sample, and only a number takes one. */}
+                  and Clamp shape a stream sample within it, and only a number
+                  takes one. */}
+              {isNumeric(declaration) ? (
+                <div style={FIELD_STYLE}>
+                  <span style={LABEL_STYLE}>{t("range", "Range")}</span>
+                  <div style={{ display: "flex", gap: 12 }}>
+                    <Input
+                      type="number"
+                      placeholder={t("min", "Min")}
+                      aria-label={t("min", "Min")}
+                      value={draft.min}
+                      disabled={!canEdit}
+                      onChange={(next) =>
+                        setDraft((current) => ({ ...current, min: next }))
+                      }
+                    />
+                    <Input
+                      type="number"
+                      placeholder={t("max", "Max")}
+                      aria-label={t("max", "Max")}
+                      value={draft.max}
+                      disabled={!canEdit}
+                      onChange={(next) =>
+                        setDraft((current) => ({ ...current, max: next }))
+                      }
+                    />
+                  </div>
+                </div>
+              ) : null}
+
               {declaration.type === "number" ? (
                 <>
                   <div style={TOGGLE_ROW_STYLE}>
@@ -542,35 +600,9 @@ export default function ParameterDetailPanel({ paramKey, initialTab, focusName }
                   </div>
                 </>
               ) : null}
-
-              {isNumeric(declaration) ? (
-                <div style={FIELD_STYLE}>
-                  <span style={LABEL_STYLE}>{t("range", "Range")}</span>
-                  <div style={{ display: "flex", gap: 12 }}>
-                    <Input
-                      type="number"
-                      placeholder={t("min", "Min")}
-                      aria-label={t("min", "Min")}
-                      value={draft.min}
-                      disabled={!canEdit}
-                      onChange={(next) =>
-                        setDraft((current) => ({ ...current, min: next }))
-                      }
-                    />
-                    <Input
-                      type="number"
-                      placeholder={t("max", "Max")}
-                      aria-label={t("max", "Max")}
-                      value={draft.max}
-                      disabled={!canEdit}
-                      onChange={(next) =>
-                        setDraft((current) => ({ ...current, max: next }))
-                      }
-                    />
-                  </div>
-                </div>
-              ) : null}
             </Section>
+
+            <hr style={DIVIDER_STYLE} />
 
             <Section title={t("mapping", "Mapping")}>
               <div style={TOGGLE_ROW_STYLE}>

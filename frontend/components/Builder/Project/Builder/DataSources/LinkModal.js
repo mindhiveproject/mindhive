@@ -11,6 +11,7 @@ import Chip from "../../../../DesignSystem/Chip";
 import Input from "../../../../DesignSystem/Input";
 import FavoriteButton from "../../../../DesignSystem/FavoriteButton";
 import {
+  CheckIcon,
   CloseIcon,
   LinkIcon,
   LinkOffIcon,
@@ -193,6 +194,7 @@ export default function LinkDataSourceModal({
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState(() => new Set());
   const [showOutputs, setShowOutputs] = useState(false);
+  const [justLinkedId, setJustLinkedId] = useState(null);
 
   // Every open starts back at the warning note — this is a "know what you're
   // doing" gate, not a one-time dismissal.
@@ -202,8 +204,22 @@ export default function LinkDataSourceModal({
       setSearch("");
       setFilters(new Set());
       setShowOutputs(false);
+      setJustLinkedId(null);
     }
   }, [open]);
+
+  // The new source lands in the linked list above, which is usually scrolled
+  // out of view from the catalog row that was clicked, so the row confirms it.
+  useEffect(() => {
+    if (!justLinkedId) return undefined;
+    const timer = setTimeout(() => setJustLinkedId(null), 1500);
+    return () => clearTimeout(timer);
+  }, [justLinkedId]);
+
+  const linkBlock = (blockId) => {
+    onAddSource(blockId);
+    setJustLinkedId(blockId);
+  };
 
   const { data } = useQuery(DATA_SOURCE_BLOCKS, { skip: !open });
   const blocks = data?.dataSourceBlocks || [];
@@ -256,6 +272,7 @@ export default function LinkDataSourceModal({
   const settingsLabel = t("dataSources.settingsLabel", {}, { default: "Settings" });
   const unlinkLabel = t("dataSources.unlinkLabel", {}, { default: "Unlink" });
   const linkLabel = t("dataSources.linkLabel", {}, { default: "Link" });
+  const linkedLabel = t("dataSources.linkedLabel", {}, { default: "Linked" });
   const closeLabel = t("dataSources.linkModal.close", {}, { default: "Close" });
   const favoriteAddLabel = t("dataSources.favoriteAddLabel", {}, {
     default: "Add to favorites",
@@ -461,10 +478,10 @@ export default function LinkDataSourceModal({
                     <IconButton
                       variant="filled"
                       tone="tertiary"
-                      icon={<LinkIcon />}
-                      ariaLabel={linkLabel}
-                      title={linkLabel}
-                      onClick={() => onAddSource(block.id)}
+                      icon={block.id === justLinkedId ? <CheckIcon /> : <LinkIcon />}
+                      ariaLabel={block.id === justLinkedId ? linkedLabel : linkLabel}
+                      title={block.id === justLinkedId ? linkedLabel : linkLabel}
+                      onClick={() => linkBlock(block.id)}
                     />
                   </div>
                 </div>

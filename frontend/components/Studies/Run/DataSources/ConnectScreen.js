@@ -8,8 +8,10 @@ import CameraCanvas from "./CameraCanvas";
 import CameraSelect from "./CameraSelect";
 import { overlayLayers } from "./receivers";
 
+// The page never scrolls: the list of devices does, between a top bar and a
+// footer that stay put, so Continue is always in view.
 const PAGE_STYLE = {
-  minHeight: "100vh",
+  height: "100vh",
   display: "flex",
   flexDirection: "column",
   background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
@@ -18,9 +20,9 @@ const PAGE_STYLE = {
 // Under a host's own top bar there is no viewport to fill, only the space left.
 const EMBEDDED_PAGE_STYLE = {
   ...PAGE_STYLE,
+  height: "auto",
   flex: "1 1 0%",
   minHeight: 0,
-  overflowY: "auto",
 };
 
 const TOP_BAR_STYLE = {
@@ -28,11 +30,15 @@ const TOP_BAR_STYLE = {
   alignItems: "center",
   gap: 12,
   padding: "16px 24px",
+  flexShrink: 0,
 };
 
 const BODY_STYLE = {
-  flex: 1,
+  flex: "1 1 0%",
+  minHeight: 0,
+  overflowY: "auto",
   display: "flex",
+  alignItems: "flex-start",
   justifyContent: "center",
   padding: "48px 24px",
 };
@@ -276,7 +282,10 @@ const FOOTER_STYLE = {
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
+  flexShrink: 0,
   padding: "16px 24px",
+  borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
 };
 
 /**
@@ -313,7 +322,7 @@ export default function ConnectScreen({
         </div>
       )}
 
-      <div style={BODY_STYLE}>
+      <div className="MH-Scrollbar" style={BODY_STYLE}>
         <div style={COLUMN_STYLE}>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <h2 className="MH-Type-Title-Large" style={{ margin: 0, color: "var(--MH-Theme-Neutrals-Black, #171717)" }}>

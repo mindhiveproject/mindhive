@@ -93,6 +93,7 @@ export function getVisualFilterQuery(session?: Session) {
       OR: [
         { privacy: { equals: "public" } },
         { privacy: { equals: "unlisted" } },
+        { published: { equals: true } },
       ],
     };
   }
@@ -109,6 +110,8 @@ export function getVisualFilterQuery(session?: Session) {
       { viewers: { some: { id: { equals: session.itemId } } } },
       // Public visuals
       { privacy: { equals: "public" } },
+      // Published by an admin — open to everyone, whatever the privacy says
+      { published: { equals: true } },
       // Unlisted visuals
       { privacy: { equals: "unlisted" } },
       // You have liked & they are unlisted or for friends
@@ -240,7 +243,12 @@ export const Visual = list({
     extensions: json({ defaultValue: [] }),
     docs: json(),
     docsVisible: checkbox(),
-    published: checkbox({ access: { update: ownerOnlyUpdate } }),
+    // The admin-curated gate: a published visual is visible to everyone and,
+    // with `includeInStudies`, offered to every study builder. Anyone else's
+    // visuals stay personal — they can still add their own to their studies.
+    published: checkbox({
+      access: { update: ({ session }) => isAdmin(session) },
+    }),
     lastTimeEdited: timestamp(),
     yjsState: text({
       ui: {
@@ -281,8 +289,9 @@ export const Visual = list({
       ],
       defaultValue: "sandbox",
     }),
-    // Offers an authored visual to the study builder as a step. Only means
-    // something in Authored mode; the hook below keeps the Task it runs as.
+    // Offers an authored visual to the study builder as a step — to its
+    // author's own studies, and to everyone's once an admin publishes it. Only
+    // means something in Authored mode; the hook below keeps the Task it runs as.
     includeInStudies: checkbox(),
   },
   hooks: {

@@ -102,7 +102,6 @@
 	"kind_category": "Category",
 	"kind_checkbox": "Checkbox",
 	"kind_color": "Color",
-	"kind_integer": "Whole Number",
 	"kind_number": "Number",
 	"kind_text": "Text",
 	"kind_vector2": "2D Vector",
@@ -214,5 +213,19 @@
 	"filterPublic": "Public",
 	"filterCreatedByMe": "Created by me",
 	"published": "Published",
-	"publishedHelp": "Makes this visual visible to everyone and, when included in studies, available to every researcher. Unpublished visuals stay personal."
+	"publishedHelp": "Makes this visual visible to everyone and, when included in studies, available to every researcher. Unpublished visuals stay personal.",
+	"wholeNumbersOnly": "Whole Numbers Only",
+	"wholeNumbersOnlyHelp": "Steps by 1, with no decimals.",
+	"nameYourVisual": "Name your visual",
+	"nameYourVisualHelp": "Give your visual a name. You can change it later in its settings.",
+	"visualNamePlaceholder": "The name of my visual is",
+	"startFrom": "Start from",
+	"defaultTemplate": "Default template",
+	"copyAVisual": "Copy a visual",
+	"visualToCopy": "Visual to copy",
+	"chooseAVisual": "Choose a visual",
+	"inviteCollaborators": "Invite people",
+	"inviteCollaboratorsHelp": "Editors can change the visual with you. Viewers can only open it.",
+	"backToHome": "← Back to home",
+	"createVisual": "Create Visual"
 }

@@ -1252,6 +1252,7 @@
 		"favoriteAddLabel": "Add to favorites",
 		"favoriteRemoveLabel": "Remove from favorites",
 		"linkLabel": "Link",
+		"linkedLabel": "Linked",
 		"linkModal": {
 			"catalogEmpty": "No data sources match your search.",
 			"catalogHeading": "All Data Sources",

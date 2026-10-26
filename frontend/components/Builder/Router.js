@@ -11,6 +11,7 @@ import BuilderApp from "./App";
 
 // visuals
 import VisualBuilder from "../Visuals/Builder/Main";
+import NewVisual from "../Visuals/New/Main";
 
 export default function BuilderRouter({ query }) {
   const router = useRouter();
@@ -29,6 +30,9 @@ export default function BuilderRouter({ query }) {
   }
 
   if (area === "visuals") {
+    if (selector === "add") {
+      return <NewVisual user={user} />;
+    }
     return <VisualBuilder query={query} user={user} />;
   }
 

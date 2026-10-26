@@ -114,7 +114,7 @@ const GlobalStyles = createGlobalStyle`
     margin: 24px;
     margin: var(--padding-internal);
     min-height: calc(100vh - 2 * 24px);
-    min-height: calc(100vh - 2 * var(--padding-internal));
+    min-height: calc(var(--MH-Run-Height, 100vh) - 2 * var(--padding-internal));
     width: calc(100vw - 2 * 24px);
     width: calc(100vw - 2 * var(--padding-internal));
     /* Display content using flexboxes */
@@ -139,7 +139,7 @@ const GlobalStyles = createGlobalStyle`
   .container.fullscreen.frameless {
     margin: 0;
     width: 100%;
-    min-height: 100vh;
+    min-height: var(--MH-Run-Height, 100vh);
   }
 
   /* Remove frame on small screens */
@@ -149,7 +149,7 @@ const GlobalStyles = createGlobalStyle`
       border: none;
       border-radius: 0;
       width: 100%;
-      min-height: 100vh;
+      min-height: var(--MH-Run-Height, 100vh);
     }
   }
 

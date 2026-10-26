@@ -17,9 +17,18 @@ import { createRuntimeSaveClient } from './runtimeSaveClient';
 // save before the study moves on regardless.
 const SAVE_TIMEOUT = 15000;
 
-const FRAME_BOX = { position: 'relative', width: '100%', height: '100vh' };
+// The window, unless a host (the study's data-source bar) says how much of it
+// is left.
+const FRAME_BOX = {
+  position: 'relative',
+  width: '100%',
+  height: 'var(--MH-Run-Height, 100vh)',
+};
 
-const CONTINUE_STYLE = { position: 'absolute', right: 16, bottom: 16 };
+// Sits beside the help button that floats in the window's bottom-right corner
+// (HelpButton: 40px, 20px from the edges) as one row with it: the same
+// baseline, 8px apart.
+const CONTINUE_STYLE = { position: 'absolute', right: 68, bottom: 20 };
 
 const NOTICE_STYLE = {
   position: 'absolute',

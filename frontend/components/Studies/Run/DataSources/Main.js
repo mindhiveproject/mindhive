@@ -67,6 +67,24 @@ export function SourceRuntime({ row, onStatus }) {
   return null;
 }
 
+// The window is split between the status bar and the study under it, so the
+// page itself never scrolls. The study scrolls inside its own pane, and tells
+// anything that sizes itself to the window (a task frame, a lab.js page) to
+// size to the pane instead through --MH-Run-Height.
+const RUN_STYLE = {
+  display: "flex",
+  flexDirection: "column",
+  height: "100vh",
+};
+
+const RUN_CONTENT_STYLE = {
+  position: "relative",
+  flex: "1 1 0%",
+  minHeight: 0,
+  overflowY: "auto",
+  "--MH-Run-Height": "100%",
+};
+
 function defaultLeave(study, user) {
   window.location.href =
     user?.type === "GUEST" ? "/" : `/dashboard/discover/studies?name=${study?.slug}`;
@@ -292,7 +310,7 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
         ) : released ? (
           children
         ) : (
-          <>
+          <div style={RUN_STYLE}>
             <StatusBar
               study={study}
               rows={activeRows}
@@ -300,8 +318,8 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
               activeRowId={previewRowId}
               onOpenPreview={togglePreview}
             />
-            {children}
-          </>
+            <div style={RUN_CONTENT_STYLE}>{children}</div>
+          </div>
         )}
 
         {!released && previewRow && apis[previewRow.id] && canViewSignal(previewRow) && (

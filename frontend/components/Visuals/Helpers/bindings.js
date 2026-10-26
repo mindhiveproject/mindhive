@@ -263,11 +263,11 @@ export function labelFor(key, declaration) {
 }
 
 // What an author picks from, in the order they are offered. A kind is a
-// declared `type` plus the two spellings the panel tells apart on sight: a
-// number that steps by 1, and a category of exactly `[false, true]`.
+// declared `type` plus the spelling the panel tells apart on sight: a category
+// of exactly `[false, true]`. A whole number is not a kind of its own but a
+// setting of a number — see `isWholeNumber`.
 export const KIND_LABELS = {
   number: "Number",
-  integer: "Whole Number",
   checkbox: "Checkbox",
   category: "Category",
   text: "Text",
@@ -290,13 +290,27 @@ export function isToggle(declaration) {
 /** The kind of a normalized declaration — a key of `KIND_LABELS`. */
 export function kindOf(declaration) {
   if (isToggle(declaration)) return "checkbox";
-  if (declaration?.type === "number" && declaration.step === 1) return "integer";
   return KIND_LABELS[declaration?.type] ? declaration.type : "number";
 }
 
 /** Human label for a declaration's kind. */
 export function typeLabel(declaration) {
   return KIND_LABELS[kindOf(declaration)];
+}
+
+/** Whether a number steps by 1, which is all a whole number is. */
+export function isWholeNumber(declaration) {
+  return declaration?.type === "number" && declaration.step === 1;
+}
+
+/**
+ * The declaration fields that make a number whole, or not, for
+ * `updateParameter`. Turning it on rounds the default to a value it allows.
+ */
+export function wholeNumberFields(declaration, whole) {
+  return whole
+    ? { step: 1, default: Math.round(toNumber(declaration?.default)) }
+    : { step: undefined };
 }
 
 const CLEARED = { min: undefined, max: undefined, step: undefined, options: undefined };
@@ -323,15 +337,6 @@ export function retype(declaration, kind) {
 
   if (kind === "number") {
     return { ...CLEARED, ...range, type: "number", default: toNumber(given) };
-  }
-  if (kind === "integer") {
-    return {
-      ...CLEARED,
-      ...range,
-      type: "number",
-      step: 1,
-      default: Math.round(toNumber(given)),
-    };
   }
   if (kind === "checkbox") {
     return { ...CLEARED, type: "boolean", default: false };
