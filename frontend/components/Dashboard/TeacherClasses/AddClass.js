@@ -14,7 +14,15 @@ import { CREATE_CLASS } from "../../Mutations/Classes";
 import { teacherClassesRefetch } from "../../Queries/Classes";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 
-const ADD_CLASS_INITIAL_INPUTS = { title: "", description: "" };
+const ADD_CLASS_INITIAL_INPUTS = {
+  title: "",
+  description: "",
+  isDoe: false,
+  school: "",
+};
+
+// Keep in step with keystone/lib/doe/doe.ts.
+const DOE_STAFF_DOMAIN = "@schools.nyc.gov";
 
 /** TipTap often yields `<p></p>` when empty; treat as no description for the API. */
 function normalizeClassDescriptionForSubmit(html) {
@@ -29,7 +37,14 @@ export default function AddClass({ user }) {
   const router = useRouter();
   const { t } = useTranslation("classes");
   const [clientError, setClientError] = useState(null);
-  const { inputs, handleChange, resetForm } = useForm(ADD_CLASS_INITIAL_INPUTS);
+  // A DOE staff address ticks "NYC public school" for the teacher; they can
+  // untick it for a class run elsewhere.
+  const { inputs, handleChange, resetForm } = useForm({
+    ...ADD_CLASS_INITIAL_INPUTS,
+    isDoe: String(user?.email || "")
+      .toLowerCase()
+      .endsWith(DOE_STAFF_DOMAIN),
+  });
 
   useEffect(() => {
     resetForm();
@@ -66,6 +81,10 @@ export default function AddClass({ user }) {
         title: titlePlain,
         description: normalizeClassDescriptionForSubmit(latestInputs.description),
         settings: { assignableToStudents: false },
+        dataOwner: latestInputs.isDoe ? "NYC_DOE" : null,
+        school: latestInputs.isDoe
+          ? String(latestInputs.school || "").trim().toUpperCase()
+          : "",
       },
     });
     router.push({

@@ -4,8 +4,10 @@
  * Sign-ins are recorded from now on (session strategy in auth.ts), but
  * accounts created before that have no history. Without a value they would
  * never reach the two-year de-identification rule, so each one gets its latest
- * known activity instead: the newest of its creation date and the dates of its
- * datasets, journals, posts, homework and logs. An account with no date at all
+ * known activity instead: the newest of its creation date and the dates of
+ * everything it authored, created, submitted or edited (participation data,
+ * journals, boards, studies, classes, lessons, Connect answers and more; see
+ * `sources` below). An account with no date at all
  * gets the time of this run, which starts its clock now.
  *
  * Run it once after `npm run migrate` (or after `keystone dev` has updated the
@@ -65,22 +67,75 @@ async function main() {
       select: { id: true, dateCreated: true },
     });
 
-    // One grouped query per source, not one per account.
-    const latest = new Map();
+    // Every record that carries a person's own action (author, creator,
+    // submitter, editor) and a date: [model, profile keys, date fields].
+    // Passive links are left out on purpose: notifications received, invites
+    // received, datasets other people collected on someone's task. updatedAt
+    // can also move when others edit a record (a class a student joins, a
+    // shared board), which only makes an account look more recent, never less.
+    // One grouped query per source and key, not one per account.
+    const BOTH = ["createdAt", "updatedAt"];
+    const CREATED = ["createdAt"];
     const sources = [
-      ["dataset", "profileId", ["createdAt"]],
-      ["journal", "creatorId", ["createdAt", "updatedAt"]],
-      ["post", "authorId", ["createdAt", "updatedAt"]],
-      ["homework", "authorId", ["createdAt", "updatedAt"]],
-      ["log", "userId", ["createdAt"]],
+      // participation and personal work
+      ["dataset", ["profileId"], ["createdAt", "completedAt"]],
+      ["summaryResult", ["userId"], BOTH],
+      ["studyDataSourceRecord", ["profileId"], BOTH],
+      ["journal", ["creatorId"], BOTH],
+      ["post", ["authorId"], BOTH],
+      ["homework", ["authorId"], BOTH],
+      ["review", ["authorId"], BOTH],
+      ["talk", ["authorId"], BOTH],
+      ["word", ["authorId"], BOTH],
+      ["log", ["userId"], BOTH],
+      // projects, studies and tasks
+      ["proposalBoard", ["creatorId", "authorId"], BOTH],
+      ["proposalCard", ["isEditedById"], ["updatedAt"]],
+      ["study", ["authorId"], BOTH],
+      ["studyVersion", ["createdById"], CREATED],
+      ["template", ["authorId"], BOTH],
+      ["task", ["authorId"], BOTH],
+      ["consent", ["authorId"], BOTH],
+      ["spec", ["authorId"], BOTH],
+      ["jsPsychExperiment", ["authorId"], BOTH],
+      ["datasource", ["authorId"], BOTH],
+      ["dataSourceBlock", ["authorId"], BOTH],
+      ["visual", ["authorId", "isEditedById"], CREATED],
+      ["mediaAsset", ["authorId"], CREATED],
+      // teaching
+      ["class", ["creatorId"], BOTH],
+      ["classNetwork", ["creatorId"], BOTH],
+      ["networkInvite", ["requestedById", "reviewedById"], CREATED],
+      ["curriculum", ["authorId"], BOTH],
+      ["lesson", ["authorId"], BOTH],
+      ["assignment", ["authorId"], BOTH],
+      ["resource", ["authorId"], BOTH],
+      ["formDefinition", ["createdById", "publishedById"], BOTH],
+      // Connect, organizations, support
+      ["connectRound", ["createdById"], BOTH],
+      ["connectQuestion", ["proposedById", "approvedById"], BOTH],
+      ["connectPreference", ["submitterId"], ["submittedAt", ...BOTH]],
+      ["connectTeamPreference", ["submitterId"], CREATED],
+      ["connectMatch", ["createdById"], BOTH],
+      ["connectRating", ["raterId"], CREATED],
+      ["opportunity", ["reviewedById"], BOTH],
+      ["opportunityReviewNote", ["authorId"], BOTH],
+      ["organization", ["createdById"], BOTH],
+      ["organizationInvite", ["invitedById"], CREATED],
+      ["friendship", ["requesterId"], CREATED],
+      ["ticket", ["reporterId"], BOTH],
+      ["ticketAnnotation", ["authorId"], CREATED],
     ];
-    for (const [model, key, fields] of sources) {
-      const rows = await prisma[model].groupBy({
-        by: [key],
-        where: { [key]: { not: null } },
-        _max: Object.fromEntries(fields.map((field) => [field, true])),
-      });
-      foldLatest(latest, rows, key, fields);
+    const latest = new Map();
+    for (const [model, keys, fields] of sources) {
+      for (const key of keys) {
+        const rows = await prisma[model].groupBy({
+          by: [key],
+          where: { [key]: { not: null } },
+          _max: Object.fromEntries(fields.map((field) => [field, true])),
+        });
+        foldLatest(latest, rows, key, fields);
+      }
     }
 
     let fromActivity = 0;
