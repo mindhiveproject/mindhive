@@ -83,6 +83,7 @@ export const GET_CONSENT = gql`
         }
       }
       createdAt
+      studiesCount
       author {
         id
         username

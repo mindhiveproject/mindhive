@@ -88,6 +88,13 @@
 			"contacts": "Contacts"
 		},
 		"close": "Close",
+		"delete": "Delete",
+		"deleteHeading": "Delete protocol",
+		"deleteHint": "Delete this protocol and all its consent forms. This can’t be undone.",
+		"deleteInfo": "“{{title}}” and all its consent forms will be deleted. This can’t be undone.",
+		"deleteStudies": "Studies using this protocol: {{count}}. They will no longer show these consent forms.",
+		"deleteTitle": "Delete this protocol?",
+		"deleting": "Deleting…",
 		"collaborators": "Collaborators",
 		"complete": "Complete",
 		"completeCount": "{{done}} of {{total}} complete",

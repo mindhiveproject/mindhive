@@ -3,7 +3,6 @@ import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
 import { GET_MY_CONSENTS } from "../../Queries/Consent";
-import Button from "../../DesignSystem/Button";
 
 export default function ConsentsList({ user }) {
   const { t } = useTranslation("dashboard");
@@ -70,7 +69,6 @@ export default function ConsentsList({ user }) {
       <div className="consentListHeader hasActions">
         <div>{t("consentAdmin.title", {}, { default: "Title" })}</div>
         <div>{t("consentAdmin.owner", {}, { default: "Owner" })}</div>
-        <div aria-hidden="true" />
       </div>
 
       <div className="consentListBoard">
@@ -93,13 +91,7 @@ export default function ConsentsList({ user }) {
                   ? t("consentAdmin.you", {}, { default: "You" })
                   : consent?.author?.username}
               </div>
-              <div className="consentListRowAction">
-                <Link href={{ pathname: href, query: { action: "status" } }}>
-                  <Button variant="outline" type="button">
-                    {t("consentAdmin.status", {}, { default: "Status" })}
-                  </Button>
-                </Link>
-              </div>
+              {/* TODO: a Status button once the status page is designed */}
             </div>
           );
         })}

@@ -20,6 +20,7 @@ import {
 } from "../../Queries/Consent";
 import MessageCard from "../../DesignSystem/MessageCard";
 import BackToProtocols from "./BackToProtocols";
+import DeleteConsentSection from "./DeleteConsentSection";
 import useSavedFlash from "./useSavedFlash";
 import useConsentSections from "./useConsentSections";
 import {
@@ -666,6 +667,11 @@ export default function ConsentSettings({ consent, template, user }) {
             </label>
           </div>
         </section>
+      )}
+
+      {/* only the author may delete a protocol */}
+      {!isNew && consent?.author?.id === user?.id && (
+        <DeleteConsentSection consent={consent} user={user} />
       )}
     </div>
   );

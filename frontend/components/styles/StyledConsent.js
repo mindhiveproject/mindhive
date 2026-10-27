@@ -28,7 +28,7 @@ export const StyledConsent = styled.div`
 
   .consentListHeader.hasActions,
   .consentListRow.hasActions {
-    grid-template-columns: minmax(10rem, 3fr) minmax(5rem, 1fr) 6.5rem;
+    grid-template-columns: minmax(10rem, 3fr) minmax(5rem, 1fr);
   }
 
   .consentListHeader.hasAction,
