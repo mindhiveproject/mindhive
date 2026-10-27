@@ -1,98 +1,183 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import Link from "next/link";
 
-import ReactHtmlParser from "react-html-parser";
-
-import { GET_CONSENT } from "../../Queries/Consent";
-import { EDIT_CONSENT } from "../../Mutations/Consent";
+import { GET_CONSENT, GET_MY_CONSENTS } from "../../Queries/Consent";
+import {
+  EDIT_CONSENT,
+  SUBMIT_CONSENT_FOR_REVIEW,
+} from "../../Mutations/Consent";
+import ConsentPreview from "./ConsentPreview";
 import useForm from "../../../lib/useForm";
 import ConsentForm from "./ConsentForm";
-import Button from "../../DesignSystem/Button";
+import ConsentSettings from "./ConsentSettings";
+import {
+  finalizeInfo,
+  normalizeInfo,
+  consentTypesForGroups,
+  normalizeSettings,
+} from "./consentTypes";
 
 export default function ConsentPage({ code, user, query }) {
-  const router = useRouter();
   const { t } = useTranslation("dashboard");
   const { action } = query;
 
   const { data, loading, error } = useQuery(GET_CONSENT, {
     variables: { code },
   });
+  const consent = data?.consent;
 
-  const consent = data?.consent || { title: "", description: "", info: [] };
-  const { inputs, handleChange, clearForm } = useForm({ ...consent });
-
-  const [editConsent, { loading: editConsentLoading }] = useMutation(
-    EDIT_CONSENT,
-    {
-      refetchQueries: [{ query: GET_CONSENT, variables: { code } }],
-    }
-  );
-
-  async function handleSave() {
-    await editConsent({
-      variables: {
-        id: consent?.id,
-        title: inputs?.title,
-        description: inputs?.description,
-        info: inputs?.info,
-        collaborators: inputs?.collaborators?.length
-          ? {
-              set: inputs?.collaborators?.map((col) => ({ id: col?.id })),
-            }
-          : { set: [] },
-      },
-    });
-    router.push({
-      pathname: "/dashboard/irb",
-    });
+  if (loading && !data) {
+    return (
+      <p className="consentListLoading">
+        {t("consentAdmin.loading", {}, { default: "Loading…" })}
+      </p>
+    );
   }
 
-  if (action && action === "edit") {
+  if (error || !consent) {
     return (
-      <ConsentForm
-        inputs={inputs}
-        handleChange={handleChange}
-        handleSave={handleSave}
-        headerName="Edit protocol"
-        submitBtnName="Save"
-        loading={loading}
-        error={error}
-      />
+      <div className="consentListEmpty">
+        <h3>
+          {t(
+            "consentAdmin.notFound",
+            {},
+            {
+              default: "This protocol could not be found.",
+            }
+          )}
+        </h3>
+        <p>
+          <Link href="/dashboard/irb">
+            {t(
+              "consentAdmin.backToProtocols",
+              {},
+              {
+                default: "Back to my protocols",
+              }
+            )}
+          </Link>
+        </p>
+      </div>
+    );
+  }
+
+  // class teacher or teaching team of the linked class
+  const isReviewer =
+    !!user?.id &&
+    [consent?.class?.creator, ...(consent?.class?.teachingTeam || [])].some(
+      (p) => p?.id === user.id
+    );
+
+  const canEdit =
+    !!user?.id &&
+    (consent?.author?.id === user?.id ||
+      consent?.collaborators?.some((c) => c?.id === user?.id));
+
+  if (action === "status" && canEdit) {
+    // Status area: placeholder until the design is ready
+    return <div className="consentStatus" />;
+  }
+
+  if (action === "settings" && canEdit) {
+    return <ConsentSettings consent={consent} user={user} />;
+  }
+
+  if (action === "edit" && canEdit) {
+    return (
+      <EditConsent consent={consent} user={user} initialForm={query?.form} />
     );
   }
 
   return (
-    <div className="consentPage">
-      <div className="consentHeader">
-        <div>
-          <h1>{consent?.title}</h1>
-          <h3> {consent?.description}</h3>
-        </div>
+    <ConsentPreview
+      consent={consent}
+      user={user}
+      canEdit={canEdit}
+      isReviewer={isReviewer}
+    />
+  );
+}
 
-        <div>
-          {consent?.author?.id === user?.id && (
-            <Link
-              href={{
-                pathname: `/dashboard/irb/${code}`,
-                query: { action: "edit" },
-              }}
-            >
-              <Button variant="filled" type="button">
-                {t("consentAdmin.edit", {}, { default: "Edit" })}
-              </Button>
-            </Link>
-          )}
-        </div>
-      </div>
+function EditConsent({ consent, user, initialForm }) {
+  const { t } = useTranslation("dashboard");
+  // The consent is already loaded, so the form never needs to re-sync.
+  // Title, description and collaborators are edited on the settings page.
+  const { inputs, handleChange } = useForm(
+    { title: consent?.title || "", info: normalizeInfo(consent?.info) },
+    { freezeInitialSync: true }
+  );
 
-      {consent?.info?.map((block, i) => (
-        <div key={i}>
-          <h3>{block?.description}</h3>
-          {block?.text ? <>{ReactHtmlParser(block?.text)}</> : <>-----</>}
-        </div>
-      ))}
-    </div>
+  const [editConsent, { loading, error }] = useMutation(EDIT_CONSENT, {
+    refetchQueries: [
+      { query: GET_CONSENT, variables: { code: consent?.code } },
+      { query: GET_MY_CONSENTS, variables: { userId: user?.id } },
+    ],
+    awaitRefetchQueries: true,
+  });
+
+  const [submitReview, { loading: submittingReview, error: submitError }] =
+    useMutation(SUBMIT_CONSENT_FOR_REVIEW, {
+      refetchQueries: [
+        { query: GET_CONSENT, variables: { code: consent?.code } },
+        { query: GET_MY_CONSENTS, variables: { userId: user?.id } },
+      ],
+      awaitRefetchQueries: true,
+    });
+  const teachers = [
+    consent?.class?.creator,
+    ...(consent?.class?.teachingTeam || []),
+  ].filter(Boolean);
+  const review = {
+    status: consent?.settings?.review?.status,
+    note: consent?.settings?.review?.note,
+    reviewedBy: consent?.settings?.review?.reviewedBy?.username,
+    hasClass: !!consent?.class?.id,
+    reviewers: [...new Set(teachers.map((p) => p?.username))].filter(Boolean),
+  };
+
+  // saves the current forms and marks the protocol as submitted
+  async function handleSubmitReview() {
+    try {
+      // the server saves the forms and notifies the teaching team
+      await submitReview({
+        variables: {
+          consentId: consent?.id,
+          info: finalizeInfo(inputs?.info),
+        },
+      });
+    } catch (err) {
+      // surfaced through error
+    }
+  }
+
+  async function handleSave() {
+    try {
+      // stay on the current form; the editor confirms the save
+      await editConsent({
+        variables: { id: consent?.id, info: finalizeInfo(inputs?.info) },
+      });
+      return true;
+    } catch (err) {
+      // surfaced through error
+      return false;
+    }
+  }
+
+  return (
+    <ConsentForm
+      initialForm={initialForm}
+      review={review}
+      onSubmitReview={handleSubmitReview}
+      submittingReview={submittingReview}
+      groups={normalizeSettings(consent?.settings).eligibility.groups}
+      user={user}
+      inputs={inputs}
+      handleChange={handleChange}
+      handleSave={handleSave}
+      submitBtnName={t("consentAdmin.save", {}, { default: "Save" })}
+      loading={loading}
+      error={error || submitError}
+    />
   );
 }

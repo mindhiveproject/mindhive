@@ -12,15 +12,27 @@ export const GET_CONSENTS = gql`
   }
 `;
 
-// get my consents
+// get my consents (authored or shared with me as a collaborator)
 export const GET_MY_CONSENTS = gql`
-  query GET_MY_CONSENTS($userId: ID!) { 
-    consents(where: { author: { id: { equals: $userId } } }) {
+  query GET_MY_CONSENTS($userId: ID!) {
+    consents(
+      where: {
+        OR: [
+          { author: { id: { equals: $userId } } }
+          { collaborators: { some: { id: { equals: $userId } } } }
+        ]
+      }
+      orderBy: { createdAt: desc }
+    ) {
       id
       code
       title
       description
       createdAt
+      author {
+        id
+        username
+      }
     }
   }
 `;
@@ -28,7 +40,10 @@ export const GET_MY_CONSENTS = gql`
 // get public consents
 export const GET_PUBLIC_CONSENTS = gql`
   query GET_PUBLIC_CONSENTS {
-    consents(where: { public: { equals: true } }) {
+    consents(
+      where: { public: { equals: true } }
+      orderBy: { createdAt: desc }
+    ) {
       id
       code
       title
@@ -50,11 +65,44 @@ export const GET_CONSENT = gql`
       title
       description
       info
+      settings
+      organization
+      class {
+        id
+        title
+        creator {
+          id
+          username
+        }
+        teachingTeam {
+          id
+          username
+        }
+      }
+      createdAt
       author {
         id
+        username
       }
       collaborators {
         id
+        username
+      }
+    }
+  }
+`;
+
+// classes a student can link a protocol to (for teacher review)
+export const GET_MY_STUDENT_CLASSES = gql`
+  query GET_MY_STUDENT_CLASSES {
+    authenticatedItem {
+      ... on Profile {
+        id
+        studentIn {
+          id
+          title
+          code
+        }
       }
     }
   }

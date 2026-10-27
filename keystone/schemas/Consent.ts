@@ -65,13 +65,20 @@ export const Consent = list({
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
-            return { connect: { id: context.session.itemId } };
+            // keep the collaborators picked at creation, plus the creator
+            const selfId = context.session.itemId;
+            const picked = [inputData.collaborators?.connect || []]
+              .flat()
+              .filter((c: { id?: string }) => c?.id && c.id !== selfId);
+            return { connect: [...picked, { id: selfId }] };
           } else {
             return inputData.collaborators;
           }
         },
       },
     }),
+    // class whose teaching team reviews the protocol (student protocols)
+    class: relationship({ ref: "Class" }),
     studies: relationship({
       ref: "Study.consent",
       many: true,
