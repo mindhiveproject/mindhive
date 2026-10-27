@@ -6,6 +6,8 @@ import { GET_REVIEW } from "../../../Queries/Review";
 import { CREATE_REVIEW, UPDATE_REVIEW } from "../../../Mutations/Review";
 import { PROPOSAL_REVIEWS_QUERY } from "../../../Queries/Proposal";
 import { getTabByMilestoneKey } from "../../../../lib/feedbackCenterTabs";
+import { isOnTeachingTeamOf } from "../../../../lib/classTeacherUtils";
+import { studentDisplayName } from "../../../../lib/connectBallotUtils";
 import Button from "../../../DesignSystem/Button";
 import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
@@ -37,6 +39,7 @@ export default function Navigation({
   handleChange,
   status,
   milestone,
+  user,
 }) {
   const { t } = useTranslation("builder");
   const [returnUrl, setReturnUrl] = useState("/projects");
@@ -69,10 +72,14 @@ export default function Navigation({
     project?.collaborators?.length > 0
       ? project.collaborators
       : study?.collaborators || [];
+  // The class's teaching team sees students' real names; peers see usernames.
+  const showRealNames = isOnTeachingTeamOf(user, project?.usedInClass?.id);
   const collaboratorChips = collaboratorProfiles
     .map((profile, index) => ({
       key: getProfileChipKey(profile, index),
-      label: getProfileDisplayName(profile),
+      label: showRealNames
+        ? studentDisplayName(profile)
+        : getProfileDisplayName(profile),
     }))
     .filter((entry) => Boolean(entry.label));
   // Keep the header to one row: a few names, the rest behind a "+N" chip.

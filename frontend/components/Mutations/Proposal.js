@@ -315,6 +315,24 @@ export const UPDATE_CARD_EDIT = gql`
   }
 `;
 
+// Saves the students' task & survey picks on a card and returns what the
+// list view shows, so the cached card updates without a refetch.
+export const UPDATE_CARD_STUDENT_TASKS = gql`
+  mutation UPDATE_CARD_STUDENT_TASKS($id: ID!, $input: ProposalCardUpdateInput!) {
+    updateProposalCard(where: { id: $id }, data: $input) {
+      id
+      settings
+      tasks {
+        id
+        title
+        slug
+        i18nContent
+        taskType
+      }
+    }
+  }
+`;
+
 export const DELETE_CARD = gql`
   mutation DELETE_CARD($id: ID!) {
     deleteProposalCard(where: { id: $id }) {

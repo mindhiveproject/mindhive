@@ -17,6 +17,7 @@ import {
   resolveReviewFormKey,
 } from "../../../../../lib/milestones";
 import { getStudentPickedTasks } from "../../../../../lib/studentTaskSelection";
+import { getLocalizedField } from "../../../../../lib/i18nContent";
 import {
   getClassCurriculumTypes,
   getCurriculumType,
@@ -229,10 +230,7 @@ export default function useTaskSuggestions({
     const titles = new Map();
     const pickedTasks = [...studentTasksByProject.values()].flat();
     for (const task of [...(tasksData?.tasks || []), ...pickedTasks]) {
-      titles.set(
-        task.id,
-        task?.i18nContent?.[locale]?.title || task?.title || ""
-      );
+      titles.set(task.id, getLocalizedField(task, "title", locale) || "");
     }
     return titles;
   }, [tasksData, studentTasksByProject, locale]);

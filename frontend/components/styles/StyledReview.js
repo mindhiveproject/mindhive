@@ -509,6 +509,13 @@ export const StyledDasboardReview = styled.div`
         grid-template-columns: auto 1fr;
       }
 
+      .studentNames {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        min-width: 0;
+      }
+
       .suggestedTasks {
         display: flex;
         flex-wrap: wrap;

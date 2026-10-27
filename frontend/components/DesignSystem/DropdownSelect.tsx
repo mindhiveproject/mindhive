@@ -284,6 +284,12 @@ interface DropdownSelectBaseProps {
    */
   placeholder?: string;
   /**
+   * When `multiple`, keep the placeholder in the trigger instead of listing
+   * the picks, for callers that show the picks themselves (e.g. as chips).
+   * @default false
+   */
+  placeholderOnly?: boolean;
+  /**
    * When `multiple`, show a type-to-filter field above the options.
    * @default true
    */
@@ -393,6 +399,7 @@ export default function DropdownSelect(props: DropdownSelectProps) {
     fitContent = false,
     multiple = false,
     placeholder = "",
+    placeholderOnly = false,
     searchableMultiple = true,
     searchableSingle = false,
     icon,
@@ -423,7 +430,7 @@ export default function DropdownSelect(props: DropdownSelectProps) {
   const displayLabel = useMemo<React.ReactNode>(() => {
     if (multiple) {
       const ids = selectedIds ?? [];
-      if (ids.length === 0) {
+      if (ids.length === 0 || placeholderOnly) {
         return placeholder;
       }
       const parts = ids.map((id) => {
@@ -446,7 +453,7 @@ export default function DropdownSelect(props: DropdownSelectProps) {
       return fromLabelText || placeholder;
     }
     return placeholder;
-  }, [multiple, selectedIds, options, value, placeholder]);
+  }, [multiple, selectedIds, options, value, placeholder, placeholderOnly]);
 
   const searchEnabled = multiple ? searchableMultiple : searchableSingle;
 

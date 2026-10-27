@@ -59,18 +59,11 @@ const StyledFeedback = styled.div`
     }
 
     .tasksArea {
-      display: grid;
-      justify-content: end;
-      justify-items: end;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      .task {
-        display: grid;
-        grid-gap: 10px;
-        grid-template-columns: auto 1fr;
-        padding: 10px 20px;
-        background: #fdf2d0;
-        border-radius: 20px;
-      }
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      max-width: 100%;
     }
   }
 

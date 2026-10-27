@@ -38,6 +38,7 @@ import { isMilestoneSubmitted } from "../../../../../../lib/milestoneStatus";
 import { listPreviousEntries } from "../../../../../../lib/cardPreviousEntries";
 import {
   allowsStudentTaskSelection,
+  withStudentPicks,
   getTemplateLinkedTasks,
 } from "../../../../../../lib/studentTaskSelection";
 
@@ -386,11 +387,7 @@ export default function ProposalCard({
   const showStudentTaskPicker = allowsStudentTaskSelection(proposalCard);
   const linkedTasks = getTemplateLinkedTasks(inputs);
   const handleStudentTasksChange = (picks) => {
-    const tasks = [...getTemplateLinkedTasks(inputs), ...picks];
-    const settings = {
-      ...inputs.settings,
-      studentTaskIds: picks.map((task) => task.id),
-    };
+    const { tasks, settings } = withStudentPicks(inputs, picks);
     handleChange({ target: { name: "tasks", value: tasks } });
     handleChange({ target: { name: "settings", value: settings } });
     trackSave(() =>
@@ -405,6 +402,18 @@ export default function ProposalCard({
       }),
     );
   };
+
+  const studentTaskPicker = (
+    <StudentTaskPicker
+      proposalCard={inputs}
+      classId={proposal?.usedInClass?.id}
+      user={user}
+      // Submitted cards stay editable (the student revises them),
+      // so only the teacher preview is read-only.
+      disabled={isPreview}
+      onChange={handleStudentTasksChange}
+    />
+  );
 
   // Send update to the server when the editor gains focus
   const handleFocus = async () => {
@@ -1572,6 +1581,12 @@ export default function ProposalCard({
                     </div>
                 </>
               )}
+
+              {/* Students pick under their entry; the teacher preview keeps it
+                  in the side panel. */}
+              {showStudentTaskPicker && !isPreview && (
+                <div style={{ marginTop: "24px" }}>{studentTaskPicker}</div>
+              )}
             </div>
             <div className="infoBoard">
               {/* Display Linked Items: Assignments first, then combined Resources */}
@@ -1625,17 +1640,7 @@ export default function ProposalCard({
                 </div>
 
               )}
-              {showStudentTaskPicker && (
-                <StudentTaskPicker
-                  proposalCard={inputs}
-                  classId={proposal?.usedInClass?.id}
-                  user={user}
-                  // Submitted cards stay editable (the student revises them),
-                  // so only the teacher preview is read-only.
-                  disabled={isPreview}
-                  onChange={handleStudentTasksChange}
-                />
-              )}
+              {showStudentTaskPicker && isPreview && studentTaskPicker}
               <div className="proposalCardComments">
                 <div className="cardSubheader">
                   {t("mainCard.comments", "Comments")}

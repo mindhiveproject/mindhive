@@ -313,6 +313,13 @@ const proposalBoardSelection = (cardTextFields) => `
           }
 ${cardTextFields}          settings
           position
+          tasks {
+            id
+            title
+            slug
+            i18nContent
+            taskType
+          }
           section {
             id
             title
@@ -376,6 +383,14 @@ export const PROPOSAL_LIST_VIEW_SYNC_QUERY = gql`
           content
           revisedContent
           comment
+          settings
+          tasks {
+            id
+            title
+            slug
+            i18nContent
+            taskType
+          }
           lastTimeEdited
           isEditedBy {
             username
@@ -468,6 +483,8 @@ export const GET_CARD_CONTENT = gql`
         id
         title
         slug
+        i18nContent
+        taskType
       }
       studies {
         id
@@ -1075,10 +1092,16 @@ export const PROJECTS_QUERY = gql`
         stage
       }
       author {
+        id
         username
+        firstName
+        lastName
       }
       collaborators {
+        id
         username
+        firstName
+        lastName
       }
       usedInClass {
         id

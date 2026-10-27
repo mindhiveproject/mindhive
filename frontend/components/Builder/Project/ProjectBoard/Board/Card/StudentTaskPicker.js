@@ -11,6 +11,7 @@ import {
 } from "../../../../../../lib/studentTaskSelection";
 import DropdownSelect from "../../../../../DesignSystem/DropdownSelect";
 import { StarFilledIcon } from "../../../../../DesignSystem/Icons";
+import FavoriteTaskChip from "../../../../../User/FavoriteTaskChip";
 import { getLocalizedField } from "../../../../../../lib/i18nContent";
 
 // Tasks and surveys the students picked for their copy of a card, when the
@@ -136,9 +137,10 @@ export default function StudentTaskPicker({
           }
         )}
       </div>
-      {/* The trigger lists the picks, so there are no chips below it. */}
+      {/* The picks show as chips below, so the trigger keeps its placeholder. */}
       <DropdownSelect
         multiple
+        placeholderOnly
         value={pickedTasks.map((task) => task.id)}
         onChange={handleChange}
         options={options}
@@ -154,6 +156,28 @@ export default function StudentTaskPicker({
         )}
         disabled={disabled}
       />
+      {pickedTasks.length > 0 && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+          {pickedTasks.map((task) => (
+            <FavoriteTaskChip
+              key={task.id}
+              task={task}
+              user={user}
+              disabled={disabled}
+              onClose={
+                disabled
+                  ? undefined
+                  : () =>
+                      handleChange(
+                        pickedTasks
+                          .map((picked) => picked.id)
+                          .filter((id) => id !== task.id)
+                      )
+              }
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

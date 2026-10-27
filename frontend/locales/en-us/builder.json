@@ -1529,6 +1529,8 @@
 	"mainCard": {
 		"studentTasks": {
 			"description": "Pick the tasks and surveys you plan to use for this part of your project.",
+			"favoriteAdd": "Add to favorites",
+			"favoriteRemove": "Remove from favorites",
 			"favoritesGroup": "Your favorites",
 			"placeholder": "Add a task or survey",
 			"surveysGroup": "Surveys",
@@ -1924,6 +1926,9 @@
 			"emptyState": "No cards match the selected filters. Please adjust your status, review step, or assigned filters to see cards.",
 			"reviewSteps": "Review Steps",
 			"title": "Filter by"
+		},
+		"studentTasks": {
+			"linkedByTeacher": "Linked by your teacher: {{tasks}}"
 		}
 	},
 	"proposalSelector": {
@@ -1947,6 +1952,7 @@
 		"comment": "comment{{count !== 1 ? 's' : ''}}",
 		"commentBtn": "Comment",
 		"featuredProject": "Featured project",
+		"studentNames": "Students",
 		"feedbackCenter": "Feedback Center",
 		"filterByClasses": "Filter by classes",
 		"noClassesAvailable": "You are not connected to any classes yet.",
