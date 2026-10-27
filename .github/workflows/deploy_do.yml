@@ -103,7 +103,10 @@ jobs:
         env:
           PM2_APPS: ${{ vars.PM2_APPS }}
         run: |
-          ssh "yury@${{ secrets.DEPLOY_HOST }}" bash -s -- "$GITHUB_SHA" "$PM2_APPS" <<'EOF'
+          # ssh joins its arguments into one remote command line, so quote
+          # them here; otherwise "$2" would only get the first app name.
+          printf -v REMOTE_ARGS '%q ' "$GITHUB_SHA" "$PM2_APPS"
+          ssh "yury@${{ secrets.DEPLOY_HOST }}" "bash -s -- $REMOTE_ARGS" <<'EOF'
           set -eo pipefail
           SHA="$1"
           PM2_APPS="${2:?set the PM2_APPS repository variable}"
