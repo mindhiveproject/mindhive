@@ -21,14 +21,14 @@ import {
 import MessageCard from "../../DesignSystem/MessageCard";
 import BackToProtocols from "./BackToProtocols";
 import useSavedFlash from "./useSavedFlash";
+import useConsentSections from "./useConsentSections";
 import {
-  CONSENT_SECTIONS,
   DEFAULT_GROUPS,
   LINK_EXPIRY_DAYS,
   REMINDER_AFTER_DAYS,
-  completedSections,
   consentTypesForGroups,
   finalizeInfo,
+  formReady,
   getConsentType,
   hasMinorGroup,
   isStudentUser,
@@ -89,9 +89,23 @@ export default function ConsentSettings({ consent, template, user }) {
   const { data: classData } = useQuery(GET_MY_STUDENT_CLASSES, {
     skip: !isStudent,
   });
-  const classOptions = (classData?.authenticatedItem?.studentIn || []).map(
-    (cl) => ({ value: cl.id, label: cl.title || cl.code })
-  );
+  const studentClasses = classData?.authenticatedItem?.studentIn || [];
+  const classOptions = studentClasses.map((cl) => ({
+    value: cl.id,
+    label: cl.title || cl.code,
+  }));
+  // the class picked here decides which consent sections apply
+  const sectionsClassId = inputs.classId || consent?.class?.id;
+  const pickedClass =
+    studentClasses.find((cl) => cl.id === sectionsClassId) ||
+    (consent?.class?.id === sectionsClassId ? consent?.class : null);
+  const { sectionsFor } = useConsentSections({
+    classId: sectionsClassId,
+    classNetworkId: pickedClass?.networks?.[0]?.id,
+    review: consent?.settings?.review,
+  });
+  // approved by the teaching team: read-only until they reopen it
+  const locked = consent?.settings?.review?.status === "approved";
   const groups = visibleGroups(user);
   const selectedGroups = eligibility.groups.filter((key) =>
     groups.some((group) => group.key === key)
@@ -101,7 +115,8 @@ export default function ConsentSettings({ consent, template, user }) {
     !!inputs.title.trim() &&
     selectedGroups.length > 0 &&
     (!isStudent || !!inputs.classId) &&
-    !loading;
+    !loading &&
+    !locked;
 
   const toggleGroup = (key, checked) =>
     setSettings("eligibility", {
@@ -139,7 +154,10 @@ export default function ConsentSettings({ consent, template, user }) {
               title: inputs.title,
               description: inputs.description,
               settings: inputs.settings,
-              info: finalizeInfo(normalizeInfo(template?.info || [])),
+              info: finalizeInfo(
+                normalizeInfo(template?.info || []),
+                sectionsFor
+              ),
               ...(template?.organization
                 ? { organization: template.organization }
                 : {}),
@@ -258,6 +276,18 @@ export default function ConsentSettings({ consent, template, user }) {
           }
         )}
       </p>
+      {locked && (
+        <p className="consentSettingsNote">
+          {t(
+            "consentAdmin.review.locked",
+            {},
+            {
+              default:
+                "This protocol was approved and is locked. Ask your teacher to reopen it to make changes.",
+            }
+          )}
+        </p>
+      )}
 
       <DisplayError error={createError || editError} />
 
@@ -474,8 +504,7 @@ export default function ConsentSettings({ consent, template, user }) {
             {tabs.map((name) => {
               const type = getConsentType(name);
               const block = info.find((b) => b?.name === name);
-              const ready =
-                completedSections(block) === CONSENT_SECTIONS.length;
+              const ready = formReady(block, sectionsFor(name));
               return (
                 <li key={name}>
                   <div>

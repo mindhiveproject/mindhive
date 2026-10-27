@@ -11,6 +11,7 @@ import ConsentPreview from "./ConsentPreview";
 import useForm from "../../../lib/useForm";
 import ConsentForm from "./ConsentForm";
 import ConsentSettings from "./ConsentSettings";
+import useConsentSections from "./useConsentSections";
 import {
   finalizeInfo,
   normalizeInfo,
@@ -135,6 +136,11 @@ function EditConsent({ consent, user, initialForm }) {
     hasClass: !!consent?.class?.id,
     reviewers: [...new Set(teachers.map((p) => p?.username))].filter(Boolean),
   };
+  const consentSections = useConsentSections({
+    classId: consent?.class?.id,
+    classNetworkId: consent?.class?.networks?.[0]?.id,
+    review: consent?.settings?.review,
+  });
 
   // saves the current forms and marks the protocol as submitted
   async function handleSubmitReview() {
@@ -143,7 +149,7 @@ function EditConsent({ consent, user, initialForm }) {
       await submitReview({
         variables: {
           consentId: consent?.id,
-          info: finalizeInfo(inputs?.info),
+          info: finalizeInfo(inputs?.info, consentSections.sectionsFor),
         },
       });
     } catch (err) {
@@ -155,7 +161,10 @@ function EditConsent({ consent, user, initialForm }) {
     try {
       // stay on the current form; the editor confirms the save
       await editConsent({
-        variables: { id: consent?.id, info: finalizeInfo(inputs?.info) },
+        variables: {
+          id: consent?.id,
+          info: finalizeInfo(inputs?.info, consentSections.sectionsFor),
+        },
       });
       return true;
     } catch (err) {
@@ -168,6 +177,7 @@ function EditConsent({ consent, user, initialForm }) {
     <ConsentForm
       initialForm={initialForm}
       review={review}
+      consentSections={consentSections}
       onSubmitReview={handleSubmitReview}
       submittingReview={submittingReview}
       groups={normalizeSettings(consent?.settings).eligibility.groups}

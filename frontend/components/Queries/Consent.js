@@ -78,6 +78,9 @@ export const GET_CONSENT = gql`
           id
           username
         }
+        networks {
+          id
+        }
       }
       createdAt
       author {
@@ -102,6 +105,9 @@ export const GET_MY_STUDENT_CLASSES = gql`
           id
           title
           code
+          networks {
+            id
+          }
         }
       }
     }

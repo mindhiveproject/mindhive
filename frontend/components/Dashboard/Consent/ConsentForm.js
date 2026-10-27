@@ -11,11 +11,12 @@ import JoditEditor from "../../Jodit/Editor";
 import BackToProtocols from "./BackToProtocols";
 import useSavedFlash from "./useSavedFlash";
 import {
-  CONSENT_SECTIONS,
   LEGACY_SECTION,
   assembleText,
   completedSections,
+  formReady,
   getConsentType,
+  requiredSections,
   sectionFilled,
   consentTypesForGroups,
   isStudentUser,
@@ -34,6 +35,7 @@ export default function ConsentForm({
   loading,
   error,
   review,
+  consentSections,
   onSubmitReview,
   submittingReview,
 }) {
@@ -60,8 +62,18 @@ export default function ConsentForm({
   const currentName = tabs.includes(activeName) ? activeName : tabs[0];
   const block = info.find((b) => b?.name === currentName);
   const audience = getConsentType(currentName)?.audience;
+  const { sectionsFor, sectionLabel, checklistLabel, sectionHint } =
+    consentSections;
+  const sections = sectionsFor(currentName);
+  const required = requiredSections(sections);
 
-  const canSave = !!inputs?.title?.trim() && !loading;
+  // approved by the teaching team: read-only until they reopen it
+  const locked = review?.status === "approved";
+  const canSave =
+    !!inputs?.title?.trim() &&
+    !loading &&
+    !consentSections.loading &&
+    !locked;
 
   const typeLabel = (name) => {
     const type = getConsentType(name);
@@ -69,15 +81,6 @@ export default function ConsentForm({
       type?.label || info.find((b) => b?.name === name)?.description || name;
     return t(`consentAdmin.types.${name}`, {}, { default: fallback });
   };
-
-  const sectionLabel = (section) =>
-    t(
-      `consentAdmin.sections.${section.key}${
-        section.key === "activities" && audience === "parent" ? "Parent" : ""
-      }`,
-      {},
-      { default: section.label(audience) }
-    );
 
   const updateSection = (key, value) => {
     handleChange({
@@ -110,14 +113,16 @@ export default function ConsentForm({
       ),
     }[audience] ||
     t("consentAdmin.previewConsent", {}, { default: "Preview consent form" });
-  const previewText = previewOpen && block ? assembleText(block) : "";
+  const previewText =
+    previewOpen && block ? assembleText(block, sections) : "";
 
   // Teacher review (Figma node 10:491): students only
   const showReview = isStudentUser(user) && !!review;
-  const allReady = tabs.every(
-    (name) =>
-      completedSections(info.find((b) => b?.name === name)) ===
-      CONSENT_SECTIONS.length
+  const allReady = tabs.every((name) =>
+    formReady(
+      info.find((b) => b?.name === name),
+      sectionsFor(name)
+    )
   );
   const reviewers = review?.reviewers?.length
     ? review.reviewers.join(", ")
@@ -139,7 +144,7 @@ export default function ConsentForm({
     "",
     t("consentAdmin.review.notSubmitted", {}, { default: "Not submitted yet" }),
   ];
-  const completed = completedSections(block);
+  const completed = completedSections(block, sections);
   const hasLegacyText = block?.sections?.[LEGACY_SECTION] !== undefined;
 
   return (
@@ -178,6 +183,19 @@ export default function ConsentForm({
 
       <DisplayError error={error} />
 
+      {locked && (
+        <p className="consentSettingsNote">
+          {t(
+            "consentAdmin.review.locked",
+            {},
+            {
+              default:
+                "This protocol was approved and is locked. Ask your teacher to reopen it to make changes.",
+            }
+          )}
+        </p>
+      )}
+
       <div
         className="consentFormTabs"
         role="tablist"
@@ -191,8 +209,7 @@ export default function ConsentForm({
       >
         {tabs.map((name) => {
           const tabBlock = info.find((b) => b?.name === name);
-          const complete =
-            completedSections(tabBlock) === CONSENT_SECTIONS.length;
+          const complete = formReady(tabBlock, sectionsFor(name));
           return (
             <button
               key={name}
@@ -224,28 +241,39 @@ export default function ConsentForm({
 
       <div className="consentEditorBody">
         <div className="consentSections" role="tabpanel">
-          {CONSENT_SECTIONS.map((section) => (
-            <div
-              className="consentSectionCard"
-              key={`${currentName}-${section.key}`}
-            >
-              <label
-                className="consentSectionLabel"
-                htmlFor={`consent-${currentName}-${section.key}`}
+          {sections.map((section) => {
+            const hint = sectionHint(section);
+            return (
+              <div
+                className="consentSectionCard"
+                key={`${currentName}-${section.key}`}
               >
-                {sectionLabel(section)}
-              </label>
-              <Input
-                id={`consent-${currentName}-${section.key}`}
-                multiline
-                rows={2}
-                value={block?.sections?.[section.key] || ""}
-                onChange={(value) => updateSection(section.key, value)}
-                disabled={loading}
-                className="consentSectionInput"
-              />
-            </div>
-          ))}
+                <label
+                  className="consentSectionLabel"
+                  htmlFor={`consent-${currentName}-${section.key}`}
+                >
+                  {sectionLabel(section, currentName)}
+                  {!section.required &&
+                    ` (${t(
+                      "consentAdmin.optional",
+                      {},
+                      { default: "optional" }
+                    )})`}
+                </label>
+                {hint && <p className="consentSectionHint">{hint}</p>}
+                <Input
+                  id={`consent-${currentName}-${section.key}`}
+                  multiline
+                  rows={2}
+                  value={block?.sections?.[section.key] || ""}
+                  onChange={(value) => updateSection(section.key, value)}
+                  placeholder={section.placeholder || undefined}
+                  disabled={loading || locked}
+                  className="consentSectionInput"
+                />
+              </div>
+            );
+          })}
 
           {hasLegacyText && (
             <div className="consentSectionCard" key={`${currentName}-legacy`}>
@@ -268,12 +296,20 @@ export default function ConsentForm({
                   }
                 )}
               </p>
-              <JoditEditor
-                key={currentName}
-                minHeight={200}
-                content={block?.sections?.[LEGACY_SECTION]}
-                setContent={(content) => updateSection(LEGACY_SECTION, content)}
-              />
+              {locked ? (
+                <div className="consentSectionText">
+                  {ReactHtmlParser(block?.sections?.[LEGACY_SECTION] || "")}
+                </div>
+              ) : (
+                <JoditEditor
+                  key={currentName}
+                  minHeight={200}
+                  content={block?.sections?.[LEGACY_SECTION]}
+                  setContent={(content) =>
+                    updateSection(LEGACY_SECTION, content)
+                  }
+                />
+              )}
             </div>
           )}
         </div>
@@ -291,25 +327,17 @@ export default function ConsentForm({
           <p className="consentChecklistCount">
             {t(
               "consentAdmin.completeCount",
-              { done: completed, total: CONSENT_SECTIONS.length },
+              { done: completed, total: required.length },
               { default: "{{done}} of {{total}} complete" }
             )}
           </p>
           <ul>
-            {CONSENT_SECTIONS.map((section) => {
+            {required.map((section) => {
               const filled = sectionFilled(block, section.key);
               return (
                 <li key={section.key} className={filled ? "done" : "missing"}>
                   <span aria-hidden="true">{filled ? "✓" : "!"}</span>
-                  <span>
-                    {t(
-                      `consentAdmin.checklist.${section.key}`,
-                      {},
-                      {
-                        default: section.checklist,
-                      }
-                    )}
-                  </span>
+                  <span>{checklistLabel(section, currentName)}</span>
                 </li>
               );
             })}

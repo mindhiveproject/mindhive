@@ -92,4 +92,28 @@ export const Consent = list({
     }),
     updatedAt: timestamp(),
   },
+  hooks: {
+    // A protocol approved by its class teaching team is locked: only that
+    // team may change it (reviewConsent reopens it for more work).
+    async validateInput({ operation, item, context, addValidationError }) {
+      if (operation !== "update") return;
+      if ((item?.settings as any)?.review?.status !== "approved") return;
+      const sessionId = context.session?.itemId;
+      const cl = item?.classId
+        ? await context.sudo().query.Class.findOne({
+            where: { id: String(item.classId) },
+            query: "creator { id } teachingTeam { id }",
+          })
+        : null;
+      const teamIds = [
+        cl?.creator?.id,
+        ...(cl?.teachingTeam || []).map((p: { id: string }) => p.id),
+      ];
+      if (!sessionId || !teamIds.includes(sessionId)) {
+        addValidationError(
+          "This protocol was approved and is locked. Ask your teacher to reopen it to make changes."
+        );
+      }
+    },
+  },
 });

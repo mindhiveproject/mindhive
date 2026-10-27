@@ -6,10 +6,15 @@
  * - reviewConsent: a member of that teaching team approves it or reopens it
  *   with a note; the author and collaborators get an Update.
  *
- * The state lives in Consent.settings.review. Writes use sudo because
+ * The state lives in Consent.settings.review, with a snapshot of the
+ * section definitions the protocol was submitted against (`sections`), so
+ * submitted and approved protocols keep their sections when an admin edits
+ * the consent FormDefinitions. Writes use sudo because
  * teachers are not collaborators on the protocol (list update is
  * author/collaborator only); permission is checked here instead.
  */
+
+import resolveFormDefinition from "./resolveFormDefinition";
 
 const CONSENT_QUERY = `
   id
@@ -18,8 +23,58 @@ const CONSENT_QUERY = `
   settings
   author { id username }
   collaborators { id }
-  class { id creator { id } teachingTeam { id } }
+  class { id creator { id } teachingTeam { id } networks { id } }
 `;
+
+// Consent sections are defined per audience (keys consent_<audience>);
+// only text fields are sections. Keep in sync with consentTypes.js.
+const CONSENT_AUDIENCES = ["adult", "parent", "minor"];
+const SECTION_FIELD_TYPES = ["text", "textarea"];
+
+// The resolved section definitions of each audience. Audiences with no
+// published definition are left out (the editor falls back to the
+// built-in sections).
+async function snapshotSections(context: any, consent: any) {
+  const snapshot: Record<string, unknown> = {};
+  for (const audience of CONSENT_AUDIENCES) {
+    const match = await resolveFormDefinition(
+      null,
+      {
+        key: `consent_${audience}`,
+        classId: consent.class?.id,
+        classNetworkId: consent.class?.networks?.[0]?.id,
+      },
+      context.sudo()
+    );
+    if (!match) continue;
+    const definition = await context.sudo().query.FormDefinition.findOne({
+      where: { id: match.id },
+      query: `id version cards(orderBy: { order: asc }) {
+        fields(orderBy: { order: asc }) {
+          name fieldType label labelI18n helperText helperTextI18n
+          placeholder isRequired
+        }
+      }`,
+    });
+    snapshot[audience] = {
+      definitionId: definition.id,
+      version: definition.version,
+      sections: (definition.cards || [])
+        .flatMap((card: any) => card.fields || [])
+        .filter((field: any) => SECTION_FIELD_TYPES.includes(field.fieldType))
+        .map((field: any) => ({
+          key: field.name,
+          label: field.label,
+          labelI18n: field.labelI18n,
+          helperText: field.helperText,
+          helperTextI18n: field.helperTextI18n,
+          placeholder: field.placeholder,
+          required: !!field.isRequired,
+        })),
+    };
+  }
+  return snapshot;
+}
 
 // Update messages are rendered as HTML
 function escapeHtml(value: unknown): string {
@@ -92,6 +147,7 @@ export async function submitConsentForReview(
     where: { id: sessionId },
     query: "username",
   });
+  const sections = await snapshotSections(context, consent);
 
   await context.sudo().db.Consent.updateOne({
     where: { id: consentId },
@@ -103,6 +159,7 @@ export async function submitConsentForReview(
           status: "submitted",
           submittedAt: new Date().toISOString(),
           submittedBy: { id: sessionId, username: submitter?.username },
+          sections,
         },
       },
     },

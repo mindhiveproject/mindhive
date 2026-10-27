@@ -78,7 +78,26 @@ export const STUDENT_CONSENT_TYPES = [
   "regularMinorsKids",
 ];
 
-// Required sections of every form. `label` may depend on the audience.
+// Sections are admin-defined FormDefinitions, one per audience (keys
+// consent_<audience>, seeded in keystone/mutations/seedData/consentFormSeed.ts).
+// Each text field is a section stored under its name in info[i].sections;
+// required fields must be filled for a form to be ready.
+// Keep in sync with keystone/mutations/consentReview.ts.
+export const CONSENT_AUDIENCES = ["adult", "parent", "minor"];
+const SECTION_FIELD_TYPES = ["text", "textarea"];
+
+export function consentDefinitionKey(audience) {
+  return `consent_${audience}`;
+}
+
+// Form types with no known audience (older custom ones) use the adult wording
+export function audienceOf(name) {
+  return getConsentType(name)?.audience || "adult";
+}
+
+// Built-in sections: used while definitions load, when none is published,
+// and for protocols submitted before section snapshots existed.
+// `label` may depend on the audience.
 export const CONSENT_SECTIONS = [
   {
     key: "purpose",
@@ -162,9 +181,48 @@ export function sectionFilled(block, key) {
   return !!stripHtml(block?.sections?.[key]).trim();
 }
 
-export function completedSections(block) {
-  return CONSENT_SECTIONS.filter((section) => sectionFilled(block, section.key))
-    .length;
+// Built-in sections in the shape of definition sections
+export function fallbackSections(audience) {
+  return CONSENT_SECTIONS.map((section) => ({
+    key: section.key,
+    label: section.label(audience),
+    checklist: section.checklist,
+    required: true,
+    builtIn: true,
+  }));
+}
+
+// Sections of a resolved consent FormDefinition, in card and field order
+export function definitionSections(definition) {
+  return (definition?.cards || [])
+    .flatMap((card) => card?.fields || [])
+    .filter((field) => SECTION_FIELD_TYPES.includes(field?.fieldType))
+    .map((field) => ({
+      key: field.name,
+      label: field.label,
+      labelI18n: field.labelI18n,
+      helperText: field.helperText,
+      helperTextI18n: field.helperTextI18n,
+      placeholder: field.placeholder,
+      required: !!field.isRequired,
+    }));
+}
+
+export function requiredSections(sections) {
+  return (sections || []).filter((section) => section.required);
+}
+
+// Number of required sections filled in
+export function completedSections(block, sections) {
+  return requiredSections(sections).filter((section) =>
+    sectionFilled(block, section.key)
+  ).length;
+}
+
+export function formReady(block, sections) {
+  return (
+    completedSections(block, sections) === requiredSections(sections).length
+  );
 }
 
 function stripHtml(value) {
@@ -183,16 +241,15 @@ function escapeHtml(value) {
 
 // Build the HTML participants see at study join from a block's sections.
 // TODO: display the sections individually to participants instead.
-export function assembleText(block) {
-  const audience = getConsentType(block?.name)?.audience;
-  const parts = CONSENT_SECTIONS.filter((section) =>
+export function assembleText(block, sections) {
+  const parts = (sections || []).filter((section) =>
     sectionFilled(block, section.key)
   ).map((section) => {
     const paragraphs = String(block.sections[section.key])
       .split(/\n{2,}/)
       .map((p) => `<p>${escapeHtml(p.trim()).replace(/\n/g, "<br>")}</p>`)
       .join("");
-    return `<h4>${escapeHtml(section.label(audience))}</h4>${paragraphs}`;
+    return `<h4>${escapeHtml(section.label)}</h4>${paragraphs}`;
   });
   if (sectionFilled(block, LEGACY_SECTION)) {
     parts.push(block.sections[LEGACY_SECTION]);
@@ -200,11 +257,12 @@ export function assembleText(block) {
   return parts.join("");
 }
 
-// Info ready to save: every block carries the assembled participant text
-export function finalizeInfo(info) {
+// Info ready to save: every block carries the assembled participant text.
+// `sectionsFor(name)` gives the sections of a form type.
+export function finalizeInfo(info, sectionsFor) {
   return (info || []).map((block) => ({
     ...block,
-    text: assembleText(block),
+    text: assembleText(block, sectionsFor(block?.name)),
   }));
 }
 

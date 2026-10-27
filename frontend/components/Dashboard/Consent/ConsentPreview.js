@@ -6,10 +6,10 @@ import ReactHtmlParser from "react-html-parser";
 import Button from "../../DesignSystem/Button";
 import BackToProtocols from "./BackToProtocols";
 import TeacherReviewPanel from "./TeacherReviewPanel";
+import useConsentSections from "./useConsentSections";
 import {
-  CONSENT_SECTIONS,
   LEGACY_SECTION,
-  completedSections,
+  formReady,
   consentTypesForGroups,
   getConsentType,
   normalizeInfo,
@@ -30,7 +30,11 @@ export default function ConsentPreview({ consent, user, canEdit, isReviewer }) {
   const [activeName, setActiveName] = useState(null);
   const currentName = tabs.includes(activeName) ? activeName : tabs[0];
   const block = info.find((b) => b?.name === currentName);
-  const audience = getConsentType(currentName)?.audience;
+  const { sectionsFor, sectionLabel } = useConsentSections({
+    classId: consent?.class?.id,
+    classNetworkId: consent?.class?.networks?.[0]?.id,
+    review: consent?.settings?.review,
+  });
   const href = `/dashboard/irb/${consent?.code}`;
 
   const typeLabel = (name) => {
@@ -39,15 +43,6 @@ export default function ConsentPreview({ consent, user, canEdit, isReviewer }) {
       type?.label || info.find((b) => b?.name === name)?.description || name;
     return t(`consentAdmin.types.${name}`, {}, { default: fallback });
   };
-
-  const sectionLabel = (section) =>
-    t(
-      `consentAdmin.sections.${section.key}${
-        section.key === "activities" && audience === "parent" ? "Parent" : ""
-      }`,
-      {},
-      { default: section.label(audience) }
-    );
 
   const hint = getConsentType(currentName)?.hint;
 
@@ -95,9 +90,10 @@ export default function ConsentPreview({ consent, user, canEdit, isReviewer }) {
           )}
         >
           {tabs.map((name) => {
-            const complete =
-              completedSections(info.find((b) => b?.name === name)) ===
-              CONSENT_SECTIONS.length;
+            const complete = formReady(
+              info.find((b) => b?.name === name),
+              sectionsFor(name)
+            );
             return (
               <button
                 key={name}
@@ -145,14 +141,16 @@ export default function ConsentPreview({ consent, user, canEdit, isReviewer }) {
               )}
             </p>
           )}
-          {CONSENT_SECTIONS.map((section) => {
+          {sectionsFor(currentName).map((section) => {
             const filled = sectionFilled(block, section.key);
             return (
               <section
                 className="consentSectionCard"
                 key={`${currentName}-${section.key}`}
               >
-                <h3 className="consentSectionLabel">{sectionLabel(section)}</h3>
+                <h3 className="consentSectionLabel">
+                  {sectionLabel(section, currentName)}
+                </h3>
                 {filled ? (
                   <p className="consentSectionText">
                     {block.sections[section.key]}
