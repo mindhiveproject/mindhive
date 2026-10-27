@@ -52,6 +52,7 @@ import {
   updateGuestStudiesInfo,
 } from "./participantRun";
 import markOpportunityReviewNotesRead from "./markOpportunityReviewNotesRead";
+import { reviewConsent, submitConsentForReview } from "./consentReview";
 import recordOpportunityPreviewVisit from "./recordOpportunityPreviewVisit";
 import toggleFavoriteOpportunity from "./toggleFavoriteOpportunity";
 import resolveFormDefinition from "./resolveFormDefinition";
@@ -314,6 +315,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # Connect the session user to OpportunityReviewNote.readBy for
         # notes they can see. Needed because list update is author-only.
         markOpportunityReviewNotesRead(noteIds: [ID!]!): [OpportunityReviewNote!]!
+        # Consent protocol teacher review (see consentReview.ts).
+        submitConsentForReview(consentId: ID!, info: JSON): Consent
+        reviewConsent(consentId: ID!, decision: String!, note: String): Consent
         # Student class Opportunities preview session (dwell >= 1s).
         # Creates a Log with event OPPORTUNITY_PREVIEW_VISIT.
         recordOpportunityPreviewVisit(
@@ -706,6 +710,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         updateGuestStudiesInfo,
         toggleReviewUpvote,
         markOpportunityReviewNotesRead,
+        submitConsentForReview,
+        reviewConsent,
         recordOpportunityPreviewVisit,
         toggleFavoriteOpportunity,
         seedOpportunityForm,

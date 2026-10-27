@@ -1,6 +1,6 @@
 // Two-step "+ New form definition" wizard. Step 1 picks the consumer
 // surface (individual profile / organization profile / opportunity /
-// feedback). Step 2 collects surface-specific inputs and composes the
+// feedback / consent sections). Step 2 collects surface-specific inputs and composes the
 // key admins used to have to remember and type by hand.
 //
 // The key remains the load-bearing identifier internally — this
@@ -126,6 +126,18 @@ const SURFACES = [
     label: "Feedback (review)",
     hint: "A milestone review form. One key per (stage × curriculum) pair.",
   },
+  {
+    value: "consent",
+    label: "Consent sections",
+    hint: "The sections of a consent protocol (/dashboard/irb). One key per audience; required fields must be filled.",
+  },
+];
+
+// Consent sections are defined per audience of the consent form
+const CONSENT_AUDIENCE_OPTIONS = [
+  { value: "adult", label: "Adult consent" },
+  { value: "parent", label: "Parent / guardian permission" },
+  { value: "minor", label: "Participant assent" },
 ];
 
 // Preset stage + curriculum options for the feedback wizard. The
@@ -173,14 +185,28 @@ const KEY_FOR_SURFACE = {
   opportunity: "opportunity",
 };
 
-function composedKey(surface, stage, curriculum) {
+function composedKey(surface, stage, curriculum, audience) {
+  if (surface === "consent") return audience ? `consent_${audience}` : "";
   if (surface !== "feedback") return KEY_FOR_SURFACE[surface] || "";
   if (!stage || !curriculum) return "";
   return `review_${stage}_${curriculum}`;
 }
 
-function suggestedTitle(surface, stage, curriculum, stageOpts, currOpts) {
+function suggestedTitle(
+  surface,
+  stage,
+  curriculum,
+  stageOpts,
+  currOpts,
+  audience
+) {
   const surfaceLabel = SURFACES.find((s) => s.value === surface)?.label || "";
+  if (surface === "consent") {
+    const audienceLabel = CONSENT_AUDIENCE_OPTIONS.find(
+      (o) => o.value === audience
+    )?.label;
+    return audienceLabel ? `${surfaceLabel} — ${audienceLabel}` : surfaceLabel;
+  }
   if (surface !== "feedback") return surfaceLabel;
   const stageLabel =
     stageOpts.find((o) => o.value === stage)?.text || stage || "";
@@ -200,6 +226,7 @@ export default function NewDefinitionForm({ open, onClose }) {
   const [proposalBoardId, setProposalBoardId] = useState(null);
   const [reviewStage, setReviewStage] = useState(null);
   const [reviewCurriculum, setReviewCurriculum] = useState(null);
+  const [consentAudience, setConsentAudience] = useState("adult");
   const [stageOptions, setStageOptions] = useState(DEFAULT_STAGE_OPTIONS);
   const [curriculumOptions, setCurriculumOptions] = useState(
     DEFAULT_CURRICULUM_OPTIONS
@@ -237,13 +264,19 @@ export default function NewDefinitionForm({ open, onClose }) {
     }));
   }, [boardsData]);
 
-  const key = composedKey(surface, reviewStage, reviewCurriculum);
+  const key = composedKey(
+    surface,
+    reviewStage,
+    reviewCurriculum,
+    consentAudience
+  );
   const autoTitle = suggestedTitle(
     surface,
     reviewStage,
     reviewCurriculum,
     stageOptions,
-    curriculumOptions
+    curriculumOptions,
+    consentAudience
   );
   const effectiveTitle = titleTouched ? title : autoTitle;
 
@@ -420,6 +453,26 @@ export default function NewDefinitionForm({ open, onClose }) {
                   />
                 </FieldRow>
               </>
+            ) : null}
+
+            {surface === "consent" ? (
+              <FieldRow>
+                <span className="label-text">Audience</span>
+                <span className="hint">
+                  Form types use the definition of their audience (e.g. SONA
+                  and NYC parent forms use the parent one).
+                </span>
+                <select
+                  value={consentAudience}
+                  onChange={(e) => setConsentAudience(e.target.value)}
+                >
+                  {CONSENT_AUDIENCE_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+              </FieldRow>
             ) : null}
 
             <FieldRow>

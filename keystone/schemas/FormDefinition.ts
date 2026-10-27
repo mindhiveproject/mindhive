@@ -8,7 +8,7 @@ import {
 } from "@keystone-6/core/fields";
 import { rules, isSignedIn } from "../access";
 
-// The four consumer surfaces admin-defined forms drive today. Purely
+// The consumer surfaces admin-defined forms drive today. Purely
 // UX-facing: `surface` is a filter / grouping / picker aid in the admin
 // UI. The load-bearing identifier is still `key`, which the resolver
 // and validator use. When adding a fifth surface, extend this list AND
@@ -19,6 +19,7 @@ export const SURFACE_OPTIONS = [
   { label: "Opportunity", value: "opportunity" },
   { label: "Feedback (review)", value: "feedback" },
   { label: "Student assessment", value: "student_assessment" },
+  { label: "Consent sections", value: "consent" },
 ] as const;
 
 const SURFACE_VALUES = new Set(SURFACE_OPTIONS.map((o) => o.value));
@@ -36,6 +37,8 @@ export function inferSurfaceFromKey(
   if (key === "opportunity") return "opportunity";
   if (key.startsWith("review_")) return "feedback";
   if (key.startsWith("student_assessment")) return "student_assessment";
+  // consent_adult / consent_parent / consent_minor
+  if (key.startsWith("consent_")) return "consent";
   return null;
 }
 

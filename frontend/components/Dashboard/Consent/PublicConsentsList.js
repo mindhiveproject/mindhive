@@ -1,106 +1,113 @@
-import { useQuery, useMutation } from "@apollo/client";
-import moment from "moment";
-import { useState } from "react";
-import { GET_PUBLIC_CONSENTS, GET_MY_CONSENTS } from "../../Queries/Consent";
-import { CREATE_CONSENT } from "../../Mutations/Consent";
+import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-
 import Link from "next/link";
-import { customAlphabet } from "nanoid";
-import Button from "../../DesignSystem/Button";
+import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 
-export default function ConsentsList({ query, user }) {
+import { GET_PUBLIC_CONSENTS } from "../../Queries/Consent";
+import Button from "../../DesignSystem/Button";
+
+export default function PublicConsentsList({ user }) {
   const router = useRouter();
   const { t } = useTranslation("dashboard");
-  
-  const [newConsentId, setNewConsentId] = useState(null); // State to store the new consent ID
-  
   const { data, error, loading } = useQuery(GET_PUBLIC_CONSENTS, {
-    variables: {
-      id: user?.id,
-    },
+    fetchPolicy: "cache-and-network",
   });
-
   const consents = data?.consents || [];
-  
-  const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 16);
 
-  const [createNewConsent, {data: newConsentData, errorConsent}] = useMutation(CREATE_CONSENT, {
-    refetchQueries: [GET_MY_CONSENTS, "MyConsentQuery"],
-  });
-
-  async function createConsentlCopy(i) {
-    // console.log("Copying consent...");
-    // console.log(consents[i])
-    const consentToCopy = consents[i];
-  
-    if (!consentToCopy) {
-      console.error("Consent not found.");
-      return;
-    }
-
-    const input = {
-      title: `${consentToCopy.title} (${user.username}'s copy)`, // The title of the consent
-      description: consentToCopy.description, // The description of the consent
-      info: consentToCopy.info, // The info of the consent
-      settings: consentToCopy.settings, // The settings of the consent
-      organization: consentToCopy.organization, // The organization of the consent
-      code: nanoid(16), // A unique code generated for the consent
-      author: {
-        connect: {
-          id: user?.id, // The ID of the current user, connecting them as the author
-        },
-      },
-      createdAt: new Date().toISOString(), // The timestamp for when the consent is created
-    };
-    
-    // console.log("Consent copy variables:", input);
-
-    try {
-      const { data } = await createNewConsent({
-        variables: {
-          input: input,
-        },
-      });
-  
-      // if (data?.createConsent?.id) {
-      //   setTimeout(() => {
-      //     navigate(`/dashboard/irb/${data.createConsent.id}`);
-      //   }, 500);
-      // }
-      if (data?.createConsent?.id) {
-        setNewConsentId(data.createConsent.id); // Store the new consent ID in state
-        router.push(`/dashboard/irb/`);
-      }
-    } catch (error) {
-      console.error("Error creating consent copy:", error);
-    }
+  if (error) {
+    return (
+      <p className="consentListError" role="alert">
+        {t(
+          "consentAdmin.loadPublicError",
+          {},
+          {
+            default: "We couldn’t load the public protocols. Please try again.",
+          }
+        )}
+      </p>
+    );
   }
-  
+
+  if (loading && !data) {
+    return (
+      <p className="consentListLoading">
+        {t("consentAdmin.loading", {}, { default: "Loading…" })}
+      </p>
+    );
+  }
+
+  if (consents.length === 0) {
+    return (
+      <div className="consentListEmpty">
+        <h3>
+          {t(
+            "consentAdmin.noPublicProtocols",
+            {},
+            {
+              default: "There are no public protocols yet.",
+            }
+          )}
+        </h3>
+      </div>
+    );
+  }
+
   return (
-    <div className="board">
-      {consents?.map((consent, i) => (
-        <Link
-          key={i}
-          href={{
-            pathname: `/dashboard/irb/${newConsentId}?action=edit`,
-          }}
-        >
-          <div className="item">
-            <p>{consent?.title}</p>
-            <p>{consent?.description}</p>
-            <p>{moment(consent?.createdAt).format("MMMM D, YYYY")}</p>
-            <Button
-              variant="filled"
-              type="button"
-              onClick={() => createConsentlCopy(i)}
-            >
-              {t("consentAdmin.customize", {}, { default: "Customize" })}
-            </Button>
+    <>
+      <div className="consentListContainer">
+        <div className="consentListHeader hasAction">
+          <div>{t("consentAdmin.title", {}, { default: "Title" })}</div>
+          <div>
+            {t("consentAdmin.description", {}, { default: "Description" })}
           </div>
-        </Link>
-      ))}
-    </div>
+          <div>
+            {t("consentAdmin.dateCreated", {}, { default: "Date created" })}
+          </div>
+          <div aria-hidden="true" />
+        </div>
+
+        <div className="consentListBoard">
+          {consents.map((consent) => {
+            const href = `/dashboard/irb/${consent?.code}`;
+            return (
+              <div
+                key={consent.id}
+                className="consentListRow hasAction"
+                onClick={() => router.push(href)}
+              >
+                <div className="consentListRowTitle">
+                  <Link href={href} onClick={(e) => e.stopPropagation()}>
+                    {consent?.title}
+                  </Link>
+                </div>
+                <div className="consentListRowMeta">{consent?.description}</div>
+                <div className="consentListRowMeta">
+                  {moment(consent?.createdAt).format("MMMM D, YYYY")}
+                </div>
+                <div className="consentListRowAction">
+                  {/* opens a prefilled new protocol; nothing is copied yet */}
+                  <Link
+                    href={{
+                      pathname: "/dashboard/irb/add",
+                      query: { from: consent?.code },
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Button variant="outline" type="button">
+                      {t(
+                        "consentAdmin.customize",
+                        {},
+                        { default: "Customize" }
+                      )}
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
   );
 }
