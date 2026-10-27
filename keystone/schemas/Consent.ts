@@ -65,13 +65,20 @@ export const Consent = list({
       hooks: {
         async resolveInput({ context, operation, inputData }) {
           if (operation === "create") {
-            return { connect: { id: context.session.itemId } };
+            // keep the collaborators picked at creation, plus the creator
+            const selfId = context.session.itemId;
+            const picked = [inputData.collaborators?.connect || []]
+              .flat()
+              .filter((c: { id?: string }) => c?.id && c.id !== selfId);
+            return { connect: [...picked, { id: selfId }] };
           } else {
             return inputData.collaborators;
           }
         },
       },
     }),
+    // class whose teaching team reviews the protocol (student protocols)
+    class: relationship({ ref: "Class" }),
     studies: relationship({
       ref: "Study.consent",
       many: true,
@@ -84,5 +91,29 @@ export const Consent = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+  },
+  hooks: {
+    // A protocol approved by its class teaching team is locked: only that
+    // team may change it (reviewConsent reopens it for more work).
+    async validateInput({ operation, item, context, addValidationError }) {
+      if (operation !== "update") return;
+      if ((item?.settings as any)?.review?.status !== "approved") return;
+      const sessionId = context.session?.itemId;
+      const cl = item?.classId
+        ? await context.sudo().query.Class.findOne({
+            where: { id: String(item.classId) },
+            query: "creator { id } teachingTeam { id }",
+          })
+        : null;
+      const teamIds = [
+        cl?.creator?.id,
+        ...(cl?.teachingTeam || []).map((p: { id: string }) => p.id),
+      ];
+      if (!sessionId || !teamIds.includes(sessionId)) {
+        addValidationError(
+          "This protocol was approved and is locked. Ask your teacher to reopen it to make changes."
+        );
+      }
+    },
   },
 });

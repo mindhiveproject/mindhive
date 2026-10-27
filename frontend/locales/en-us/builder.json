@@ -216,7 +216,8 @@
 		"title": "Connect"
 	},
 	"consentSelector": {
-		"typeConsentProtocol": "Type consent protocol"
+		"typeConsentProtocol": "Type consent protocol",
+		"manageProtocols": "Manage consent protocols"
 	},
 	"createBlock": {
 		"currentlySelected": "Currently selected language: ",
@@ -452,7 +453,7 @@
 			"operations": {
 				"compute": "Compute",
 				"computeNew": "Compute new variable",
-						"copyExisting": "Copy existing variable",
+				"copyExisting": "Copy existing variable",
 				"recode": "Recode",
 				"recodeVariable": "Recode a variable",
 				"reverse": "Reverse",

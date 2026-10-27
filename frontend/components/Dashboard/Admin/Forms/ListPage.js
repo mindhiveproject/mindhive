@@ -22,6 +22,7 @@ const SURFACE_LABEL = {
   profile_organization: "Organization profile",
   opportunity: "Opportunity",
   feedback: "Feedback",
+  consent: "Consent sections",
 };
 
 // Keys are lowercase everywhere post-unification. If you add a new
@@ -40,6 +41,9 @@ const BASELINE_KEYS = [
   "review_submitted_as_proposal_nyu_cusp",
   "review_peer_review_nyu_cusp",
   "review_project_report_nyu_cusp",
+  "consent_adult",
+  "consent_parent",
+  "consent_minor",
 ];
 
 const Shell = styled.div`
@@ -520,6 +524,7 @@ export default function ListPage() {
             <option value="profile_organization">Organization profile</option>
             <option value="opportunity">Opportunity</option>
             <option value="feedback">Feedback (review)</option>
+            <option value="consent">Consent sections</option>
           </select>
         </label>
         <label>
