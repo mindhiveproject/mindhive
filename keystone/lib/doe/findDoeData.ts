@@ -15,6 +15,11 @@
 // in scope are removed from them (de-identification, a school leaving). At
 // termination everything is deleted, shared or not; that is the caller's call.
 //
+// De-identified accounts (deidentifiedAt set; only DOE accounts are
+// de-identified) and the content kept from them (DoeRetainedRecord) no longer
+// belong to any class or school, by design, so only the all-DOE scope, used at
+// termination, includes them.
+//
 // Queries are flat (`id: { in: [...] }`, `some` on a join table), never chains
 // of nested to-one relation filters, which make Postgres scan whole tables.
 // Works on context.prisma or a plain PrismaClient (scripts).
@@ -44,6 +49,8 @@ export type DoeData = {
   summaryResultIds: string[];
   dataSourceRecordIds: string[];
   guestIds: string[];
+  /** Content kept from de-identified accounts; all-DOE scope only. */
+  retained: { listKey: string; itemId: string }[];
 };
 
 /** Postgres caps bind parameters, so long `in` lists are queried in parts. */
@@ -83,7 +90,10 @@ export async function findDoeData(
   let classIds: string[] = [];
   let profileIds: string[];
   if ("profileId" in scope) {
-    profileIds = [String(scope.profileId)];
+    const exists = await prisma.profile.count({
+      where: { id: String(scope.profileId) },
+    });
+    profileIds = exists ? [String(scope.profileId)] : [];
   } else {
     const classes = await prisma.class.findMany({
       where: {
@@ -107,6 +117,13 @@ export async function findDoeData(
       });
     });
     profileIds = unique(people.map((p: any) => p.id));
+    if ("all" in scope) {
+      const deidentified = await prisma.profile.findMany({
+        where: { deidentifiedAt: { not: null } },
+        select: { id: true },
+      });
+      profileIds = unique([...profileIds, ...deidentified.map((p: any) => p.id)]);
+    }
   }
   const inScope = new Set(profileIds);
 
@@ -257,6 +274,12 @@ export async function findDoeData(
       "profileId"
     ),
     guestIds: unique(datasets.map((d) => d.guestId)),
+    retained:
+      "all" in scope
+        ? await prisma.doeRetainedRecord.findMany({
+            select: { listKey: true, itemId: true },
+          })
+        : [],
   };
 }
 
@@ -273,5 +296,6 @@ export function countDoeData(data: DoeData) {
     summaryResults: data.summaryResultIds.length,
     dataSourceRecords: data.dataSourceRecordIds.length,
     guests: data.guestIds.length,
+    retainedRecords: data.retained.length,
   };
 }

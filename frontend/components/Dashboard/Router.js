@@ -29,6 +29,7 @@ import SponsorConnectMain from "./SponsorConnect/Main";
 import ManagementMain from "./Management/Main";
 import AdminFormsMain from "./Admin/Forms/Main";
 import AdminMilestonesMain from "./Admin/Milestones/Main";
+import AdminDoeDataMain from "./Admin/DoeData/Main";
 import Profile from "./Profile/Router";
 
 export default function DashboardRouter({ query }) {
@@ -114,6 +115,10 @@ export default function DashboardRouter({ query }) {
 
   if (area === "admin-milestones") {
     return <AdminMilestonesMain query={query} user={user} />;
+  }
+
+  if (area === "admin-doe-data") {
+    return <AdminDoeDataMain query={query} user={user} />;
   }
 
   if (area === "tags") {

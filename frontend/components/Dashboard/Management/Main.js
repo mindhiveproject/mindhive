@@ -110,6 +110,14 @@ export default function ManagementMain({ query, user }) {
                 </div>
               </Link>
             </div>
+
+            <div>
+              <Link href="/dashboard/admin-doe-data">
+                <div className="menuTitle">
+                  <p>DOE data</p>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

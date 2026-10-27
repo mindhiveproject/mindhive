@@ -1,5 +1,9 @@
 import path from "path";
 import { assertWithinBase } from "../../../lib/api/paths";
+import {
+  backendGraphqlAsCaller,
+  READABLE_DATASET_TOKENS,
+} from "../../../lib/api/graphql";
 
 const fs = require("fs");
 
@@ -13,8 +17,28 @@ export const config = {
   },
 };
 
+// fileDirs are "YYYY/MM/DD/<dataset token>"; the caller gets only the files of
+// datasets they may read (keystone/mutations/dataFileAccess), and must be
+// signed in.
+async function readableDirs(req, fileDirs) {
+  if (!req.headers.cookie || !Array.isArray(fileDirs)) return [];
+  const tokenOf = (dir) => String(dir || "").split("/").filter(Boolean).pop() || "";
+  try {
+    const data = await backendGraphqlAsCaller(req, READABLE_DATASET_TOKENS, {
+      tokens: fileDirs.map(tokenOf).filter(Boolean),
+    });
+    const readable = new Set(data?.readableDatasetTokens || []);
+    return fileDirs.filter((dir) => readable.has(tokenOf(dir)));
+  } catch {
+    return [];
+  }
+}
+
 export default async function handler(req, res) {
-  const { fileDirs } = req.body;
+  if (!req.headers.cookie) {
+    return res.status(401).json({ error: "Sign in to download data." });
+  }
+  const fileDirs = await readableDirs(req, req.body?.fileDirs);
 
   // Find the absolute path of the json directory
   const jsonDirectory = path.join(process.cwd(), "data");

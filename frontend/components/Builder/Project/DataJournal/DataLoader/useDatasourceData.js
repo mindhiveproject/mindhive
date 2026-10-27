@@ -218,7 +218,7 @@ export default function useDatasourceData({ datasource, user }) {
     modAddr?.month != null &&
     modAddr?.day != null &&
     modAddr?.token
-      ? `/api/data/${modAddr.year}/${modAddr.month}/${modAddr.day}/${modAddr.token}?type=modified`
+      ? `/api/data/${modAddr.year}/${modAddr.month}/${modAddr.day}/${modAddr.token}?type=modified&datasource=${datasource?.id}`
       : null;
 
   const { data: modifiedStudyFileRaw, error: modifiedStudyFileErr } = useSWR(
@@ -244,7 +244,7 @@ export default function useDatasourceData({ datasource, user }) {
     uploadedAddr?.month != null &&
     uploadedAddr?.day != null &&
     uploadedAddr?.token
-      ? `/api/data/${uploadedAddr.year}/${uploadedAddr.month}/${uploadedAddr.day}/${uploadedAddr.token}?type=${uploadType}`
+      ? `/api/data/${uploadedAddr.year}/${uploadedAddr.month}/${uploadedAddr.day}/${uploadedAddr.token}?type=${uploadType}&datasource=${datasource?.id}`
       : null;
 
   const { data: uploadedFileRaw, error: uploadedFileErr } = useSWR(

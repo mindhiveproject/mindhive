@@ -222,10 +222,11 @@ const baseSession = statelessSessions({
 });
 
 // Records when each account last signed in, for the two-year de-identification
-// rule. Every sign-in starts a session here: password sign-in, and Google
-// sign-in, which ends in the same password sign-in. Sessions last 30 days and
-// are not renewed, so an active account signs in at least monthly. A failed
-// write is logged and never blocks the sign-in.
+// rule, and clears any warning sent before it. Every sign-in starts a session
+// here: password sign-in, and Google sign-in, which ends in the same password
+// sign-in. Sessions last 30 days and are not renewed, so an active account
+// signs in at least monthly. A failed write is logged and never blocks the
+// sign-in.
 const session: typeof baseSession = {
   ...baseSession,
   async start(args) {
@@ -235,7 +236,7 @@ const session: typeof baseSession = {
       try {
         await args.context.prisma.profile.update({
           where: { id: String(data.itemId) },
-          data: { lastSignInAt: new Date() },
+          data: { lastSignInAt: new Date(), deidentificationWarnedAt: null },
         });
       } catch (error: any) {
         console.error(`[lastSignInAt] sign-in not recorded: ${error?.message}`);
