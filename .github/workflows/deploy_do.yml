@@ -162,7 +162,8 @@ jobs:
           mv .next-build .next
 
           # Only MindHive's apps; `reload all` would also restart YouQuantified.
-          pm2 reload $PM2_APPS
+          # `pm2 reload` takes a single app and ignores any further names.
+          for app in $PM2_APPS; do pm2 reload "$app"; done
           pm2 save
           rm -f /tmp/next-build.tgz
           echo "Deployed $(git rev-parse --short HEAD)"
