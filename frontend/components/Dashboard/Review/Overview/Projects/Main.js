@@ -6,6 +6,8 @@ import useTranslation from "next-translate/useTranslation";
 import { PROJECTS_QUERY } from "../../../../Queries/Proposal";
 import { getProjectsQueryFilterForTab, isMilestoneSubmitted, isOpenForComments } from "../../../../../lib/milestoneStatus";
 import { getMilestoneByKey } from "../../../../../lib/milestones";
+import { isOnTeachingTeamOf } from "../../../../../lib/classTeacherUtils";
+import { studentDisplayName } from "../../../../../lib/connectBallotUtils";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 import { ArrowDropDownIcon } from "../../../../DesignSystem/Icons";
 import Card from "./Card";
@@ -14,6 +16,19 @@ import useTaskSuggestions, { TASK_SOURCES } from "./useTaskSuggestions";
 
 function containsAny(arr1, arr2) {
   return arr1.some((item) => arr2.includes(item));
+}
+
+// Author and collaborators of a project, once each.
+function projectStudentNames(project) {
+  const seen = new Set();
+  return [project?.author, ...(project?.collaborators || [])]
+    .filter((profile) => {
+      if (!profile?.id || seen.has(profile.id)) return false;
+      seen.add(profile.id);
+      return true;
+    })
+    .map(studentDisplayName)
+    .filter(Boolean);
 }
 
 const sortOptions = [
@@ -40,6 +55,7 @@ export default function ProjectsBoard({
   myClassesIds,
   allUniqueClasses,
   milestones = [],
+  user,
 }) {
   const { t } = useTranslation("builder");
   const { locale } = useRouter();
@@ -488,6 +504,11 @@ export default function ProjectsBoard({
             studentTasks={(studentTasksByProject.get(project.id) || []).map(
               (task) => ({ id: task.id, title: taskTitles.get(task.id) || task.title })
             )}
+            studentNames={
+              isOnTeachingTeamOf(user, project?.usedInClass?.id)
+                ? projectStudentNames(project)
+                : []
+            }
             key={project?.id}
             onClick={() =>
               navigateToProject({ id: project.id, stage: selector })

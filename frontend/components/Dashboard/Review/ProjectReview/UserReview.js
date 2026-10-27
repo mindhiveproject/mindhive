@@ -283,6 +283,7 @@ export default function UserReview({
         handleChange={handleChange}
         status={status}
         milestone={milestone}
+        user={user}
       />
 
       <div

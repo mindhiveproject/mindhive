@@ -1075,10 +1075,16 @@ export const PROJECTS_QUERY = gql`
         stage
       }
       author {
+        id
         username
+        firstName
+        lastName
       }
       collaborators {
+        id
         username
+        firstName
+        lastName
       }
       usedInClass {
         id
