@@ -755,7 +755,7 @@ export default function ProposalPDF({
                 </p>
               </div>
             ) : (
-              <Preview cards={cards.flat()} user={user} submitStatuses={submitStatuses} proposalId={proposalId} onUnsavedChangesChange={onUnsavedChangesChange} />
+              <Preview cards={cards.flat()} user={user} classId={usedInClass?.id} submitStatuses={submitStatuses} proposalId={proposalId} onUnsavedChangesChange={onUnsavedChangesChange} />
             )}
           </div>
         </div>

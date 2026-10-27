@@ -6,7 +6,7 @@ import Card from "./Card";
 // one is closed when another card is opened.
 const MAX_ACTIVE_CARDS = 3;
 
-export default function Preview({ cards, user, submitStatuses = {}, proposalId, onUnsavedChangesChange }) {
+export default function Preview({ cards, user, classId, submitStatuses = {}, proposalId, onUnsavedChangesChange }) {
   const cardSaveStateRef = useRef({});
   const [anyPending, setAnyPending] = useState(false);
   const [activeCardIds, setActiveCardIds] = useState([]);
@@ -89,6 +89,7 @@ export default function Preview({ cards, user, submitStatuses = {}, proposalId, 
           card={card}
           cardId={card?.id}
           user={user}
+          classId={classId}
           submitStatuses={submitStatuses}
           proposalId={proposalId}
           isActive={activeCardIds.includes(card?.id)}

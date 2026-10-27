@@ -82,7 +82,7 @@ export default function Card({
             <Chip
               key={name}
               label={name}
-              variant="static"
+              variant="neutral"
               title={t("review.studentNames")}
               style={{ maxWidth: "100%" }}
             />

@@ -2,10 +2,10 @@ import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import Chip from "../../DesignSystem/Chip";
-import { StarFilledIcon } from "../../DesignSystem/Icons";
+import { getLocalizedField } from "../../../lib/i18nContent";
 
 // Tasks & surveys students picked on a card (see lib/studentTaskSelection),
-// as star chips. Used on the Feedback Center project cards and on the
+// as chips. Used on the Feedback Center project cards and on the
 // project review page. `highlightedIds` marks the ones matching the task
 // filter; `showEmpty` prints a line when there is nothing to show.
 export default function StudentTaskChips({
@@ -37,10 +37,9 @@ export default function StudentTaskChips({
       {tasks.map((task) => (
         <Chip
           key={task.id}
-          label={task?.i18nContent?.[locale]?.title || task?.title}
+          label={getLocalizedField(task, "title", locale)}
           variant="static"
           tone={highlightedIds?.has(task.id) ? "info" : "default"}
-          leading={<StarFilledIcon width={16} height={16} />}
           title={t("review.studentPickedTask", {}, {
             default: "Picked by students",
           })}
