@@ -140,6 +140,13 @@ jobs:
           install_if_lock_changed
           rm -rf .next-build && mkdir .next-build
           tar -xzf /tmp/next-build.tgz -C .next-build --strip-components=1
+          # Carry over the previous builds' hashed assets for a week, so open
+          # tabs and the old instance during a rolling reload don't 404 on
+          # chunks the new build no longer has.
+          if [[ -d .next/static ]]; then
+            tar -C .next/static -cf - . | tar -C .next-build/static -xf - --skip-old-files
+            find .next-build/static -type f -mtime +7 -delete
+          fi
 
           cd ../keystone
           install_if_lock_changed
