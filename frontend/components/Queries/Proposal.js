@@ -517,8 +517,17 @@ export const PROPOSAL_REVIEWS_QUERY = gql`
       milestoneStatus
       checklist
       settings
-      author {
+      creator {
+        id
         username
+        firstName
+        lastName
+      }
+      author {
+        id
+        username
+        firstName
+        lastName
       }
       collaborators {
         id
