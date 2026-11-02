@@ -47,11 +47,22 @@ import unfollowUser from "./unfollowUser";
 import joinClass from "./joinClass";
 import toggleReviewUpvote from "./toggleReviewUpvote";
 import classJoinPreview from "./classJoinPreview";
+import doeDataSummary from "./doeDataSummary";
+import {
+  canReadDatasourceFile,
+  readableDatasetTokens,
+} from "./dataFileAccess";
+import {
+  deleteDoeData,
+  doeExportPerson,
+  doeExportSchool,
+} from "./doeDataAdmin";
 import {
   recordStudyConditions,
   updateGuestStudiesInfo,
 } from "./participantRun";
 import markOpportunityReviewNotesRead from "./markOpportunityReviewNotesRead";
+import { reviewConsent, submitConsentForReview } from "./consentReview";
 import recordOpportunityPreviewVisit from "./recordOpportunityPreviewVisit";
 import toggleFavoriteOpportunity from "./toggleFavoriteOpportunity";
 import resolveFormDefinition from "./resolveFormDefinition";
@@ -76,6 +87,8 @@ import backfillLinkActionCardsToMilestones from "./backfillLinkActionCardsToMile
 import backfillLowercaseKeys from "./backfillLowercaseKeys";
 import backfillTicketPermissions from "./backfillTicketPermissions";
 import pruneTicketScreenshots from "./pruneTicketScreenshots";
+import runDeidentification from "./runDeidentification";
+import { retentionSettings, setAutoDeidentify } from "./retentionSettings";
 import closeTicketsFromCommit from "./closeTicketsFromCommit";
 import ticketForAgent from "./ticketForAgent";
 import supportTicketPreviews from "./supportTicketPreviews";
@@ -317,6 +330,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # Connect the session user to OpportunityReviewNote.readBy for
         # notes they can see. Needed because list update is author-only.
         markOpportunityReviewNotesRead(noteIds: [ID!]!): [OpportunityReviewNote!]!
+        # Consent protocol teacher review (see consentReview.ts).
+        submitConsentForReview(consentId: ID!, info: JSON): Consent
+        reviewConsent(consentId: ID!, decision: String!, note: String): Consent
         # Student class Opportunities preview session (dwell >= 1s).
         # Creates a Log with event OPPORTUNITY_PREVIEW_VISIT.
         recordOpportunityPreviewVisit(
@@ -386,6 +402,31 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillTicketPermissions(
           dryRun: Boolean
         ): BackfillTicketPermissionsResult!
+        # Monthly DOE de-identification job: warns DOE accounts silent for
+        # 23 months, de-identifies those silent for two years and warned 30
+        # days ago. canRunRetention, or the RETENTION_SECRET for the
+        # scheduled workflow, which only previews unless autoDeidentify is
+        # on. Dry run unless dryRun:false; an admin's real run acts only on
+        # the profileIds they approved from a dry run's preview.
+        runDeidentification(
+          dryRun: Boolean
+          secret: String
+          limit: Int
+          profileIds: [ID!]
+        ): JSON
+        # Turns the scheduled run's acting on or off. canRunRetention only.
+        setAutoDeidentify(enabled: Boolean!): JSON
+        # Deletes DOE data for one person (DOE request), one school, or all
+        # of it (termination). canDeleteDoeData only. Dry run unless
+        # dryRun:false; a real run must repeat the confirmation phrase.
+        deleteDoeData(
+          email: String
+          profileId: ID
+          school: String
+          termination: Boolean
+          dryRun: Boolean
+          confirm: String
+        ): JSON
         # secret stands in for a session so a scheduled job can run this;
         # omit it and a canManageTickets session is required instead.
         pruneTicketScreenshots(
@@ -605,6 +646,20 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         networkInviteContext(token: String!): NetworkInviteContext
         # Title and teacher of a class, by join code. Public; no roster.
         classJoinPreview(code: String!): ClassJoinPreview
+        # For the frontend's raw-data routes, run as the caller: which of
+        # these dataset tokens they may read, and whether they may read a
+        # Data Journal file of a datasource.
+        readableDatasetTokens(tokens: [String!]!): [String!]!
+        # The DOE retention switches. canRunRetention only.
+        doeRetentionSettings: JSON
+        canReadDatasourceFile(datasourceId: ID!, token: String!): Boolean!
+        # Counts of DOE data in a scope: all DOE classes, one school (DBN)
+        # or one person. canManageUsers only; no names or ids.
+        doeDataSummary(school: String, profileId: ID): JSON
+        # One account's data (DOE access requests) and one school's accounts
+        # (handover to DOE before deletion). canDeleteDoeData only.
+        doeExportPerson(email: String, profileId: ID): JSON
+        doeExportSchool(school: String!, includeRawFiles: Boolean): JSON
         # Connect Bank people search. Case-insensitive on Postgres via
         # Prisma mode; plain contains on local SQLite (ASCII CI).
         searchConnectUsers(
@@ -657,6 +712,12 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         resolveMilestonesForBoard,
         networkInviteContext,
         classJoinPreview,
+        readableDatasetTokens,
+        doeRetentionSettings: retentionSettings,
+        canReadDatasourceFile,
+        doeDataSummary,
+        doeExportPerson,
+        doeExportSchool,
         searchConnectUsers,
         searchConnectUsersCount,
       },
@@ -709,6 +770,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         updateGuestStudiesInfo,
         toggleReviewUpvote,
         markOpportunityReviewNotesRead,
+        submitConsentForReview,
+        reviewConsent,
         recordOpportunityPreviewVisit,
         toggleFavoriteOpportunity,
         seedOpportunityForm,
@@ -728,6 +791,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillLowercaseKeys,
         backfillTicketPermissions,
         pruneTicketScreenshots,
+        runDeidentification,
+        setAutoDeidentify,
+        deleteDoeData,
         closeTicketsFromCommit,
         backfillTicketScreenshotsToNotion,
         backfillSupportTicketsToNotion,

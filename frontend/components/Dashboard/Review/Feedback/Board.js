@@ -6,7 +6,7 @@ import { PROPOSAL_REVIEWS_QUERY } from "../../../Queries/Proposal";
 import { ALL_PUBLIC_TASKS } from "../../../Queries/Task";
 
 import StyledFeedback from "../../../styles/StyledFeedback";
-import ManageFavorite from "../../../User/ManageFavorite";
+import FavoriteTaskChip from "../../../User/FavoriteTaskChip";
 import { useTemplateQuestions } from "../ProjectReview/Review/Template";
 
 function getQuestionTitle(card, status, templates) {
@@ -225,15 +225,21 @@ export default function Board({
                         task = tasksWithId[0];
                       }
                       return (
-                        <div key={id} className="task">
-                          <ManageFavorite user={user} id={id} />
-                          <a
-                            href={`/dashboard/discover/tasks?name=${task?.slug}`}
-                            target="_blank"
-                          >
-                            <div className="questionAnswer">{task.title}</div>
-                          </a>
-                        </div>
+                        <FavoriteTaskChip
+                          key={id}
+                          task={{ ...task, id }}
+                          user={user}
+                          onClick={
+                            task?.slug
+                              ? () =>
+                                  window.open(
+                                    `/dashboard/discover/tasks?name=${task.slug}`,
+                                    "_blank",
+                                    "noopener"
+                                  )
+                              : undefined
+                          }
+                        />
                       );
                     })}
                   </div>

@@ -15,6 +15,9 @@ pydantic/.env
 # Working plans are local, not repo docs
 docs/*-plan.md
 
+ # Miscellaneous
 frontend/public/four in a row original codebase/*
-scripts/debug/inspectBoardMilestones.js
+scripts/debug/*
 keystone/jspsych-archives/*
+scripts/deploy.sh
+docs/deployment.md

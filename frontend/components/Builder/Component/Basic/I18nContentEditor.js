@@ -48,15 +48,13 @@ const safeJsonStringify = (value) => {
 export default function I18nContentEditor({ task, handleChange }) {
   const { t } = useTranslation("builder");
   const [activeLanguage, setActiveLanguage] = useState('en-us');
-  // Initialize i18nContent if it doesn't exist
-  if (!task?.i18nContent) {
-    task.i18nContent = {};
-  }
-
+  // Build a normalized copy: task.i18nContent can be a frozen Apollo result,
+  // so it must never be written to in place.
   // Ensure every language has every editable field (saved content omits blanks)
+  const i18nContent = { ...(task?.i18nContent || {}) };
   Object.keys(SUPPORTED_LANGUAGES).forEach(lang => {
-    const existing = task.i18nContent[lang] || {};
-    task.i18nContent[lang] = {
+    const existing = i18nContent[lang] || {};
+    i18nContent[lang] = {
       title: '',
       description: '',
       descriptionForParticipants: '',
@@ -81,9 +79,9 @@ export default function I18nContentEditor({ task, handleChange }) {
   // Handle changes to i18n content
   const handleI18nChange = (language, field, value) => {
     const updatedI18nContent = {
-      ...task.i18nContent,
+      ...i18nContent,
       [language]: {
-        ...task.i18nContent[language],
+        ...i18nContent[language],
         [field]: value,
       }
     };
@@ -120,11 +118,11 @@ export default function I18nContentEditor({ task, handleChange }) {
     }
   
     const updatedI18nContent = {
-      ...task.i18nContent,
+      ...i18nContent,
       [lang]: {
-        ...task.i18nContent[lang],
+        ...i18nContent[lang],
         [field]: {
-          ...task.i18nContent[lang][field],
+          ...i18nContent[lang][field],
           [key]: safeValue,
         },
       },
@@ -143,7 +141,7 @@ export default function I18nContentEditor({ task, handleChange }) {
 
   // Get the available fields for editing (from en-us as template)
   const getEditableFields = () => {
-    const enUsContent = task.i18nContent['en-us'] || {};
+    const enUsContent = i18nContent['en-us'] || {};
     return Object.keys(enUsContent).filter(field => field !== 'parameters'); // Skip parameters for now
   };
 
@@ -209,10 +207,9 @@ export default function I18nContentEditor({ task, handleChange }) {
       <div className="language-content">
         <p>{t("createBlock.currentlySelected")}{SUPPORTED_LANGUAGES[activeLanguage]}</p>
         
-        {console.log(task)}
         {getEditableFields().map((field) => {
 
-          let fieldValue = task.i18nContent[activeLanguage][field];
+          let fieldValue = i18nContent[activeLanguage][field];
           
           if (!fieldValue && field === "settings") {
               fieldValue = {

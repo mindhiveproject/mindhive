@@ -7,7 +7,10 @@ import useTranslation from "next-translate/useTranslation";
 import parseSafeHtml from "../../../../../../../lib/safeHtml";
 import TipTapEditor from "../../../../../../TipTap/Main";
 
-import { UPDATE_CARD_CONTENT } from "../../../../../../Mutations/Proposal";
+import {
+  UPDATE_CARD_EDIT,
+  UPDATE_CARD_STUDENT_TASKS,
+} from "../../../../../../Mutations/Proposal";
 import { GET_CARD_CONTENT, PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
 import { getRegularCardVariant } from "../../../../../../Utils/cardVariants";
 import { useCardCollabSession } from "../../../../../../../lib/useCardCollabSession";
@@ -18,6 +21,14 @@ import {
 import StatusChip from "./StatusChip";
 import SaveIndicator from "../../SaveIndicator";
 import InfoPopover from "../../../../../../DesignSystem/InfoPopover";
+import StudentTaskPicker from "../../Card/StudentTaskPicker";
+import { mergeCardSettings } from "../../../../../../Utils/mergeCardSettings";
+import { getLocalizedField } from "../../../../../../../lib/i18nContent";
+import {
+  allowsStudentTaskSelection,
+  getTemplateLinkedTasks,
+  withStudentPicks,
+} from "../../../../../../../lib/studentTaskSelection";
 
 // Close the card's collaboration connection after this long without activity.
 const IDLE_DISCONNECT_MS = 30000;
@@ -28,6 +39,7 @@ export default function Card({
   card,
   cardId,
   user,
+  classId,
   submitStatuses = {},
   proposalId,
   isActive = false,
@@ -35,7 +47,7 @@ export default function Card({
   onDeactivate,
   onSaveStateChange,
 }) {
-  const { t } = useTranslation("builder");
+  const { t, lang } = useTranslation("builder");
   const [focusRequest, setFocusRequest] = useState(null); // { field, x, y } of the click that activated the card
   const [peerNames, setPeerNames] = useState([]);
   const [, setBadgeTick] = useState(0);
@@ -85,9 +97,10 @@ export default function Card({
     ...(proposalId ? [{ query: PROPOSAL_QUERY, variables: { id: proposalId } }] : []),
   ];
 
-  const [updateCardStatus, { loading: statusLoading }] = useMutation(UPDATE_CARD_CONTENT, {
+  const [updateCardStatus, { loading: statusLoading }] = useMutation(UPDATE_CARD_EDIT, {
     refetchQueries,
   });
+  const [updateStudentTasks] = useMutation(UPDATE_CARD_STUDENT_TASKS);
 
   // Status can be changed until the card is locked. Cards used in several review
   // steps stay editable until the project report is submitted.
@@ -269,20 +282,54 @@ export default function Card({
   const handleStatusChange = async (newStatus) => {
     if (!canEditStatus || statusLoading) return;
     try {
+      // Only settings: the list view doesn't load the card's relations, so
+      // sending them would clear the card's tasks, resources and studies.
       await updateCardStatus({
         variables: {
           id: cardId,
-          settings: { ...card.settings, status: newStatus },
-          // Include existing relationships to satisfy mutation requirements
-          assignedTo: card?.assignedTo?.map((profile) => ({ id: profile?.id })) || [],
-          resources: card?.resources?.map((resource) => ({ id: resource?.id })) || [],
-          assignments: card?.assignments?.map((assignment) => ({ id: assignment?.id })) || [],
-          tasks: card?.tasks?.map((task) => ({ id: task?.id })) || [],
-          studies: card?.studies?.map((study) => ({ id: study?.id })) || [],
+          input: {
+            settings: mergeCardSettings(card.settings, { status: newStatus }),
+          },
         },
       });
     } catch (error) {
       console.error("Failed to update card status:", error);
+    }
+  };
+
+  // Student-picked tasks & surveys, same as on the board's card.
+  const showStudentTaskPicker = allowsStudentTaskSelection(card);
+  const linkedTasks = getTemplateLinkedTasks(card);
+  const handleStudentTasksChange = async (picks) => {
+    const { tasks, settings } = withStudentPicks(card, picks);
+    const mergedSettings = mergeCardSettings(card.settings, settings);
+    try {
+      await updateStudentTasks({
+        variables: {
+          id: cardId,
+          input: {
+            tasks: { set: tasks.map((task) => ({ id: task.id })) },
+            settings: mergedSettings,
+          },
+        },
+        optimisticResponse: {
+          updateProposalCard: {
+            __typename: "ProposalCard",
+            id: cardId,
+            settings: mergedSettings,
+            tasks: tasks.map((task) => ({
+              __typename: "Task",
+              id: task.id,
+              title: task.title ?? null,
+              slug: task.slug ?? null,
+              i18nContent: task.i18nContent ?? null,
+              taskType: task.taskType ?? null,
+            })),
+          },
+        },
+      });
+    } catch (error) {
+      console.error("Failed to update card tasks:", error);
     }
   };
 
@@ -498,6 +545,31 @@ export default function Card({
                 <div>{parseSafeHtml(getCardContent())}</div>
               )}
             </>
+          )}
+          {showStudentTaskPicker && (
+            <div style={{ marginTop: "24px", display: "grid", gap: "8px" }}>
+              {linkedTasks.length > 0 && (
+                <div className="MH-Type-Body-Base" style={{ color: "#626262" }}>
+                  {t(
+                    "proposalPDF.studentTasks.linkedByTeacher",
+                    {
+                      tasks: linkedTasks
+                        .map((task) => getLocalizedField(task, "title", lang))
+                        .filter(Boolean)
+                        .join(", "),
+                    },
+                    { default: "Linked by your teacher: {{tasks}}" }
+                  )}
+                </div>
+              )}
+              <StudentTaskPicker
+                proposalCard={card}
+                classId={classId}
+                user={user}
+                disabled={!isUsedLoggedIn}
+                onChange={handleStudentTasksChange}
+              />
+            </div>
           )}
           {/* Comments Accordion - Shared for both locked and unlocked cards */}
           <div style={{ marginTop: "24px", marginLeft: card.isLocked ? "4px" : "0", border: "none" }}>

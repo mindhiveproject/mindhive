@@ -1,0 +1,71 @@
+name: De-identify inactive DOE accounts
+
+# The DOE data agreement: a DOE account with no sign-in for two years is
+# de-identified, after a warning email 30 days before. This runs the backend
+# job that does both (keystone/mutations/runDeidentification.ts) once a month.
+# Each run is logged in the backend's RetentionRun list (counts only).
+#
+# The backend decides whether the run acts: unless an admin has switched
+# "run automatically" on (DOE data page), the scheduled run is a preview and
+# admins approve each run themselves.
+#
+# Needs two repository secrets:
+#   TICKET_BACKEND_URL  the backend GraphQL URL, shared with the ticket jobs
+#   RETENTION_SECRET    must match the backend's env var of the same name
+# Until RETENTION_SECRET is set, the job skips: set it only once a manual
+# dry run has been reviewed.
+
+on:
+  schedule:
+    - cron: "23 3 1 * *" # 1st of each month, 03:23 UTC — off the hour
+  workflow_dispatch:
+    inputs:
+      dryRun:
+        description: "Report what would happen without warning or de-identifying anyone"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  deidentify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Warn and de-identify inactive DOE accounts
+        env:
+          BACKEND_URL: ${{ secrets.TICKET_BACKEND_URL }}
+          RETENTION_SECRET: ${{ secrets.RETENTION_SECRET }}
+          # The scheduled run acts; a manual run defaults to a dry run so it
+          # can be used to preview.
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dryRun || 'false' }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${BACKEND_URL:-}" ] || [ -z "${RETENTION_SECRET:-}" ]; then
+            echo "TICKET_BACKEND_URL or RETENTION_SECRET is not set — skipping."
+            echo "Set both repository secrets to enable the de-identification job."
+            exit 0
+          fi
+
+          # Secrets go through jq --arg, never interpolated into the JSON body.
+          BODY=$(jq -n \
+            --arg secret "$RETENTION_SECRET" \
+            --argjson dryRun "$DRY_RUN" \
+            '{
+              query: "mutation($secret: String!, $dryRun: Boolean) { runDeidentification(secret: $secret, dryRun: $dryRun) }",
+              variables: { secret: $secret, dryRun: $dryRun }
+            }')
+
+          RESPONSE=$(curl -sS --fail-with-body -X POST "$BACKEND_URL" \
+            -H "Content-Type: application/json" \
+            --data-binary "$BODY")
+
+          echo "$RESPONSE" | jq -e '.errors' >/dev/null 2>&1 && {
+            echo "Backend returned errors:"
+            echo "$RESPONSE" | jq '.errors'
+            exit 1
+          }
+
+          # Counts only: no names, emails or ids.
+          echo "$RESPONSE" | jq '.data.runDeidentification'

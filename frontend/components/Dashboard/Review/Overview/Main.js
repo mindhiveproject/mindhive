@@ -304,6 +304,7 @@ export default function Overview({ query, user }) {
           selectedClassId={selectedClassId}
           myClassesIds={myClasses.map((cl) => cl?.id)}
           milestones={classTemplateSteps}
+          user={user}
         />
       ) : null}
 

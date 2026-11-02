@@ -1,5 +1,6 @@
 // Safe self-service seeder for the admin UI. Checks each baseline
-// FormDefinition key (opportunity, profile_*, and review_* forms)
+// FormDefinition key (opportunity, profile_*, review_* and consent_*
+// forms)
 // and only inserts the seed when no row with that key exists at all
 // (any scope, any status). Never clobbers existing definitions, so it's
 // safe to call from a "Seed default forms" button without confirmation.
@@ -10,6 +11,7 @@ import { OPPORTUNITY_FORM_SEED } from "./seedData/opportunityFormSeed";
 import { PROFILE_INDIVIDUAL_FORM_SEED } from "./seedData/profileIndividualFormSeed";
 import { PROFILE_ORGANIZATION_FORM_SEED } from "./seedData/profileOrganizationFormSeed";
 import { ALL_REVIEW_FORM_SEEDS } from "./seedData/reviewForms";
+import { CONSENT_FORM_SEEDS } from "./seedData/consentFormSeed";
 import { insertSeed } from "./seedData/insertSeed";
 
 const BASELINE_SEEDS = [
@@ -17,6 +19,7 @@ const BASELINE_SEEDS = [
   PROFILE_INDIVIDUAL_FORM_SEED,
   PROFILE_ORGANIZATION_FORM_SEED,
   ...ALL_REVIEW_FORM_SEEDS,
+  ...CONSENT_FORM_SEEDS,
 ];
 
 async function seedMissingForms(root: any, _args: {}, context: any) {

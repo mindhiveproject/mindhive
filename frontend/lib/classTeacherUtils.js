@@ -28,3 +28,14 @@ export function isClassTeacherOrMentor(myclass, userId) {
 export function canManageTeachingTeam(myclass, userId) {
   return isClassTeacher(myclass, userId);
 }
+
+// Teachers, teaching team members and mentors of the class (from the
+// current user's teacherIn / teachingTeamIn / mentorIn).
+export function isOnTeachingTeamOf(user, classId) {
+  if (!classId) return false;
+  return [
+    ...(user?.teacherIn || []),
+    ...(user?.teachingTeamIn || []),
+    ...(user?.mentorIn || []),
+  ].some((cls) => cls?.id === classId);
+}

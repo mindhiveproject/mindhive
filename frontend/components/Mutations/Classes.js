@@ -7,6 +7,8 @@ export const CREATE_CLASS = gql`
     $title: String!
     $description: String
     $settings: JSON
+    $dataOwner: String
+    $school: String
   ) {
     createClass(
       data: {
@@ -14,6 +16,8 @@ export const CREATE_CLASS = gql`
         title: $title
         description: $description
         settings: $settings
+        dataOwner: $dataOwner
+        school: $school
       }
     ) {
       id

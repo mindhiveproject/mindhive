@@ -546,6 +546,9 @@
 	},
 	"classForm": {
 		"description": "Description",
+		"doe": "This class is in an NYC public school (NYC DOE)",
+		"school": "School code (DBN)",
+		"schoolHint": "Your school's six-character DOE code, for example 02M475. MindHive uses it only to manage your school's data under its agreement with NYC DOE.",
 		"title": "Title",
 		"titleRequired": "Please enter a class title."
 	},

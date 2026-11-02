@@ -29,6 +29,7 @@ const SURFACE_LABEL = {
   profile_organization: "Organization profile",
   opportunity: "Opportunity",
   feedback: "Feedback",
+  consent: "Consent sections",
 };
 
 const Shell = styled.div`

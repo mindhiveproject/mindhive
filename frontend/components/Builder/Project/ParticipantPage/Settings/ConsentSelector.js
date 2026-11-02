@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
+import Button from "../../../../DesignSystem/Button";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 
 import { GET_CONSENTS } from "../../../../Queries/Consent";
@@ -32,15 +33,25 @@ export default function ConsentSelector({
   };
 
   return (
-    <DropdownSelect
-      multiple
-      portal
-      disabled={disabled}
-      ariaLabel={t("settingsBlock.askForConsent")}
-      placeholder={t("consentSelector.typeConsentProtocol")}
-      options={options}
-      value={value}
-      onChange={onChange}
-    />
+    <div style={{ display: "grid", gap: 8, justifyItems: "start" }}>
+      <DropdownSelect
+        multiple
+        portal
+        disabled={disabled}
+        ariaLabel={t("settingsBlock.askForConsent")}
+        placeholder={t("consentSelector.typeConsentProtocol")}
+        options={options}
+        value={value}
+        onChange={onChange}
+      />
+      {/* new tab, so unsaved builder changes are kept */}
+      <a href="/dashboard/irb" target="_blank" rel="noopener noreferrer">
+        <Button variant="outline" type="button">
+          {t("consentSelector.manageProtocols", {}, {
+            default: "Manage consent protocols",
+          })}
+        </Button>
+      </a>
+    </div>
   );
 }

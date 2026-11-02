@@ -5,6 +5,7 @@ import { ALL_PUBLIC_TASKS } from "../../../../Queries/Task";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
+import { getLocalizedField } from "../../../../../lib/i18nContent";
 
 // `hiddenTaskIds` is the project class's block list (Class.hiddenTasks).
 // Those tasks stay listed but disabled and sorted last, so mentors see what
@@ -32,7 +33,7 @@ export default function TaskSelector({
 
   const options = tasks
     .map((task) => {
-      const title = task?.i18nContent?.[locale]?.title || task?.title;
+      const title = getLocalizedField(task, "title", locale);
       const hidden = hiddenIds.has(task.id);
       return {
         value: task.id,

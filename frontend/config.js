@@ -27,6 +27,3 @@ export const collabOrigin =
   (isDev ? "http://localhost:4445" : backendOrigin);
 
 export const collabWsUrl = `${collabOrigin.replace(/^http/, "ws")}/collaboration`;
-
-// Client-exposed key for the ChatGPT simulation blocks; empty disables them.
-export const openAiKey = process.env.NEXT_PUBLIC_OPENAI_KEY || "";

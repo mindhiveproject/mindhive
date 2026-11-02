@@ -22,6 +22,18 @@ export const permissionFields = {
     defaultValue: false,
     label: "User can file and triage platform tickets",
   }),
+  // Runs the DOE de-identification job by hand (mutations/runDeidentification).
+  canRunRetention: checkbox({
+    defaultValue: false,
+    label: "User can run the DOE de-identification job",
+  }),
+  // Exports and deletes DOE data on request, per school and at termination
+  // (mutations/doeDataAdmin). Kept apart from canManageUsers on purpose:
+  // irreversible deletion of a school's data is its own decision.
+  canDeleteDoeData: checkbox({
+    defaultValue: false,
+    label: "User can export and delete DOE data",
+  }),
 };
 
 export type Permission = keyof typeof permissionFields;

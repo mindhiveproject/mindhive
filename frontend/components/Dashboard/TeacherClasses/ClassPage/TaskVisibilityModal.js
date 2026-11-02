@@ -12,6 +12,7 @@ import Button from "../../../DesignSystem/Button";
 import ToggleSwitch from "../../../DesignSystem/ToggleSwitch";
 import Input from "../../../DesignSystem/Input";
 import MessageCard from "../../../DesignSystem/MessageCard";
+import { getLocalizedField } from "../../../../lib/i18nContent";
 
 const TYPE_GROUPS = [
   { taskType: "TASK", key: "taskVisibility.groupTasks", default: "Tasks" },
@@ -75,9 +76,9 @@ const StyledTaskVisibility = styled.div`
   }
 `;
 
-// Title in the viewer's language, falling back to the original.
+// Title in the viewer's language, falling back to en-us, then the original.
 function taskTitle(task, locale) {
-  return task?.i18nContent?.[locale]?.title || task?.title || "";
+  return getLocalizedField(task, "title", locale) || "";
 }
 
 // Lists every public task and survey with a Visible/Hidden switch for the

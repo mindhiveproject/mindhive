@@ -76,6 +76,9 @@ import { FormCard } from "./schemas/FormCard";
 import { FormField } from "./schemas/FormField";
 import { OpportunityReviewNote } from "./schemas/OpportunityReviewNote";
 import { Milestone } from "./schemas/Milestone";
+import { DoeRetainedRecord } from "./schemas/DoeRetainedRecord";
+import { RetentionRun } from "./schemas/RetentionRun";
+import { RetentionSetting } from "./schemas/RetentionSetting";
 
 // see https://keystonejs.com/docs/fields/overview for the full list of fields
 //   this is a few common fields for an example
@@ -164,4 +167,7 @@ export const lists: Lists = {
   FormField,
   OpportunityReviewNote,
   Milestone,
+  DoeRetainedRecord,
+  RetentionRun,
+  RetentionSetting,
 };

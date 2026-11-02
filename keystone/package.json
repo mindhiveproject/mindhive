@@ -6,12 +6,12 @@
     "dev": "keystone dev",
     "start": "NODE_ENV=production keystone start",
     "build": "NODE_ENV=production keystone build",
-    "postinstall": "keystone postinstall",
+    "postinstall": "keystone build --no-ui",
     "migrate": "NODE_ENV=production keystone prisma db push",
     "seed:data-source-blocks": "node scripts/seed-data-source-blocks.js"
   },
   "engines": {
-    "node": "20.11.1"
+    "node": "22.23.4"
   },
   "dependencies": {
     "@graphql-tools/schema": "^9.0.12",

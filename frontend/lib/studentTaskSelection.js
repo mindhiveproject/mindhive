@@ -24,3 +24,15 @@ export function getTemplateLinkedTasks(card) {
   const ids = new Set(getStudentTaskIds(card));
   return (card?.tasks || []).filter((task) => task?.id && !ids.has(task.id));
 }
+
+// The card's tasks and settings once the students' picks are replaced by
+// `picks`; teacher-linked tasks are kept first.
+export function withStudentPicks(card, picks) {
+  return {
+    tasks: [...getTemplateLinkedTasks(card), ...picks],
+    settings: {
+      ...card?.settings,
+      studentTaskIds: picks.map((task) => task.id),
+    },
+  };
+}

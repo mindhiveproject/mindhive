@@ -74,6 +74,8 @@ export const CURRENT_USER_QUERY = gql`
           name
           canManageForms
           canManageTickets
+          canRunRetention
+          canDeleteDoeData
         }
         image {
           id

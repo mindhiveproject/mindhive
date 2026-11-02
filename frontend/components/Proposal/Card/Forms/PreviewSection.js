@@ -8,6 +8,7 @@ import { MANAGE_FAVORITE_TASKS } from "../../../Mutations/User";
 import { CURRENT_USER_QUERY } from "../../../Queries/User";
 import { stripHtml, TYPO } from "./utils";
 import { isPublishedToClassId } from "../../../Mutations/Resource";
+import { getLocalizedField } from "../../../../lib/i18nContent";
 
 // Chip tooltip's "Type:" prefix. Weight only — the size comes from the
 // tooltip or popover it sits in, so it never outgrows the title beside it.
@@ -250,7 +251,9 @@ const TaskSurveyChip = ({
   hoveredItemId,
   setHoveredItemId,
 }) => {
-  const fullTitle = stripHtml(item?.title) || "Untitled";
+  const { lang } = useTranslation();
+  const fullTitle =
+    stripHtml(getLocalizedField(item, "title", lang)) || "Untitled";
   const isHovered = hoveredItemId === item.id;
   const viewUrl = `/dashboard/discover/tasks?name=${item?.slug}`;
   const typeLabel = t("board.expendedCard.tasks", "Tasks");

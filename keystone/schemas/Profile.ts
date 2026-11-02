@@ -24,24 +24,7 @@ import {
   syncClassStaffAsRoundReviewers,
 } from "../lib/classStaff";
 
-import uniqid from "uniqid";
-import {
-  uniqueNamesGenerator,
-  Config,
-  adjectives as baseAdjectives,
-  colors,
-  animals,
-} from "unique-names-generator";
-
-const adjectives = baseAdjectives
-  .filter((w) => !["booby", "tasty", "nutty"].includes(w))
-  .concat(["curious", "kind"]);
-
-const customConfig: Config = {
-  dictionaries: [adjectives, colors, animals],
-  separator: "-",
-  length: 3,
-};
+import { newPublicId, newPublicReadableId } from "../lib/publicIds";
 
 // Read rules for private profile fields. Denied reads resolve to null.
 // Contact details for other users belong in publicMail, which stays public.
@@ -102,7 +85,7 @@ export const Profile = list({
       hooks: {
         async resolveInput({ operation }) {
           if (operation === "create") {
-            return uniqid();
+            return newPublicId();
           }
         },
       },
@@ -118,7 +101,7 @@ export const Profile = list({
       hooks: {
         async resolveInput({ operation }) {
           if (operation === "create") {
-            return uniqueNamesGenerator(customConfig);
+            return newPublicReadableId();
           }
         },
       },
@@ -188,6 +171,11 @@ export const Profile = list({
     }),
     deidentifiedAt: timestamp({
       isIndexed: true,
+      access: { ...ownerOnlyRead, create: () => false, update: () => false },
+    }),
+    // When the 30-day warning before de-identification was emailed; cleared
+    // by the next sign-in (auth.ts), so a later silence warns again.
+    deidentificationWarnedAt: timestamp({
       access: { ...ownerOnlyRead, create: () => false, update: () => false },
     }),
     language: select({

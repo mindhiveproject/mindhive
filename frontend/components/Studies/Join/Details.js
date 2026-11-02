@@ -41,7 +41,9 @@ export default function Details({ user, study, query }) {
     sonaid: "",
     eng: "",
     age: "",
-    share: "true",
+    // off unless the participant ticks it: details are only kept for later
+    // studies on request (data minimization, DOE data agreement)
+    share: "false",
     ...query, // populate by information from query
     ...user?.generalInfo, // populate by the saved user information
     guest: query?.guest, // check whether guest participation is requested

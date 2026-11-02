@@ -13,6 +13,7 @@ export default function Card({
   milestones = [],
   matchedTasks = [],
   studentTasks = [],
+  studentNames = [],
   onClick,
   className = "",
   style,
@@ -74,6 +75,20 @@ export default function Card({
         </div>
       </div>
       <div className="p13">{shortenTitle(project?.title)}</div>
+      {/* Only passed for the class's teachers, teaching team and mentors. */}
+      {studentNames.length > 0 ? (
+        <div className="studentNames" aria-label={t("review.studentNames")}>
+          {studentNames.map((name) => (
+            <Chip
+              key={name}
+              label={name}
+              variant="neutral"
+              title={t("review.studentNames")}
+              style={{ maxWidth: "100%" }}
+            />
+          ))}
+        </div>
+      ) : null}
       {/* Tasks & surveys students picked on the cards submitted with this
           milestone; the ones matching the task filter are highlighted. */}
       <StudentTaskChips tasks={studentTasks} highlightedIds={matchedTaskIds} />
