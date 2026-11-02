@@ -19,7 +19,6 @@ export default function Wrapper({
   addFunctions,
   node,
   onOpenPreview,
-  persistStudy,
 }) {
   const { t } = useTranslation("builder");
   const [showEditor, setShowEditor] = useState(isEditorOpen);
@@ -97,7 +96,6 @@ export default function Wrapper({
         createCopy={createCopy}
         task={task}
         updateCanvas={updateCanvas}
-        persistStudy={persistStudy}
         close={close}
         openPreview={() => onOpenPreview?.()}
       />

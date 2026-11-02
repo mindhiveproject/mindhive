@@ -36,7 +36,6 @@ export default function Builder({
   onBeforeCanvasMutation,
   onAfterCanvasMutation,
   onModelReplaced,
-  persistStudy,
 }) {
   const { t } = useTranslation("builder");
   const [node, setNode] = useState(null);
@@ -165,6 +164,9 @@ export default function Builder({
           details: addFunctions.shorten(task?.description),
           subtitle: addFunctions.shorten(task?.subtitle),
           askDataUsageQuestion: task?.askDataUsageQuestion,
+          // the node now holds its own copy, so editing it again updates
+          // that copy instead of copying the original once more
+          ...(operation === "create" ? { createCopy: false } : {}),
         });
       }
     });
@@ -289,7 +291,6 @@ export default function Builder({
               addFunctions={lockedAddFunctions}
               node={node}
               onOpenPreview={openBlockPreview}
-              persistStudy={persistStudy}
             />
           )}
           {sidepanelMode === "design" && node && (
