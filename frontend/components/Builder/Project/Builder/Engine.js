@@ -833,7 +833,6 @@ export default function Engine({
         onBeforeCanvasMutation={onBeforeCanvasMutation}
         onAfterCanvasMutation={onAfterCanvasMutation}
         onModelReplaced={onModelReplaced}
-        persistStudy={autoSave}
       />
       <CycleLinkPreventedModal
         open={cycleWarningOpen}
