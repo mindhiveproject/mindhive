@@ -6,7 +6,12 @@ import { useQuery } from "@apollo/client";
 import { VISUAL_DATA_SOURCES } from "../../Queries/DataSourceBlock";
 import { SourceRuntime } from "../../Studies/Run/DataSources/Main";
 import { outputKey } from "../../../lib/yqOutputs";
-import { bindingFor, isStreamMappable, streamValue } from "../Helpers/bindings";
+import {
+  bindingFor,
+  isStreamMappable,
+  mappedChannels,
+  streamValue,
+} from "../Helpers/bindings";
 
 /**
  * The plain snapshot a sketch reads as `sources`: each source's connection
@@ -35,7 +40,8 @@ export function describeSources(rows, apis) {
 
 /**
  * Subscribes every `stream` binding to its output, putting each packet's
- * latest sample for the mapped channel straight into the bus.
+ * latest sample for the mapped channel straight into the bus — an array of
+ * them, one per component, for a vector.
  *
  * @param {(sourceId: string) => object | undefined} apiFor - The live api for
  *   the mapping's `sourceId`: the visual's own source, or in a study, the
@@ -52,17 +58,25 @@ export function subscribeStreams(bus, declared, bindings, apiFor) {
     if (!isStreamMappable(declaration, binding)) continue;
     const api = apiFor(mapping.sourceId);
     if (!api?.addPacketListener) continue;
+    const channels = mappedChannels(mapping);
+    const isVector = declaration.type !== "number";
 
     unsubscribes.push(
       api.addPacketListener((output, packet, channelCount) => {
         if (outputKey(output) !== mapping.output) return;
-        if (mapping.channel >= channelCount) return;
         const samples = Math.floor(packet.data.length / channelCount);
         if (!samples) return;
-        // Samples are interleaved; the sketch only ever needs the newest.
-        const raw = packet.data[(samples - 1) * channelCount + mapping.channel];
-        if (!Number.isFinite(raw)) return;
-        bus.set(key, streamValue(declaration, binding, raw));
+        // Samples are interleaved; the sketch only ever needs the newest. A
+        // vector is only set once every component has a sample, so the sketch
+        // never sees half of one.
+        const raw = channels.map((channel) =>
+          channel < channelCount
+            ? packet.data[(samples - 1) * channelCount + channel]
+            : NaN
+        );
+        if (!raw.every(Number.isFinite)) return;
+        const values = raw.map((value) => streamValue(declaration, binding, value));
+        bus.set(key, isVector ? values : values[0]);
       })
     );
   }

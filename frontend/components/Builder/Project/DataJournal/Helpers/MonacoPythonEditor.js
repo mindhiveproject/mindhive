@@ -18,6 +18,24 @@ if (typeof window !== "undefined") {
   loader.config({
     paths: { vs: `${window.location.origin}${MONACO_VS_PATH}` },
   });
+
+  // Safari only: Monaco's clipboard service hands `navigator.clipboard.write` a
+  // pending promise on every click and keydown, then cancels the previous one.
+  // Nothing catches that rejection, so it surfaces as an unhandled "Canceled"
+  // that means nothing — and Next's dev overlay shows it as a crash. The listener
+  // lives at module level because Monaco's own outlives the editor. Capture, so
+  // it runs ahead of the overlay's listener, which ignores `preventDefault`.
+  window.addEventListener(
+    "unhandledrejection",
+    (event) => {
+      const { reason } = event;
+      if (reason?.name !== "Canceled") return;
+      if (!reason.stack?.includes(MONACO_VS_PATH)) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    },
+    { capture: true },
+  );
 }
 
 const DATA_JOURNAL_MONACO_THEME = "mindhiveDataJournal";

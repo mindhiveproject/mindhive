@@ -27,6 +27,7 @@ import {
   isStreamMappable,
   isToggle,
   labelFor,
+  mappedChannels,
   typeLabel,
 } from "../../Helpers/bindings";
 import { addParameter, keyFromName } from "../../Runtime/parametersFile";
@@ -450,14 +451,23 @@ export function MapChip({ binding, dataSources, sourceApis, onClick }) {
   }
 
   const source = dataSources.find((row) => row.id === mapping.sourceId);
-  const channel = (source?.block?.outputs || [])
-    .find((output) => outputKey(output) === mapping.output)
-    ?.channels?.find((entry) => entry.index === mapping.channel);
+  const output = (source?.block?.outputs || []).find(
+    (entry) => outputKey(entry) === mapping.output
+  );
+  // A vector is named by its group; the group may be wider than the vector
+  // (a landmark's x, y and z feeding a 2D vector), so it matches on the start.
+  const channels = mappedChannels(mapping);
+  const label =
+    mapping.channels === undefined
+      ? output?.channels?.find((entry) => entry.index === mapping.channel)?.label
+      : output?.groups?.find((group) =>
+          channels.every((index, i) => group.channels[i] === index)
+        )?.label;
   const live = !!source && !!sourceApis[source.id]?.streaming;
 
   return (
     <Chip
-      label={channel?.label || t("missingOutput", "Missing output")}
+      label={label || t("missingOutput", "Missing output")}
       leading={<WaveformIcon width={18} height={18} />}
       style={live ? CHIP_LIVE_STYLE : CHIP_MAPPED_STYLE}
       title={

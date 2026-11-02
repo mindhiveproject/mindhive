@@ -46,13 +46,15 @@ const EMPTY_STYLE = {
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
-// Same three views as the task and survey banks, with "favorited" the default
-// since the bank is mostly for getting back to what you've starred.
+// Same three views as the task and survey banks, with "mine" the default so
+// the bank opens on the visuals you made.
 const FILTERS = [
   { key: "favorited", labelKey: "filterFavorited", default: "Favorited" },
   { key: "public", labelKey: "filterPublic", default: "Public" },
   { key: "mine", labelKey: "filterCreatedByMe", default: "Created by me" },
 ];
+
+const DEFAULT_FILTER = "mine";
 
 function whereFor(filter, userId) {
   if (filter === "favorited")
@@ -80,7 +82,7 @@ export default function VisualsBank({ user }) {
   const { t } = useTranslation("visuals");
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("favorited");
+  const [filter, setFilter] = useState(DEFAULT_FILTER);
 
   const { data, loading, refetch } = useQuery(MY_VISUALS, {
     variables: { where: whereFor(filter, user?.id) },
@@ -153,8 +155,8 @@ export default function VisualsBank({ user }) {
               onClick={() => setFilter(f.key)}
               // The active non-default chip clears back to the default view.
               onClose={
-                isSelected && f.key !== "favorited"
-                  ? () => setFilter("favorited")
+                isSelected && f.key !== DEFAULT_FILTER
+                  ? () => setFilter(DEFAULT_FILTER)
                   : undefined
               }
             />

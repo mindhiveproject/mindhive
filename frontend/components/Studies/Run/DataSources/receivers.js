@@ -38,6 +38,8 @@ const OVERLAY_LAYERS = {
   face_landmark: { box: false, landmarks: false, connections: "mesh" },
   face_landmark_pair: { box: false, landmarks: false, connections: "contours" },
   face_emotion: { box: true, label: true, landmarks: false, connections: "contours" },
+  // The joints as points, joined by MediaPipe's skeleton.
+  pose: { box: false, label: false, landmarks: true, connections: "contours" },
 };
 
 export function overlayLayers(receiverType) {

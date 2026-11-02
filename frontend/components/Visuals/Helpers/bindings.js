@@ -13,11 +13,12 @@
 
 export const EMPTY_BINDING = {
   // null | { kind: "manual", value }
-  //      | { kind: "stream", sourceId, output, channel }
+  //      | { kind: "stream", sourceId, output, channel | channels }
   //          sourceId — the VisualDataSource row
   //          output   — the block output's `outputKey` ("<node>[/<stream>]"),
   //                     never a stream ID, which carries the device's runtime id
-  //          channel  — the channel's `index` within that output
+  //          channel  — the channel's `index` within that output (a number)
+  //          channels — one channel `index` per component (a vector)
   //      | { kind: "column", datasetId, column, mode, samplingRate }
   mapping: null,
   rangeOverride: null,
@@ -232,13 +233,34 @@ export function resolveValues(declared, bindings, live = {}) {
 }
 
 /**
- * Whether a parameter can take a device output. Only numbers can for now: a
- * stream channel carries one number per sample, and a number is the one kind
- * that means the same thing on both sides. Categorical streams onto category
- * and text parameters are the next step.
+ * Whether a parameter can take a device output: a number reads one channel, a
+ * vector one channel per component. Categorical streams onto category and text
+ * parameters are the next step.
  */
 export function isStreamMappable(declaration, binding) {
-  return declaration?.type === "number" && binding?.allowMapping !== false;
+  const type = declaration?.type;
+  return (
+    (type === "number" || !!VECTOR_SIZES[type]) && binding?.allowMapping !== false
+  );
+}
+
+/** The channel indices a stream mapping reads, in component order. */
+export function mappedChannels(mapping) {
+  return mapping.channels ?? [mapping.channel];
+}
+
+/**
+ * The groups of an output a vector parameter can read: a group is a set of
+ * channels that belong together, like one landmark's x, y and z. A group with
+ * more channels than the vector has components still fits, and feeds its first
+ * ones (a 2D vector takes a landmark's x and y). Each comes back with exactly
+ * the channels the vector reads.
+ */
+export function groupsFor(output, declaration) {
+  const size = VECTOR_SIZES[declaration?.type];
+  return (output?.groups || [])
+    .filter((group) => group.channels.length >= size)
+    .map((group) => ({ ...group, channels: group.channels.slice(0, size) }));
 }
 
 /**

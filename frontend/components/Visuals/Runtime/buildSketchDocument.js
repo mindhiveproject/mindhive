@@ -57,7 +57,7 @@ function windowResized() {
 }
 `;
 
-/** Tag on every message between the app and the frame, in the style of yq-data's `yq-data/1`. */
+/** Tag on every message between the app and the frame, in the style of yq-data's `yq-stream` protocol. */
 export const PROTOCOL = "yq-visual/1";
 
 /**

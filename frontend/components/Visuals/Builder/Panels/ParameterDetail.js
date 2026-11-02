@@ -24,8 +24,10 @@ import {
   EMPTY_BINDING,
   KIND_LABELS,
   bindingFor,
+  groupsFor,
   isNumeric,
   isStreamMappable,
+  mappedChannels,
   isWholeNumber,
   kindOf,
   labelFor,
@@ -359,14 +361,14 @@ export default function ParameterDetailPanel({ paramKey, initialTab, focusName }
       }
       updateFile(parametersFile.id, next);
       // A value set by hand would keep winning over the default just changed,
-      // and a stream can't feed a parameter retyped to something other than a
-      // number.
+      // and a stream's channels fit the type they were picked for — one for a
+      // number, one per component for a vector — and no other.
       if (binding.mapping?.kind === "manual" && "default" in fields) {
         patch.mapping = null;
       } else if (
         binding.mapping?.kind === "stream" &&
         "type" in fields &&
-        shown.type !== "number"
+        shown.type !== declaration.type
       ) {
         patch.mapping = null;
       }
@@ -678,9 +680,10 @@ export default function ParameterDetailPanel({ paramKey, initialTab, focusName }
  * from. Picking a channel maps it; picking the mapped one again unmaps it,
  * back to the default rather than to a manual value the author never set.
  *
- * Only numeric outputs are listed, and only for a number parameter — see
- * `isStreamMappable`. A source's outputs are listed whether or not it is
- * streaming, so a mapping can be set up before the device is to hand.
+ * Only numeric outputs are listed — channels for a number parameter, groups
+ * (a landmark's x, y and z) for a vector — see `isStreamMappable`. A source's
+ * outputs are listed whether or not it is streaming, so a mapping can be set up
+ * before the device is to hand.
  */
 function StreamPicker({
   paramKey,
@@ -707,7 +710,7 @@ function StreamPicker({
               )
             : t(
                 "onlyNumbersMap",
-                "Only number parameters can be mapped to a device output for now."
+                "Only number and vector parameters can be mapped to a device output for now."
               )
         }
       />
@@ -734,15 +737,36 @@ function StreamPicker({
     );
   }
 
+  const isVector = declaration.type !== "number";
+
   return dataSources.map((source) => {
     const excluded = new Set(source.settings?.excludedChannels || []);
     const outputs = (source.block?.outputs || []).filter(
       (output) => output.valueType !== "categorical"
     );
-    const channels = outputs.flatMap((output) =>
-      (output.channels || [])
-        .filter((channel) => !excluded.has(channelKey(output, channel.index)))
-        .map((channel) => ({ output, channel }))
+    // A vector reads a whole group, so it is offered the groups of every
+    // output rather than their channels. A group with a channel the source's
+    // settings leave out is not offered either: it would be half a vector.
+    const choices = outputs.flatMap((output) =>
+      isVector
+        ? groupsFor(output, declaration)
+            .filter((group) =>
+              group.channels.every(
+                (index) => !excluded.has(channelKey(output, index))
+              )
+            )
+            .map((group) => ({
+              output,
+              label: group.label,
+              channels: group.channels,
+            }))
+        : (output.channels || [])
+            .filter((channel) => !excluded.has(channelKey(output, channel.index)))
+            .map((channel) => ({
+              output,
+              label: channel.label,
+              channels: [channel.index],
+            }))
     );
 
     return (
@@ -753,19 +777,26 @@ function StreamPicker({
           </span>
           <StatusIndicator streaming={!!sourceApis[source.id]?.streaming} />
         </div>
-        {channels.length === 0 ? (
-          <span>{t("noNumericOutputs", "This source has no numeric outputs to map.")}</span>
+        {choices.length === 0 ? (
+          <span>
+            {isVector
+              ? t(
+                  "noVectorOutputs",
+                  "This source has no grouped outputs to map to a vector."
+                )
+              : t("noNumericOutputs", "This source has no numeric outputs to map.")}
+          </span>
         ) : (
           <div style={CHIPS_STYLE}>
-            {channels.map(({ output, channel }) => {
+            {choices.map(({ output, label, channels }) => {
               const selected =
                 mapping?.sourceId === source.id &&
                 mapping?.output === outputKey(output) &&
-                mapping?.channel === channel.index;
+                mappedChannels(mapping).join() === channels.join();
               return (
                 <Chip
-                  key={channelKey(output, channel.index)}
-                  label={channel.label}
+                  key={`${outputKey(output)}::${channels.join()}`}
+                  label={label}
                   selected={selected}
                   pressed={selected}
                   accent="tertiary"
@@ -778,7 +809,7 @@ function StreamPicker({
                             kind: "stream",
                             sourceId: source.id,
                             output: outputKey(output),
-                            channel: channel.index,
+                            ...(isVector ? { channels } : { channel: channels[0] }),
                           },
                     })
                   }

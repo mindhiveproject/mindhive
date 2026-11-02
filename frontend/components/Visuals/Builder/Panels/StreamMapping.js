@@ -116,8 +116,12 @@ export default function StreamMappingPanel({ stream }) {
 
   if (!source || !channel) return null;
 
-  const keys = order.filter((key) =>
-    isStreamMappable(declared[key], bindingFor(bindings, key))
+  // A single channel is one number; a vector reads a whole group, which is
+  // picked from the parameter's own panel.
+  const keys = order.filter(
+    (key) =>
+      declared[key].type === "number" &&
+      isStreamMappable(declared[key], bindingFor(bindings, key))
   );
 
   function toggle(key, mapped) {

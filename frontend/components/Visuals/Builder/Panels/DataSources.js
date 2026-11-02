@@ -21,6 +21,7 @@ import {
   StatusIndicator,
 } from "../../../Studies/Run/DataSources/ConnectScreen";
 import { useVisualBuilder } from "../../Context/VisualBuilderContext";
+import { mappedChannels } from "../../Helpers/bindings";
 import { channelKey, outputKey } from "../../../../lib/yqOutputs";
 
 const EMPTY_STYLE = {
@@ -295,7 +296,7 @@ function DataSourceBlock({ source, api, canEdit, onRemove, onSettings }) {
         binding?.mapping?.kind === "stream" &&
         binding.mapping.sourceId === source.id &&
         binding.mapping.output === outputKey(output) &&
-        binding.mapping.channel === channel.index
+        mappedChannels(binding.mapping).includes(channel.index)
     );
   const isOpen = (output, channel) =>
     detailStream?.sourceId === source.id &&
