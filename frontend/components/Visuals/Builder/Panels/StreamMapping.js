@@ -116,7 +116,7 @@ export default function StreamMappingPanel({ stream }) {
 
   if (!source || !channel) return null;
 
-  // A single channel is one number; a vector reads a whole group, which is
+  // A single channel is one number; a vector reads a whole point, which is
   // picked from the parameter's own panel.
   const keys = order.filter(
     (key) =>

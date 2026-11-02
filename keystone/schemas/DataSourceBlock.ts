@@ -91,12 +91,15 @@ export const DataSourceBlock = list({
 
     // A yq-data PipelineGraph, stored verbatim and rehydrated with
     // `new Pipeline(graph)`:
-    //   { nodes: [{ id, method, parameters, receiver, stream, label }],
+    //   { nodes: [{ id, method, parameters, receiver, stream, label, expects? }],
     //     edges: [{ from: [nodeId], to: [nodeId, port] }],
     //     record?: { nodes: [nodeId] } }
     // `record` is the passive "which outputs a session captures" selection the
     // package carries in the graph itself; only aggregates of those reach the
     // server. Future: let researchers download the raw values to their computer.
+    // `expects` is what a source node's receiver will announce, so
+    // `Pipeline.describe()` can report it before a device connects; the builder
+    // reads a point stream's landmarks from there to map vector parameters.
     graph: json({ defaultValue: { nodes: [], edges: [] } }),
 
     // Declares the "Advanced Options" fields the study builder's data source

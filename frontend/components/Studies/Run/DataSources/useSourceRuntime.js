@@ -29,6 +29,9 @@ export default function useSourceRuntime(row) {
       inputs.map((input) => [input.id, { status: "disconnected" }])
     )
   );
+  // nodeId -> the points `Pipeline.describe()` reports for it (a point stream's
+  // landmarks), known from the graph before any device connects.
+  const [points, setPoints] = useState({});
 
   const receiversRef = useRef({}); // inputId -> receiver instance
   const connectionSubsRef = useRef({}); // inputId -> isConnected$ subscription
@@ -52,6 +55,14 @@ export default function useSourceRuntime(row) {
       if (cancelled) return;
       pipeline = new Pipeline(block.graph);
       pipelineRef.current = pipeline;
+      setPoints(
+        Object.fromEntries(
+          pipeline
+            .describe()
+            .filter((output) => output.points)
+            .map((output) => [output.nodeId, output.points])
+        )
+      );
       pipeline.start();
 
       pipeline.recordTargets().forEach((output, nodeId) => {
@@ -253,6 +264,7 @@ export default function useSourceRuntime(row) {
   return {
     inputs,
     outputs,
+    points,
     inputStatus,
     connect,
     disconnect,

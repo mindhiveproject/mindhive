@@ -454,14 +454,14 @@ export function MapChip({ binding, dataSources, sourceApis, onClick }) {
   const output = (source?.block?.outputs || []).find(
     (entry) => outputKey(entry) === mapping.output
   );
-  // A vector is named by its group; the group may be wider than the vector
+  // A vector is named by its point; the point may be wider than the vector
   // (a landmark's x, y and z feeding a 2D vector), so it matches on the start.
   const channels = mappedChannels(mapping);
   const label =
     mapping.channels === undefined
       ? output?.channels?.find((entry) => entry.index === mapping.channel)?.label
-      : output?.groups?.find((group) =>
-          channels.every((index, i) => group.channels[i] === index)
+      : sourceApis[mapping.sourceId]?.points?.[output?.node]?.find((point) =>
+          channels.every((index, i) => point.indices[i] === index)
         )?.label;
   const live = !!source && !!sourceApis[source.id]?.streaming;
 

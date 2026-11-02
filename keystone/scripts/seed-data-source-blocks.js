@@ -435,9 +435,7 @@ const BLOCKS = [
       { id: "camera", receiver: "pose", label: "Camera", required: true },
     ],
     // PoseReceiver emits a single "landmarks" stream (numPoses defaults to 1):
-    // x, y, z per landmark in image-normalized coordinates. `groups` are the
-    // channels that belong together, which is what a vector parameter maps to
-    // (mirrors yq-data's pointChannelGroups).
+    // x, y, z per landmark in image-normalized coordinates.
     outputs: [
       {
         node: "pose",
@@ -449,14 +447,31 @@ const BLOCKS = [
             label: `${landmark} ${axis}`,
           }))
         ),
-        groups: POSE_LANDMARK_NAMES.map((landmark, i) => ({
-          label: landmark,
-          channels: [i * 3, i * 3 + 1, i * 3 + 2],
-        })),
       },
     ],
     graph: {
-      nodes: [{ id: "pose", receiver: "camera", label: "Body landmarks" }],
+      nodes: [
+        {
+          id: "pose",
+          receiver: "camera",
+          label: "Body landmarks",
+          // What the receiver will announce (yq-data's pointStreamMetadata), so
+          // `describe()` lists the landmarks vector parameters map to before a
+          // camera is connected.
+          expects: [
+            {
+              streamID: "pose:landmarks",
+              modality: "video",
+              channelCount: 99,
+              additionalMetadata: {
+                pointComponents: ["x", "y", "z"],
+                topology: "mediapipe-pose-33",
+                coordinateSpace: "image",
+              },
+            },
+          ],
+        },
+      ],
       edges: [],
       record: { nodes: ["pose"] },
     },

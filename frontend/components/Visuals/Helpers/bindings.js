@@ -250,17 +250,17 @@ export function mappedChannels(mapping) {
 }
 
 /**
- * The groups of an output a vector parameter can read: a group is a set of
- * channels that belong together, like one landmark's x, y and z. A group with
- * more channels than the vector has components still fits, and feeds its first
- * ones (a 2D vector takes a landmark's x and y). Each comes back with exactly
- * the channels the vector reads.
+ * The points of an output a vector parameter can read, from `Pipeline.describe()`:
+ * a point is a set of channels that belong together, like one landmark's x, y
+ * and z. A point with more channels than the vector has components still fits,
+ * and feeds its first ones (a 2D vector takes a landmark's x and y). Each comes
+ * back with exactly the indices the vector reads.
  */
-export function groupsFor(output, declaration) {
+export function pointsFor(points, declaration) {
   const size = VECTOR_SIZES[declaration?.type];
-  return (output?.groups || [])
-    .filter((group) => group.channels.length >= size)
-    .map((group) => ({ ...group, channels: group.channels.slice(0, size) }));
+  return (points || [])
+    .filter((point) => point.indices.length >= size)
+    .map((point) => ({ ...point, indices: point.indices.slice(0, size) }));
 }
 
 /**

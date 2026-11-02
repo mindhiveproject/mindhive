@@ -60,9 +60,10 @@ export function SourceRuntime({ row, onStatus }) {
   useEffect(() => {
     onStatus(row.id, api);
     // `api`'s functions are stable (useCallback); only report up again when
-    // the connection state actually changed.
+    // the connection state actually changed, or the pipeline booted and `points`
+    // came in.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [row.id, statusSignature, api.streaming, api.requiredConnected]);
+  }, [row.id, statusSignature, api.streaming, api.requiredConnected, api.points]);
 
   return null;
 }

@@ -24,7 +24,7 @@ import {
   EMPTY_BINDING,
   KIND_LABELS,
   bindingFor,
-  groupsFor,
+  pointsFor,
   isNumeric,
   isStreamMappable,
   mappedChannels,
@@ -680,7 +680,7 @@ export default function ParameterDetailPanel({ paramKey, initialTab, focusName }
  * from. Picking a channel maps it; picking the mapped one again unmaps it,
  * back to the default rather than to a manual value the author never set.
  *
- * Only numeric outputs are listed — channels for a number parameter, groups
+ * Only numeric outputs are listed — channels for a number parameter, points
  * (a landmark's x, y and z) for a vector — see `isStreamMappable`. A source's
  * outputs are listed whether or not it is streaming, so a mapping can be set up
  * before the device is to hand.
@@ -744,21 +744,21 @@ function StreamPicker({
     const outputs = (source.block?.outputs || []).filter(
       (output) => output.valueType !== "categorical"
     );
-    // A vector reads a whole group, so it is offered the groups of every
-    // output rather than their channels. A group with a channel the source's
+    // A vector reads a whole point, so it is offered the points of every
+    // output rather than their channels. A point with a channel the source's
     // settings leave out is not offered either: it would be half a vector.
     const choices = outputs.flatMap((output) =>
       isVector
-        ? groupsFor(output, declaration)
-            .filter((group) =>
-              group.channels.every(
+        ? pointsFor(sourceApis[source.id]?.points?.[output.node], declaration)
+            .filter((point) =>
+              point.indices.every(
                 (index) => !excluded.has(channelKey(output, index))
               )
             )
-            .map((group) => ({
+            .map((point) => ({
               output,
-              label: group.label,
-              channels: group.channels,
+              label: point.label,
+              channels: point.indices,
             }))
         : (output.channels || [])
             .filter((channel) => !excluded.has(channelKey(output, channel.index)))
