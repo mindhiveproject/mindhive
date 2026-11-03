@@ -59,6 +59,7 @@ import {
 import {
   recordStudyConditions,
   updateGuestStudiesInfo,
+  guestForRun,
 } from "./participantRun";
 import markOpportunityReviewNotesRead from "./markOpportunityReviewNotesRead";
 import { reviewConsent, submitConsentForReview } from "./consentReview";
@@ -647,6 +648,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # The DOE retention switches. canRunRetention only.
         doeRetentionSettings: JSON
         canReadDatasourceFile(datasourceId: ID!, token: String!): Boolean!
+        guestForRun(publicId: String!): JSON
         # Counts of DOE data in a scope: all DOE classes, one school (DBN)
         # or one person. canManageUsers only; no names or ids.
         doeDataSummary(school: String, profileId: ID): JSON
@@ -708,6 +710,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         readableDatasetTokens,
         doeRetentionSettings: retentionSettings,
         canReadDatasourceFile,
+        guestForRun,
         doeDataSummary,
         doeExportPerson,
         doeExportSchool,

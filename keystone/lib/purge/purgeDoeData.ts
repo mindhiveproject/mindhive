@@ -7,16 +7,20 @@
 //     people in scope removed from them;
 //   - other content with a member outside the scope, likewise;
 //   - teaching materials (templates, tasks, lessons, resources, curricula,
-//     assignments), kept for the classes using them, author removed.
+//     assignments), kept for the classes using them, author removed;
+//   - what a shared study collected from people outside the scope, guests
+//     included (their data is not in findDoeData's result at all).
 // At termination (`termination: true`, scope { all: true }) all of it goes,
 // shared or not, with the content kept from de-identified accounts.
 //
 // Raw study files are deleted before their database rows, so a run that
 // stops early leaves rows to find again rather than files nobody points to.
-// Afterwards the scope is searched again; `remaining` should be all zeros.
+// Afterwards every record selected for deletion is looked up again by id, since
+// searching the scope alone finds nothing once its accounts and classes are
+// gone, and the scope is searched too; `remaining` should be all zeros.
 // dryRun only counts.
 
-import { countDoeData, findDoeData, DoeScope } from "../doe/findDoeData";
+import { countDoeData, findDoeData, inChunks, DoeScope } from "../doe/findDoeData";
 import { deleteOwnedRecords } from "./deidentify";
 import { deleteRecords } from "./deleteRecords";
 import {
@@ -31,7 +35,7 @@ export type PurgeCounts = {
   rawFolders: number;
   deleted: Record<string, number>;
   kept: Record<string, number>;
-  remaining?: ReturnType<typeof countDoeData>;
+  remaining?: Record<string, number>;
 };
 
 const add = (bag: Record<string, number>, key: string, n: number) => {
@@ -96,28 +100,50 @@ export async function purgeDoeData(
   const inScope = new Set(data.profileIds);
   const counts: PurgeCounts = { rawFolders: 0, deleted: {}, kept: {} };
 
+  const selected = new Map<string, Set<string>>();
+  const remove = (listKey: string, ids: string[]) => {
+    const seen = selected.get(listKey) || new Set<string>();
+    ids.forEach((id) => seen.add(id));
+    selected.set(listKey, seen);
+    return deleteRecords(context, listKey, ids, dryRun);
+  };
+
   // 1. Study data: raw files first, then rows.
   counts.rawFolders = await deleteRawFolders(data.datasets, dryRun);
-  add(counts.deleted, "Dataset", await deleteRecords(context, "Dataset", data.datasets.map((d) => d.id), dryRun));
-  add(counts.deleted, "SummaryResult", await deleteRecords(context, "SummaryResult", data.summaryResultIds, dryRun));
-  add(counts.deleted, "StudyDataSourceRecord", await deleteRecords(context, "StudyDataSourceRecord", data.dataSourceRecordIds, dryRun));
-
-  // Guests go only when nothing outside the scope still points at them.
-  const datasetIds = new Set(data.datasets.map((d) => d.id));
-  const guestsToDelete: string[] = [];
-  for (const guestId of data.guestIds) {
-    const others = await prisma.dataset.count({
-      where: { guestId, id: { notIn: [...datasetIds] } },
-    });
-    if (!others) guestsToDelete.push(guestId);
+  const studyData: [string, string, string[]][] = [
+    ["Dataset", "dataset", data.datasets.map((d) => d.id)],
+    ["SummaryResult", "summaryResult", data.summaryResultIds],
+    ["StudyDataSourceRecord", "studyDataSourceRecord", data.dataSourceRecordIds],
+  ];
+  for (const [listKey, , ids] of studyData) {
+    add(counts.deleted, listKey, await remove(listKey, ids));
   }
-  add(counts.deleted, "Guest", await deleteRecords(context, "Guest", guestsToDelete, dryRun));
+  add(counts.kept, "Dataset (other people, shared study)", data.keptStudyData.datasets);
+  add(counts.kept, "SummaryResult (other people, shared study)", data.keptStudyData.summaryResults);
+  add(counts.kept, "StudyDataSourceRecord (other people, shared study)", data.keptStudyData.dataSourceRecords);
+
+  // Guests go only when none of their study data stays.
+  const guestsStaying = new Set<string>();
+  for (const [, model, ids] of studyData) {
+    const going = new Set(ids);
+    const rows = await inChunks(data.guestIds, (part) =>
+      prisma[model].findMany({
+        where: { guestId: { in: part } },
+        select: { id: true, guestId: true },
+      })
+    );
+    rows.forEach((r: any) => {
+      if (!going.has(r.id)) guestsStaying.add(r.guestId);
+    });
+  }
+  add(counts.deleted, "Guest", await remove("Guest", data.guestIds.filter((id) => !guestsStaying.has(id))));
+  add(counts.kept, "Guest (has data that stays)", guestsStaying.size);
 
   // 2. Boards and studies: only their own, unless terminating.
   const boards = termination ? [...data.boards.scoped, ...data.boards.shared] : data.boards.scoped;
   const studies = termination ? [...data.studies.scoped, ...data.studies.shared] : data.studies.scoped;
-  add(counts.deleted, "ProposalBoard", await deleteRecords(context, "ProposalBoard", boards, dryRun));
-  add(counts.deleted, "Study", await deleteRecords(context, "Study", studies, dryRun));
+  add(counts.deleted, "ProposalBoard", await remove("ProposalBoard", boards));
+  add(counts.deleted, "Study", await remove("Study", studies));
   if (!termination) {
     add(counts.kept, "ProposalBoard (shared)", data.boards.shared.length);
     add(counts.kept, "Study (shared)", data.studies.shared.length);
@@ -138,7 +164,7 @@ export async function purgeDoeData(
       toDelete = ids.filter((id) => (members.get(id) || []).every((m) => inScope.has(m)));
       add(counts.kept, `${listKey} (shared)`, ids.length - toDelete.length);
     }
-    add(counts.deleted, listKey, await deleteRecords(context, listKey, toDelete, dryRun));
+    add(counts.deleted, listKey, await remove(listKey, toDelete));
   }
 
   // 4. Content kept from de-identified accounts (all-DOE scope only).
@@ -148,23 +174,38 @@ export async function purgeDoeData(
       byList.set(listKey, [...(byList.get(listKey) || []), itemId]);
     }
     for (const [listKey, ids] of byList) {
-      add(counts.deleted, `${listKey} (retained)`, await deleteRecords(context, listKey, ids, dryRun));
+      add(counts.deleted, `${listKey} (retained)`, await remove(listKey, ids));
     }
     if (!dryRun) await prisma.doeRetainedRecord.deleteMany({});
     add(counts.deleted, "DoeRetainedRecord", data.retained.length);
   }
 
   // 5. The people: their personal records and files, then the accounts.
+  let ownedLeft = 0;
   for (const profileId of data.profileIds) {
     const owned = await deleteOwnedRecords(context, profileId, dryRun);
     for (const [field, n] of Object.entries(owned.deleted)) add(counts.deleted, field, n);
     add(counts.deleted, "files", owned.files);
+    if (dryRun) continue;
+    const left = await deleteOwnedRecords(context, profileId, true);
+    ownedLeft += left.files + Object.values(left.deleted).reduce((a, n) => a + n, 0);
   }
-  add(counts.deleted, "Profile", await deleteRecords(context, "Profile", data.profileIds, dryRun));
+  add(counts.deleted, "Profile", await remove("Profile", data.profileIds));
 
   // 6. The classes (school and all-DOE scopes).
-  add(counts.deleted, "Class", await deleteRecords(context, "Class", data.classIds, dryRun));
+  add(counts.deleted, "Class", await remove("Class", data.classIds));
 
-  if (!dryRun) counts.remaining = countDoeData(await findDoeData(prisma, scope));
+  if (!dryRun) {
+    const remaining: Record<string, number> = {
+      "raw study folders": await deleteRawFolders(data.datasets, true),
+      "personal records of deleted accounts": ownedLeft,
+    };
+    for (const [listKey, ids] of selected) {
+      remaining[listKey] = await deleteRecords(context, listKey, [...ids], true);
+    }
+    const found = countDoeData(await findDoeData(prisma, scope));
+    remaining["found by searching the scope again"] = Object.values(found).reduce((a, n) => a + n, 0);
+    counts.remaining = remaining;
+  }
   return counts;
 }

@@ -951,6 +951,46 @@ export function canViewParticipantData(
 }
 
 /**
+ * Guest records (age, zip code, answers, and the code that identifies a guest)
+ * are visible to admins and the people who see the guest's results, the same
+ * ones as lib/runtime/resultAccess.js: the team of a study the guest took part
+ * in and the authors of the tasks the guest ran. Guests have no session; their
+ * run pages read their own record with guestForRun (mutations/participantRun).
+ */
+export async function canViewGuestData(
+  context: any,
+  guestId: string | null | undefined
+): Promise<boolean> {
+  const session = context?.session;
+  const me = session?.itemId;
+  if (!me || !guestId) return false;
+  if (isAdmin({ session })) return true;
+  const ids = await cachedIds(context, "visibleGuests", async () => {
+    const meId = String(me);
+    const studyIds = await findIds(context, "Study", {
+      OR: [
+        ...authorOrCollaboratorWhere(meId).OR,
+        { proposal: { some: authorOrCollaboratorWhere(meId) } },
+      ],
+    });
+    const inMyStudies = { study: { id: { in: studyIds } } };
+    const isMe = { id: { equals: meId } };
+    const results = {
+      some: { OR: [inMyStudies, { taskAuthor: isMe }, { assetAuthor: isMe }] },
+    };
+    return findIds(context, "Guest", {
+      OR: [
+        { participantIn: { some: { id: { in: studyIds } } } },
+        { datasets: results },
+        { summaryResults: results },
+        { dataSourceRecords: { some: inMyStudies } },
+      ],
+    });
+  });
+  return ids.includes(String(guestId));
+}
+
+/**
  * Field access for ConnectPreference.teachingTeamNote: platform admins or
  * teaching-team staff on the preference's round. Students (including the
  * submitter) never read or write this field.
