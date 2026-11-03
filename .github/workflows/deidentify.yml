@@ -2,7 +2,9 @@ name: De-identify inactive DOE accounts
 
 # The DOE data agreement: a DOE account with no sign-in for two years is
 # de-identified, after a warning email 30 days before. This runs the backend
-# job that does both (keystone/mutations/runDeidentification.ts) once a month.
+# job that does both (keystone/mutations/runDeidentification.ts) for the two
+# reviews a year, between semesters. Each review is two runs at least 30 days
+# apart, so accounts warned by the first are due at the second.
 # Each run is logged in the backend's RetentionRun list (counts only).
 #
 # The backend decides whether the run acts: unless an admin has switched
@@ -17,7 +19,11 @@ name: De-identify inactive DOE accounts
 
 on:
   schedule:
-    - cron: "23 3 1 * *" # 1st of each month, 03:23 UTC — off the hour
+    # 03:23 UTC, off the hour. Keep each pair over 30 days apart: a run only
+    # de-identifies accounts warned at least 30 days before it.
+    - cron: "23 3 5 1,6 *" # warning runs: January 5, June 5
+    - cron: "23 3 5 2 *" # second run of the winter review: February 5
+    - cron: "23 3 15 7 *" # second run of the summer review: July 15
   workflow_dispatch:
     inputs:
       dryRun:

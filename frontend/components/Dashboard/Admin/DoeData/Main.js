@@ -1,4 +1,4 @@
-// Admin tool for the NYC DOE data agreement: the monthly de-identification
+// Admin tool for the NYC DOE data agreement: de-identification reviews
 // (canRunRetention, see Deidentification.js), and checking, exporting and
 // deleting the DOE data of one person (DOE request), one school (school stops
 // using MindHive) or all of it (termination), with a printable record of each
@@ -26,7 +26,7 @@ const TERMINATION_PHRASE = "DELETE ALL DOE DATA";
 const DBN = /^\d{2}[MXKQR]\d{3}$/;
 
 const TRIGGERS = {
-  SCHEDULE: "Monthly schedule",
+  SCHEDULE: "Scheduled run",
   MANUAL: "Run by an admin",
   DOE_REQUEST: "DOE request",
   SCHOOL: "School stopped using MindHive",

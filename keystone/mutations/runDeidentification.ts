@@ -6,13 +6,16 @@ import { changeStoredJson, stripPersonalKeys } from "../lib/purge/personal";
 import { sendNotificationEmail } from "../lib/mail";
 import { getRetentionSettings } from "./retentionSettings";
 
-// The monthly DOE de-identification job (de-identification policy: "When
-// data is de-identified or deleted"). For DOE accounts only:
+// The DOE de-identification job (de-identification policy: "When data is
+// de-identified or deleted"). Reviews happen twice a year, between semesters,
+// each as two runs at least 30 days apart: the first warns, the second
+// de-identifies the accounts warned. Every run does both steps, for whoever is
+// due. For DOE accounts only:
 //   1. no sign-in for 23 months and no warning yet -> warning email, and
 //      deidentificationWarnedAt is set (a sign-in clears it, auth.ts);
 //   2. no sign-in for two years and warned at least 30 days ago ->
 //      lib/purge/deidentify. Accounts past two years on the first run (the
-//      backfill dated many) are warned first and de-identified a month later.
+//      backfill dated many) are warned first and de-identified at a later run.
 //   3. guests in DOE studies whose participation is over two years old ->
 //      the personal details on the guest record are stripped.
 // It never deletes accounts or study data; full deletion is the admin tool.
@@ -188,7 +191,7 @@ async function runDeidentification(
         await sendNotificationEmail(
           account.email,
           "Your MindHive account will be de-identified",
-          `You have not signed in to MindHive for almost two years. On ${date}, ` +
+          `You have not signed in to MindHive for two years or close to it. On or after ${date}, ` +
             "your account will be de-identified: your name, email address and " +
             "other personal details will be deleted, and your account will no " +
             "longer be linked to you. To keep your account, sign in before then.",

@@ -399,7 +399,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillTicketPermissions(
           dryRun: Boolean
         ): BackfillTicketPermissionsResult!
-        # Monthly DOE de-identification job: warns DOE accounts silent for
+        # DOE de-identification job, run twice a year: warns DOE accounts silent for
         # 23 months, de-identifies those silent for two years and warned 30
         # days ago. canRunRetention, or the RETENTION_SECRET for the
         # scheduled workflow, which only previews unless autoDeidentify is

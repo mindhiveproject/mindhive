@@ -33,7 +33,7 @@ export const RetentionRun = list({
     trigger: select({
       type: "string",
       options: [
-        { label: "Monthly schedule", value: "SCHEDULE" },
+        { label: "Scheduled run", value: "SCHEDULE" },
         { label: "Run by an admin", value: "MANUAL" },
         { label: "DOE request", value: "DOE_REQUEST" },
         { label: "School stopped using MindHive", value: "SCHOOL" },

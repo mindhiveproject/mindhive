@@ -3,7 +3,7 @@ import { checkbox, text, timestamp } from "@keystone-6/core/fields";
 
 import { isAdmin } from "../access";
 
-// Switches for the DOE data agreement's monthly job, one row (key "default"),
+// Switches for the DOE data agreement's de-identification job, one row (key "default"),
 // read and changed through mutations/retentionSettings.ts.
 //
 // autoDeidentify is off by default: the scheduled run then only previews and
