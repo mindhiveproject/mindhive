@@ -20,10 +20,13 @@ export default function ParticipantsTable({
   components,
   users,
   guests,
+  loading,
 }) {
   const { t } = useTranslation("builder");
   // participants
   const [participants, setParticipants] = useState([]);
+  // whether the rows have been built from loaded data at least once
+  const [rowsBuilt, setRowsBuilt] = useState(false);
 
   // Get translated study statuses
   const studyStatuses = getTranslatedStudyStatuses(t);
@@ -123,15 +126,17 @@ export default function ParticipantsTable({
   useEffect(() => {
     async function getParticipants() {
       // rows read the participant's path for this study, so wait for the study
-      if (!study?.id) return;
+      // and the participants to load
+      if (loading || !study?.id) return;
       const allParticipants = [...users, ...guests];
       const processed = allParticipants.map((participant) =>
         processParticipant({ participant })
       );
       setParticipants(processed);
+      setRowsBuilt(true);
     }
     getParticipants();
-  }, [study, users, guests]);
+  }, [study, users, guests, loading]);
 
   return (
     <div className="collectBoard">
@@ -141,7 +146,12 @@ export default function ParticipantsTable({
         participants={participants}
         components={components}
       />
-      <Grid query={query} studyId={study?.id} participants={participants} />
+      <Grid
+        query={query}
+        studyId={study?.id}
+        participants={participants}
+        loading={loading || !rowsBuilt}
+      />
     </div>
   );
 }

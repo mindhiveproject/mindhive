@@ -19,16 +19,21 @@ export default function Collect({ query, user, tab, studyId }) {
     return <div>{t("collect.noStudyFound", "No study found, please save your study first.")}</div>;
   }
 
-  const { data: collectData, error: collectError } = useQuery(
-    GET_STUDY_COLLECT_DATA,
-    {
-      variables: { studyId: studyId },
-    }
-  );
+  const {
+    data: collectData,
+    loading: collectLoading,
+    error: collectError,
+  } = useQuery(GET_STUDY_COLLECT_DATA, {
+    variables: { studyId: studyId },
+  });
   const users = collectData?.studyCollectData?.participants || [];
   const guests = collectData?.studyCollectData?.guests || [];
 
-  const { data: studyData } = useQuery(GET_STUDY_RESULTS, {
+  const {
+    data: studyData,
+    loading: studyLoading,
+    error: studyError,
+  } = useQuery(GET_STUDY_RESULTS, {
     variables: { id: studyId },
   });
   const study = studyData?.study || { participants: [], guests: [] };
@@ -77,7 +82,7 @@ export default function Collect({ query, user, tab, studyId }) {
             participantId={participantId}
             type={type}
           />
-        ) : collectError ? (
+        ) : collectError || studyError ? (
           <div>
             {t(
               "collect.loadError",
@@ -91,6 +96,7 @@ export default function Collect({ query, user, tab, studyId }) {
             components={components}
             users={users}
             guests={guests}
+            loading={collectLoading || studyLoading}
           />
         )}
       </StyledCollectPage>

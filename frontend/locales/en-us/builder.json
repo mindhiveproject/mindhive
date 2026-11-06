@@ -1410,6 +1410,7 @@
 		"condition": "Condition",
 		"consent": "Consent",
 		"duration": "Duration",
+		"loadingParticipants": "Loading participant data…",
 		"numberCompleted": "Number Completed",
 		"open": "Open",
 		"publicId": "Public Id",
