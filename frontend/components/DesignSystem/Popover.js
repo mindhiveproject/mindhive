@@ -163,6 +163,7 @@ export default function Popover({
         target instanceof Element &&
         (target.closest(".DesignSystem-DropdownSelect-Panel") ||
           target.closest(".DesignSystem-Tooltip") ||
+          target.closest(".DesignSystem-Modal-Overlay") ||
           (target.closest(".DesignSystem-Popover") &&
             target.closest(".DesignSystem-Popover") !== surfaceRef.current))
       ) {

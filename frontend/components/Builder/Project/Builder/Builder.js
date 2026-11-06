@@ -13,6 +13,7 @@ import TaskPreview from "../../../Tasks/Preview/Main";
 import { StyledCanvasBuilder } from "../../../styles/StyledBuilder";
 import Modal from "./Modal/Main";
 import StudyPreview from "../../../Studies/Preview/Main";
+import StudyTitle from "./StudyTitle";
 
 import InDev from "../../../Global/InDev";
 import { GET_CLASSES } from "../../../Queries/Classes";
@@ -331,50 +332,68 @@ export default function Builder({
             onOpenSettings={openDataSourceSettings}
           />
         )}
-        <div className="boardTopActions">
-          <Button
-            id="commentButton"
-            type="button"
-            variant="filled"
-            style={{ background: "#5D5763" }}
-            onClick={lockedAddFunctions.addComment}
-            disabled={isCanvasLocked}
-          >
-            {t("builder.addComment", {}, { default: "Add a comment" })}
-          </Button>
-          {needsStartingPoint && (
-            <Button
-              type="button"
-              variant="tonal"
-              onClick={lockedAddFunctions.addAnchor}
-              disabled={isCanvasLocked}
-            >
-              {t("builder.addStartingPoint", {}, {
-                default: "Add starting point",
-              })}
-            </Button>
-          )}
-          {typeof undoCanvas === "function" &&
-            canUndo &&
-            !isCanvasLocked && (
-              <IconButton
-                id="undoButton"
-                type="button"
-                variant="text"
-                onClick={undoCanvas}
-                ariaLabel={t("builder.undo", {}, { default: "Undo" })}
-                title={t("builder.undo", {}, { default: "Undo" })}
-                icon={
-                  <img
-                    src="/assets/tiptapIcons/undo.svg"
-                    alt=""
-                    width="24"
-                    height="24"
-                  />
-                }
-              />
+        {!isPreviewOpen && (
+          <div
+            className={clsx(
+              "boardTopBar",
+              (sidepanelMode === "block" || sidepanelMode === "design") &&
+                "boardTopBar--wideSidepanel"
             )}
-        </div>
+          >
+            <StudyTitle
+              study={study}
+              projectId={project?.id}
+              disabled={isCanvasLocked}
+              onSaved={(title) =>
+                handleChange?.({ target: { name: "title", value: title } })
+              }
+            />
+            <div className="boardTopActions">
+              {typeof undoCanvas === "function" &&
+                canUndo &&
+                !isCanvasLocked && (
+                  <IconButton
+                    id="undoButton"
+                    type="button"
+                    variant="text"
+                    onClick={undoCanvas}
+                    ariaLabel={t("builder.undo", {}, { default: "Undo" })}
+                    title={t("builder.undo", {}, { default: "Undo" })}
+                    icon={
+                      <img
+                        src="/assets/tiptapIcons/undo.svg"
+                        alt=""
+                        width="24"
+                        height="24"
+                      />
+                    }
+                  />
+                )}
+              <Button
+                id="commentButton"
+                type="button"
+                variant="filled"
+                style={{ background: "#5D5763" }}
+                onClick={lockedAddFunctions.addComment}
+                disabled={isCanvasLocked}
+              >
+                {t("builder.addComment", {}, { default: "Add a comment" })}
+              </Button>
+              {needsStartingPoint && (
+                <Button
+                  type="button"
+                  variant="tonal"
+                  onClick={lockedAddFunctions.addAnchor}
+                  disabled={isCanvasLocked}
+                >
+                  {t("builder.addStartingPoint", {}, {
+                    default: "Add starting point",
+                  })}
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {isPreviewOpen && componentId && (

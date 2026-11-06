@@ -84,6 +84,28 @@ export default function ProposalHeader({
     ],
   });
 
+  // Saves the title when the field loses focus (Enter blurs; Escape cancels).
+  const titleCancelledRef = useRef(false);
+  const saveTitle = async () => {
+    const original = proposal?.title || "";
+    const next = (inputs.title || "").trim();
+    if (titleCancelledRef.current || !next || next === original) {
+      titleCancelledRef.current = false;
+      handleChange({ target: { name: "title", value: original } });
+      setIsTitleEditing(false);
+      return;
+    }
+    setIsTitleEditing(false);
+    try {
+      await updateProposal({
+        variables: { id: proposal?.id, ...inputs, title: next },
+      });
+    } catch (err) {
+      handleChange({ target: { name: "title", value: original } });
+      alert(err?.message);
+    }
+  };
+
   const handleEditIconClick = () => {
     if (proposalBuildMode && titleInputRef.current) {
       titleInputRef.current.focus();
@@ -133,71 +155,21 @@ export default function ProposalHeader({
             <div className="headerLeftSection">
               <div className="headerTitleRow">
                 {isTitleEditing ? (
-                  <button 
-                    className="headerEditIcon" 
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      if (inputs.title !== proposal?.title) {
-                        updateProposal({
-                          variables: {
-                            id: proposal?.id,
-                            ...inputs,
-                          },
-                        }).then(() => {
-                          setIsTitleEditing(false);
-                        });
-                      } else {
-                        setIsTitleEditing(false);
-                      }
-                    }}
-                    aria-label="Save title"
-                    disabled={loading}
-                    style={{
-                      minWidth: "60px",
-                      padding: "0 12px",
-                    }}
-                  >
-                    {loading ? (
-                      <span className="MH-Type-Label-Base" style={{ color: "#171717" }}>{t("header.saving", "Saving")}</span>
-                    ) : (
-                      <span className="MH-Type-Label-Base" style={{ color: "#171717" }}>{t("header.save", "Save")}</span>
-                    )}
-                  </button>
-                ) : (
-                  <IconButton
-                    variant="text"
-                    icon={<PencilIcon style={{ color: "#171717" }} />}
-                    onClick={handleEditIconClick}
-                    ariaLabel={t("header.editTitle", {}, { default: "Edit title" })}
-                  />
-                )}
-                {isTitleEditing ? (
                   <input
                     type="text"
                     name="title"
+                    aria-label={t("header.editTitle", {}, { default: "Edit title" })}
                     value={inputs.title || ""}
                     onChange={handleChange}
-                    onBlur={() => {
-                      setIsTitleEditing(false);
-                    }}
+                    onFocus={(e) => e.target.select()}
+                    onBlur={saveTitle}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
-                        if (inputs.title !== proposal?.title) {
-                          updateProposal({
-                            variables: {
-                              id: proposal?.id,
-                              ...inputs,
-                            },
-                          }).then(() => {
-                            setIsTitleEditing(false);
-                          });
-                        } else {
-                          setIsTitleEditing(false);
-                        }
+                        e.currentTarget.blur();
                       } else if (e.key === "Escape") {
-                        handleChange({ target: { name: "title", value: proposal?.title || "" } });
-                        setIsTitleEditing(false);
+                        titleCancelledRef.current = true;
+                        e.currentTarget.blur();
                       }
                     }}
                     className="headerTitle MH-Type-Heading-Base"
@@ -216,14 +188,35 @@ export default function ProposalHeader({
                 ) : (
                   <div className="headerTitleWrapper">
                     <Tooltip
-                      content={inputs.title || proposal?.title || t("header.myProjectBoard", "My Project Board")}
+                      content={t("header.clickToRename", {}, {
+                        default: "Click to rename the project",
+                      })}
                       side="bottom"
                       delayMs={650}
                       maxWidth={400}
                     >
-                      <h1 className="headerTitle">
-                        {inputs.title || proposal?.title || t("header.myProjectBoard", "My Project Board")}
-                      </h1>
+                      <div
+                        className="headerTitleEditable"
+                        role="button"
+                        tabIndex={0}
+                        aria-label={t("header.editTitle", {}, { default: "Edit title" })}
+                        onClick={handleEditIconClick}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            handleEditIconClick();
+                          }
+                        }}
+                      >
+                        <h1 className="headerTitle">
+                          {inputs.title || proposal?.title || t("header.myProjectBoard", "My Project Board")}
+                        </h1>
+                        <PencilIcon
+                          className="headerTitleEditIcon"
+                          aria-hidden="true"
+                          style={{ color: "#171717" }}
+                        />
+                      </div>
                     </Tooltip>
                   </div>
                 )}

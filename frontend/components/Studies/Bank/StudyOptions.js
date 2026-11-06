@@ -5,8 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import Authorship from "./Options/Authorship";
 import Archive from "./Options/Archive";
 import Delete from "./Options/Delete";
-import Links from "./Options/Links";
-import StudyDropdown from "../../Projects/StudyConnector/StudyDropdown";
+import { LinkedClass, LinkedStudy } from "./Options/Links";
 import Button from "../../DesignSystem/Button";
 import IconButton from "../../DesignSystem/IconButton";
 import PanelHeader from "../../DesignSystem/PanelHeader";
@@ -26,6 +25,9 @@ export default function StudyOptions({
   study,
   project,
   studiesInfo,
+  // "study": the board's linked study (project board tab);
+  // "class": the study's linked class (study tabs); null: neither.
+  linkSection = null,
   variant = "dropdown",
 }) {
   const { t } = useTranslation("common");
@@ -72,10 +74,20 @@ export default function StudyOptions({
             closeLabel={tBuilder("connectModal.close", {}, { default: "Close" })}
           />
           <div style={BODY_STYLE}>
+            {linkSection === "study" && project?.id && (
+              <>
+                <LinkedStudy user={user} project={project} />
+                <hr style={{ border: 0, borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)", margin: "4px 0", width: "100%" }} />
+              </>
+            )}
             {study?.id && (
               <>
-                <Links user={user} study={study} />
-                <hr style={{ border: 0, borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)", margin: "4px 0", width: "100%" }} />
+                {linkSection === "class" && (
+                  <>
+                    <LinkedClass study={study} />
+                    <hr style={{ border: 0, borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)", margin: "4px 0", width: "100%" }} />
+                  </>
+                )}
                 <Authorship
                   user={user}
                   study={study}
@@ -109,9 +121,6 @@ export default function StudyOptions({
                   }
                 />
               </>
-            )}
-            {project?.id && (
-              <StudyDropdown user={user} project={project} />
             )}
           </div>
         </Popover>

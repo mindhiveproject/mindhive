@@ -1191,7 +1191,7 @@ export const StyledCanvasBuilder = styled.div`
     position: relative;
     overflow: hidden;
 
-    > *:not(.sidepanel):not(.boardTopActions):not(.dataSourcesPanel) {
+    > *:not(.sidepanel):not(.boardTopBar):not(.dataSourcesPanel) {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -1206,15 +1206,106 @@ export const StyledCanvasBuilder = styled.div`
     }
   }
 
-  .boardTopActions {
+  /* Floating card at the top of the canvas, styled and spaced like the side
+     panel (8px inset, same border, radius and shadow), ending 8px before it. */
+  .boardTopBar {
     position: absolute;
     z-index: 10;
-    left: 10px;
-    top: 10px;
+    top: 8px;
+    left: 8px;
+    right: calc(max(280px, min(548px, 46%)) + 16px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 56px;
+    padding: 8px 8px 8px 16px;
+    box-sizing: border-box;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    border-radius: 12px;
+    box-shadow: 0px 4px 7.5px 0px rgba(0, 0, 0, 0.02);
+    transition: right 220ms ease;
+
+    &.boardTopBar--wideSidepanel {
+      right: calc(max(280px, min(700px, 65%)) + 16px);
+    }
+  }
+
+  .boardTopBarTitle {
+    flex: 0 1 auto;
+    margin: 0 0 0 -8px;
+    min-width: 0;
+    max-width: 100%;
+    padding: 6px 8px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
+
+  .boardTopBarTitleButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: text;
+
+    .boardTopBarTitleText {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .boardTopBarTitleEditIcon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    &:hover:not(:disabled) .boardTopBarTitleEditIcon,
+    &:focus-visible .boardTopBarTitleEditIcon {
+      opacity: 1;
+    }
+
+    &:hover:not(:disabled) {
+      background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  .boardTopBarTitleInput {
+    flex: 1 1 auto;
+    border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    outline: none;
+
+    &:focus {
+      border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+    }
+  }
+
+  .boardTopActions {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: flex-end;
     gap: 8px;
+    flex-shrink: 0;
   }
 
   .dataSourcesPanel {

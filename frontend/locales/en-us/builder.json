@@ -1,9 +1,11 @@
 {
 	"studyOptions": {
-		"untitledBoard": "Untitled board",
-		"noLinkedProjects": "This study is not linked to any project.",
-		"unlinkFromBoard": "Unlink from \"{{board}}\"",
-		"unlinkConfirm": "Unlink this study from \"{{board}}\"? The study and the board are kept; only the link between them is removed."
+		"linkedStudy": "Linked study",
+		"changeLinkedClass": "Change linked class",
+		"linkedClassInfo": "Linking this study to a class shares it with that class: the class's teachers can follow and review it, and the class's settings (such as available data sources) apply to it. Removing the class takes the study out of that class.",
+		"unlink": "Unlink",
+		"unlinkStudy": "Unlink study from this board",
+		"unlinkStudyConfirm": "Unlink \"{{study}}\" from this board? The study and the board are kept; only the link between them is removed."
 	},
 	"actionCard": {
 		"clickToSubmit": "Click to submit for {{title}}",
@@ -94,6 +96,8 @@
 	"build-intro": "In this builder, you can create a new study, upload your own tasks, or use tasks from the library.",
 	"buildBlockFromScratch": "Select this option if you would prefer to build a block entirely from scratch.",
 	"builder": {
+		"studyTitle": "Study title",
+		"renameStudy": "Click to rename the study",
 		"addComment": "Add a comment",
 		"addStartingPoint": "Add starting point",
 		"lockedMessage": "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study.",
@@ -1426,6 +1430,7 @@
 		"studyStatus": "Study Status"
 	},
 	"header": {
+		"clickToRename": "Click to rename the project",
 		"addCollaborator": "Add collaborator",
 		"allDataOneFile": "All data in one file",
 		"downloadData": "Download data",
@@ -1539,6 +1544,7 @@
 	"introductionVideo": "Introduction video",
 	"link": "Link",
 	"linkClass": {
+		"notLinked": "Not linked to a class",
 		"doNotConnectClass": "Do not connect to class"
 	},
 	"main": {

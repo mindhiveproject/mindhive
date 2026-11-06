@@ -909,6 +909,37 @@ export const StyledProposal = styled.div`
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .headerTitleEditable {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 100%;
+      min-width: 0;
+      padding: 0 8px;
+      border-radius: 8px;
+      cursor: text;
+      h1 {
+        min-width: 0;
+      }
+      .headerTitleEditIcon {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        opacity: 0;
+        transition: opacity 0.15s;
+      }
+      &:hover,
+      &:focus-visible {
+        background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
+        .headerTitleEditIcon {
+          opacity: 1;
+        }
+      }
+      &:focus-visible {
+        outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+        outline-offset: 2px;
+      }
+    }
     .headerInfoRow {
       display: flex;
       flex-direction: row;
