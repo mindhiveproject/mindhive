@@ -2245,22 +2245,27 @@ export const StyledParticipantPage = styled.div`
 export const StyledCollectPage = styled.div`
   display: grid;
   width: 100%;
-  overflow-y: scroll;
-  background: rgb(229, 229, 229);
+  overflow-y: auto;
+  /* same canvas as the Project Board tab */
+  background: #f7f9f8;
+  padding: 24px 20px;
+  box-sizing: border-box;
+  align-content: start;
   .clickable {
     cursor: pointer;
   }
   .collectBoard {
     display: grid;
     max-width: 1600px;
-    margin: 45px 0px 45px 0px;
+    margin: 0;
     width: 100%;
+    min-width: 0;
     justify-self: center;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       "header"
       "participants";
-    grid-gap: 20px;
+    grid-gap: 24px;
     align-content: baseline;
 
     .header {
@@ -2274,43 +2279,79 @@ export const StyledCollectPage = styled.div`
     .noresponses {
     }
 
+    /* the three header sections (share link, all data, data by task) are each
+       a card, like the sections of the Project Board */
     .study {
-      background: #ffffff;
-      padding: 2rem;
       display: grid;
-      grid-gap: 20px;
-      grid-template-columns: 1fr 1fr 1fr;
-      border-radius: 4px;
-      align-items: baseline;
+      grid-gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      align-items: stretch;
+
+      & > div {
+        display: grid;
+        align-content: start;
+        grid-gap: 12px;
+        min-width: 0;
+        background: var(--MH-Theme-Neutrals-White, #ffffff);
+        border: 1.5px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+        border-radius: 8px;
+        padding: 24px;
+      }
+
+      h3 {
+        margin: 0;
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+      p {
+        margin: 0;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+      }
 
       .shareStudy {
-        display: grid;
-        align-items: baseline;
-      }
-
-      .downloadOptions {
-        display: grid;
-        grid-gap: 15px;
-        grid-template-columns: 1fr;
-        .downloadArea {
-          display: grid;
-          grid-gap: 5px;
-          grid-template-columns: auto 1fr;
-          align-items: center;
-          cursor: pointer;
+        .studyLink {
+          max-width: 100%;
         }
       }
-      .downloadByComponent {
+
+      /* why a download card shows no download buttons */
+      p.downloadEmpty {
+        padding: 12px;
+        background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+        border-radius: 8px;
+        font: var(--MH-Type-Body-Small, var(--MH-Type-Body-Base));
+      }
+
+      /* design system download buttons, stacked */
+      .downloadOptions,
+      .downloadButtons {
+        justify-items: start;
+      }
+      .downloadButtons {
         display: grid;
-        grid-gap: 10px;
-        cursor: pointer;
+        grid-gap: 12px;
       }
       .buttons {
-        display: grid;
-        grid-gap: 5px;
-        grid-template-columns: auto auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
         justify-content: start;
         align-items: center;
+        margin-top: 4px;
+      }
+    }
+
+    /* participants table: match the board's card border and radius */
+    #collectTable {
+      --ag-border-color: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      --ag-wrapper-border-radius: 8px;
+      --ag-header-background-color: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      --ag-font-family: inherit;
+      .ag-root-wrapper {
+        border-width: 1.5px;
       }
     }
 
@@ -2372,25 +2413,29 @@ export const StyledCollectPage = styled.div`
   .participantPage {
     display: grid;
     max-width: 1100px;
-    margin: 45px 0px 45px 0px;
+    margin: 0;
     width: 100%;
     justify-self: center;
     grid-template-columns: 1fr;
-    grid-gap: 20px;
+    grid-gap: 24px;
     align-content: baseline;
     .resultItem {
       display: grid;
-      margin: 5px 0px;
-      padding: 10px;
+      margin: 6px 0px;
+      padding: 12px;
       grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
-      background: white;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      border-radius: 8px;
     }
     .infoItem {
       display: grid;
-      margin: 5px 0px;
-      padding: 10px;
+      margin: 6px 0px;
+      padding: 12px;
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      background: white;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      border-radius: 8px;
     }
     .ui.toggle.checkbox input:checked ~ .box:before,
     .ui.toggle.checkbox input:checked ~ label:before {

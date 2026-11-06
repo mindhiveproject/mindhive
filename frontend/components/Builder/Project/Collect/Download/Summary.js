@@ -2,7 +2,8 @@ import { useState } from "react";
 import { saveAs } from "file-saver";
 import csvWithPlainNumbers from "../../../../../lib/csvWithPlainNumbers";
 import moment from "moment";
-import { Icon } from "semantic-ui-react";
+import Button from "../../../../DesignSystem/Button";
+import { DownloadIcon } from "../../../../DesignSystem/Icons";
 import useTranslation from "next-translate/useTranslation";
 
 import buildAggregateColumns from "../../../../../lib/yqParticipantAggregates";
@@ -231,14 +232,16 @@ export default function DownloadSummaryData({
 
   return (
     <>
-      {loading ? (
-        <div>{t("byComponent.wait", "Wait ...")}</div>
-      ) : (
-        <div className="downloadArea" onClick={() => download()}>
-          <Icon color="teal" size="large" name="download" />
-          <a>{t("byComponent.downloadAggregatedBy", { by })}</a>
-        </div>
-      )}
+      <Button
+        variant={by === "by participant" ? "primary" : "subtle"}
+        leadingIcon={<DownloadIcon />}
+        disabled={loading}
+        onClick={() => download()}
+      >
+        {loading
+          ? t("byComponent.preparing", "Preparing download…")
+          : t("byComponent.downloadAggregatedBy", { by }).trim()}
+      </Button>
     </>
   );
 }

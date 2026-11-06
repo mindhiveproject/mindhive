@@ -145,6 +145,7 @@ export default function ParticipantsTable({
         slug={study.slug}
         participants={participants}
         components={components}
+        loading={loading || !rowsBuilt}
       />
       <Grid
         query={query}
