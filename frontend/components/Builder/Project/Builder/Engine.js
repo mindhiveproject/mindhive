@@ -1,5 +1,6 @@
 import { useState, useEffect, useReducer, useRef, useCallback } from "react";
 import useTranslation from "next-translate/useTranslation";
+import { useApolloClient } from "@apollo/client";
 
 import uniqid from "uniqid";
 
@@ -31,6 +32,8 @@ import {
 } from "../../shared/strictDiagramLinks";
 import { isStudyLocked } from "../../../../lib/studyLock";
 import useAutoSave from "../../../../lib/useAutoSave";
+import { TASK_OWNERSHIP } from "../../../Queries/Task";
+import { COPY_TASK_FOR_STUDY } from "../../../Mutations/Task";
 
 export default function Engine({
   query,
@@ -418,6 +421,52 @@ export default function Engine({
     };
   };
 
+  const apolloClient = useApolloClient();
+
+  // Points a block just added to the canvas at the user's own copy of its
+  // task, so later edits to the original (by its author) never change this
+  // study. Blocks of a task the user owns keep the original unless `always`
+  // is set ("Create a copy"); the Study Builder never edits that original
+  // either, see Component/Wrapper.js.
+  const giveNodeOwnTask = async (node, { always = false } = {}) => {
+    const originalId = node?.options?.componentID;
+    if (!originalId) return;
+    try {
+      const { data } = await apolloClient.query({
+        query: TASK_OWNERSHIP,
+        variables: { id: originalId },
+        fetchPolicy: "network-only",
+      });
+      const task = data?.task;
+      const owns =
+        task?.author?.id === user?.id ||
+        (task?.collaborators || []).some((c) => c?.id === user?.id);
+      if (owns && !always) return;
+      const res = await apolloClient.mutate({
+        mutation: COPY_TASK_FOR_STUDY,
+        variables: { id: originalId },
+      });
+      const copyId = res?.data?.copyTaskForStudy?.id;
+      // the block may have been removed while the copy was being made
+      if (!copyId || !engine.getModel().getNode(node.getID())) return;
+      node.updateOptions({ componentID: copyId, createCopy: false });
+      engine.repaintCanvas();
+      markStudyChanged();
+      forceUpdate();
+    } catch (error) {
+      alert(
+        t(
+          "engine.copyFailed",
+          {},
+          {
+            default:
+              "This block could not get its own copy of the task. Remove it and add it again.",
+          }
+        )
+      );
+    }
+  };
+
   const addComponentToCanvas = ({
     name,
     details,
@@ -439,7 +488,6 @@ export default function Engine({
           testId: uniqid.time(),
           taskType,
           subtitle: `${t("engine.copy", "COPY")} ${shorten(subtitle)}`,
-          createCopy: true,
         });
       } else {
         newNode = new TaskModel({
@@ -460,6 +508,7 @@ export default function Engine({
       newNode.setPosition(point);
       engine.getModel().addNode(newNode);
       forceUpdate();
+      giveNodeOwnTask(newNode, { always: !!createCopy });
     });
   };
 
@@ -576,6 +625,7 @@ export default function Engine({
 
   const addFunctions = {
     addComponentToCanvas,
+    giveNodeOwnTask,
     addStudyTemplateToCanvas,
     addComment,
     addAnchor,

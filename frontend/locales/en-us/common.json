@@ -536,6 +536,7 @@
 	},
 	"blockTags": {
 		"createdByYou": "Created by you",
+		"original": "Original",
 		"collaborator": "Collaborator",
 		"runtimeLabjs": "Lab.js",
 		"runtimeJspsych": "jsPsych",

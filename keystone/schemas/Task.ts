@@ -102,6 +102,12 @@ export const Task = list({
     template: relationship({
       ref: "Template.tasks",
     }),
+    // Set on a study's own copy of a task (made when the task is added to a
+    // study, or when a block of it is edited). A task without it is an
+    // original: the one shown in the task bank, which studies never edit.
+    copiedFrom: relationship({
+      ref: "Task",
+    }),
     visual: relationship({
       ref: "Visual.tasks",
     }),

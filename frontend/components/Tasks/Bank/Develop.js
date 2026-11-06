@@ -45,7 +45,9 @@ function buildWhere({ filter, taskType, userId, hiddenTaskIds }) {
     favorited: { favoriteBy: { some: { id: { equals: userId } } } },
     // Browsing public tasks respects the student's class block lists.
     public: excludeHiddenTasks({ public: { equals: true } }, hiddenTaskIds),
+    // originals only: a study's own copies of a task stay in that study
     mine: {
+      copiedFrom: null,
       OR: [
         { author: { id: { equals: userId } } },
         { collaborators: { some: { id: { equals: userId } } } },
