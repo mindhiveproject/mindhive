@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import Authorship from "./Options/Authorship";
 import Archive from "./Options/Archive";
 import Delete from "./Options/Delete";
+import Links from "./Options/Links";
 import StudyDropdown from "../../Projects/StudyConnector/StudyDropdown";
 import Button from "../../DesignSystem/Button";
 import IconButton from "../../DesignSystem/IconButton";
@@ -73,6 +74,8 @@ export default function StudyOptions({
           <div style={BODY_STYLE}>
             {study?.id && (
               <>
+                <Links user={user} study={study} />
+                <hr style={{ border: 0, borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)", margin: "4px 0", width: "100%" }} />
                 <Authorship
                   user={user}
                   study={study}

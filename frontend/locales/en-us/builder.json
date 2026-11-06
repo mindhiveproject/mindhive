@@ -1,4 +1,10 @@
 {
+	"studyOptions": {
+		"untitledBoard": "Untitled board",
+		"noLinkedProjects": "This study is not linked to any project.",
+		"unlinkFromBoard": "Unlink from \"{{board}}\"",
+		"unlinkConfirm": "Unlink this study from \"{{board}}\"? The study and the board are kept; only the link between them is removed."
+	},
 	"actionCard": {
 		"clickToSubmit": "Click to submit for {{title}}",
 		"customStep": "Milestone",

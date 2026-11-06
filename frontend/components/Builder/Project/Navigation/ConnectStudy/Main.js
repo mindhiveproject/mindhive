@@ -30,17 +30,6 @@ export default function Connect({ study, user, projectId }) {
           collaborators: {
             set: (inputs?.collaborators || []).map((col) => ({ id: col?.id })),
           },
-          classes: inputs?.classes
-            ? {
-                set: inputs.classes
-                  .filter((cl) => cl?.id)
-                  .map((cl) => ({ id: cl.id })),
-              }
-            : {
-                disconnect: (study?.classes || []).map((cl) => ({
-                  id: cl?.id,
-                })),
-              },
         },
       },
       refetchQueries: [

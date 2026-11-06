@@ -31,11 +31,6 @@ export default function Connect({
         collaborators: {
           set: (inputs?.collaborators || []).map((col) => ({ id: col?.id })),
         },
-        classes: {
-          set: Array.isArray(inputs?.classes)
-            ? inputs.classes.filter((cl) => cl?.id).map((cl) => ({ id: cl.id }))
-            : [],
-        },
       },
     },
     refetchQueries: [

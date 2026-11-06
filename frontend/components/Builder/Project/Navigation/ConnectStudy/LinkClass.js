@@ -6,7 +6,7 @@ import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 
 const NOT_CONNECTED = "$$$-class-not-connected-$$$";
 
-export default function LinkClass({ study, handleChange }) {
+export default function LinkClass({ study, handleChange, portal = false }) {
   const { t } = useTranslation("builder");
   const { data } = useQuery(GET_USER_CLASSES);
 
@@ -47,6 +47,7 @@ export default function LinkClass({ study, handleChange }) {
   return (
     <DropdownSelect
       multiple
+      portal={portal}
       value={value}
       options={options}
       ariaLabel={t("connectStudyModal.linkedClass", {}, {
