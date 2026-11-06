@@ -48,6 +48,8 @@ import toggleReviewUpvote from "./toggleReviewUpvote";
 import classJoinPreview from "./classJoinPreview";
 import doeDataSummary from "./doeDataSummary";
 import studyCollectData from "./studyCollectData";
+import classDashboardProjects from "./classDashboardProjects";
+import classDashboardStudies from "./classDashboardStudies";
 import {
   canReadDatasourceFile,
   readableDatasetTokens,
@@ -679,6 +681,14 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # A study's participants, guests and results for its Collect page,
         # checked once: the caller must be able to edit the study.
         studyCollectData(studyId: ID!): StudyCollectData!
+        # A class's project boards for its teacher dashboard, in the shape of
+        # proposalBoards { ... } in CLASS_DASHBOARD_PROJECTS_QUERY. The caller
+        # must be able to read the class. See lib/classDashboard.js.
+        classDashboardProjects(classId: ID!): JSON!
+        # A class's studies for its teacher dashboard, in the shape of
+        # studies { ... } in CLASS_DASHBOARD_STUDIES_QUERY; each study's
+        # classes are limited to those the caller may read.
+        classDashboardStudies(classId: ID!): JSON!
         # The DOE retention switches. canRunRetention only.
         doeRetentionSettings: JSON
         canReadDatasourceFile(datasourceId: ID!, token: String!): Boolean!
@@ -743,6 +753,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         classJoinPreview,
         readableDatasetTokens,
         studyCollectData,
+        classDashboardProjects,
+        classDashboardStudies,
         doeRetentionSettings: retentionSettings,
         canReadDatasourceFile,
         guestForRun,

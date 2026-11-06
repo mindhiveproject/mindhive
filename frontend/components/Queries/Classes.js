@@ -238,55 +238,16 @@ export const CLASS_ROSTER_QUERY = gql`
   }
 `;
 
+// The class's project boards with their sections and cards, collaborators,
+// study and reviews, loaded by the backend in one query per relation
+// (keystone/lib/classDashboard.js). Through proposalBoards { ... } Keystone
+// resolved each board's and each section's relations on its own: ~1,400
+// database queries per view for a large class. Plain JSON, so it isn't kept
+// in sync with ProposalBoard edits elsewhere: useClassDashboardData refetches
+// it on mount, and the dashboard's mutations refetch it.
 export const CLASS_DASHBOARD_PROJECTS_QUERY = gql`
   query CLASS_DASHBOARD_PROJECTS_QUERY($classId: ID!) {
-    proposalBoards(where: { usedInClass: { id: { equals: $classId } } }) {
-      id
-      title
-      isMain
-      sections {
-        id
-        cards {
-          id
-          type
-          settings
-        }
-      }
-      milestoneStatus
-      submitProposalStatus
-      submitProposalOpenForComments
-      peerFeedbackStatus
-      peerFeedbackOpenForComments
-      projectReportStatus
-      projectReportOpenForComments
-      usedInClass {
-        id
-      }
-      clonedFrom {
-        id
-      }
-      collaborators {
-        id
-        username
-      }
-      study {
-        id
-        title
-        status
-        collaborators {
-          id
-          username
-        }
-        dataCollectionStatus
-        dataCollectionOpenForParticipation
-      }
-      reviews {
-        stage
-        milestone {
-          key
-        }
-      }
-    }
+    classDashboardProjects(classId: $classId)
   }
 `;
 
@@ -321,20 +282,13 @@ export const CLASS_DASHBOARD_MENTORS_QUERY = gql`
   }
 `;
 
+// The class's studies with their classes and collaborators, loaded by the
+// backend with one class access check for all studies
+// (keystone/lib/classDashboard.js) instead of one per study. Plain JSON, like
+// CLASS_DASHBOARD_PROJECTS_QUERY.
 export const CLASS_DASHBOARD_STUDIES_QUERY = gql`
   query CLASS_DASHBOARD_STUDIES_QUERY($classId: ID!) {
-    studies(where: { classes: { some: { id: { equals: $classId } } } }) {
-      id
-      title
-      classes {
-        id
-        title
-      }
-      collaborators {
-        id
-        username
-      }
-    }
+    classDashboardStudies(classId: $classId)
   }
 `;
 
