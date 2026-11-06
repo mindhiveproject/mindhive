@@ -251,6 +251,7 @@ export default function Builder({
           onBeforeCanvasMutation={onBeforeCanvasMutation}
           onAfterCanvasMutation={onAfterCanvasMutation}
           onModelReplaced={onModelReplaced}
+          onTaskNodeAdded={addFunctions?.giveNodeOwnTask}
         />
         <div
           className={clsx(
@@ -290,6 +291,14 @@ export default function Builder({
               updateCanvas={updateCanvas}
               addFunctions={lockedAddFunctions}
               node={node}
+              sharesTask={
+                !!node?.options?.componentID &&
+                (engine?.model?.getNodes() || []).some(
+                  (n) =>
+                    n !== node &&
+                    n?.options?.componentID === node?.options?.componentID
+                )
+              }
               onOpenPreview={openBlockPreview}
             />
           )}

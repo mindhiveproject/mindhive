@@ -72,6 +72,7 @@ import seedProfileForms from "./seedProfileForms";
 import seedReviewForms from "./seedReviewForms";
 import seedMissingForms from "./seedMissingForms";
 import duplicateFormDefinition from "./duplicateFormDefinition";
+import copyTaskForStudy from "./copyTaskForStudy";
 import publishFormDefinition from "./publishFormDefinition";
 import saveClassFormDefinition from "./saveClassFormDefinition";
 import saveBoardReviewFormDefinition from "./saveBoardReviewFormDefinition";
@@ -361,6 +362,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         seedMissingForms: [FormDefinition!]!
         # Clone a FormDefinition + its cards + fields as a new draft.
         duplicateFormDefinition(id: ID!): FormDefinition
+        # The signed-in user's own copy of a task for a study block.
+        copyTaskForStudy(id: ID!): Task
         # Teacher wizard: create/update a class-scoped opportunity form
         # with baked-in defaults. Optionally publish in the same call.
         saveClassFormDefinition(input: SaveClassFormDefinitionInput!): FormDefinition
@@ -806,6 +809,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         seedReviewForms,
         seedMissingForms,
         duplicateFormDefinition,
+        copyTaskForStudy,
         saveClassFormDefinition,
         saveBoardReviewFormDefinition,
         forkReviewFormForBoard,

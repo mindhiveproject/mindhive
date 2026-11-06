@@ -1387,8 +1387,12 @@
 	"duplicateEditSurvey": "Duplicate and edit a pre-existing MindHive survey and its parameters.",
 	"duration": "Duration",
 	"durationHelp": "Approximately how long will it take for someone to complete the {{taskType}}?",
+	"originalTask": {
+		"pageNotice": "This is your original task template. Other people's studies run their own copy, so your changes here don't reach them. Blocks in your own studies that still use the original will update."
+	},
 	"engine": {
 		"copy": "COPY",
+		"copyFailed": "This block could not get its own copy of the task. Remove it and add it again.",
 		"cycleLinkPrevented": "This connection would create a circular flow with no valid end. Choose a different path so the study can finish.",
 		"cycleLinkPreventedTitle": "Circular flow not allowed",
 		"save": "Save",

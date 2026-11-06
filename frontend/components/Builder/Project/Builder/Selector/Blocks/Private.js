@@ -20,6 +20,8 @@ export default function PrivateBlocks({
           ? {
               AND: [
                 { taskType: { equals: componentType } },
+                // originals only: a study's own copies stay in that study
+                { copiedFrom: null },
                 {
                   OR: [
                     { author: { id: { equals: user?.id } } },
@@ -37,6 +39,8 @@ export default function PrivateBlocks({
           : {
               AND: [
                 { taskType: { equals: componentType } },
+                // originals only: a study's own copies stay in that study
+                { copiedFrom: null },
                 {
                   OR: [
                     { author: { id: { equals: user?.id } } },

@@ -78,7 +78,12 @@ export default function TaskCard({
             />
           )}
           {domain === "develop" && (
-            <BlockTags task={task} user={viewer || user} showRuntime />
+            <BlockTags
+              task={task}
+              user={viewer || user}
+              showRuntime
+              showOriginal={domain === "develop"}
+            />
           )}
         </div>
 

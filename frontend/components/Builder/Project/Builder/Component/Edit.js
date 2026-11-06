@@ -3,9 +3,8 @@ import { useRef } from "react";
 
 import useForm from "../../../../../lib/useForm";
 import useAutoSave from "../../../../../lib/useAutoSave";
-import { runtimeAssetVariables } from "../../../../../lib/runtime/runtimeAsset";
 
-import { CREATE_TASK, UPDATE_TASK } from "../../../../Mutations/Task";
+import { COPY_TASK_FOR_STUDY, UPDATE_TASK } from "../../../../Mutations/Task";
 
 import ComponentForm from "../../../Component/Form";
 
@@ -45,7 +44,7 @@ export default function EditComponent({
   inputsRef.current = inputs;
   const createdIdRef = useRef(isAuthor && !createCopy ? task?.id : null);
 
-  const [createTask, { error: createTaskError }] = useMutation(CREATE_TASK);
+  const [copyTask, { error: createTaskError }] = useMutation(COPY_TASK_FOR_STUDY);
   const [updateTask, { error: taskError }] = useMutation(UPDATE_TASK);
 
   // Writes the task as it is when the save starts. useAutoSave runs saves one
@@ -57,53 +56,40 @@ export default function EditComponent({
       .filter((col) => col?.id)
       .map((col) => ({ id: col.id }));
 
-    if (createdIdRef.current) {
-      await updateTask({
-        variables: {
-          id: createdIdRef.current,
-          title: current?.title,
-          description: current?.description,
-          descriptionForParticipants: current?.descriptionForParticipants,
-          link: current?.link,
-          parameters: current?.parameters,
-          settings: current?.settings,
-          i18nContent: cleanI18nContent(current),
-          collaborators,
-        },
-        refetchQueries: [
-          { query: MY_TASK, variables: { id: createdIdRef.current } },
-          { query: TASK_TO_EDIT, variables: { id: createdIdRef.current } },
-          {
-            query: TASK_TO_PARTICIPATE,
-            variables: { id: createdIdRef.current },
-          },
-        ],
-        awaitRefetchQueries: true,
-      });
-      return;
+    // first save of a block that has no copy of its own yet: copy the task
+    // (keeping everything the form does not show), then save the edits on it
+    if (!createdIdRef.current) {
+      const res = await copyTask({ variables: { id: current?.id } });
+      const newId = res?.data?.copyTaskForStudy?.id;
+      if (!newId) throw new Error("The task could not be copied.");
+      createdIdRef.current = newId;
+      handleMultipleUpdate({ id: newId });
+      inputsRef.current = { ...inputsRef.current, id: newId };
+      updateCanvas({ task: inputsRef.current, operation: "create" });
     }
 
-    const res = await createTask({
+    await updateTask({
       variables: {
+        id: createdIdRef.current,
         title: current?.title,
         description: current?.description,
         descriptionForParticipants: current?.descriptionForParticipants,
-        ...runtimeAssetVariables(current),
-        taskType: current?.taskType,
-        isExternal: current?.isExternal,
         link: current?.link,
         parameters: current?.parameters,
         settings: current?.settings,
         i18nContent: cleanI18nContent(current),
         collaborators,
       },
+      refetchQueries: [
+        { query: MY_TASK, variables: { id: createdIdRef.current } },
+        { query: TASK_TO_EDIT, variables: { id: createdIdRef.current } },
+        {
+          query: TASK_TO_PARTICIPATE,
+          variables: { id: createdIdRef.current },
+        },
+      ],
+      awaitRefetchQueries: true,
     });
-    const newId = res?.data?.createTask?.id;
-    createdIdRef.current = newId;
-    handleMultipleUpdate({ id: newId });
-    // keep the edits made while the copy was being created
-    inputsRef.current = { ...inputsRef.current, id: newId };
-    updateCanvas({ task: inputsRef.current, operation: "create" });
   };
 
   const { saveState, markChanged, saveNow, autoSave } = useAutoSave({
