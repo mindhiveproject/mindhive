@@ -639,6 +639,8 @@
 	"curriculumTypeUpdateError": "Failed to update curriculum type",
 	"curriculumTypeYouQuantified": "YouQuantified",
 	"dashboard": {
+		"untitledProject": "Untitled project",
+		"searchProjectsByTitleOrPeople": "Search by project title, creator or collaborator",
 		"chooseProjectBoardAbove": "Choose a project board above to see its milestones.",
 		"addClassProjectBoard": "Add a class project board",
 		"zeroStateBody": "Project boards help you guide your students through their projects in a step-by-step way, following milestones like “expert feedback” and “peer feedback.” You can also add resources and assignments to project cards.",
@@ -750,6 +752,8 @@
 		"studyDetails": "Study Details",
 		"studyLabel": "Study: {{study}}",
 		"studyManager": {
+			"untitledStudy": "Untitled study",
+			"searchStudiesByTitleOrPeople": "Search by study title, creator or collaborator",
 			"assignToExistingStudy": "Assign to Existing Study",
 			"assignToStudy": "Assign to Study",
 			"cancel": "Cancel",

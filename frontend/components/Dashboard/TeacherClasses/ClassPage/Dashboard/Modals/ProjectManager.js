@@ -12,6 +12,7 @@ import Input from "../../../../../DesignSystem/Input";
 import DropdownSelect from "../../../../../DesignSystem/DropdownSelect";
 import { OpenInNewIcon, TrashIcon } from "../../../../../DesignSystem/Icons";
 import DashboardAssetIcon from "../DashboardAssetIcon";
+import { peopleOption } from "./peopleOption";
 import { classDashboardRefetchQueries } from "../useClassDashboardData";
 
 import { CLASS_ROSTER_QUERY } from "../../../../../Queries/Classes";
@@ -66,7 +67,12 @@ export default function ProjectManager(props) {
 
   const projectOptions = availableProjects
     .filter((project) => !localProjects.some((p) => p.id === project.id))
-    .map((project) => ({ value: project.id, label: project.title }));
+    .map((project) =>
+      peopleOption(
+        project,
+        t("dashboard.untitledProject", {}, { default: "Untitled project" })
+      )
+    );
 
   // Class roster, used to add other students as collaborators on a project
   const { data: rosterData } = useQuery(CLASS_ROSTER_QUERY, {
@@ -277,8 +283,14 @@ export default function ProjectManager(props) {
               </h2>
               <DropdownSelect
                 searchableSingle
+                portal
                 value={projectId}
-                placeholder={t("dashboard.selectAProject")}
+                placeholder={t("dashboard.searchProjectsByTitleOrPeople", {}, {
+                  default: "Search by project title, creator or collaborator",
+                })}
+                searchPlaceholder={t("dashboard.searchProjectsByTitleOrPeople", {}, {
+                  default: "Search by project title, creator or collaborator",
+                })}
                 options={projectOptions}
                 onChange={setProjectId}
                 disabled={projectOptions.length === 0}

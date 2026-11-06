@@ -11,6 +11,7 @@ import Input from "../../../../../DesignSystem/Input";
 import DropdownSelect from "../../../../../DesignSystem/DropdownSelect";
 import { OpenInNewIcon, TrashIcon } from "../../../../../DesignSystem/Icons";
 import DashboardAssetIcon from "../DashboardAssetIcon";
+import { peopleOption } from "./peopleOption";
 import { classDashboardRefetchQueries } from "../useClassDashboardData";
 
 import {
@@ -87,7 +88,14 @@ export default function StudyManager(props) {
 
   const studyOptions = availableStudies
     .filter((study) => !localStudies.some((s) => s.id === study.id))
-    .map((study) => ({ value: study.id, label: study.title }));
+    .map((study) =>
+      peopleOption(
+        study,
+        t("dashboard.studyManager.untitledStudy", {}, {
+          default: "Untitled study",
+        })
+      )
+    );
 
   // Class roster, used to add other students as collaborators on a study
   const { data: rosterData } = useQuery(CLASS_ROSTER_QUERY, {
@@ -341,8 +349,14 @@ export default function StudyManager(props) {
               </h2>
               <DropdownSelect
                 searchableSingle
+                portal
                 value={studyId}
-                placeholder={t("dashboard.studyManager.selectAStudy")}
+                placeholder={t("dashboard.studyManager.searchStudiesByTitleOrPeople", {}, {
+                  default: "Search by study title, creator or collaborator",
+                })}
+                searchPlaceholder={t("dashboard.studyManager.searchStudiesByTitleOrPeople", {}, {
+                  default: "Search by study title, creator or collaborator",
+                })}
                 options={studyOptions}
                 onChange={setStudyId}
                 disabled={studyOptions.length === 0}
