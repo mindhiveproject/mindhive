@@ -1,3 +1,4 @@
+import { useState } from "react";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
@@ -9,6 +10,7 @@ import { AgGridReact } from "ag-grid-react";
 import OwnedItemsShowcase from "./utils/OwnedItemsShowcase";
 import { filterOwnedClassItems } from "./utils/ownedClassItems";
 import { useClassTablePrefs } from "./useClassTablePrefs";
+import StudyCollaboratorsModal from "./StudyCollaboratorsModal";
 
 const LinkButton = styled.a`
   display: inline-flex;
@@ -43,6 +45,7 @@ export default function Studies({ myclass, user, readOnly = false }) {
   const tablePrefs = useClassTablePrefs(myclass?.id, "studies", {
     defaultPageSize: 20,
   });
+  const [collaboratorsStudyId, setCollaboratorsStudyId] = useState(null);
 
   const studies = myclass?.studies || [];
   const ownedStudies =
@@ -117,12 +120,24 @@ export default function Studies({ myclass, user, readOnly = false }) {
       minWidth: 160,
       wrapText: true,
       autoHeight: true,
+      onCellClicked: (params) => setCollaboratorsStudyId(params?.data?.id),
+      tooltipValueGetter: () =>
+        readOnly
+          ? t("studies.viewCollaborators", {}, { default: "View collaborators" })
+          : t("studies.manageCollaborators", {}, {
+              default: "Manage collaborators",
+            }),
+      cellClass: "classTabClickableCell",
       cellStyle: {
         whiteSpace: "normal",
         lineHeight: "1.5",
         display: "flex",
         alignItems: "center",
         wordBreak: "break-word",
+        cursor: "pointer",
+        textDecoration: "underline",
+        textDecorationColor: "var(--MH-Theme-Neutrals-Medium, #a1a1a1)",
+        textUnderlineOffset: "3px",
       },
     },
     {
@@ -235,6 +250,14 @@ export default function Studies({ myclass, user, readOnly = false }) {
           </div>
         )}
       </section>
+      {collaboratorsStudyId && (
+        <StudyCollaboratorsModal
+          study={studies.find((s) => s?.id === collaboratorsStudyId)}
+          classId={myclass?.id}
+          readOnly={readOnly}
+          onClose={() => setCollaboratorsStudyId(null)}
+        />
+      )}
     </div>
   );
 }
