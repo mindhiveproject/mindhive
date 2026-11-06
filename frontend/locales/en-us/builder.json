@@ -179,6 +179,7 @@
 		"librariesLoadingMessage": "The data analysis libraries are loading."
 	},
 	"collect": {
+		"loadError": "The study's data could not be loaded. If you work on this study and see this message, please contact tech support at support.mindhive@nyu.edu.",
 		"noProjectFound": "No project found, please save your project first.",
 		"noStudyAttachedHeader": "🤷🏻 Your project has no Study attached to it.",
 		"noStudyAttachedMessage": "Let your teacher know so they can create one and associate it. If you need help, please contact tech support at support.mindhive@nyu.edu."

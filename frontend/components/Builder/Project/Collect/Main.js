@@ -3,10 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { StyledCollectPage } from "../../../styles/StyledBuilder";
 
-import {
-  GET_STUDY_PARTICIPANTS,
-  GET_STUDY_GUESTS,
-} from "../../../Queries/User";
+import { GET_STUDY_COLLECT_DATA } from "../../../Queries/User";
 import { GET_STUDY_RESULTS } from "../../../Queries/Study";
 
 import Navigation from "../Navigation/Main";
@@ -22,15 +19,14 @@ export default function Collect({ query, user, tab, studyId }) {
     return <div>{t("collect.noStudyFound", "No study found, please save your study first.")}</div>;
   }
 
-  const { data: participantsData } = useQuery(GET_STUDY_PARTICIPANTS, {
-    variables: { studyId: studyId },
-  });
-  const users = participantsData?.profiles || [];
-
-  const { data: guestsData } = useQuery(GET_STUDY_GUESTS, {
-    variables: { studyId: studyId },
-  });
-  const guests = guestsData?.guests || [];
+  const { data: collectData, error: collectError } = useQuery(
+    GET_STUDY_COLLECT_DATA,
+    {
+      variables: { studyId: studyId },
+    }
+  );
+  const users = collectData?.studyCollectData?.participants || [];
+  const guests = collectData?.studyCollectData?.guests || [];
 
   const { data: studyData } = useQuery(GET_STUDY_RESULTS, {
     variables: { id: studyId },
@@ -81,6 +77,13 @@ export default function Collect({ query, user, tab, studyId }) {
             participantId={participantId}
             type={type}
           />
+        ) : collectError ? (
+          <div>
+            {t(
+              "collect.loadError",
+              "The study's data could not be loaded. If you work on this study and see this message, please contact tech support at support.mindhive@nyu.edu."
+            )}
+          </div>
         ) : (
           <Table
             query={query}

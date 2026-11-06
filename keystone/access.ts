@@ -289,6 +289,18 @@ async function findIds(context: any, listKey: string, where: any) {
   return rows.map((row: { id: string }) => String(row.id));
 }
 
+/**
+ * Ids of the studies the session user may edit (studyUpdateWhere), whose
+ * participants' data and results they may therefore read.
+ */
+function researcherStudyIds(context: any): Promise<string[]> {
+  const me = context?.session?.itemId;
+  if (!me) return Promise.resolve([]);
+  return cachedIds(context, "researcherStudies", () =>
+    findIds(context, "Study", studyUpdateWhere(String(me)))
+  );
+}
+
 /** Ids of classes where the session user is creator, co-teacher or mentor. */
 export function staffClassIds(context: any): Promise<string[]> {
   const me = context?.session?.itemId;
@@ -921,9 +933,8 @@ export function canViewContactEmail(
 /**
  * Participant data (info, generalInfo, studiesInfo: demographics and consent
  * answers) is also visible to the researchers of a study the profile took
- * part in, for Test & Collect: the study's author and collaborators, and the
- * team of its project board (board author and collaborators) — the same
- * people lib/runtime/resultAccess.js lets see the study's datasets.
+ * part in, for Test & Collect: whoever may edit the study (studyUpdateWhere) —
+ * the same people lib/runtime/resultAccess.js lets see the study's datasets.
  */
 export function canViewParticipantData(
   context: any,
@@ -933,17 +944,12 @@ export function canViewParticipantData(
   if (!me || !profileId) return Promise.resolve(false);
   return memoPerRequest(context, `participantData:${profileId}`, async () => {
     if (await canViewPrivateProfile(context, profileId)) return true;
+    const studyIds = await researcherStudyIds(context);
+    if (studyIds.length === 0) return false;
     const matches = await context.sudo().db.Profile.count({
       where: {
         id: { equals: String(profileId) },
-        participantIn: {
-          some: {
-            OR: [
-              ...authorOrCollaboratorWhere(String(me)).OR,
-              { proposal: { some: authorOrCollaboratorWhere(String(me)) } },
-            ],
-          },
-        },
+        participantIn: { some: { id: { in: studyIds } } },
       },
     });
     return matches > 0;
@@ -953,8 +959,8 @@ export function canViewParticipantData(
 /**
  * Guest records (age, zip code, answers, and the code that identifies a guest)
  * are visible to admins and the people who see the guest's results, the same
- * ones as lib/runtime/resultAccess.js: the team of a study the guest took part
- * in and the authors of the tasks the guest ran. Guests have no session; their
+ * ones as lib/runtime/resultAccess.js: whoever may edit a study the guest took
+ * part in (studyUpdateWhere) and the authors of the tasks the guest ran. Guests have no session; their
  * run pages read their own record with guestForRun (mutations/participantRun).
  */
 export async function canViewGuestData(
@@ -967,12 +973,7 @@ export async function canViewGuestData(
   if (isAdmin({ session })) return true;
   const ids = await cachedIds(context, "visibleGuests", async () => {
     const meId = String(me);
-    const studyIds = await findIds(context, "Study", {
-      OR: [
-        ...authorOrCollaboratorWhere(meId).OR,
-        { proposal: { some: authorOrCollaboratorWhere(meId) } },
-      ],
-    });
+    const studyIds = await researcherStudyIds(context);
     const inMyStudies = { study: { id: { in: studyIds } } };
     const isMe = { id: { equals: meId } };
     const results = {

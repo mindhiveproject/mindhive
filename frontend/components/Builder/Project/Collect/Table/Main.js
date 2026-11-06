@@ -34,7 +34,9 @@ export default function ParticipantsTable({
     const studyInfo = participant?.studiesInfo?.[study?.id];
     const path = studyInfo?.info?.path || [];
 
-    const startedAt = path?.length && path[0]?.timestampFinished;
+    // null (shown blank) when the participant has no path in this study, e.g.
+    // a researcher of it who never ran it
+    const startedAt = path[0]?.timestampFinished || null;
 
     // Compute duration
     // Get the event timestamps
@@ -47,7 +49,9 @@ export default function ParticipantsTable({
     const minTimestamp = Math.min(...timestamps);
     const maxTimestamp = Math.max(...timestamps);
     // Calculate the duration in minutes (this will be used for filter)
-    const duration = (maxTimestamp - minTimestamp) / (1000 * 60);
+    const duration = timestamps.length
+      ? (maxTimestamp - minTimestamp) / (1000 * 60)
+      : null;
 
     // compute the number of completed tasks
     const numberCompleted = participant?.datasets?.filter(
@@ -118,6 +122,8 @@ export default function ParticipantsTable({
   // get participants and order them by the time moment when they joined the study
   useEffect(() => {
     async function getParticipants() {
+      // rows read the participant's path for this study, so wait for the study
+      if (!study?.id) return;
       const allParticipants = [...users, ...guests];
       const processed = allParticipants.map((participant) =>
         processParticipant({ participant })

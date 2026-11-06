@@ -47,6 +47,7 @@ import joinClass from "./joinClass";
 import toggleReviewUpvote from "./toggleReviewUpvote";
 import classJoinPreview from "./classJoinPreview";
 import doeDataSummary from "./doeDataSummary";
+import studyCollectData from "./studyCollectData";
 import {
   canReadDatasourceFile,
   readableDatasetTokens,
@@ -557,6 +558,33 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         isActive: Boolean
         position: Int
       }
+      # A study's Collect page. See lib/studyCollect.js.
+      type StudyCollectStudyRef {
+        id: ID!
+      }
+      type StudyCollectDataset {
+        id: ID!
+        token: String
+        isCompleted: Boolean
+        isIncluded: Boolean
+        studyStatus: String
+        studyVersion: String
+        study: StudyCollectStudyRef
+      }
+      type StudyCollectParticipant {
+        id: ID!
+        publicId: String
+        publicReadableId: String
+        type: String
+        info: JSON
+        generalInfo: JSON
+        studiesInfo: JSON
+        datasets: [StudyCollectDataset!]!
+      }
+      type StudyCollectData {
+        participants: [StudyCollectParticipant!]!
+        guests: [StudyCollectParticipant!]!
+      }
       # Public preview of a class for the join-by-code page.
       type ClassJoinPreview {
         id: ID!
@@ -645,6 +673,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # these dataset tokens they may read, and whether they may read a
         # Data Journal file of a datasource.
         readableDatasetTokens(tokens: [String!]!): [String!]!
+        # A study's participants, guests and results for its Collect page,
+        # checked once: the caller must be able to edit the study.
+        studyCollectData(studyId: ID!): StudyCollectData!
         # The DOE retention switches. canRunRetention only.
         doeRetentionSettings: JSON
         canReadDatasourceFile(datasourceId: ID!, token: String!): Boolean!
@@ -708,6 +739,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         networkInviteContext,
         classJoinPreview,
         readableDatasetTokens,
+        studyCollectData,
         doeRetentionSettings: retentionSettings,
         canReadDatasourceFile,
         guestForRun,

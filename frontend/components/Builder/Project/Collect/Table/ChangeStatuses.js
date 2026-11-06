@@ -10,6 +10,7 @@ import {
 } from "../../../../Queries/Result";
 
 import { GET_STUDY_RESULTS } from "../../../../Queries/Study";
+import { GET_STUDY_COLLECT_DATA } from "../../../../Queries/User";
 
 export default function ChangeDatasetStatuses({
   participantId,
@@ -28,10 +29,12 @@ export default function ChangeDatasetStatuses({
       ? [
           { query: GET_USER_RESULTS, variables: { id: participantId } },
           { query: GET_STUDY_RESULTS, variables: { id: studyId } },
+          { query: GET_STUDY_COLLECT_DATA, variables: { studyId } },
         ]
       : [
           { query: GET_GUEST_RESULTS, variables: { id: participantId } },
           { query: GET_STUDY_RESULTS, variables: { id: studyId } },
+          { query: GET_STUDY_COLLECT_DATA, variables: { studyId } },
         ];
 
   const [changeStatus, { loading }] = useMutation(CHANGE_DATASET_STATUS, {

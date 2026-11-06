@@ -82,9 +82,18 @@ test("researchers of a study read and manage its results by study id", async () 
   );
 });
 
-test("the lookup covers study authors, collaborators and project boards", async () => {
+test("the lookup covers study authors, collaborators, project boards and class staff", async () => {
   const context = fakeContext();
   await buildResultAccessFilter({ itemId: "student-1" }, false, context);
+  const staffClass = {
+    some: {
+      OR: [
+        { creator: { id: "student-1" } },
+        { teachingTeam: { some: { id: "student-1" } } },
+        { mentors: { some: { id: "student-1" } } },
+      ],
+    },
+  };
   assert.deepEqual(context.lookups[0].where, {
     OR: [
       { author: { id: "student-1" } },
@@ -99,6 +108,9 @@ test("the lookup covers study authors, collaborators and project boards", async 
           },
         },
       },
+      { classes: staffClass },
+      { author: { studentIn: staffClass } },
+      { collaborators: { some: { studentIn: staffClass } } },
     ],
   });
 });
