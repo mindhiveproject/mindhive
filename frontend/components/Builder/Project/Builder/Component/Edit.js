@@ -33,6 +33,7 @@ export default function EditComponent({
   updateCanvas,
   close,
   openPreview,
+  onDeleteFromCanvas,
 }) {
   const { inputs, handleChange, handleMultipleUpdate } = useForm(
     { ...task },
@@ -139,6 +140,13 @@ export default function EditComponent({
     close();
   };
 
+  // Pending edits to the block's task are saved first; the task itself is
+  // kept, only this block is removed from the canvas.
+  const handleDeleteFromCanvas = async () => {
+    await flushSave().catch(() => {});
+    onDeleteFromCanvas?.();
+  };
+
   const handlePreview = async () => {
     await flushSave().catch(() => {});
     openPreview?.();
@@ -156,6 +164,7 @@ export default function EditComponent({
       isTemplateAuthor={isTemplateAuthor}
       close={handleClose}
       openPreview={handlePreview}
+      onDeleteFromCanvas={onDeleteFromCanvas ? handleDeleteFromCanvas : undefined}
       isInStudyBuilder
     />
   );

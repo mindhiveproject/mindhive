@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { MY_TASKS } from "../../../../../Queries/Task";
 import Card from "./Card";
+import BlocksLoading from "./Loading";
 import { getLocalizedField } from "../../../../../../lib/i18nContent";
 
 export default function PrivateBlocks({
@@ -84,6 +85,8 @@ export default function PrivateBlocks({
 
   const tasks = data?.tasks || [];
   const localizedTasks = processComponentsWithI18n(tasks);
+
+  if (loading && !data) return <BlocksLoading />;
 
   return (
     <div>

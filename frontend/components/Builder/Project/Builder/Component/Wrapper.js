@@ -20,6 +20,7 @@ export default function Wrapper({
   node,
   sharesTask,
   onOpenPreview,
+  onDeleteFromCanvas,
 }) {
   const { t } = useTranslation("builder");
   const [showEditor, setShowEditor] = useState(isEditorOpen);
@@ -105,6 +106,7 @@ export default function Wrapper({
         updateCanvas={updateCanvas}
         close={close}
         openPreview={() => onOpenPreview?.()}
+        onDeleteFromCanvas={onDeleteFromCanvas}
       />
     );
   }

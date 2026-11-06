@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import Button from "../../DesignSystem/Button";
 import IconButton from "../../DesignSystem/IconButton";
 import MessageCard from "../../DesignSystem/MessageCard";
+import { TrashIcon } from "../../DesignSystem/Icons";
 
 import { StyledBuilderArea } from "../../styles/StyledBuilder";
 import StyledTaskBuilder from "../../styles/StyledTaskBuilder";
@@ -34,6 +35,7 @@ export default function ComponentForm({
   close,
   isInStudyBuilder,
   openPreview,
+  onDeleteFromCanvas,
 }) {
   const { t } = useTranslation("builder");
   const router = useRouter();
@@ -140,6 +142,30 @@ export default function ComponentForm({
                 <Button variant="tonal" type="button" onClick={handlePreview}>
                   {t("viewer.preview", { taskType }, {
                     default: "Preview {{taskType}}",
+                  })}
+                </Button>
+              ) : null}
+              {onDeleteFromCanvas ? (
+                <Button
+                  variant="subtle"
+                  type="button"
+                  onClick={onDeleteFromCanvas}
+                  style={{
+                    background: "var(--MH-Theme-Danger-Light)",
+                    color: "var(--MH-Theme-Danger-Dark)",
+                  }}
+                  leadingIcon={
+                    <TrashIcon
+                      style={{
+                        color: "var(--MH-Theme-Danger-Dark)",
+                        width: "20px",
+                        height: "20px",
+                      }}
+                    />
+                  }
+                >
+                  {t("blockPanel.deleteFromCanvas", {}, {
+                    default: "Delete",
                   })}
                 </Button>
               ) : null}

@@ -2371,6 +2371,7 @@
 		"sectionTitlePlaceholder": "Enter section title"
 	},
 	"selector": {
+		"loadingBlocks": "Loading blocks…",
 		"addBlockAria": "Add block",
 		"addFavoriteAria": "Add to favorites",
 		"basicBlocks": {
@@ -2824,6 +2825,7 @@
 	},
 	"videoNotSupported": "Video not supported",
 	"blockPanel": {
+		"deleteFromCanvas": "Delete",
 		"autosave": "Autosave on",
 		"close": "Close",
 		"loading": "Loading…",

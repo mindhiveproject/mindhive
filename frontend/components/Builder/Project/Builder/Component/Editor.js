@@ -8,6 +8,7 @@ export default function Editor({
   updateCanvas,
   close,
   openPreview,
+  onDeleteFromCanvas,
 }) {
   return (
     <EditComponent
@@ -18,6 +19,7 @@ export default function Editor({
       updateCanvas={updateCanvas}
       close={close}
       openPreview={openPreview}
+      onDeleteFromCanvas={onDeleteFromCanvas}
     />
   );
 }

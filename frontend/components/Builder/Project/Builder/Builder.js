@@ -20,6 +20,7 @@ import { GET_CLASSES } from "../../../Queries/Classes";
 import StudyConnector from "../../../Projects/StudyConnector/Main";
 import Button from "../../../DesignSystem/Button";
 import IconButton from "../../../DesignSystem/IconButton";
+import { FeedbackIcon } from "../../../DesignSystem/Icons";
 
 export default function Builder({
   query,
@@ -139,6 +140,20 @@ export default function Builder({
     setMenuTab("flow");
   };
 
+  // Same result as selecting the block and pressing Backspace: the block and
+  // its links leave the canvas (one undo step); its task is kept.
+  const deleteNodeFromCanvas = () => {
+    if (isCanvasLocked || !node) return;
+    onBeforeCanvasMutation?.();
+    try {
+      node.remove();
+    } finally {
+      onAfterCanvasMutation?.();
+    }
+    engine?.repaintCanvas?.();
+    closeComponentModal();
+  };
+
   const openBlockPreview = useCallback(() => {
     setIsPreviewOpen(true);
   }, []);
@@ -252,7 +267,8 @@ export default function Builder({
           onBeforeCanvasMutation={onBeforeCanvasMutation}
           onAfterCanvasMutation={onAfterCanvasMutation}
           onModelReplaced={onModelReplaced}
-          onTaskNodeAdded={addFunctions?.giveNodeOwnTask}
+          onTaskNodeAdded={addFunctions?.onTaskNodeAdded}
+          onDesignNodeAdded={addFunctions?.openNodeSettings}
         />
         <div
           className={clsx(
@@ -301,6 +317,9 @@ export default function Builder({
                 )
               }
               onOpenPreview={openBlockPreview}
+              onDeleteFromCanvas={
+                isCanvasLocked ? undefined : deleteNodeFromCanvas
+              }
             />
           )}
           {sidepanelMode === "design" && node && (
@@ -372,10 +391,10 @@ export default function Builder({
               <Button
                 id="commentButton"
                 type="button"
-                variant="filled"
-                style={{ background: "#5D5763" }}
+                variant="subtle"
                 onClick={lockedAddFunctions.addComment}
                 disabled={isCanvasLocked}
+                leadingIcon={(<FeedbackIcon />)}
               >
                 {t("builder.addComment", {}, { default: "Add a comment" })}
               </Button>

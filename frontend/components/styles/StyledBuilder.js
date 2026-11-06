@@ -468,9 +468,9 @@ export const StyledCanvasBuilder = styled.div`
     background: #ffffff;
     /* Top padding is dropped here and re-added inside .sidepanelNavbar so that
        the navbar can sit flush at top:0 when the panel scrolls. Keep this in
-       sync with the navbar's rendered height (16px top pad + 40px row + 8px
+       sync with the navbar's rendered height (16px top pad + 43px row + 7px
        bottom pad). */
-    --sidepanel-nav-h: 64px;
+    --sidepanel-nav-h: 66px;
     padding: 0 16px 16px;
     margin: 8px;
     border-radius: 12px;
@@ -507,8 +507,11 @@ export const StyledCanvasBuilder = styled.div`
     .sidepanelDefaultHost {
       display: flex;
       flex-direction: column;
-      flex: 1;
-      min-height: 0;
+      /* Grow with the content rather than being capped at the panel height:
+         the sticky navbar and search row inside it can only stay stuck while
+         this box extends below them, so a capped box pushed them out of view
+         once the panel was scrolled past its height. */
+      flex: 1 0 auto;
       min-width: 0;
       width: 100%;
     }

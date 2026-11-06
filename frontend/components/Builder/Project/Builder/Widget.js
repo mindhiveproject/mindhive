@@ -10,6 +10,7 @@ export default function Widget({
   onAfterCanvasMutation,
   onModelReplaced,
   onTaskNodeAdded,
+  onDesignNodeAdded,
 }) {
   if (engine) {
     return (
@@ -23,6 +24,7 @@ export default function Widget({
         onAfterCanvasMutation={onAfterCanvasMutation}
         onModelReplaced={onModelReplaced}
         onTaskNodeAdded={onTaskNodeAdded}
+        onDesignNodeAdded={onDesignNodeAdded}
       />
     );
   }
