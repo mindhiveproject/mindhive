@@ -406,58 +406,37 @@ export const GET_USER = gql`
   }
 `;
 
-// get study participants for Test & Collect
-export const GET_STUDY_PARTICIPANTS = gql`
-  query GET_STUDY_PARTICIPANTS($studyId: ID!) {
-    profiles(
-      where: {
-        OR: [
-          { participantIn: { some: { id: { equals: $studyId } } } }
-          { researcherIn: { some: { id: { equals: $studyId } } } }
-          { collaboratorInStudy: { some: { id: { equals: $studyId } } } }
-        ]
+// get study participants, guests and their results for Test & Collect,
+// access-checked once at the study level (keystone lib/studyCollect.js)
+export const GET_STUDY_COLLECT_DATA = gql`
+  query GET_STUDY_COLLECT_DATA($studyId: ID!) {
+    studyCollectData(studyId: $studyId) {
+      participants {
+        ...StudyCollectParticipantFields
       }
-    ) {
-      id
-      publicId
-      publicReadableId
-      type
-      info
-      generalInfo
-      studiesInfo
-      datasets {
-        isCompleted
-        isIncluded
-        token
-        studyStatus
-        studyVersion
-        study {
-          id
-        }
+      guests {
+        ...StudyCollectParticipantFields
       }
     }
   }
-`;
 
-export const GET_STUDY_GUESTS = gql`
-  query GET_STUDY_GUESTS($studyId: ID!) {
-    guests(where: { participantIn: { some: { id: { equals: $studyId } } } }) {
+  fragment StudyCollectParticipantFields on StudyCollectParticipant {
+    id
+    publicId
+    publicReadableId
+    type
+    info
+    generalInfo
+    studiesInfo
+    datasets {
       id
-      publicId
-      publicReadableId
-      type
-      info
-      generalInfo
-      studiesInfo
-      datasets {
-        isCompleted
-        isIncluded
-        token
-        studyStatus
-        studyVersion
-        study {
-          id
-        }
+      isCompleted
+      isIncluded
+      token
+      studyStatus
+      studyVersion
+      study {
+        id
       }
     }
   }

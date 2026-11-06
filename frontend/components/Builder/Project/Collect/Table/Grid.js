@@ -76,13 +76,14 @@ export default function Grid({ query, studyId, participants }) {
       field: "startedAt",
       headerName: t("grid.startedAt", "Started At"),
       valueFormatter: (params) =>
-        moment(params.value).format("MM/DD/YYYY hh:mm A"),
+        params.value ? moment(params.value).format("MM/DD/YYYY hh:mm A") : "",
       filter: "agDateColumnFilter", // Use the date filter
     },
     {
       field: "duration",
       headerName: t("grid.duration", "Duration"),
       valueFormatter: (params) => {
+        if (params.value == null || Number.isNaN(params.value)) return "";
         const duration = moment.duration(
           params.value * 1000 * 60,
           "milliseconds"
