@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Dropdown, Icon } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
+import Button from "../../../../DesignSystem/Button";
+import { DownloadIcon } from "../../../../DesignSystem/Icons";
 
 import { saveAs } from "file-saver";
 import csvWithPlainNumbers from "../../../../../lib/csvWithPlainNumbers";
@@ -11,6 +13,7 @@ import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 
 import buildAggregateColumns from "../../../../../lib/yqParticipantAggregates";
+import DownloadEmptyNotice from "./EmptyNotice";
 
 export default function DownloadByComponent({
   studyId,
@@ -19,6 +22,7 @@ export default function DownloadByComponent({
   participantsInStudy,
   datasets,
   filteredDatasetTokens,
+  emptyReason,
 }) {
   const { t } = useTranslation("builder");
   const [selected, setSelected] = useState([]);
@@ -213,45 +217,54 @@ export default function DownloadByComponent({
     setLoadingRaw(false);
   };
 
+  // why the download buttons are not shown, or null when they are
+  const noticeReason = !components?.length
+    ? "noTasks"
+    : emptyReason
+    ? emptyReason
+    : !selected?.length
+    ? "selectTasks"
+    : null;
+
   return (
     <div className="downloadByComponent">
       <h3>{t("byComponent.dataByTask", "Data by task in separate files")}</h3>
-      <Dropdown
-        placeholder={t("byComponent.selectTasks", "Select tasks or surveys")}
-        fluid
-        multiple
-        search
-        selection
-        options={options}
-        onChange={onChange}
-        value={selected}
-      />
-      {selected?.length > 0 && (
-        <>
-          <>
-            {loadingSummary ? (
-              <div>{t("byComponent.wait", "Wait ...")}</div>
-            ) : (
-              <div
-                className="downloadArea"
-                onClick={() => downloadAggregated()}
-              >
-                <Icon color="teal" size="large" name="download" />
-                <a>{t("byComponent.downloadAggregated", "Download aggregated data")}</a>
-              </div>
-            )}
-          </>
-          <>
-            {loadingRaw ? (
-              <div>{t("byComponent.wait", "Wait ...")}</div>
-            ) : (
-              <div className="downloadArea" onClick={() => downloadRaw()}>
-                <Icon color="teal" size="large" name="download" />
-                <a>{t("byComponent.downloadRaw", "Download raw data")}</a>
-              </div>
-            )}
-          </>
-        </>
+      {components?.length > 0 && (
+        <Dropdown
+          placeholder={t("byComponent.selectTasks", "Select tasks or surveys")}
+          fluid
+          multiple
+          search
+          selection
+          options={options}
+          onChange={onChange}
+          value={selected}
+        />
+      )}
+      <DownloadEmptyNotice reason={noticeReason} />
+      {!noticeReason && (
+        <div className="downloadButtons">
+          <Button
+            variant="primary"
+            leadingIcon={<DownloadIcon />}
+            disabled={loadingSummary}
+            onClick={() => downloadAggregated()}
+          >
+            {loadingSummary
+              ? t("byComponent.preparing", "Preparing download…")
+              : t("byComponent.downloadAggregated", "Download aggregated data")}
+          </Button>
+          <Button
+            variant="subtle"
+            leadingIcon={<DownloadIcon />}
+            disabled={loadingRaw}
+            onClick={() => downloadRaw()}
+          >
+            {loadingRaw
+              ? t("byComponent.preparing", "Preparing download…")
+              : t("byComponent.downloadRaw", "Download raw data")}
+          </Button>
+        </div>
       )}
     </div>
   );

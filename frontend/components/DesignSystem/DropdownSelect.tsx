@@ -233,6 +233,11 @@ export interface DropdownSelectOption {
   /** Plain-text label used for search and the trigger when `label` is a ReactNode. */
   labelText?: string;
   /**
+   * Extra text the search field also matches (e.g. people's names), on top of
+   * the label. Not displayed.
+   */
+  searchText?: string;
+  /**
    * Lists the option under a header of this name, after the ungrouped ones.
    * Groups keep the order they first appear in, even if their options aren't
    * contiguous in `options`.
@@ -299,6 +304,11 @@ interface DropdownSelectBaseProps {
    * @default false
    */
   searchableSingle?: boolean;
+  /**
+   * Placeholder of the type-to-filter field; says what can be searched.
+   * @default "Search options"
+   */
+  searchPlaceholder?: string;
   /**
    * Replaces the default chevron after the label. Omit for the built-in
    * chevron; pass `null` to show no trailing icon.
@@ -402,6 +412,7 @@ export default function DropdownSelect(props: DropdownSelectProps) {
     placeholderOnly = false,
     searchableMultiple = true,
     searchableSingle = false,
+    searchPlaceholder,
     icon,
     leadingIcon,
     placement = "auto",
@@ -463,7 +474,9 @@ export default function DropdownSelect(props: DropdownSelectProps) {
     }
     const q = searchQuery.trim().toLowerCase();
     return options.filter((opt) =>
-      getOptionLabelString(opt).toLowerCase().includes(q)
+      `${getOptionLabelString(opt)} ${opt.searchText || ""}`
+        .toLowerCase()
+        .includes(q)
     );
   }, [searchEnabled, options, searchQuery]);
 
@@ -746,8 +759,14 @@ export default function DropdownSelect(props: DropdownSelectProps) {
                 e.stopPropagation();
               }
             }}
-            placeholder={t("dropdownSelect.searchPlaceholder", {}, { default: "Search options" })}
-            aria-label={t("dropdownSelect.searchPlaceholder", {}, { default: "Search options" })}
+            placeholder={
+              searchPlaceholder ||
+              t("dropdownSelect.searchPlaceholder", {}, { default: "Search options" })
+            }
+            aria-label={
+              searchPlaceholder ||
+              t("dropdownSelect.searchPlaceholder", {}, { default: "Search options" })
+            }
             autoComplete="off"
             className="DesignSystem-DropdownSelect-search MH-Type-Label-Base"
           />

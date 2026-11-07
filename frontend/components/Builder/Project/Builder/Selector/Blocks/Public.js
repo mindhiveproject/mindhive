@@ -4,6 +4,7 @@ import { MY_TASKS, PUBLIC_TASKS } from "../../../../../Queries/Task";
 import useHiddenTaskIds from "../../../../../Tasks/Bank/useHiddenTaskIds";
 import { excludeHiddenTasks } from "../../../../../../lib/taskBankFilter";
 import Card from "./Card";
+import BlocksLoading from "./Loading";
 import { getLocalizedField } from "../../../../../../lib/i18nContent";
 
 export default function PublicBlocks({
@@ -80,7 +81,7 @@ export default function PublicBlocks({
     variables: { where: excludeHiddenTasks(publicWhere, hiddenTaskIds) },
   });
 
-  const { data: ownedData } = useQuery(MY_TASKS, {
+  const { data: ownedData, loading: ownedLoading } = useQuery(MY_TASKS, {
     variables: { where: ownedWhere },
     skip: !user?.id || isSurveyBuilder,
   });
@@ -117,6 +118,11 @@ export default function PublicBlocks({
     ...ownedTasks.filter((task) => task?.id && !seen.has(task.id)),
   ];
   const localizedTasks = processComponentsWithI18n(tasks);
+
+  // The survey builder row is a single card under the list: no placeholder.
+  if ((loading && !data) || (ownedLoading && !ownedData)) {
+    return isSurveyBuilder ? null : <BlocksLoading />;
+  }
 
   return (
     <div>

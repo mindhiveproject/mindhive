@@ -2,6 +2,7 @@ import { STUDY_TEMPLATES } from "../../../../../Queries/Study";
 import { useQuery } from "@apollo/client";
 
 import StudyCard from "./StudyCard";
+import BlocksLoading from "../Blocks/Loading";
 import useHiddenStudyIds from "../../../../../Tasks/Bank/useHiddenStudyIds";
 
 export default function StudyTemplates({
@@ -30,6 +31,8 @@ export default function StudyTemplates({
                 ?.map((collaborator) => collaborator?.id)
                 .includes(user?.id))))
     );
+
+  if (loading && !data) return <BlocksLoading count={3} />;
 
   return (
     <div className="blocksMenuContent">

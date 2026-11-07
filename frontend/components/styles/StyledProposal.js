@@ -909,6 +909,37 @@ export const StyledProposal = styled.div`
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .headerTitleEditable {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 100%;
+      min-width: 0;
+      padding: 0 8px;
+      border-radius: 8px;
+      cursor: text;
+      h1 {
+        min-width: 0;
+      }
+      .headerTitleEditIcon {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        opacity: 0;
+        transition: opacity 0.15s;
+      }
+      &:hover,
+      &:focus-visible {
+        background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
+        .headerTitleEditIcon {
+          opacity: 1;
+        }
+      }
+      &:focus-visible {
+        outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+        outline-offset: 2px;
+      }
+    }
     .headerInfoRow {
       display: flex;
       flex-direction: row;
@@ -956,6 +987,44 @@ export const StyledProposal = styled.div`
         &:hover:not(:disabled) {
           background: #FDF2D0;
           border-color: #4A4550;
+        }
+      }
+      /* Study linked: a static success chip (no hover change); still opens
+         the Study builder on click. */
+      &.linked {
+        background: var(--MH-Theme-Primary-Light, #DEF8FB);
+        border-color: transparent;
+        .studyLinkIcon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+      /* Main project: static, star filled; explained by its tooltip. */
+      &.mainProject {
+        background: var(--MH-Theme-Primary-Light, #def8fb);
+        border-color: transparent;
+        cursor: default;
+        &:focus-visible {
+          outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+          outline-offset: 2px;
+        }
+      }
+      &.mainProject--editable {
+        cursor: pointer;
+        &:hover {
+          background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
+        }
+      }
+      /* Not main yet: an outlined chip that opens the "set as main" modal. */
+      &.setMainProject {
+        background: var(--MH-Theme-Neutrals-White, #ffffff);
+        border: 1px dashed var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+        &:hover {
+          background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+        }
+        &:focus-visible {
+          outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+          outline-offset: 2px;
         }
       }
       &.list {

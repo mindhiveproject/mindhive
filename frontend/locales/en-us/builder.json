@@ -1,4 +1,28 @@
 {
+	"mainProject": {
+		"tooltipMember": "This is your main project for this class. It shows your teacher that this is the project you'll keep working on. Click to change this.",
+		"unsetTitle": "Remove as main project?",
+		"unsetConfirm": "Remove as main project",
+		"unsetExplanation": "This project will no longer be your main project. Until you choose another one, your teacher won't see which project you're focusing on in this class.",
+		"unsetShared": "This project is shared, so it will stop being the main project for everyone working on it.",
+		"setShared": "This project is shared, so it will become the main project for everyone working on it.",
+		"label": "Main project",
+		"setAsMain": "Set as main project",
+		"tooltip": "This is your main project for this class. It shows your teacher that this is the project you'll keep working on.",
+		"modalTitle": "Make this your main project?",
+		"explanation": "Your main project shows your teacher which project you'll keep working on in this class. You can have one main project per class.",
+		"replaces": "{{titles}} will no longer be your main project.",
+		"cancel": "Cancel",
+		"confirm": "Set as main project"
+	},
+	"studyOptions": {
+		"linkedStudy": "Linked study",
+		"changeLinkedClass": "Change linked class",
+		"linkedClassInfo": "Linking this study to a class shares it with that class: the class's teachers can follow and review it, and the class's settings (such as available data sources) apply to it. Removing the class takes the study out of that class.",
+		"unlink": "Unlink",
+		"unlinkStudy": "Unlink study from this board",
+		"unlinkStudyConfirm": "Unlink \"{{study}}\" from this board? The study and the board are kept; only the link between them is removed."
+	},
 	"actionCard": {
 		"clickToSubmit": "Click to submit for {{title}}",
 		"customStep": "Milestone",
@@ -88,6 +112,8 @@
 	"build-intro": "In this builder, you can create a new study, upload your own tasks, or use tasks from the library.",
 	"buildBlockFromScratch": "Select this option if you would prefer to build a block entirely from scratch.",
 	"builder": {
+		"studyTitle": "Study title",
+		"renameStudy": "Click to rename the study",
 		"addComment": "Add a comment",
 		"addStartingPoint": "Add starting point",
 		"lockedMessage": "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study.",
@@ -113,6 +139,7 @@
 		"downloadAggregatedBy": "Download aggregated data {{by}}",
 		"downloadRaw": "Download raw data",
 		"noSubtitle": "no subtitle",
+		"preparing": "Preparing download…",
 		"selectTasks": "Select tasks or surveys",
 		"wait": "Wait ..."
 	},
@@ -1410,6 +1437,7 @@
 		"condition": "Condition",
 		"consent": "Consent",
 		"duration": "Duration",
+		"loadingParticipants": "Loading participant data…",
 		"numberCompleted": "Number Completed",
 		"open": "Open",
 		"publicId": "Public Id",
@@ -1418,8 +1446,16 @@
 		"studyStatus": "Study Status"
 	},
 	"header": {
+		"clickToRename": "Click to rename the project",
 		"addCollaborator": "Add collaborator",
 		"allDataOneFile": "All data in one file",
+		"downloadData": "Download data",
+		"downloadLoading": "Loading the study's data…",
+		"downloadNoCompleted": "Participants have started your study, but none has completed a task yet. Downloads appear once a task is completed.",
+		"downloadNoData": "No data yet. Data appears here once participants take part in your study. Share the study link to invite them.",
+		"downloadNoTasks": "Your study has no tasks or surveys yet. Add them in the Study builder to download their data separately.",
+		"downloadNoneIncluded": "None of the completed data is included in analysis yet. Tick the Analysis box for the participants you want to include in the table below, and the downloads will appear here.",
+		"downloadSelectTasks": "Select one or more tasks or surveys above to download their data.",
 		"allowAddingCards": "Allow adding new cards",
 		"allowAddingSections": "Allow adding new sections",
 		"allowMovingCards": "Allow moving cards",
@@ -1428,6 +1464,7 @@
 		"classTemplateReadOnly": "Class template (used by class board)",
 		"collaborators": "Collaborators",
 		"copyLink": "Copy study link",
+		"copyLinkAria": "Copy study link to clipboard",
 		"createYourStudyProposal": "Create your study proposal here to begin your research journey ",
 		"descriptionPlaceholder": "Enter project board description",
 		"editTitle": "Edit title",
@@ -1449,6 +1486,8 @@
 		"testStudy": "Test your study",
 		"titlePlaceholder": "Enter project board title",
 		"unlinked": "No study linked",
+		"studyLinked": "Study Link",
+		"openStudyBuilder": "Open the Study builder",
 		"updateCollaboratorsFailed": "Failed to update collaborators. Please try again.",
 		"userNoClasses": "You are not associated with any classes."
 	},
@@ -1523,6 +1562,7 @@
 	"introductionVideo": "Introduction video",
 	"link": "Link",
 	"linkClass": {
+		"notLinked": "Not linked to a class",
 		"doNotConnectClass": "Do not connect to class"
 	},
 	"main": {
@@ -2349,6 +2389,7 @@
 		"sectionTitlePlaceholder": "Enter section title"
 	},
 	"selector": {
+		"loadingBlocks": "Loading blocks…",
 		"addBlockAria": "Add block",
 		"addFavoriteAria": "Add to favorites",
 		"basicBlocks": {
@@ -2802,6 +2843,7 @@
 	},
 	"videoNotSupported": "Video not supported",
 	"blockPanel": {
+		"deleteFromCanvas": "Delete",
 		"autosave": "Autosave on",
 		"close": "Close",
 		"loading": "Loading…",

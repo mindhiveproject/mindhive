@@ -6,7 +6,7 @@ import DropdownSelect from "../../../../DesignSystem/DropdownSelect";
 
 const NOT_CONNECTED = "$$$-class-not-connected-$$$";
 
-export default function LinkClass({ study, handleChange }) {
+export default function LinkClass({ study, handleChange, portal = false }) {
   const { t } = useTranslation("builder");
   const { data } = useQuery(GET_USER_CLASSES);
 
@@ -33,7 +33,10 @@ export default function LinkClass({ study, handleChange }) {
       value: NOT_CONNECTED,
       label: notConnectedLabel,
     },
-    ...myClassObjects.map((cl) => ({
+    // A class can appear in several roles (e.g. teacher and student).
+    ...myClassObjects
+      .filter((cl, i, all) => cl?.id && all.findIndex((c) => c?.id === cl.id) === i)
+      .map((cl) => ({
       value: cl.id,
       label: cl.title,
     })),
@@ -47,6 +50,7 @@ export default function LinkClass({ study, handleChange }) {
   return (
     <DropdownSelect
       multiple
+      portal={portal}
       value={value}
       options={options}
       ariaLabel={t("connectStudyModal.linkedClass", {}, {
@@ -54,12 +58,19 @@ export default function LinkClass({ study, handleChange }) {
       })}
       onChange={(next) => {
         const ids = Array.isArray(next) ? next : [];
+        // "Do not connect" and the classes exclude each other. While it is
+        // selected, picking a class arrives with it still in the list: the
+        // option that was just clicked wins.
+        const pickedNotConnected =
+          ids.includes(NOT_CONNECTED) && !value.includes(NOT_CONNECTED);
+        const classIds = ids.filter((id) => id !== NOT_CONNECTED);
         handleChange({
           target: {
             name: "classes",
-            value: ids.includes(NOT_CONNECTED)
-              ? null
-              : ids.map((id) => ({ id })),
+            value:
+              pickedNotConnected || !classIds.length
+                ? null
+                : classIds.map((id) => ({ id })),
           },
         });
       }}

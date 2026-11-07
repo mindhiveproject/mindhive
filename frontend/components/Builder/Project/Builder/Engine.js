@@ -467,6 +467,30 @@ export default function Engine({
     }
   };
 
+  // Opens the settings panel of a block that was just added, so the user
+  // sees right away what the block needs (e.g. a design block's conditions).
+  // Skipped if the block was removed in the meantime.
+  const openNodeSettings = (node) => {
+    const eng = engineRef.current || engine;
+    if (!node || isCanvasLockedRef.current) return;
+    if (!eng?.getModel?.()?.getNode?.(node.getID())) return;
+    if (node.options?.type === "design") {
+      eng.openDesignSettings?.({ node });
+    } else if (node.options?.componentID) {
+      eng.openComponentModal?.({
+        node,
+        isEditorOpen: true,
+        isInfoOpen: false,
+        isPreviewOpen: false,
+      });
+    }
+  };
+
+  // A dropped or added task block first gets the study's own copy of its
+  // task, then opens on that copy (never on the original).
+  const onTaskNodeAdded = (node, options) =>
+    giveNodeOwnTask(node, options).finally(() => openNodeSettings(node));
+
   const addComponentToCanvas = ({
     name,
     details,
@@ -508,7 +532,7 @@ export default function Engine({
       newNode.setPosition(point);
       engine.getModel().addNode(newNode);
       forceUpdate();
-      giveNodeOwnTask(newNode, { always: !!createCopy });
+      onTaskNodeAdded(newNode, { always: !!createCopy });
     });
   };
 
@@ -588,8 +612,9 @@ export default function Engine({
   const addDesignToCanvas = ({ name, details, conditions }) => {
     if (isCanvasLocked)
       return alert(t("engine.studyLocked", "The study has been locked"));
+    let newNode;
     withHistorySnapshot(() => {
-      const newNode = new DesignModel({
+      newNode = new DesignModel({
         name,
         details,
         conditions,
@@ -603,6 +628,7 @@ export default function Engine({
       engine.getModel().addNode(newNode);
       forceUpdate();
     });
+    openNodeSettings(newNode);
   };
 
   const onBeforeCanvasMutation = () => {
@@ -626,6 +652,8 @@ export default function Engine({
   const addFunctions = {
     addComponentToCanvas,
     giveNodeOwnTask,
+    onTaskNodeAdded,
+    openNodeSettings,
     addStudyTemplateToCanvas,
     addComment,
     addAnchor,

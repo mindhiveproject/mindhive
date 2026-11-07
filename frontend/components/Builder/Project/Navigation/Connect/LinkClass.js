@@ -43,6 +43,7 @@ export default function LinkClass({ project, handleChange }) {
 
   return (
     <DropdownSelect
+      portal
       value={value}
       options={options}
       searchableSingle

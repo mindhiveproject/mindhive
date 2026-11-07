@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Icon } from "semantic-ui-react";
+import Button from "../../../../DesignSystem/Button";
+import { DownloadIcon } from "../../../../DesignSystem/Icons";
 
 import { saveAs } from "file-saver";
 import csvWithPlainNumbers from "../../../../../lib/csvWithPlainNumbers";
@@ -86,14 +87,16 @@ export default function DownloadRawData({
 
   return (
     <>
-      {loading ? (
-        <div>{t("byComponent.wait", "Wait ...")}</div>
-      ) : (
-        <div className="downloadArea" onClick={() => download()}>
-          <Icon color="teal" size="large" name="download" />
-          <a>{t("byComponent.downloadRaw", "Download raw data")}</a>
-        </div>
-      )}
+      <Button
+        variant="subtle"
+        leadingIcon={<DownloadIcon />}
+        disabled={loading}
+        onClick={() => download()}
+      >
+        {loading
+          ? t("byComponent.preparing", "Preparing download…")
+          : t("byComponent.downloadRaw", "Download raw data")}
+      </Button>
     </>
   );
 }

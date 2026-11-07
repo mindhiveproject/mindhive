@@ -5,8 +5,19 @@ import DownloadRawData from "../Download/RawData";
 import DownloadSummaryData from "../Download/Summary";
 import DownloadByComponent from "../Download/ByComponent";
 import Button from "../../../../DesignSystem/Button";
+import CopyButton from "../../../../DesignSystem/CopyButton";
+import Tooltip from "../../../../DesignSystem/Tooltip";
+import DownloadEmptyNotice, {
+  getDownloadEmptyReason,
+} from "../Download/EmptyNotice";
 
-export default function Header({ study, slug, participants, components }) {
+export default function Header({
+  study,
+  slug,
+  participants,
+  components,
+  loading,
+}) {
   const { t } = useTranslation("builder");
   const { origin } = absoluteUrl();
 
@@ -23,16 +34,15 @@ export default function Header({ study, slug, participants, components }) {
     ?.filter((dataset) => dataset?.isCompleted && dataset?.isIncluded)
     .map((dataset) => dataset?.token);
 
-  const copyLink = () => {
-    const copyLink = `${origin}/studies/${slug}`;
-    const temp = document.createElement("input");
-    document.body.append(temp);
-    temp.value = copyLink;
-    temp.select();
-    document.execCommand("copy");
-    temp.remove();
-    alert(t("header.linkCopied", {}, { default: "The link is copied" }));
-  };
+  const studyLink = `${origin}/studies/${slug}`;
+  const copyAria = t("header.copyLinkAria", "Copy study link to clipboard");
+
+  const emptyReason = loading
+    ? "loading"
+    : getDownloadEmptyReason({
+        datasets: study?.datasets,
+        includedCount: filteredDatasetTokens?.length || 0,
+      });
 
   return (
     <div className="header">
@@ -48,25 +58,24 @@ export default function Header({ study, slug, participants, components }) {
               }
             )}
           </p>
-          <h3>
-            {origin}/studies/{slug}
-          </h3>
+          <Tooltip content={copyAria} side="top">
+            <CopyButton
+              className="studyLink"
+              value={studyLink}
+              ariaLabel={copyAria}
+              title={studyLink}
+              style={{
+                border: "none",
+                background: "#E6E6E6",
+                backgroundColor: "#E6E6E6",
+              }}
+            >
+              {studyLink}
+            </CopyButton>
+          </Tooltip>
           <div className="buttons">
             <div>
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => copyLink()}
-              >
-                {t("header.copyLink", {}, { default: "Copy study link" })}
-              </Button>
-            </div>
-            <div>
-              <a
-                target="_blank"
-                href={`${origin}/studies/${slug}`}
-                rel="noreferrer"
-              >
+              <a target="_blank" href={studyLink} rel="noreferrer">
                 <Button variant="outline" type="button">
                   {t("header.testStudy", {}, { default: "Test your study" })}
                 </Button>
@@ -75,19 +84,9 @@ export default function Header({ study, slug, participants, components }) {
           </div>
         </div>
         <div className="downloadOptions">
-          <h3>{t("header.allDataOneFile", "All data in one file")}</h3>
-          {filteredDatasetTokens?.length > 0 && (
-            <DownloadSummaryData
-              by=""
-              study={study}
-              participantsInStudy={participants}
-              components={components}
-              datasets={study?.datasets || []}
-              filteredDatasetTokens={filteredDatasetTokens}
-            />
-          )}
-
-          {filteredDatasetTokens?.length > 0 && (
+          <h3>{t("header.downloadData", "Download data")}</h3>
+          <DownloadEmptyNotice reason={emptyReason} />
+          {!emptyReason && (
             <DownloadSummaryData
               by="by participant"
               study={study}
@@ -98,7 +97,18 @@ export default function Header({ study, slug, participants, components }) {
             />
           )}
 
-          {fileDirs?.length > 0 && (
+          {!emptyReason && (
+            <DownloadSummaryData
+              by=""
+              study={study}
+              participantsInStudy={participants}
+              components={components}
+              datasets={study?.datasets || []}
+              filteredDatasetTokens={filteredDatasetTokens}
+            />
+          )}
+
+          {!emptyReason && fileDirs?.length > 0 && (
             <DownloadRawData
               slug={slug}
               fileDirs={fileDirs}
@@ -115,6 +125,7 @@ export default function Header({ study, slug, participants, components }) {
           participantsInStudy={participants}
           datasets={study?.datasets || []}
           filteredDatasetTokens={filteredDatasetTokens}
+          emptyReason={emptyReason}
         />
       </div>
     </div>

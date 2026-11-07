@@ -99,6 +99,7 @@ export const CreatorWidget = props => {
       diagramEngine.getModel().addNode(node);
       props.onAfterCanvasMutation?.();
       forceUpdate();
+      props.onDesignNodeAdded?.(node);
     }
   };
 
