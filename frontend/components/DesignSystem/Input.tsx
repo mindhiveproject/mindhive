@@ -112,6 +112,18 @@ const StyledField = styled.input`
     border-color: var(--MH-Theme-Warning-Base, #b9261a);
   }
 
+  /* A number field is typed into, not stepped: the browser's up/down arrows
+     are dropped so every type reads as the same box. */
+  &[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  &[type="number"]::-webkit-inner-spin-button,
+  &[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
   &:focus {
     border-color: var(--MH-Theme-Primary-Dark, #336f8a);
     box-shadow: 0 0 0 1px var(--MH-Theme-Primary-Dark, #336f8a);

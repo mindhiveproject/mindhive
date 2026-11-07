@@ -32,6 +32,7 @@ export type ChipTone =
   | "success"
   | "warning"
   | "info"
+  | "accent"
   | "danger";
 
 /**
@@ -91,6 +92,10 @@ const StyledChip = styled.div`
   &.DesignSystem-Chip--tone-info {
     background: var(--MH-Theme-Primary-Light, #def8fb);
     color: var(--MH-Theme-Primary-Dark, #336f8a);
+  }
+  &.DesignSystem-Chip--tone-accent {
+    background: var(--MH-Theme-Additional-Accent-Light, #f5f2ff);
+    color: var(--MH-Theme-Additional-Accent-Base, #6f26ce);
   }
   &.DesignSystem-Chip--tone-danger {
     background: var(--MH-Theme-Danger-Light, #fdecea);

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { createRuntimeFrameConnection } from './runtimeFrameConnection';
+import { paramsMessage, sourcesMessage } from './runtimeProtocol';
 
 const FRAME_STYLE = {
   display: 'block',
@@ -37,10 +38,15 @@ function createNonce() {
  * @param {"JSPSYCH" | "P5"} runtime
  * @param {"persist" | "preview"} mode
  * @param {object} [params] - Task parameter values, sent once in `init`.
+ * @param {import("../../Visuals/Runtime/parameterBus").default} [bus] - Live
+ *   parameter values, sent as `params` patches once connected.
+ * @param {Array} [sources] - The study's device state, sent as `sources`
+ *   whenever it changes.
  * @param {string} [title] - Accessible name of the frame.
  * @param {boolean} [autoFocus=false] - Focus the frame once it has loaded, so
  *   keyboard responses reach the task without a click first.
  * @param {() => void} [onReady]
+ * @param {(parameters: object) => void} [onDeclare] - What the task reads.
  * @param {(rows: object[]) => void} [onRows]
  * @param {(marker: {label, value, time}) => void} [onMarker]
  * @param {(result: {aggregated, rows}) => void} [onFinish]
@@ -54,9 +60,12 @@ export default function RuntimeFrame({
   runtime,
   mode,
   params,
+  bus,
+  sources,
   title = 'Task',
   autoFocus = false,
   onReady,
+  onDeclare,
   onRows,
   onMarker,
   onFinish,
@@ -79,6 +88,7 @@ export default function RuntimeFrame({
   const handlers = useRef({});
   Object.assign(handlers.current, {
     onReady,
+    onDeclare,
     onRows,
     onMarker,
     onFinish,
@@ -87,17 +97,39 @@ export default function RuntimeFrame({
   });
   const initRef = useRef(null);
   initRef.current = { runtime, mode, params };
+  const sourcesRef = useRef(sources);
+  const connectionRef = useRef(null);
 
   useEffect(() => {
+    let detach = null;
     const connection = createRuntimeFrameConnection({
       nonce,
       getFrameWindow: () => frameRef.current?.contentWindow ?? null,
       init: initRef.current,
       handlers: handlers.current,
     });
+    // Starts the live feed; the render-time assign above leaves it alone.
+    handlers.current.onConnected = () => {
+      if (sourcesRef.current) {
+        connection.send(sourcesMessage(sourcesRef.current));
+      }
+      detach =
+        bus?.connect((values) => connection.send(paramsMessage(values))) ??
+        null;
+    };
+    connectionRef.current = connection;
     connection.start();
-    return () => connection.close();
-  }, [nonce]);
+    return () => {
+      detach?.();
+      connection.close();
+      connectionRef.current = null;
+    };
+  }, [nonce, bus]);
+
+  useEffect(() => {
+    sourcesRef.current = sources;
+    if (sources) connectionRef.current?.send(sourcesMessage(sources));
+  }, [sources]);
 
   return (
     <iframe

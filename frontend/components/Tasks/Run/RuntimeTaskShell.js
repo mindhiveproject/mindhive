@@ -1,5 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import useTranslation from 'next-translate/useTranslation';
+import Button from '../../DesignSystem/Button';
+import { StudySourcesContext } from '../../Studies/Run/DataSources/Main';
 import RuntimeFrame from './RuntimeFrame';
 import { createRunBuffer } from './runBuffer';
 import { createRuntimeSaveClient } from './runtimeSaveClient';
@@ -8,7 +17,26 @@ import { createRuntimeSaveClient } from './runtimeSaveClient';
 // save before the study moves on regardless.
 const SAVE_TIMEOUT = 15000;
 
-const FRAME_BOX = { width: '100%', height: '100vh' };
+// The window, unless a host (the study's data-source bar) says how much of it
+// is left.
+const FRAME_BOX = {
+  position: 'relative',
+  width: '100%',
+  height: 'var(--MH-Run-Height, 100vh)',
+};
+
+// Sits beside the help button that floats in the window's bottom-right corner
+// (HelpButton: 40px, 20px from the edges) as one row with it: the same
+// baseline, 8px apart.
+const CONTINUE_STYLE = { position: 'absolute', right: 68, bottom: 20 };
+
+const NOTICE_STYLE = {
+  position: 'absolute',
+  top: 16,
+  left: 16,
+  right: 16,
+  maxWidth: 480,
+};
 
 function wait(ms) {
   return new Promise((resolve) => {
@@ -30,6 +58,9 @@ export function parameterValues(list) {
  * once the full result is saved, or the save times out, as for Lab.js. A
  * crash ends the run with FAILURE and offers Continue.
  *
+ * Every marker is also passed to the study's marker stream, if it has one,
+ * so it lands on the same clock as the devices recording next to it.
+ *
  * @param {"JSPSYCH" | "P5"} runtime
  * @param {(nonce: string) => string} buildSrc - The task document's URL; a
  *   stable function, since a new identity rebuilds the frame.
@@ -38,6 +69,12 @@ export function parameterValues(list) {
  * @param {string} title - Accessible name of the frame.
  * @param {object} [runContext] - From startRun; required when saving.
  * @param {boolean} [isSavingData] - False in preview: nothing is sent (D12).
+ * @param {object} [bus] - Live parameter values (see RuntimeFrame).
+ * @param {Array} [sources] - Device state for the frame (see RuntimeFrame).
+ * @param {(parameters: object) => void} [onDeclare]
+ * @param {boolean} [canContinue] - Offer a Continue button that finishes the
+ *   run, for a task that has no end of its own.
+ * @param {React.ReactNode} [notice] - Shown over the top of the frame.
  */
 export default function RuntimeTaskShell({
   runtime,
@@ -50,8 +87,14 @@ export default function RuntimeTaskShell({
   onFinish,
   currentStep,
   isTaskRetaken,
+  bus,
+  sources,
+  onDeclare,
+  canContinue = false,
+  notice,
 }) {
   const { t } = useTranslation('common');
+  const studySources = useContext(StudySourcesContext);
   const [state, setState] = useState('running');
   const doneRef = useRef(false);
   const finishRef = useRef(null);
@@ -167,13 +210,29 @@ export default function RuntimeTaskShell({
         runtime={runtime}
         mode={runToken ? 'persist' : 'preview'}
         params={params}
+        bus={bus}
+        sources={sources}
         autoFocus
         title={title}
+        onDeclare={onDeclare}
         onRows={(rows) => buffer.addRows(rows)}
-        onMarker={(marker) => buffer.addMarker(marker)}
+        onMarker={(marker) => {
+          buffer.addMarker(marker);
+          studySources?.mark(marker.label, marker.time);
+        }}
         onFinish={handleFinish}
         onFailure={handleFailure}
       />
+      {notice && <div style={NOTICE_STYLE}>{notice}</div>}
+      {canContinue && state === 'running' && (
+        <Button
+          variant="filled"
+          style={CONTINUE_STYLE}
+          onClick={() => handleFinish({ aggregated: {} })}
+        >
+          {t('runtime.continue', {}, { default: 'Continue' })}
+        </Button>
+      )}
       {state === 'saving' && (
         <p role="status">
           {t(

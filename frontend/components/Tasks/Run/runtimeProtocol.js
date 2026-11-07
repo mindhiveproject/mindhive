@@ -9,10 +9,19 @@
 //
 // The frame never holds the run token and never calls a MindHive server. It
 // sends rows, markers and a finish message; the parent decides what to keep.
+// A p5 visual also declares its parameters, and the parent keeps their values
+// live (`params`) along with the study's device state (`sources`).
 
 const PROTOCOL = 'mindhive-runtime/2';
 
-const FRAME_MESSAGE_TYPES = ['ready', 'rows', 'marker', 'finish', 'failure'];
+const FRAME_MESSAGE_TYPES = [
+  'ready',
+  'declare',
+  'rows',
+  'marker',
+  'finish',
+  'failure',
+];
 const RUN_MODES = ['persist', 'preview'];
 
 const MAX_ROWS_PER_MESSAGE = 10000;
@@ -72,6 +81,13 @@ function validateFrameMessage(data) {
   }
 
   if (type === 'ready') return { ok: true, message: { type } };
+
+  if (type === 'declare') {
+    if (!isPlainObject(data.parameters) || !isSerializable(data.parameters)) {
+      return rejected('declared parameters must be a plain object');
+    }
+    return { ok: true, message: { type, parameters: data.parameters } };
+  }
 
   if (type === 'rows') {
     const problem = validateRows(data.rows, {
@@ -152,14 +168,28 @@ function initMessage({ runtime, mode, params = {} }) {
   return { protocol: PROTOCOL, type: 'init', runtime, mode, params };
 }
 
+/** Live parameter values, merged into `MindHive.params`. */
+function paramsMessage(values) {
+  return { protocol: PROTOCOL, type: 'params', values };
+}
+
+/** The study's device state, which replaces `MindHive.sources`. */
+function sourcesMessage(sources) {
+  return { protocol: PROTOCOL, type: 'sources', sources };
+}
+
 /**
  * The script a task document runs before any experiment code. It answers the
  * handshake and defines `window.MindHive`, which the jsPsych shim and the p5
  * task document build on:
  *
  *   MindHive.params              parameter values, filled in by `init`
+ *                                and kept live by `params`
+ *   MindHive.sources             the study's devices, replaced by `sources`
  *   MindHive.mode                "persist" or "preview"
  *   MindHive.onInit(callback)    runs once `init` has arrived
+ *   MindHive.onUpdate(callback)  runs after every `params` or `sources`
+ *   MindHive.declare(parameters) tells the parent what the task reads
  *   MindHive.ready()             the experiment has started
  *   MindHive.saveRow(row)        one result row (also saveRows(rows))
  *   MindHive.marker(label, value, time)
@@ -183,6 +213,7 @@ function frameClientSource(nonce) {
   var finished = false;
   var initialized = false;
   var initCallbacks = [];
+  var updateCallbacks = [];
 
   function post(message) {
     var envelope = Object.assign({ protocol: PROTOCOL }, message);
@@ -229,10 +260,17 @@ function frameClientSource(nonce) {
 
   var MindHive = {
     params: {},
+    sources: [],
     mode: null,
     onInit: function (callback) {
       if (initialized) callback(MindHive);
       else initCallbacks.push(callback);
+    },
+    onUpdate: function (callback) {
+      updateCallbacks.push(callback);
+    },
+    declare: function (parameters) {
+      post({ type: "declare", parameters: jsonSafe(parameters || {}, 0) });
     },
     ready: function () {
       post({ type: "ready" });
@@ -287,6 +325,12 @@ function frameClientSource(nonce) {
       initCallbacks.splice(0).forEach(function (callback) {
         try { callback(MindHive); } catch (e) { reportError(e); }
       });
+    } else if (data.type === "params" || data.type === "sources") {
+      if (data.type === "params") Object.assign(MindHive.params, data.values || {});
+      else MindHive.sources = data.sources || [];
+      updateCallbacks.forEach(function (callback) {
+        try { callback(MindHive); } catch (e) {}
+      });
     }
   }
 
@@ -337,5 +381,7 @@ module.exports = {
   frameClientSource,
   initMessage,
   isHelloMessage,
+  paramsMessage,
+  sourcesMessage,
   validateFrameMessage,
 };

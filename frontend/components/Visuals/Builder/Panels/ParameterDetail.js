@@ -9,6 +9,7 @@ import Chip from "../../../DesignSystem/Chip";
 import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import IconButton from "../../../DesignSystem/IconButton";
 import Input from "../../../DesignSystem/Input";
+import MessageCard from "../../../DesignSystem/MessageCard";
 import {
   ArrowDropDownIcon,
   CableIcon,
@@ -23,14 +24,23 @@ import {
   EMPTY_BINDING,
   KIND_LABELS,
   bindingFor,
+  pointsFor,
   isNumeric,
   isStreamMappable,
+  mappedChannels,
+  isWholeNumber,
   kindOf,
   labelFor,
   normalizeDeclarations,
   retype,
+  wholeNumberFields,
 } from "../../Helpers/bindings";
-import { removeParameter, updateParameter } from "../../Runtime/parametersFile";
+import {
+  keyFromName,
+  removeParameter,
+  renameParameter,
+  updateParameter,
+} from "../../Runtime/parametersFile";
 import { ValueControl } from "./Parameters";
 import { StatusIndicator } from "../../../Studies/Run/DataSources/ConnectScreen";
 import { channelKey, outputKey } from "../../../../lib/yqOutputs";
@@ -217,15 +227,17 @@ function Section({ title, children, defaultOpen = true }) {
  * with the jump to the file. Everything below that line — normalize, range,
  * whether mapping is allowed at all — is data plumbing the dashboard owns.
  */
-export default function ParameterDetailPanel({ paramKey, initialTab }) {
+export default function ParameterDetailPanel({ paramKey, initialTab, focusName }) {
   const { t } = useTranslation("visuals");
   const {
     canEdit,
     declared,
     bindings,
     updateBinding,
+    renameBinding,
     files,
     updateFile,
+    openPanel,
     closePanel,
     revealFile,
     dataSources,
@@ -238,6 +250,9 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
   const parametersFile = files.find((file) => file.role === "parameters");
 
   const [tab, setTab] = useState(initialTab || "settings");
+  // The key this parameter was just saved under, while the sketch has yet to
+  // re-declare itself with it.
+  const [renamedTo, setRenamedTo] = useState(null);
   const [name, setName] = useState(labelFor(paramKey, declaration));
   // What the author has changed in the declaration and not yet saved: field →
   // value, in the form `updateParameter` takes. Empty until they touch the
@@ -290,11 +305,33 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
 
   // The parameter can vanish underneath this panel — deleted from the file, or
   // renamed in code, which is the same thing as far as the declared key goes.
+  // Renamed from here, the panel follows it to the key it now goes by.
   useEffect(() => {
-    if (!declaration) closePanel();
-  }, [declaration, closePanel]);
+    if (declaration) return;
+    if (renamedTo && declared?.[renamedTo]) {
+      openPanel({ paramKey: renamedTo, initialTab: tab });
+    } else {
+      closePanel();
+    }
+  }, [declaration, declared, renamedTo, tab, openPanel, closePanel]);
 
   if (!declaration) return null;
+
+  // Renaming spells a new key from the name, so a name that can't be spelled
+  // into one, or lands on a key already declared, can't be saved.
+  const trimmedName = name.trim();
+  const nextKey = trimmedName ? keyFromName(trimmedName) : paramKey;
+  const renaming = trimmedName !== labelFor(paramKey, declaration);
+  const nameError = !renaming
+    ? null
+    : !nextKey
+    ? t("nameNeedsLetter", "Start the name with a letter.")
+    : nextKey !== paramKey && nextKey in declared
+    ? t("nameTaken", "There is already a parameter called “{{key}}”.").replace(
+        "{{key}}",
+        nextKey
+      )
+    : null;
 
   function onKind(kind) {
     if (kind === kindOf(shown)) return;
@@ -312,29 +349,36 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
     };
 
     const declarationPatch = { ...fields };
-    if (name.trim() !== labelFor(paramKey, declaration)) {
-      declarationPatch.label = name.trim() || undefined;
-    }
-    const next = editable
+    if (renaming) declarationPatch.label = trimmedName || undefined;
+    let next = editable
       ? updateParameter(parametersFile.content || "", paramKey, declarationPatch)
       : null;
+    let savedKey = paramKey;
     if (next !== null && Object.keys(declarationPatch).length > 0) {
+      if (renaming && nextKey !== paramKey) {
+        next = renameParameter(next, paramKey, nextKey);
+        savedKey = nextKey;
+      }
       updateFile(parametersFile.id, next);
       // A value set by hand would keep winning over the default just changed,
-      // and a stream can't feed a parameter retyped to something other than a
-      // number.
+      // and a stream's channels fit the type they were picked for — one for a
+      // number, one per component for a vector — and no other.
       if (binding.mapping?.kind === "manual" && "default" in fields) {
         patch.mapping = null;
       } else if (
         binding.mapping?.kind === "stream" &&
         "type" in fields &&
-        shown.type !== "number"
+        shown.type !== declaration.type
       ) {
         patch.mapping = null;
       }
     }
 
-    updateBinding(paramKey, patch);
+    if (savedKey !== paramKey) {
+      renameBinding(paramKey, savedKey);
+      setRenamedTo(savedKey);
+    }
+    updateBinding(savedKey, patch);
   }
 
   function onDelete() {
@@ -397,6 +441,18 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
                   aria-label={t("name", "Name")}
                   value={name}
                   disabled={!editable}
+                  invalid={!!nameError}
+                  hint={
+                    nameError ||
+                    (renaming && nextKey !== paramKey
+                      ? t(
+                          "usedInCode",
+                          "Read in your sketch as yq.params.{{key}}"
+                        ).replace("{{key}}", nextKey)
+                      : undefined)
+                  }
+                  autoFocus={focusName}
+                  onFocus={focusName ? (event) => event.target.select() : undefined}
                   onChange={setName}
                 />
               </div>
@@ -414,6 +470,33 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
                   onChange={onKind}
                 />
               </div>
+              {shown.type === "number" ? (
+                <div style={TOGGLE_ROW_STYLE}>
+                  <div style={{ flex: "1 1 auto", minWidth: 0 }}>
+                    <p style={{ ...LABEL_STYLE, margin: 0 }}>
+                      {t("wholeNumbersOnly", "Whole Numbers Only")}
+                    </p>
+                    <p style={{ ...HELP_STYLE, margin: 0 }}>
+                      {t(
+                        "wholeNumbersOnlyHelp",
+                        "Steps by 1, with no decimals."
+                      )}
+                    </p>
+                  </div>
+                  <Checkbox
+                    tone="accent"
+                    checked={isWholeNumber(shown)}
+                    disabled={!editable}
+                    ariaLabel={t("wholeNumbersOnly", "Whole Numbers Only")}
+                    onChange={(next) =>
+                      setFields((current) => ({
+                        ...current,
+                        ...wholeNumberFields(shown, next),
+                      }))
+                    }
+                  />
+                </div>
+              ) : null}
               <ValueControl
                 label={t("defaultValue", "Default Value")}
                 declaration={shown}
@@ -440,7 +523,36 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
               </div>
 
               {/* Ranging means something for numbers and vectors alike. Normalize
-                  and Clamp shape a stream sample, and only a number takes one. */}
+                  and Clamp shape a stream sample within it, and only a number
+                  takes one. */}
+              {isNumeric(declaration) ? (
+                <div style={FIELD_STYLE}>
+                  <span style={LABEL_STYLE}>{t("range", "Range")}</span>
+                  <div style={{ display: "flex", gap: 12 }}>
+                    <Input
+                      type="number"
+                      placeholder={t("min", "Min")}
+                      aria-label={t("min", "Min")}
+                      value={draft.min}
+                      disabled={!canEdit}
+                      onChange={(next) =>
+                        setDraft((current) => ({ ...current, min: next }))
+                      }
+                    />
+                    <Input
+                      type="number"
+                      placeholder={t("max", "Max")}
+                      aria-label={t("max", "Max")}
+                      value={draft.max}
+                      disabled={!canEdit}
+                      onChange={(next) =>
+                        setDraft((current) => ({ ...current, max: next }))
+                      }
+                    />
+                  </div>
+                </div>
+              ) : null}
+
               {declaration.type === "number" ? (
                 <>
                   <div style={TOGGLE_ROW_STYLE}>
@@ -490,35 +602,9 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
                   </div>
                 </>
               ) : null}
-
-              {isNumeric(declaration) ? (
-                <div style={FIELD_STYLE}>
-                  <span style={LABEL_STYLE}>{t("range", "Range")}</span>
-                  <div style={{ display: "flex", gap: 12 }}>
-                    <Input
-                      type="number"
-                      placeholder={t("min", "Min")}
-                      aria-label={t("min", "Min")}
-                      value={draft.min}
-                      disabled={!canEdit}
-                      onChange={(next) =>
-                        setDraft((current) => ({ ...current, min: next }))
-                      }
-                    />
-                    <Input
-                      type="number"
-                      placeholder={t("max", "Max")}
-                      aria-label={t("max", "Max")}
-                      value={draft.max}
-                      disabled={!canEdit}
-                      onChange={(next) =>
-                        setDraft((current) => ({ ...current, max: next }))
-                      }
-                    />
-                  </div>
-                </div>
-              ) : null}
             </Section>
+
+            <hr style={DIVIDER_STYLE} />
 
             <Section title={t("mapping", "Mapping")}>
               <div style={TOGGLE_ROW_STYLE}>
@@ -561,7 +647,7 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
             <Button
               variant="filled"
               tone="accent"
-              disabled={!canEdit}
+              disabled={!canEdit || !!nameError}
               onClick={onSave}
             >
               {t("save", "Save")}
@@ -569,7 +655,7 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
           </footer>
         </>
       ) : (
-        <div style={BODY_STYLE}>
+        <div style={{ ...BODY_STYLE, paddingTop: 16 }}>
           <h3 style={SECTION_TITLE_STYLE}>
             {t("availableStreams", "Available Streams")}
           </h3>
@@ -594,9 +680,10 @@ export default function ParameterDetailPanel({ paramKey, initialTab }) {
  * from. Picking a channel maps it; picking the mapped one again unmaps it,
  * back to the default rather than to a manual value the author never set.
  *
- * Only numeric outputs are listed, and only for a number parameter — see
- * `isStreamMappable`. A source's outputs are listed whether or not it is
- * streaming, so a mapping can be set up before the device is to hand.
+ * Only numeric outputs are listed — channels for a number parameter, points
+ * (a landmark's x, y and z) for a vector — see `isStreamMappable`. A source's
+ * outputs are listed whether or not it is streaming, so a mapping can be set up
+ * before the device is to hand.
  */
 function StreamPicker({
   paramKey,
@@ -613,17 +700,20 @@ function StreamPicker({
 
   if (!isStreamMappable(declaration, binding)) {
     return (
-      <div style={STREAMS_BOX_STYLE}>
-        {binding.allowMapping === false
-          ? t(
-              "mappingTurnedOff",
-              "Mapping is turned off for this parameter. Turn on Allow Mapping in its settings to connect it to a device."
-            )
-          : t(
-              "onlyNumbersMap",
-              "Only number parameters can be mapped to a device output for now. Set this one by hand from its controls."
-            )}
-      </div>
+      <MessageCard
+        variant="information"
+        message={
+          binding.allowMapping === false
+            ? t(
+                "mappingTurnedOff",
+                "Mapping is turned off for this parameter. Turn on Allow Mapping in its settings to connect it to a device."
+              )
+            : t(
+                "onlyNumbersMap",
+                "Only number and vector parameters can be mapped to a device output for now."
+              )
+        }
+      />
     );
   }
 
@@ -647,15 +737,36 @@ function StreamPicker({
     );
   }
 
+  const isVector = declaration.type !== "number";
+
   return dataSources.map((source) => {
     const excluded = new Set(source.settings?.excludedChannels || []);
     const outputs = (source.block?.outputs || []).filter(
       (output) => output.valueType !== "categorical"
     );
-    const channels = outputs.flatMap((output) =>
-      (output.channels || [])
-        .filter((channel) => !excluded.has(channelKey(output, channel.index)))
-        .map((channel) => ({ output, channel }))
+    // A vector reads a whole point, so it is offered the points of every
+    // output rather than their channels. A point with a channel the source's
+    // settings leave out is not offered either: it would be half a vector.
+    const choices = outputs.flatMap((output) =>
+      isVector
+        ? pointsFor(sourceApis[source.id]?.points?.[output.node], declaration)
+            .filter((point) =>
+              point.indices.every(
+                (index) => !excluded.has(channelKey(output, index))
+              )
+            )
+            .map((point) => ({
+              output,
+              label: point.label,
+              channels: point.indices,
+            }))
+        : (output.channels || [])
+            .filter((channel) => !excluded.has(channelKey(output, channel.index)))
+            .map((channel) => ({
+              output,
+              label: channel.label,
+              channels: [channel.index],
+            }))
     );
 
     return (
@@ -666,19 +777,26 @@ function StreamPicker({
           </span>
           <StatusIndicator streaming={!!sourceApis[source.id]?.streaming} />
         </div>
-        {channels.length === 0 ? (
-          <span>{t("noNumericOutputs", "This source has no numeric outputs to map.")}</span>
+        {choices.length === 0 ? (
+          <span>
+            {isVector
+              ? t(
+                  "noVectorOutputs",
+                  "This source has no grouped outputs to map to a vector."
+                )
+              : t("noNumericOutputs", "This source has no numeric outputs to map.")}
+          </span>
         ) : (
           <div style={CHIPS_STYLE}>
-            {channels.map(({ output, channel }) => {
+            {choices.map(({ output, label, channels }) => {
               const selected =
                 mapping?.sourceId === source.id &&
                 mapping?.output === outputKey(output) &&
-                mapping?.channel === channel.index;
+                mappedChannels(mapping).join() === channels.join();
               return (
                 <Chip
-                  key={channelKey(output, channel.index)}
-                  label={channel.label}
+                  key={`${outputKey(output)}::${channels.join()}`}
+                  label={label}
                   selected={selected}
                   pressed={selected}
                   accent="tertiary"
@@ -691,7 +809,7 @@ function StreamPicker({
                             kind: "stream",
                             sourceId: source.id,
                             output: outputKey(output),
-                            channel: channel.index,
+                            ...(isVector ? { channels } : { channel: channels[0] }),
                           },
                     })
                   }

@@ -6,6 +6,8 @@ const {
   PROTOCOL,
   frameClientSource,
   initMessage,
+  paramsMessage,
+  sourcesMessage,
   validateFrameMessage,
 } = require('./runtimeProtocol');
 const { createRuntimeFrameConnection } = require('./runtimeFrameConnection');
@@ -203,6 +205,43 @@ test('a frame connects, receives init, and its results reach the parent', async 
     frame.stop();
   }
   assert.equal(host.listenerCount, 0);
+});
+
+test('a frame declares its parameters and gets live values and sources', async () => {
+  const host = createHost();
+  const nonce = 'nonce-live';
+  const declared = [];
+  const frame = createFakeFrame(
+    host,
+    nonce,
+    `MindHive.declare({ size: { type: "number", default: 0.5 } });
+     MindHive.onUpdate(function (mh) {
+       window.seen = { size: mh.params.size, sources: mh.sources.length };
+     });`
+  );
+  const connection = connectTo(host, frame.frameWindow, nonce, {
+    onDeclare: (parameters) => declared.push(parameters),
+    onConnected: () => {
+      connection.send(paramsMessage({ size: 0.8 }));
+      connection.send(sourcesMessage([{ id: 's1' }]));
+    },
+  });
+  connection.start();
+  try {
+    await waitFor(() => frame.run('window.seen && window.seen.sources'));
+    assert.deepEqual(declared, [{ size: { type: 'number', default: 0.5 } }]);
+    assert.deepEqual(JSON.parse(JSON.stringify(frame.run('window.seen'))), {
+      size: 0.8,
+      sources: 1,
+    });
+    assert.equal(
+      validateFrameMessage(message({ type: 'declare', parameters: [] })).ok,
+      false
+    );
+  } finally {
+    connection.close();
+    frame.stop();
+  }
 });
 
 test('a frame with the wrong nonce or from another window gets no port', async () => {

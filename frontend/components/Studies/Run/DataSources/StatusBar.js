@@ -5,16 +5,15 @@ import { useLayoutEffect, useRef, useState } from "react";
 import IconButton from "../../../DesignSystem/IconButton";
 import { WaveformIcon, RecordDotIcon, SidePanelIcon } from "../../../DesignSystem/Icons";
 
-// One surface for the whole header: the mindHIVE logo/title, and the device
-// cards — inline in the same row when there's room, stacked underneath (one
-// per line, never a wrapped second row) when there isn't.
+// One surface for the whole header, fixed flush to the top of the window: the
+// study title, and the device cards — inline in the same row when
+// there's room, stacked underneath (one per line, never a wrapped second row)
+// when there isn't.
 const CONTAINER_STYLE = {
-  position: "sticky",
-  top: 8,
+  position: "relative",
+  flexShrink: 0,
   zIndex: 20,
-  margin: "8px 8px 0",
-  borderRadius: 12,
-  border: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  borderBottom: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
   background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
 };
 
@@ -157,21 +156,18 @@ function DeviceCard({ row, api, active, onOpenPreview }) {
 
 function TitleBlock({ study }) {
   return (
-    <>
-      <img src="/logo.png" alt="mindHIVE" height={28} style={{ flexShrink: 0 }} />
-      <span
-        className="MH-Type-Title-Base"
-        style={{ color: "var(--MH-Theme-Neutrals-Black, #171717)", flexShrink: 0 }}
-      >
-        {study?.title}
-      </span>
-    </>
+    <span
+      className="MH-Type-Title-Base"
+      style={{ color: "var(--MH-Theme-Neutrals-Black, #171717)", flexShrink: 0 }}
+    >
+      {study?.title}
+    </span>
   );
 }
 
 /**
  * Persists at the top of the runtime while a study with linked data sources
- * is being taken — the mindHIVE logo and study title, plus one compact card
+ * is being taken — the study title, plus one compact card
  * per linked source. The cards sit inline in that same row when there's
  * room; when there isn't, they drop to their own stacked section underneath
  * (one per line) rather than wrapping into a second horizontal row. Each
@@ -195,7 +191,7 @@ export default function StatusBar({ study, rows, apis, activeRowId, onOpenPrevie
   ));
 
   return (
-    <div style={{ ...CONTAINER_STYLE, position: "relative" }}>
+    <div style={CONTAINER_STYLE}>
       {/* Hidden probe: always laid out on one line (no wrap, no shrink) so its
           scrollWidth reveals whether the real content would actually fit. */}
       <div ref={measureRef} style={{ ...ROW_STYLE, ...MEASURE_STYLE }} aria-hidden="true">

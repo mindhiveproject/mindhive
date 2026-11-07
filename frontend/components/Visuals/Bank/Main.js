@@ -2,16 +2,19 @@
 
 import { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
-import Card, { CardSection } from "../../DesignSystem/Card";
 import Chip from "../../DesignSystem/Chip";
-import DropdownMenu from "../../DesignSystem/DropdownMenu";
 import Input from "../../DesignSystem/Input";
-import { MoreVertIcon } from "../../DesignSystem/Icons";
+import VisualCard from "./VisualCard";
 
 import { MY_VISUALS } from "../../Queries/YQVisual";
-import { DELETE_VISUAL } from "../../Mutations/YQVisual";
+import {
+  COPY_VISUAL,
+  DELETE_VISUAL,
+  TOGGLE_VISUAL_LIKE,
+} from "../../Mutations/YQVisual";
 
 const HEADER_STYLE = {
   display: "flex",
@@ -28,39 +31,12 @@ const TITLE_STYLE = {
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
 };
 
+// Same fluid tracks as the task and survey banks: 300px minimum, columns
+// stretch to share the row.
 const GRID_STYLE = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+  gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 300px), 1fr))",
   gap: 16,
-};
-
-const COVER_STYLE = {
-  height: 140,
-  flexShrink: 0,
-  background: "var(--MH-Theme-Neutrals-Black, #171717)",
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  borderTopLeftRadius: 12,
-  borderTopRightRadius: 12,
-};
-
-const CARD_TITLE_STYLE = {
-  margin: 0,
-  font: "var(--MH-Type-Title-Base)",
-  color: "var(--MH-Theme-Neutrals-Black, #171717)",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
-};
-
-const CARD_BODY_STYLE = {
-  margin: 0,
-  font: "var(--MH-Type-Body-Small)",
-  color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
-  display: "-webkit-box",
-  WebkitLineClamp: 2,
-  WebkitBoxOrient: "vertical",
-  overflow: "hidden",
 };
 
 const EMPTY_STYLE = {
@@ -70,40 +46,53 @@ const EMPTY_STYLE = {
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
 };
 
-const PRIVACY_LABELS = {
-  private: "Only me",
-  friends: "People I follow",
-  unlisted: "Anyone with the link",
-  public: "Everyone",
-};
+// Same three views as the task and survey banks, with "mine" the default so
+// the bank opens on the visuals you made.
+const FILTERS = [
+  { key: "favorited", labelKey: "filterFavorited", default: "Favorited" },
+  { key: "public", labelKey: "filterPublic", default: "Public" },
+  { key: "mine", labelKey: "filterCreatedByMe", default: "Created by me" },
+];
+
+const DEFAULT_FILTER = "mine";
+
+function whereFor(filter, userId) {
+  if (filter === "favorited")
+    return { likes: { some: { id: { equals: userId } } } };
+  // Public here is what an admin has published, the same gate the study
+  // builder uses.
+  if (filter === "public") return { published: { equals: true } };
+  return {
+    OR: [
+      { author: { id: { equals: userId } } },
+      { collaborators: { some: { id: { equals: userId } } } },
+      { viewers: { some: { id: { equals: userId } } } },
+    ],
+  };
+}
 
 /**
  * The visuals bank at `/dashboard/develop/visuals`.
  *
- * Scoped to visuals the signed-in user has a hand in — authored, invited to
- * edit, or invited to view. The Visual list's own access filter already hides
- * everything else, but asking for the narrower set keeps the bank from filling
- * up with every public visual on the platform.
+ * Each chip asks for the narrower set rather than relying on the Visual list's
+ * access filter alone, which would otherwise return every public visual on the
+ * platform.
  */
 export default function VisualsBank({ user }) {
   const { t } = useTranslation("visuals");
+  const router = useRouter();
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState(DEFAULT_FILTER);
 
   const { data, loading, refetch } = useQuery(MY_VISUALS, {
-    variables: {
-      where: {
-        OR: [
-          { author: { id: { equals: user?.id } } },
-          { collaborators: { some: { id: { equals: user?.id } } } },
-          { viewers: { some: { id: { equals: user?.id } } } },
-        ],
-      },
-    },
+    variables: { where: whereFor(filter, user?.id) },
     skip: !user?.id,
     fetchPolicy: "cache-and-network",
   });
 
   const [deleteVisual] = useMutation(DELETE_VISUAL);
+  const [copyVisual] = useMutation(COPY_VISUAL);
+  const [toggleLike] = useMutation(TOGGLE_VISUAL_LIKE);
 
   const visuals = (data?.visuals || []).filter((visual) =>
     search.trim()
@@ -125,6 +114,21 @@ export default function VisualsBank({ user }) {
     refetch();
   }
 
+  async function onCopy(visual) {
+    const result = await copyVisual({ variables: { id: visual.id } });
+    const id = result.data?.copyVisual?.id;
+    if (id) router.push(`/builder/visuals/${id}`);
+  }
+
+  function onToggleFavorite(visual, isFavorite) {
+    toggleLike({
+      variables: {
+        id: visual.id,
+        likes: { [isFavorite ? "disconnect" : "connect"]: [{ id: user.id }] },
+      },
+    });
+  }
+
   return (
     <div className="Visuals-Bank">
       <div style={HEADER_STYLE}>
@@ -138,82 +142,64 @@ export default function VisualsBank({ user }) {
         </div>
       </div>
 
+      <div
+        style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}
+      >
+        {FILTERS.map((f) => {
+          const isSelected = filter === f.key;
+          return (
+            <Chip
+              key={f.key}
+              label={t(f.labelKey, {}, { default: f.default })}
+              selected={isSelected}
+              onClick={() => setFilter(f.key)}
+              // The active non-default chip clears back to the default view.
+              onClose={
+                isSelected && f.key !== DEFAULT_FILTER
+                  ? () => setFilter(DEFAULT_FILTER)
+                  : undefined
+              }
+            />
+          );
+        })}
+      </div>
+
       {loading && !data ? (
         <p style={EMPTY_STYLE}>{t("loading", "Loading…")}</p>
       ) : visuals.length === 0 ? (
         <p style={EMPTY_STYLE}>
-          {t(
-            "noVisuals",
-            "No visuals yet. Create one to start writing a p5 sketch driven by live data."
-          )}
+          {t("noVisuals", "No visuals to show.")}
         </p>
       ) : (
         <div style={GRID_STYLE}>
           {visuals.map((visual) => {
             const isOwner = visual.author?.id === user?.id;
+            const canEdit =
+              isOwner ||
+              visual.collaborators?.some((c) => c.id === user?.id);
+            const isFavorite = !!visual.likes?.some((p) => p.id === user?.id);
             return (
-              <Card
+              <VisualCard
                 key={visual.id}
-                href={`/builder/visuals/${visual.id}`}
-                ariaLabel={visual.title}
-                padding={0}
-              >
-                <div
-                  style={{
-                    ...COVER_STYLE,
-                    backgroundImage: visual.cover?.url
-                      ? `url(${visual.cover.url})`
-                      : undefined,
-                  }}
-                />
-                <CardSection style={{ gap: 8 }}>
-                  <div
-                    style={{ display: "flex", alignItems: "center", gap: 8 }}
-                  >
-                    <p style={{ ...CARD_TITLE_STYLE, flex: "1 1 auto" }}>
-                      {visual.title}
-                    </p>
-                    {isOwner ? (
-                      <DropdownMenu
-                        trigger={<MoreVertIcon />}
-                        ariaLabel={t("visualActions", "Visual actions")}
-                        items={[
-                          {
-                            key: "delete",
-                            label: t("delete", "Delete"),
-                            danger: true,
-                            onClick: () => onDelete(visual),
-                          },
-                        ]}
-                      />
-                    ) : null}
-                  </div>
-                  {visual.description ? (
-                    <p style={CARD_BODY_STYLE}>{visual.description}</p>
-                  ) : null}
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                    <Chip
-                      variant="static"
-                      tone="neutral"
-                      label={t(
-                        visual.privacy,
-                        PRIVACY_LABELS[visual.privacy] || visual.privacy
-                      )}
-                    />
-                    {isOwner ? null : (
-                      <Chip
-                        variant="static"
-                        tone="neutral"
-                        label={
-                          visual.collaborators?.some((c) => c.id === user?.id)
-                            ? t("editor", "Editor")
-                            : t("viewer", "Viewer")
-                        }
-                      />
-                    )}
-                  </div>
-                </CardSection>
-              </Card>
+                visual={visual}
+                viewHref={`/preview/visual/${visual.id}`}
+                editHref={canEdit ? `/builder/visuals/${visual.id}` : undefined}
+                onCopy={canEdit ? undefined : () => onCopy(visual)}
+                isFavorite={isFavorite}
+                onToggleFavorite={() => onToggleFavorite(visual, isFavorite)}
+                menuItems={
+                  isOwner
+                    ? [
+                        {
+                          key: "delete",
+                          label: t("delete", "Delete"),
+                          danger: true,
+                          onClick: () => onDelete(visual),
+                        },
+                      ]
+                    : []
+                }
+              />
             );
           })}
         </div>

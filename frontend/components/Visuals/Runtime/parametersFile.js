@@ -2,7 +2,7 @@
 //
 // The declaration is the single source of truth: the Parameters tab renders it,
 // and Add New / Delete Parameter write back into it. That means these edits have
-// to be surgical — locate the object literal passed to `declareParameters`,
+// to be surgical — locate the object literal passed to `yq.declareParameters`,
 // splice inside it, leave every other byte of the author's file alone. Anything
 // that regenerates the file from a parsed model would put a second source of
 // truth back in play, which is exactly what declaring-in-code removed.
@@ -159,7 +159,7 @@ export function removeParameter(source, key) {
 
 /**
  * A declared key spelled from what the author called the parameter —
- * "Particle Size" becomes `particleSize`, which is what `params.particleSize`
+ * "Particle Size" becomes `particleSize`, which is what `yq.params.particleSize`
  * will read in the sketch.
  *
  * @param {string} name
@@ -174,6 +174,44 @@ export function keyFromName(name) {
     })
     .join("");
   return /^[\p{L}_$]/u.test(key) ? key : "";
+}
+
+/**
+ * Renames a parameter's key where it is declared.
+ *
+ * Only the declaration changes: the sketch's own `yq.params.oldKey` reads are the
+ * author's to follow up. The entry's value, and any comment above it, stay as
+ * they were.
+ *
+ * @param {string} source
+ * @param {string} key - The declared key to rename.
+ * @param {string} nextKey - Must be a valid identifier not already declared.
+ * @returns {string} The edited source, or the original when the key isn't found.
+ */
+export function renameParameter(source, key, nextKey) {
+  const body = findDeclarationBody(source);
+  if (!body) return source;
+
+  const innerStart = body.open + 1;
+  const inner = source.slice(innerStart, body.close);
+  const range = splitTopLevelEntries(inner).find(
+    (entry) => topLevelKey(inner.slice(entry.start, entry.end)) === key
+  );
+  if (!range) return source;
+
+  const text = inner.slice(range.start, range.end);
+  const match =
+    /^((?:\s|\/\/[^\n]*\n|\/\*[\s\S]*?\*\/)*)["']?[A-Za-z_$][\w$]*["']?/.exec(
+      text
+    );
+  if (!match) return source;
+
+  const from = innerStart + range.start + match[1].length;
+  return (
+    source.slice(0, from) +
+    nextKey +
+    source.slice(innerStart + range.start + match[0].length)
+  );
 }
 
 /**

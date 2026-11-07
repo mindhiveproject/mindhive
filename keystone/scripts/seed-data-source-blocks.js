@@ -4,9 +4,15 @@
  * clicking through the Keystone Admin UI (see docs/data-sources-blocks-setup.md
  * for the by-hand version this replaces).
  *
- * Currently seeds: Band Power (Muse), EEG Synchrony (2 headbands), Face
- * Landmarker, Face Emotion. EMOTIV isn't included yet — it needs Cortex
- * credentials per-environment, add it here once that's worth scripting too.
+ * Seeds the yq-data catalog: everything You-Quantified's Data panel offered
+ * (Muse, EMOTIV, Face Landmarker, Face Synchrony, Face Emotion, Pose, Video
+ * Heart Rate, Audio Volume, Voice Emotion), one block per concept, plus EEG
+ * Synchrony. EMOTIV blocks need Cortex credentials per-environment to actually
+ * connect (NEXT_PUBLIC_EMOTIV_CLIENT_ID / _SECRET) — the rows seed regardless.
+ *
+ * Not seeded: LSL (its streams are whatever the lab's relay carries, so there
+ * are no outputs to declare) and Muse's raw PPG (channel labels differ between
+ * Muse 2 and Muse S; Heart Rate (Muse) covers the PPG sensor).
  *
  * From the keystone directory:
  *
@@ -61,6 +67,30 @@ const BLENDSHAPE_NAMES = [
   "noseSneerRight",
 ];
 
+// MediaPipe Pose's 33 landmarks, in index order — mirrors yq-data's
+// POSE_LANDMARK_NAMES. PoseReceiver flattens them to x, y, z per landmark and
+// labels each channel "<landmark> <component>".
+const POSE_LANDMARK_NAMES = [
+  "nose", "left eye (inner)", "left eye", "left eye (outer)",
+  "right eye (inner)", "right eye", "right eye (outer)", "left ear",
+  "right ear", "mouth (left)", "mouth (right)", "left shoulder",
+  "right shoulder", "left elbow", "right elbow", "left wrist", "right wrist",
+  "left pinky", "right pinky", "left index", "right index", "left thumb",
+  "right thumb", "left hip", "right hip", "left knee", "right knee",
+  "left ankle", "right ankle", "left heel", "right heel", "left foot index",
+  "right foot index",
+];
+
+// The six bands yq-data's BandPower reports, for any EEG source.
+const BAND_CHANNELS = [
+  { index: 0, label: "Delta", unit: "µV²" },
+  { index: 1, label: "Theta", unit: "µV²" },
+  { index: 2, label: "Alpha", unit: "µV²" },
+  { index: 3, label: "Low beta", unit: "µV²" },
+  { index: 4, label: "High beta", unit: "µV²" },
+  { index: 5, label: "Gamma", unit: "µV²" },
+];
+
 const BLOCKS = [
   {
     title: "Band Power (Muse)",
@@ -74,14 +104,7 @@ const BLOCKS = [
         node: "bands",
         modality: "eeg",
         valueType: "numeric",
-        channels: [
-          { index: 0, label: "Delta", unit: "µV²" },
-          { index: 1, label: "Theta", unit: "µV²" },
-          { index: 2, label: "Alpha", unit: "µV²" },
-          { index: 3, label: "Low beta", unit: "µV²" },
-          { index: 4, label: "High beta", unit: "µV²" },
-          { index: 5, label: "Gamma", unit: "µV²" },
-        ],
+        channels: BAND_CHANNELS,
       },
     ],
     graph: {
@@ -114,18 +137,19 @@ const BLOCKS = [
     // Correlation (method "connectivity") always emits a single "synchrony"
     // stream off its node regardless of mode, so `stream` is left off here too.
     // In the default "paired" mode it correlates channel i of A with channel i
-    // of B, labelling each from A's channel names — Muse's first 4 electrodes,
-    // TP9/AF7/AF8/TP10 (muse-js's channelNames, AUX excluded by default).
+    // of B, labelling each "<A's channel name> synchrony" — Muse's first 4
+    // electrodes, TP9/AF7/AF8/TP10 (muse-js's channelNames, AUX excluded by
+    // default).
     outputs: [
       {
         node: "sync",
         modality: "eeg",
         valueType: "numeric",
         channels: [
-          { index: 0, label: "TP9", unit: "r" },
-          { index: 1, label: "AF7", unit: "r" },
-          { index: 2, label: "AF8", unit: "r" },
-          { index: 3, label: "TP10", unit: "r" },
+          { index: 0, label: "TP9 synchrony", unit: "r" },
+          { index: 1, label: "AF7 synchrony", unit: "r" },
+          { index: 2, label: "AF8 synchrony", unit: "r" },
+          { index: 3, label: "TP10 synchrony", unit: "r" },
         ],
       },
     ],
@@ -196,11 +220,13 @@ const BLOCKS = [
     inputs: [
       { id: "camera", receiver: "face_emotion", label: "Camera", required: true },
     ],
-    // FaceEmotionReceiver emits a single stream ("expressions") per node, so
-    // `stream` is left off — findOutput() matches on node alone in that case.
+    // The receiver is also asked for "face_box" and "landmarks" (the preview
+    // overlay's geometry, see receivers.js), so the node emits several streams
+    // and the expressions have to be picked out by name.
     outputs: [
       {
         node: "camera",
+        stream: "expressions",
         modality: "video",
         valueType: "numeric",
         channels: [
@@ -219,6 +245,344 @@ const BLOCKS = [
     settingsSchema: [
       { key: "detector", label: "Detector", type: "select", options: ["tiny", "ssd"], default: "tiny" },
     ],
+  },
+  {
+    title: "Raw EEG (Muse)",
+    slug: "muse-raw-eeg",
+    requirementLabel: "Requires a Muse headband",
+    inputs: [
+      { id: "eeg", receiver: "muse", label: "Muse headband", required: true },
+    ],
+    outputs: [
+      {
+        node: "eeg",
+        modality: "eeg",
+        valueType: "numeric",
+        channels: [
+          { index: 0, label: "TP9", unit: "µV" },
+          { index: 1, label: "AF7", unit: "µV" },
+          { index: 2, label: "AF8", unit: "µV" },
+          { index: 3, label: "TP10", unit: "µV" },
+        ],
+      },
+    ],
+    graph: {
+      nodes: [{ id: "eeg", receiver: "eeg", stream: "eeg" }],
+      edges: [],
+      record: { nodes: ["eeg"] },
+    },
+    settingsSchema: [],
+  },
+  {
+    title: "Heart Rate (Muse)",
+    slug: "muse-heart-rate",
+    requirementLabel: "Requires a Muse 2 or Muse S headband",
+    inputs: [
+      { id: "ppg", receiver: "muse", label: "Muse headband", required: true },
+    ],
+    // Selected by label because the infrared channel sits at a different index
+    // on Muse 2 and Muse S. HeartRate wants ~10s of signal to be stable.
+    outputs: [
+      {
+        node: "heart_rate",
+        modality: "ppg",
+        valueType: "numeric",
+        channels: [{ index: 0, label: "Heart Rate", unit: "bpm" }],
+      },
+    ],
+    graph: {
+      nodes: [
+        { id: "ppg", receiver: "ppg", stream: "ppg" },
+        { id: "pulse", method: "channel_selection", parameters: { labels: ["infrared"] } },
+        { id: "window", method: "windowing", parameters: { size: 10, hop: 1 } },
+        { id: "heart_rate", method: "heart_rate", label: "Heart rate" },
+      ],
+      edges: [
+        { from: ["ppg"], to: ["pulse"] },
+        { from: ["pulse"], to: ["window"] },
+        { from: ["window"], to: ["heart_rate"] },
+      ],
+      record: { nodes: ["heart_rate"] },
+    },
+    settingsSchema: [],
+  },
+  {
+    title: "Band Power (EMOTIV)",
+    slug: "emotiv-band-power",
+    requirementLabel: "Requires an EMOTIV headset and the EMOTIV Launcher",
+    inputs: [
+      { id: "eeg", receiver: "emotiv", label: "EMOTIV headset", required: true },
+    ],
+    outputs: [
+      {
+        node: "bands",
+        modality: "eeg",
+        valueType: "numeric",
+        channels: BAND_CHANNELS,
+      },
+    ],
+    graph: {
+      nodes: [
+        { id: "eeg", receiver: "eeg", stream: "raw_eeg" },
+        { id: "window", method: "windowing", parameters: { size: 2, hop: 0.5 } },
+        { id: "bands", method: "band_power", label: "Band power" },
+      ],
+      edges: [
+        { from: ["eeg"], to: ["window"] },
+        { from: ["window"], to: ["bands"] },
+      ],
+      record: { nodes: ["bands"] },
+    },
+    settingsSchema: [],
+  },
+  {
+    title: "Raw EEG (EMOTIV)",
+    slug: "emotiv-raw-eeg",
+    requirementLabel: "Requires an EMOTIV headset and the EMOTIV Launcher",
+    inputs: [
+      { id: "eeg", receiver: "emotiv", label: "EMOTIV headset", required: true },
+    ],
+    // Cortex reports the electrode names itself; these are the fallbacks
+    // yq-data uses for the 14-channel EPOC layout.
+    outputs: [
+      {
+        node: "eeg",
+        modality: "eeg",
+        valueType: "numeric",
+        channels: [
+          "AF3", "F7", "F3", "FC5", "T7", "P7", "O1",
+          "O2", "P8", "T8", "FC6", "F4", "F8", "AF4",
+        ].map((label, index) => ({ index, label, unit: "µV" })),
+      },
+    ],
+    graph: {
+      nodes: [{ id: "eeg", receiver: "eeg", stream: "raw_eeg" }],
+      edges: [],
+      record: { nodes: ["eeg"] },
+    },
+    settingsSchema: [],
+  },
+  {
+    title: "Motion (EMOTIV)",
+    slug: "emotiv-motion",
+    requirementLabel: "Requires an EMOTIV headset and the EMOTIV Launcher",
+    inputs: [
+      { id: "motion", receiver: "emotiv", label: "EMOTIV headset", required: true },
+    ],
+    // Orientation quaternion, accelerometer and magnetometer.
+    outputs: [
+      {
+        node: "motion",
+        modality: "accelerometer",
+        valueType: "numeric",
+        channels: [
+          "Q0", "Q1", "Q2", "Q3", "ACCX", "ACCY", "ACCZ", "MAGX", "MAGY", "MAGZ",
+        ].map((label, index) => ({ index, label })),
+      },
+    ],
+    graph: {
+      nodes: [{ id: "motion", receiver: "motion", stream: "motion_data" }],
+      edges: [],
+      record: { nodes: ["motion"] },
+    },
+    settingsSchema: [],
+  },
+  {
+    title: "Face Synchrony",
+    slug: "face-synchrony",
+    requirementLabel: "Requires camera access",
+    inputs: [
+      { id: "camera", receiver: "face_landmark_pair", label: "Camera", required: true },
+    ],
+    // Two faces in one frame: the receiver names each one's blendshapes with a
+    // face suffix, and Difference (similarity) scores each expression 0 to 1.
+    // It labels every channel "Similarity in <expression>".
+    outputs: [
+      {
+        node: "synchrony",
+        modality: "video",
+        valueType: "numeric",
+        channels: BLENDSHAPE_NAMES.map((name, index) => ({
+          index,
+          label: `Similarity in ${name}`,
+        })),
+      },
+    ],
+    graph: {
+      nodes: [
+        { id: "first", receiver: "camera", stream: "blendshapes_face_1" },
+        { id: "second", receiver: "camera", stream: "blendshapes_face_2" },
+        {
+          id: "synchrony",
+          method: "difference",
+          label: "Face synchrony",
+          parameters: { mode: "similarity" },
+        },
+      ],
+      edges: [
+        { from: ["first"], to: ["synchrony", "a"] },
+        { from: ["second"], to: ["synchrony", "b"] },
+      ],
+      record: { nodes: ["synchrony"] },
+    },
+    settingsSchema: [],
+  },
+  {
+    title: "Pose Detection",
+    slug: "pose-detection",
+    requirementLabel: "Requires camera access",
+    inputs: [
+      { id: "camera", receiver: "pose", label: "Camera", required: true },
+    ],
+    // PoseReceiver emits a single "landmarks" stream (numPoses defaults to 1):
+    // x, y, z per landmark in image-normalized coordinates.
+    outputs: [
+      {
+        node: "pose",
+        modality: "video",
+        valueType: "numeric",
+        channels: POSE_LANDMARK_NAMES.flatMap((landmark, i) =>
+          ["x", "y", "z"].map((axis, j) => ({
+            index: i * 3 + j,
+            label: `${landmark} ${axis}`,
+          }))
+        ),
+      },
+    ],
+    graph: {
+      nodes: [
+        {
+          id: "pose",
+          receiver: "camera",
+          label: "Body landmarks",
+          // What the receiver will announce (yq-data's pointStreamMetadata), so
+          // `describe()` lists the landmarks vector parameters map to before a
+          // camera is connected.
+          expects: [
+            {
+              streamID: "pose:landmarks",
+              modality: "video",
+              channelCount: 99,
+              additionalMetadata: {
+                pointComponents: ["x", "y", "z"],
+                topology: "mediapipe-pose-33",
+                coordinateSpace: "image",
+              },
+            },
+          ],
+        },
+      ],
+      edges: [],
+      record: { nodes: ["pose"] },
+    },
+    settingsSchema: [],
+  },
+  {
+    title: "Video Heart Rate",
+    slug: "video-heart-rate",
+    requirementLabel: "Requires camera access",
+    inputs: [
+      { id: "camera", receiver: "rppg", label: "Camera", required: true },
+    ],
+    // rPPG: mean RGB of the forehead per frame; the green channel carries the
+    // pulse. "spectral" is steadier than beat detection on camera signals. The
+    // first reading takes ~10s, the length of the window.
+    outputs: [
+      {
+        node: "heart_rate",
+        modality: "video",
+        valueType: "numeric",
+        channels: [{ index: 0, label: "Heart Rate", unit: "bpm" }],
+      },
+    ],
+    graph: {
+      nodes: [
+        { id: "rgb", receiver: "camera" },
+        { id: "green", method: "channel_selection", parameters: { indices: [1] } },
+        { id: "window", method: "windowing", parameters: { size: 10, hop: 1 } },
+        {
+          id: "heart_rate",
+          method: "heart_rate",
+          label: "Heart rate",
+          parameters: { strategy: "spectral" },
+        },
+      ],
+      edges: [
+        { from: ["rgb"], to: ["green"] },
+        { from: ["green"], to: ["window"] },
+        { from: ["window"], to: ["heart_rate"] },
+      ],
+      record: { nodes: ["heart_rate"] },
+    },
+    settingsSchema: [],
+  },
+  {
+    title: "Audio Volume",
+    slug: "audio-volume",
+    requirementLabel: "Requires microphone access",
+    inputs: [
+      { id: "audio", receiver: "microphone", label: "Microphone", required: true },
+    ],
+    // RMS labels each channel "<channel> volume"; a mono mic's channel is "mono".
+    outputs: [
+      {
+        node: "volume",
+        modality: "audio",
+        valueType: "numeric",
+        channels: [{ index: 0, label: "mono volume", unit: "dBFS" }],
+      },
+    ],
+    graph: {
+      nodes: [
+        { id: "audio", receiver: "audio" },
+        { id: "volume", method: "rms", label: "Volume", parameters: { decibels: true } },
+      ],
+      edges: [{ from: ["audio"], to: ["volume"] }],
+      record: { nodes: ["volume"] },
+    },
+    settingsSchema: [],
+  },
+  {
+    title: "Voice Emotion",
+    slug: "voice-emotion",
+    requirementLabel: "Requires microphone access",
+    inputs: [
+      { id: "voice", receiver: "voice_emotion", label: "Microphone", required: true },
+    ],
+    // Event-driven: one packet per spoken phrase, nothing while silent. The
+    // receiver emits "emotion" (probabilities of N/A/S/H, summing to 1) and,
+    // with emitAffect on, "affect" — valence = 3 × H, arousal = 1 − N, so
+    // valence is not bounded by 1.
+    outputs: [
+      {
+        node: "voice",
+        stream: "emotion",
+        modality: "audio",
+        valueType: "numeric",
+        channels: [
+          { index: 0, label: "N" },
+          { index: 1, label: "A" },
+          { index: 2, label: "S" },
+          { index: 3, label: "H" },
+        ],
+      },
+      {
+        node: "voice",
+        stream: "affect",
+        modality: "audio",
+        valueType: "numeric",
+        channels: [
+          { index: 0, label: "valence" },
+          { index: 1, label: "arousal" },
+        ],
+      },
+    ],
+    graph: {
+      nodes: [{ id: "voice", receiver: "voice" }],
+      edges: [],
+      record: { nodes: ["voice"] },
+    },
+    settingsSchema: [],
   },
 ];
 

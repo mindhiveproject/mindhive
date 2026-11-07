@@ -1,7 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { createReceiver, describeReceiver, needsVideoElement } from "./receivers";
+import {
+  cameraChoices,
+  connectReceiver,
+  createReceiver,
+  describeReceiver,
+  needsVideoElement,
+} from "./receivers";
 import { channelKey, findOutput } from "../../../../lib/yqOutputs";
 
 // How many recent samples a raw-signal buffer keeps for the preview canvas.
@@ -23,11 +29,15 @@ export default function useSourceRuntime(row) {
       inputs.map((input) => [input.id, { status: "disconnected" }])
     )
   );
+  // nodeId -> the points `Pipeline.describe()` reports for it (a point stream's
+  // landmarks), known from the graph before any device connects.
+  const [points, setPoints] = useState({});
 
   const receiversRef = useRef({}); // inputId -> receiver instance
   const connectionSubsRef = useRef({}); // inputId -> isConnected$ subscription
   const camerasRef = useRef({}); // inputId -> VideoReceiver backing a vision receiver, if any
   const videoElsRef = useRef({}); // inputId -> HTMLVideoElement (camera-backed inputs only)
+  const cameraIdsRef = useRef({}); // inputId -> deviceId the participant picked, if any
   const hiddenContainerRef = useRef(null); // detached host for those <video> elements
   const pipelineRef = useRef(null);
   const buffersRef = useRef(new Map()); // channelKey(output, index) -> Float32Array
@@ -45,6 +55,14 @@ export default function useSourceRuntime(row) {
       if (cancelled) return;
       pipeline = new Pipeline(block.graph);
       pipelineRef.current = pipeline;
+      setPoints(
+        Object.fromEntries(
+          pipeline
+            .describe()
+            .filter((output) => output.points)
+            .map((output) => [output.nodeId, output.points])
+        )
+      );
       pipeline.start();
 
       pipeline.recordTargets().forEach((output, nodeId) => {
@@ -146,9 +164,11 @@ export default function useSourceRuntime(row) {
           videoElsRef.current[inputId] = videoElement;
         }
 
-        const { receiver, camera } = await createReceiver(input.receiver, { videoElement });
-        await receiver.connect();
-        await receiver.startStream?.();
+        const { receiver, camera } = await createReceiver(input.receiver, {
+          videoElement,
+          deviceId: cameraIdsRef.current[inputId],
+        });
+        await connectReceiver(input.receiver, receiver);
         receiversRef.current[inputId] = receiver;
         if (camera) camerasRef.current[inputId] = camera;
         // Keyed by the input's own id, not its receiver type — two inputs of
@@ -157,10 +177,12 @@ export default function useSourceRuntime(row) {
         // source nodes' `receiver` after the input id for exactly this reason.
         pipelineRef.current?.attachReceiver(input.id, receiver);
 
-        const deviceLabel = describeReceiver(receiver, input.receiver);
+        const deviceLabel = describeReceiver(receiver, input.receiver, camera);
+        // Camera inputs also report which cameras exist and which one this is.
+        const cameraState = videoElement ? await cameraChoices(receiver, camera) : {};
         setInputStatus((s) => ({
           ...s,
-          [inputId]: { status: "connected", deviceLabel },
+          [inputId]: { status: "connected", deviceLabel, ...cameraState },
         }));
 
         // A device can drop on its own — a headband out of range, the LSL relay
@@ -169,12 +191,12 @@ export default function useSourceRuntime(row) {
         connectionSubsRef.current[inputId] = receiver.isConnected$?.subscribe(
           (isConnected) => {
             setInputStatus((s) => {
-              const current = s[inputId]?.status;
-              if (!isConnected && current === "connected") {
-                return { ...s, [inputId]: { status: "lost", deviceLabel } };
+              const current = s[inputId];
+              if (!isConnected && current?.status === "connected") {
+                return { ...s, [inputId]: { ...current, status: "lost" } };
               }
-              if (isConnected && current === "lost") {
-                return { ...s, [inputId]: { status: "connected", deviceLabel } };
+              if (isConnected && current?.status === "lost") {
+                return { ...s, [inputId]: { ...current, status: "connected" } };
               }
               return s;
             });
@@ -185,6 +207,8 @@ export default function useSourceRuntime(row) {
         delete camerasRef.current[inputId];
         videoElsRef.current[inputId]?.remove();
         delete videoElsRef.current[inputId];
+        // A picked camera that has since gone away would fail every retry.
+        delete cameraIdsRef.current[inputId];
         setInputStatus((s) => ({
           ...s,
           [inputId]: { status: "error", error: err?.message || "Could not connect" },
@@ -200,6 +224,17 @@ export default function useSourceRuntime(row) {
       setInputStatus((s) => ({ ...s, [inputId]: { status: "disconnected" } }));
     },
     [release]
+  );
+
+  // Switches a camera input to another device. The camera is opened with a
+  // `deviceId` when the receiver is created, so this reconnects the input —
+  // the same path as recovering from a drop, which the recorder already follows.
+  const selectCamera = useCallback(
+    (inputId, deviceId) => {
+      cameraIdsRef.current[inputId] = deviceId;
+      return connect(inputId);
+    },
+    [connect]
   );
 
   const getBuffer = useCallback(
@@ -229,9 +264,11 @@ export default function useSourceRuntime(row) {
   return {
     inputs,
     outputs,
+    points,
     inputStatus,
     connect,
     disconnect,
+    selectCamera,
     getBuffer,
     getVideoElement,
     getReceiver,

@@ -11,6 +11,7 @@ import { NodesTypesContainer } from "../Diagram/nodes-types-container/NodesTypes
 import { NodeTypeLabel } from "../Diagram/node-type-label/NodeTypeLabel";
 
 import Blocks from "./Blocks/Main";
+import VisualBlocks from "./Visuals/Main";
 import StudyTemplates from "./Templates/Main";
 
 const ICON_MASK = (src) => ({
@@ -49,6 +50,8 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
   };
 
   const createdBy = favoritesOnly ? "favorite" : "anyone";
+  // Visuals as study steps are still in development.
+  const isAdmin = !!user?.permissions?.some((p) => p?.name === "ADMIN");
 
   const favoritesToggle = (
     <ToggleSwitch
@@ -146,6 +149,16 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
                 value: item.componentType,
                 label: item.title,
               })),
+              ...(isAdmin
+                ? [
+                    {
+                      value: "VISUALS",
+                      label: t("selector.visuals.title", {}, {
+                        default: "Visuals",
+                      }),
+                    },
+                  ]
+                : []),
               {
                 value: "DESIGN",
                 label: t("selector.studyDesign.title", {}, {
@@ -214,6 +227,29 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
             </div>
           );
         })}
+
+        {isAdmin && activeSection === "VISUALS" && (
+          <div className="blocksMenuContent">
+            <p className="blocksMenuDescription">
+              {ReactHtmlParser(
+                t(
+                  "selector.visuals.description",
+                  {},
+                  {
+                    default:
+                      "Want participants to <strong>see their own data</strong> as part of the study? Add a visual that reacts to the devices linked to your study",
+                  }
+                )
+              )}
+            </p>
+            <VisualBlocks
+              user={user}
+              createdBy={createdBy}
+              search={search}
+              addFunctions={addFunctions}
+            />
+          </div>
+        )}
 
         {activeSection === "DESIGN" && (
           <div className="blocksMenuContent">

@@ -5,12 +5,24 @@ import Chip from "../../../DesignSystem/Chip";
 import { WaveformIcon, PlugIcon } from "../../../DesignSystem/Icons";
 import { channelKey } from "../../../../lib/yqOutputs";
 import CameraCanvas from "./CameraCanvas";
+import CameraSelect from "./CameraSelect";
+import { overlayLayers } from "./receivers";
 
+// The page never scrolls: the list of devices does, between a top bar and a
+// footer that stay put, so Continue is always in view.
 const PAGE_STYLE = {
-  minHeight: "100vh",
+  height: "100vh",
   display: "flex",
   flexDirection: "column",
   background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
+};
+
+// Under a host's own top bar there is no viewport to fill, only the space left.
+const EMBEDDED_PAGE_STYLE = {
+  ...PAGE_STYLE,
+  height: "auto",
+  flex: "1 1 0%",
+  minHeight: 0,
 };
 
 const TOP_BAR_STYLE = {
@@ -18,11 +30,15 @@ const TOP_BAR_STYLE = {
   alignItems: "center",
   gap: 12,
   padding: "16px 24px",
+  flexShrink: 0,
 };
 
 const BODY_STYLE = {
-  flex: 1,
+  flex: "1 1 0%",
+  minHeight: 0,
+  overflowY: "auto",
   display: "flex",
+  alignItems: "flex-start",
   justifyContent: "center",
   padding: "48px 24px",
 };
@@ -84,8 +100,21 @@ export function StatusIndicator({ streaming }) {
  * @param {boolean} [nested=false] - The row sits on a Light-Green card (the
  *   visual builder's) rather than a white one, so it takes the grey surface
  *   instead to stay visible.
+ * @param {object} [receiver] - The live receiver behind the camera, whose face
+ *   geometry is drawn over the feed.
+ * @param {(inputId: string, deviceId: string) => void} [onSelectCamera] - Lets
+ *   the camera be switched from the dropdown under the feed.
  */
-export function InputRow({ input, status, onConnect, onDisconnect, videoElement, nested = false }) {
+export function InputRow({
+  input,
+  status,
+  onConnect,
+  onDisconnect,
+  videoElement,
+  receiver,
+  onSelectCamera,
+  nested = false,
+}) {
   const connected = status?.status === "connected";
   const connecting = status?.status === "connecting";
   const showCamera = connected && !!videoElement;
@@ -135,11 +164,16 @@ export function InputRow({ input, status, onConnect, onDisconnect, videoElement,
       {showCamera && (
         <>
           <div style={{ borderRadius: 12, overflow: "hidden" }}>
-            <CameraCanvas videoElement={videoElement} />
+            <CameraCanvas
+              videoElement={videoElement}
+              receiver={receiver}
+              layers={overlayLayers(input.receiver)}
+            />
           </div>
-          {status.deviceLabel && (
-            <Chip variant="static" tone="neutral" label={status.deviceLabel} style={{ alignSelf: "flex-start" }} />
-          )}
+          <CameraSelect
+            status={status}
+            onSelect={onSelectCamera && ((deviceId) => onSelectCamera(input.id, deviceId))}
+          />
         </>
       )}
     </div>
@@ -248,7 +282,10 @@ const FOOTER_STYLE = {
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
+  flexShrink: 0,
   padding: "16px 24px",
+  borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #E6E6E6)",
+  background: "var(--MH-Theme-Neutrals-White, #FFFFFF)",
 };
 
 /**
@@ -257,6 +294,10 @@ const FOOTER_STYLE = {
  * the outputs it streams. Continue stays disabled until every source's
  * required inputs are connected — whether that's ever optional per-study is
  * still being worked out on the builder side.
+ *
+ * @param {boolean} [embedded=false] - The screen sits under the host's own top
+ *   bar (the visual viewer's), so it drops its logo bar and fills the space
+ *   that is left rather than the whole viewport.
  */
 export default function ConnectScreen({
   study,
@@ -268,17 +309,20 @@ export default function ConnectScreen({
   onLeave,
   heading = "This study will collect data from other devices",
   leaveLabel = "Leave the Study",
+  embedded = false,
 }) {
   return (
-    <div style={PAGE_STYLE}>
-      <div style={TOP_BAR_STYLE}>
-        <img src="/logo.png" alt="mindHIVE" height={28} />
-        <span className="MH-Type-Title-Base" style={{ color: "var(--MH-Theme-Neutrals-Black, #171717)" }}>
-          {study?.title}
-        </span>
-      </div>
+    <div style={embedded ? EMBEDDED_PAGE_STYLE : PAGE_STYLE}>
+      {embedded ? null : (
+        <div style={TOP_BAR_STYLE}>
+          <img src="/logo.png" alt="mindHIVE" height={28} />
+          <span className="MH-Type-Title-Base" style={{ color: "var(--MH-Theme-Neutrals-Black, #171717)" }}>
+            {study?.title}
+          </span>
+        </div>
+      )}
 
-      <div style={BODY_STYLE}>
+      <div className="MH-Scrollbar" style={BODY_STYLE}>
         <div style={COLUMN_STYLE}>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <h2 className="MH-Type-Title-Large" style={{ margin: 0, color: "var(--MH-Theme-Neutrals-Black, #171717)" }}>

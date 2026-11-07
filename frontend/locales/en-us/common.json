@@ -400,7 +400,8 @@
 		"externalTaskIntro": "This step happens on another website. Open it, complete it there, then come back to continue.",
 		"externalTaskOpen": "Open the task",
 		"externalTaskNoLink": "This step's link is missing or invalid.",
-		"externalTaskDone": "I've finished"
+		"externalTaskDone": "I've finished",
+		"visualNeedsDevices": "This visual reacts to data from devices ({{devices}}). Link them to the study so participants connect them before it starts; nothing is connected in preview."
 	},
 	"save": "Save",
 	"searchMembers": {

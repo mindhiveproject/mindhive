@@ -195,14 +195,17 @@ export function EditingFields({ visual, draft, setDraft, isOwner }) {
         </Card>
       ))}
 
-      <div style={RIGHT_ALIGN_STYLE}>
-        <Button
-          variant="outline"
-          onClick={() => copy(`/builder/visuals/${visual.id}`)}
-        >
-          {t("copyEditingLink", "Copy editing link")}
-        </Button>
-      </div>
+      {/* A visual that is still being set up has no link to copy yet. */}
+      {visual.id ? (
+        <div style={RIGHT_ALIGN_STYLE}>
+          <Button
+            variant="outline"
+            onClick={() => copy(`/builder/visuals/${visual.id}`)}
+          >
+            {t("copyEditingLink", "Copy editing link")}
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 }

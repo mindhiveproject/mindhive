@@ -307,11 +307,7 @@ export async function runtimeAssetPreviewToken(
  * permission: the visual's own privacy still hides it everywhere else, and a
  * participant only ever receives the code their task runs.
  */
-export async function runtimeVisualSource(
-  _root: unknown,
-  { assetToken }: { assetToken: string },
-  context: any,
-) {
+function p5AssetClaims(assetToken: string) {
   let claims;
   try {
     claims = verifyAssetToken(assetToken, tokenSecret());
@@ -319,6 +315,15 @@ export async function runtimeVisualSource(
     throw new Error("The asset token is invalid or expired");
   }
   if (claims.runtime !== "P5") throw new Error("Not a p5 asset token");
+  return claims;
+}
+
+export async function runtimeVisualSource(
+  _root: unknown,
+  { assetToken }: { assetToken: string },
+  context: any,
+) {
+  const claims = p5AssetClaims(assetToken);
   const files = await context.sudo().query.VisualCodeFile.findMany({
     where: { visual: { id: { equals: claims.assetId } } },
     orderBy: [{ order: "asc" }],
@@ -330,6 +335,29 @@ export async function runtimeVisualSource(
     language: file.language,
     content: file.content || "",
   }));
+}
+
+/**
+ * What the study runner needs to drive a p5 task's parameters from the
+ * study's devices: the visual's bindings, and which catalog block each of its
+ * data sources is, so a stream mapping can be re-pointed at the study's own
+ * linked source for that block. Same permission as the code.
+ */
+export async function runtimeVisualConfig(
+  _root: unknown,
+  { assetToken }: { assetToken: string },
+  context: any,
+) {
+  const claims = p5AssetClaims(assetToken);
+  const visual = await context.sudo().query.Visual.findOne({
+    where: { id: claims.assetId },
+    query:
+      "parameters dataSources(orderBy: [{ order: asc }]) { id label block { id title } }",
+  });
+  return {
+    parameters: visual?.parameters ?? [],
+    dataSources: visual?.dataSources ?? [],
+  };
 }
 
 export async function ingestRunMessage(

@@ -1,10 +1,16 @@
 // The document a p5 study task runs in (W32). Like the visual builder's
 // sketch document, but on the mindhive-runtime/2 bridge and with the pinned
-// p5 instead of the CDN:
+// p5 instead of the CDN. A sketch written for either namespace runs:
 //
-//   params / data      the task's parameter values, filled in by init
-//   declareParameters  fills in defaults for values the task didn't set
-//   sendEvent(l, v)    saved as a marker row
+//   yq.params / params / data
+//                      parameter values: the task's, then kept live from the
+//                      study's devices by the parent
+//   yq.sources         the study's devices and whether each is connected
+//   yq.declareParameters
+//                      fills in defaults for values the task didn't set, and
+//                      tells the parent what to feed
+//   yq.sendEvent(l, v) the same marker as MindHive.marker(l, v): saved as a
+//                      marker row and passed to the study's marker stream
 //   MindHive.saveRow(row), MindHive.finish(aggregated)
 //                      results, as for jsPsych
 //
@@ -32,16 +38,34 @@ function p5TaskPreludeSource() {
   var MindHive = window.MindHive;
   window.params = MindHive.params;
   window.data = MindHive.params;
-  window.sources = [];
+  window.sources = MindHive.sources;
   window.declareParameters = function (declaration) {
     var decl = declaration || {};
     Object.keys(decl).forEach(function (key) {
       if (!(key in MindHive.params)) MindHive.params[key] = decl[key] && decl[key].default;
     });
+    MindHive.declare(decl);
   };
   window.sendEvent = function (label, value) {
     MindHive.marker(String(label), value, Date.now());
   };
+  window.yq = {
+    params: MindHive.params,
+    declareParameters: window.declareParameters,
+    sendEvent: window.sendEvent,
+  };
+  Object.defineProperty(window.yq, "sources", {
+    enumerable: true,
+    get: function () { return MindHive.sources; },
+  });
+  // A sketch that called noLoop() only draws when asked, so a new value
+  // would otherwise never reach the canvas.
+  MindHive.onUpdate(function () {
+    window.sources = MindHive.sources;
+    try {
+      if (typeof isLooping === "function" && !isLooping()) redraw();
+    } catch (e) {}
+  });
 })();
 `;
 }

@@ -87,3 +87,28 @@
   --MH-Theme-Elevation-Medium: 2px 2px 8px rgba(0, 0, 0, 0.1);
   --MH-Theme-Elevation-High: 2px 2px 12px rgba(0, 0, 0, 0.19);
 }
+
+/*
+ * A scroll area whose scrollbar stays on screen. macOS hides overlay
+ * scrollbars until the area is scrolled, so a list that continues below the
+ * fold looks like it ends there. Put the class on the element that scrolls.
+ */
+.MH-Scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+.MH-Scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.MH-Scrollbar::-webkit-scrollbar-thumb {
+  background: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+  background-clip: content-box;
+  border: 3px solid transparent;
+  border-radius: 100px;
+}
+/* Firefox has no pseudo-elements; where they exist they win over these. */
+@supports not selector(::-webkit-scrollbar) {
+  .MH-Scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1) transparent;
+  }
+}

@@ -23,6 +23,7 @@ import { createContext, useContext } from "react";
  * @property {string[]} [declarationWarnings] - What normalizing the declaration had to correct; builder only, a participant has no code to fix.
  * @property {object} bindings - Per-parameter binding + authoring overrides.
  * @property {(key: string, patch: object) => void} updateBinding
+ * @property {?(from: string, to: string) => void} renameBinding - Builder only; moves a parameter's binding to its new key.
  * @property {?(next: boolean) => void} setDocsVisible - Builder only; absent in the Viewer.
  * @property {import("../Runtime/parameterBus").default} bus - Current parameter values, held outside React; read one with `bus.subscribe` / `bus.get`.
  * @property {Array} dataSources - Linked VisualDataSource rows, block included.
