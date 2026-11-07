@@ -54,6 +54,23 @@ export async function recordStudyConditions(
 }
 
 /**
+ * A guest participant's own record for the run pages. Guests have no session;
+ * the code in their link identifies them. Limited to what those pages use.
+ */
+export async function guestForRun(
+  root: any,
+  { publicId }: { publicId: string },
+  context: any
+): Promise<any> {
+  if (!publicId) return null;
+  return context.sudo().query.Guest.findOne({
+    where: { publicId },
+    query:
+      "id publicId publicReadableId type studiesInfo participantIn { id } createdAt updatedAt",
+  });
+}
+
+/**
  * Save a guest participant's studiesInfo. Guests have no session; the guest
  * publicId (kept in the participant's link) identifies them, as in startRun.
  */

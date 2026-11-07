@@ -289,6 +289,18 @@ async function findIds(context: any, listKey: string, where: any) {
   return rows.map((row: { id: string }) => String(row.id));
 }
 
+/**
+ * Ids of the studies the session user may edit (studyUpdateWhere), whose
+ * participants' data and results they may therefore read.
+ */
+function researcherStudyIds(context: any): Promise<string[]> {
+  const me = context?.session?.itemId;
+  if (!me) return Promise.resolve([]);
+  return cachedIds(context, "researcherStudies", () =>
+    findIds(context, "Study", studyUpdateWhere(String(me)))
+  );
+}
+
 /** Ids of classes where the session user is creator, co-teacher or mentor. */
 export function staffClassIds(context: any): Promise<string[]> {
   const me = context?.session?.itemId;
@@ -921,9 +933,8 @@ export function canViewContactEmail(
 /**
  * Participant data (info, generalInfo, studiesInfo: demographics and consent
  * answers) is also visible to the researchers of a study the profile took
- * part in, for Test & Collect: the study's author and collaborators, and the
- * team of its project board (board author and collaborators) — the same
- * people lib/runtime/resultAccess.js lets see the study's datasets.
+ * part in, for Test & Collect: whoever may edit the study (studyUpdateWhere) —
+ * the same people lib/runtime/resultAccess.js lets see the study's datasets.
  */
 export function canViewParticipantData(
   context: any,
@@ -933,20 +944,90 @@ export function canViewParticipantData(
   if (!me || !profileId) return Promise.resolve(false);
   return memoPerRequest(context, `participantData:${profileId}`, async () => {
     if (await canViewPrivateProfile(context, profileId)) return true;
+    const studyIds = await researcherStudyIds(context);
+    if (studyIds.length === 0) return false;
     const matches = await context.sudo().db.Profile.count({
       where: {
         id: { equals: String(profileId) },
-        participantIn: {
-          some: {
-            OR: [
-              ...authorOrCollaboratorWhere(String(me)).OR,
-              { proposal: { some: authorOrCollaboratorWhere(String(me)) } },
-            ],
-          },
-        },
+        participantIn: { some: { id: { in: studyIds } } },
       },
     });
     return matches > 0;
+  });
+}
+
+/**
+ * Guest records (age, zip code, answers, and the code that identifies a guest)
+ * are visible to admins and the people who see the guest's results, the same
+ * ones as lib/runtime/resultAccess.js: whoever may edit a study the guest took
+ * part in (studyUpdateWhere) and the authors of the tasks the guest ran. Guests have no session; their
+ * run pages read their own record with guestForRun (mutations/participantRun).
+ *
+ * The visible guests are looked up once per request, starting from the
+ * viewer's studies and authored results (indexed columns), not from the Guest
+ * table. The same rule written as a Guest where clause (participantIn /
+ * datasets / summaryResults / dataSourceRecords `some`) made Postgres check
+ * every guest against those tables: 30 s to 5 min per request in production
+ * (Nov 2026), long enough to exhaust the connection pool for everyone.
+ */
+export async function canViewGuestData(
+  context: any,
+  guestId: string | null | undefined
+): Promise<boolean> {
+  const session = context?.session;
+  const me = session?.itemId;
+  if (!me || !guestId) return false;
+  if (isAdmin({ session })) return true;
+  const ids = await asIdSet(visibleGuestIds(context, String(me)));
+  return ids.has(String(guestId));
+}
+
+// Set views of cachedIds lookups, so callers that check many ids against one
+// lookup don't scan the list each time. Keyed by the lookup's promise, which
+// cachedIds replaces when a write clears the request's cache.
+const idSets = new WeakMap<Promise<string[]>, Promise<Set<string>>>();
+
+function asIdSet(lookup: Promise<string[]>): Promise<Set<string>> {
+  let set = idSets.get(lookup);
+  if (!set) {
+    set = lookup.then((ids) => new Set(ids));
+    idSets.set(lookup, set);
+  }
+  return set;
+}
+
+/** Ids of the guests whose data `me` may read (see canViewGuestData). */
+function visibleGuestIds(context: any, me: string): Promise<string[]> {
+  return cachedIds(context, "visibleGuests", async () => {
+    const studyIds = await researcherStudyIds(context);
+    const ids = new Set<string>();
+    const add = (rows: { id: string | null }[]) =>
+      rows.forEach((row) => row.id && ids.add(String(row.id)));
+    add(
+      await context.prisma.$queryRaw(Prisma.sql`
+        SELECT "guest" AS "id" FROM "Dataset"
+        WHERE "guest" IS NOT NULL AND ("taskAuthor" = ${me} OR "assetAuthor" = ${me})
+        UNION
+        SELECT "guest" FROM "SummaryResult"
+        WHERE "guest" IS NOT NULL AND ("taskAuthor" = ${me} OR "assetAuthor" = ${me})
+      `)
+    );
+    // Chunked to stay well under database bind-parameter limits.
+    for (let i = 0; i < studyIds.length; i += 5000) {
+      const inChunk = Prisma.join(studyIds.slice(i, i + 5000));
+      add(
+        await context.prisma.$queryRaw(Prisma.sql`
+          SELECT "A" AS "id" FROM "_Guest_participantIn" WHERE "B" IN (${inChunk})
+          UNION
+          SELECT "guest" FROM "Dataset" WHERE "study" IN (${inChunk})
+          UNION
+          SELECT "guest" FROM "SummaryResult" WHERE "study" IN (${inChunk})
+          UNION
+          SELECT "guest" FROM "StudyDataSourceRecord" WHERE "study" IN (${inChunk})
+        `)
+      );
+    }
+    return [...ids];
   });
 }
 

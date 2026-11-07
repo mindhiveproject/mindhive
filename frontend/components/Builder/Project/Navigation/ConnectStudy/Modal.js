@@ -1,10 +1,7 @@
 import { useState } from "react";
-import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
-import LinkClass from "./LinkClass";
 import Collaborators from "../../../../Global/Collaborators";
-import { StyledLinkedProjects } from "../../../../styles/StyledProject";
 import Button from "../../../../DesignSystem/Button";
 import IconButton from "../../../../DesignSystem/IconButton";
 import Modal from "../../../../DesignSystem/Modal";
@@ -90,10 +87,6 @@ export default function ConnectModal({
           </p>
         )}
         <h2 className="MH-Type-Title-Small">
-          {t("connectStudyModal.linkedClass", {}, { default: "Linked class" })}
-        </h2>
-        <LinkClass study={study} handleChange={handleChange} />
-        <h2 className="MH-Type-Title-Small">
           {t("connectStudyModal.studyCollaborators", {}, {
             default: "Study collaborators",
           })}
@@ -103,38 +96,6 @@ export default function ConnectModal({
           collaborators={collaborators}
           handleChange={handleChange}
         />
-        {study?.title && (
-          <StyledLinkedProjects>
-            <h2 className="MH-Type-Title-Small">
-              {t("connectStudyModal.linkedProjects", {}, {
-                default: "Linked projects",
-              })}
-            </h2>
-            <p>
-              {t("connectStudyModal.linkedProjectsDescription", {
-                title: study?.title,
-              })}
-            </p>
-            <div>
-              {(study?.proposal || []).map((project) => (
-                <div className="project" key={project?.id}>
-                  <div>{project?.title}</div>
-                  <Link
-                    href={{
-                      pathname: "/builder/projects",
-                      query: { selector: project?.id },
-                    }}
-                    target="_blank"
-                  >
-                    {t("connectStudyModal.openInNewTab", {}, {
-                      default: "Open in a new tab",
-                    })}
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </StyledLinkedProjects>
-        )}
       </Modal>
     </>
   );

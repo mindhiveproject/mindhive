@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { MY_TASKS } from "../../../../../Queries/Task";
 import Card from "./Card";
+import BlocksLoading from "./Loading";
 import { getLocalizedField } from "../../../../../../lib/i18nContent";
 
 export default function PrivateBlocks({
@@ -20,6 +21,8 @@ export default function PrivateBlocks({
           ? {
               AND: [
                 { taskType: { equals: componentType } },
+                // originals only: a study's own copies stay in that study
+                { copiedFrom: null },
                 {
                   OR: [
                     { author: { id: { equals: user?.id } } },
@@ -37,6 +40,8 @@ export default function PrivateBlocks({
           : {
               AND: [
                 { taskType: { equals: componentType } },
+                // originals only: a study's own copies stay in that study
+                { copiedFrom: null },
                 {
                   OR: [
                     { author: { id: { equals: user?.id } } },
@@ -80,6 +85,8 @@ export default function PrivateBlocks({
 
   const tasks = data?.tasks || [];
   const localizedTasks = processComponentsWithI18n(tasks);
+
+  if (loading && !data) return <BlocksLoading />;
 
   return (
     <div>

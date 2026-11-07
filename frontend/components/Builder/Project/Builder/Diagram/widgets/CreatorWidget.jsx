@@ -68,6 +68,7 @@ export const CreatorWidget = props => {
       diagramEngine.getModel().addNode(node);
       props.onAfterCanvasMutation?.();
       forceUpdate();
+      props.onTaskNodeAdded?.(node);
     }
 
     // using a template
@@ -98,6 +99,7 @@ export const CreatorWidget = props => {
       diagramEngine.getModel().addNode(node);
       props.onAfterCanvasMutation?.();
       forceUpdate();
+      props.onDesignNodeAdded?.(node);
     }
   };
 

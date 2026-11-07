@@ -5,15 +5,20 @@
 // DOE data is everything connected to a class marked Class.dataOwner =
 // NYC_DOE: the accounts of its students, teacher and teaching team (MindHive
 // mentors are NYU staff and are left out), the boards and studies of those
-// accounts or of those classes, and the study data collected by those studies
-// or from those accounts, guests included. A student in both a DOE and a
-// non-DOE class counts as DOE.
+// accounts or of those classes, and study data (see below), guests included. A
+// student in both a DOE and a non-DOE class counts as DOE.
 //
 // Boards and studies come back split into those whose members (author,
 // creator, collaborators) are all in scope and those shared with someone
 // outside it: shared ones stay in place for the other members, only the people
 // in scope are removed from them (de-identification, a school leaving). At
 // termination everything is deleted, shared or not; that is the caller's call.
+//
+// Study data follows the same line. It is in scope when it came from a person
+// in scope or from a study that goes (one with no member outside the scope).
+// A shared study stays, and so does what it collected from everyone else,
+// guests included; those rows are only counted (keptStudyData). In the all-DOE
+// scope nothing stays: the data of shared studies is in scope too.
 //
 // De-identified accounts (deidentifiedAt set; only DOE accounts are
 // de-identified) and the content kept from them (DoeRetainedRecord) no longer
@@ -49,6 +54,12 @@ export type DoeData = {
   summaryResultIds: string[];
   dataSourceRecordIds: string[];
   guestIds: string[];
+  /** Other people's data in the shared studies, which stays. */
+  keptStudyData: {
+    datasets: number;
+    summaryResults: number;
+    dataSourceRecords: number;
+  };
   /** Content kept from de-identified accounts; all-DOE scope only. */
   retained: { listKey: string; itemId: string }[];
 };
@@ -56,7 +67,7 @@ export type DoeData = {
 /** Postgres caps bind parameters, so long `in` lists are queried in parts. */
 const CHUNK = 5000;
 
-async function inChunks<T>(
+export async function inChunks<T>(
   ids: string[],
   query: (part: string[]) => Promise<T[]>
 ): Promise<T[]> {
@@ -197,54 +208,39 @@ export async function findDoeData(
   const studiesById = new Map(studyRows.map((s: any) => [s.id, s]));
   const studies = [...studiesById.values()];
   const studyIds = studies.map((s: any) => s.id);
+  const studySplit = split(
+    studies.map((s: any) => ({
+      id: s.id,
+      members: [s.authorId, ...s.collaborators.map((c: any) => c.id)],
+    })),
+    inScope
+  );
+  const studiesGoing = new Set("all" in scope ? studyIds : studySplit.scoped);
 
-  // 4. Study data: from those people, or collected by those studies.
-  const datasetSelect = {
-    id: true,
-    token: true,
-    date: true,
-    studyId: true,
-    profileId: true,
-    guestId: true,
-  };
-  const datasetRows = [
-    ...(await inChunks(profileIds, (part) =>
-      prisma.dataset.findMany({
-        where: { profileId: { in: part } },
-        select: datasetSelect,
-      })
-    )),
-    ...(await inChunks(studyIds, (part) =>
-      prisma.dataset.findMany({
-        where: { studyId: { in: part } },
-        select: datasetSelect,
-      })
-    )),
-  ];
-  const datasets = [
-    ...new Map(datasetRows.map((d: any) => [d.id, d])).values(),
-  ] as DoeData["datasets"];
-
-  const byPersonOrStudy = async (
+  // 4. Study data: from those people, or collected by a study that goes.
+  const studyData = async (
     model: string,
-    personKey: string
-  ): Promise<string[]> => {
-    const rows = [
+    personKey: string,
+    fields: Record<string, boolean>
+  ) => {
+    const select = { id: true, studyId: true, guestId: true, [personKey]: true, ...fields };
+    const rows: any[] = [
       ...(await inChunks(profileIds, (part) =>
-        prisma[model].findMany({
-          where: { [personKey]: { in: part } },
-          select: { id: true },
-        })
+        prisma[model].findMany({ where: { [personKey]: { in: part } }, select })
       )),
       ...(await inChunks(studyIds, (part) =>
-        prisma[model].findMany({
-          where: { studyId: { in: part } },
-          select: { id: true },
-        })
+        prisma[model].findMany({ where: { studyId: { in: part } }, select })
       )),
     ];
-    return unique(rows.map((r: any) => r.id));
+    const found = [...new Map(rows.map((r) => [r.id, r])).values()];
+    const inData = found.filter(
+      (r) => inScope.has(r[personKey]) || studiesGoing.has(r.studyId)
+    );
+    return { rows: inData, kept: found.length - inData.length };
   };
+  const datasets = await studyData("dataset", "profileId", { token: true, date: true });
+  const summaryResults = await studyData("summaryResult", "userId", {});
+  const dataSourceRecords = await studyData("studyDataSourceRecord", "profileId", {});
 
   return {
     classIds,
@@ -260,20 +256,20 @@ export async function findDoeData(
       })),
       inScope
     ),
-    studies: split(
-      studies.map((s: any) => ({
-        id: s.id,
-        members: [s.authorId, ...s.collaborators.map((c: any) => c.id)],
-      })),
-      inScope
+    studies: studySplit,
+    datasets: datasets.rows as DoeData["datasets"],
+    summaryResultIds: summaryResults.rows.map((r) => r.id),
+    dataSourceRecordIds: dataSourceRecords.rows.map((r) => r.id),
+    guestIds: unique(
+      [...datasets.rows, ...summaryResults.rows, ...dataSourceRecords.rows].map(
+        (r) => r.guestId
+      )
     ),
-    datasets,
-    summaryResultIds: await byPersonOrStudy("summaryResult", "userId"),
-    dataSourceRecordIds: await byPersonOrStudy(
-      "studyDataSourceRecord",
-      "profileId"
-    ),
-    guestIds: unique(datasets.map((d) => d.guestId)),
+    keptStudyData: {
+      datasets: datasets.kept,
+      summaryResults: summaryResults.kept,
+      dataSourceRecords: dataSourceRecords.kept,
+    },
     retained:
       "all" in scope
         ? await prisma.doeRetainedRecord.findMany({

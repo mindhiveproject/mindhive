@@ -48,6 +48,9 @@ import joinClass from "./joinClass";
 import toggleReviewUpvote from "./toggleReviewUpvote";
 import classJoinPreview from "./classJoinPreview";
 import doeDataSummary from "./doeDataSummary";
+import studyCollectData from "./studyCollectData";
+import classDashboardProjects from "./classDashboardProjects";
+import classDashboardStudies from "./classDashboardStudies";
 import {
   canReadDatasourceFile,
   readableDatasetTokens,
@@ -60,6 +63,7 @@ import {
 import {
   recordStudyConditions,
   updateGuestStudiesInfo,
+  guestForRun,
 } from "./participantRun";
 import markOpportunityReviewNotesRead from "./markOpportunityReviewNotesRead";
 import { reviewConsent, submitConsentForReview } from "./consentReview";
@@ -71,6 +75,7 @@ import seedProfileForms from "./seedProfileForms";
 import seedReviewForms from "./seedReviewForms";
 import seedMissingForms from "./seedMissingForms";
 import duplicateFormDefinition from "./duplicateFormDefinition";
+import copyTaskForStudy from "./copyTaskForStudy";
 import publishFormDefinition from "./publishFormDefinition";
 import saveClassFormDefinition from "./saveClassFormDefinition";
 import saveBoardReviewFormDefinition from "./saveBoardReviewFormDefinition";
@@ -363,6 +368,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         seedMissingForms: [FormDefinition!]!
         # Clone a FormDefinition + its cards + fields as a new draft.
         duplicateFormDefinition(id: ID!): FormDefinition
+        # The signed-in user's own copy of a task for a study block.
+        copyTaskForStudy(id: ID!): Task
         # Teacher wizard: create/update a class-scoped opportunity form
         # with baked-in defaults. Optionally publish in the same call.
         saveClassFormDefinition(input: SaveClassFormDefinitionInput!): FormDefinition
@@ -402,7 +409,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillTicketPermissions(
           dryRun: Boolean
         ): BackfillTicketPermissionsResult!
-        # Monthly DOE de-identification job: warns DOE accounts silent for
+        # DOE de-identification job, run twice a year: warns DOE accounts silent for
         # 23 months, de-identifies those silent for two years and warned 30
         # days ago. canRunRetention, or the RETENTION_SECRET for the
         # scheduled workflow, which only previews unless autoDeidentify is
@@ -560,6 +567,33 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         isActive: Boolean
         position: Int
       }
+      # A study's Collect page. See lib/studyCollect.js.
+      type StudyCollectStudyRef {
+        id: ID!
+      }
+      type StudyCollectDataset {
+        id: ID!
+        token: String
+        isCompleted: Boolean
+        isIncluded: Boolean
+        studyStatus: String
+        studyVersion: String
+        study: StudyCollectStudyRef
+      }
+      type StudyCollectParticipant {
+        id: ID!
+        publicId: String
+        publicReadableId: String
+        type: String
+        info: JSON
+        generalInfo: JSON
+        studiesInfo: JSON
+        datasets: [StudyCollectDataset!]!
+      }
+      type StudyCollectData {
+        participants: [StudyCollectParticipant!]!
+        guests: [StudyCollectParticipant!]!
+      }
       # Public preview of a class for the join-by-code page.
       type ClassJoinPreview {
         id: ID!
@@ -650,9 +684,21 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # these dataset tokens they may read, and whether they may read a
         # Data Journal file of a datasource.
         readableDatasetTokens(tokens: [String!]!): [String!]!
+        # A study's participants, guests and results for its Collect page,
+        # checked once: the caller must be able to edit the study.
+        studyCollectData(studyId: ID!): StudyCollectData!
+        # A class's project boards for its teacher dashboard, in the shape of
+        # proposalBoards { ... } in CLASS_DASHBOARD_PROJECTS_QUERY. The caller
+        # must be able to read the class. See lib/classDashboard.js.
+        classDashboardProjects(classId: ID!): JSON!
+        # A class's studies for its teacher dashboard, in the shape of
+        # studies { ... } in CLASS_DASHBOARD_STUDIES_QUERY; each study's
+        # classes are limited to those the caller may read.
+        classDashboardStudies(classId: ID!): JSON!
         # The DOE retention switches. canRunRetention only.
         doeRetentionSettings: JSON
         canReadDatasourceFile(datasourceId: ID!, token: String!): Boolean!
+        guestForRun(publicId: String!): JSON
         # Counts of DOE data in a scope: all DOE classes, one school (DBN)
         # or one person. canManageUsers only; no names or ids.
         doeDataSummary(school: String, profileId: ID): JSON
@@ -713,8 +759,12 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         networkInviteContext,
         classJoinPreview,
         readableDatasetTokens,
+        studyCollectData,
+        classDashboardProjects,
+        classDashboardStudies,
         doeRetentionSettings: retentionSettings,
         canReadDatasourceFile,
+        guestForRun,
         doeDataSummary,
         doeExportPerson,
         doeExportSchool,
@@ -779,6 +829,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         seedReviewForms,
         seedMissingForms,
         duplicateFormDefinition,
+        copyTaskForStudy,
         saveClassFormDefinition,
         saveBoardReviewFormDefinition,
         forkReviewFormForBoard,

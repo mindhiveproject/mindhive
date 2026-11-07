@@ -18,8 +18,9 @@ export default function Wrapper({
   updateCanvas,
   addFunctions,
   node,
+  sharesTask,
   onOpenPreview,
-  persistStudy,
+  onDeleteFromCanvas,
 }) {
   const { t } = useTranslation("builder");
   const [showEditor, setShowEditor] = useState(isEditorOpen);
@@ -42,7 +43,12 @@ export default function Wrapper({
     user?.id === theTask?.author?.id ||
     (theTask?.collaborators?.map((c) => c.id) || []).includes(user.id);
 
-  const createCopy = node?.options?.createCopy;
+  // The Study Builder never edits an original task (the one in the task
+  // bank, without `copiedFrom`), nor a task another block on the canvas also
+  // uses: the block gets its own copy on first save, so the edit stays in
+  // this block.
+  const isOriginalTask = !theTask?.copiedFrom?.id;
+  const createCopy = node?.options?.createCopy || sharesTask || isOriginalTask;
 
   const canvasFields = {
     subtitle: node?.options?.subtitle,
@@ -64,7 +70,8 @@ export default function Wrapper({
       ...theTask,
       templateId: theTask?.template?.id,
       consent: null,
-      collaborators: [],
+      // an author's own task, copied for this block, keeps its team
+      collaborators: isAuthor ? theTask?.collaborators || [] : [],
       isOriginal: false,
       ...canvasFields,
     };
@@ -97,9 +104,9 @@ export default function Wrapper({
         createCopy={createCopy}
         task={task}
         updateCanvas={updateCanvas}
-        persistStudy={persistStudy}
         close={close}
         openPreview={() => onOpenPreview?.()}
+        onDeleteFromCanvas={onDeleteFromCanvas}
       />
     );
   }

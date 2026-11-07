@@ -129,6 +129,7 @@ export default function StudyDropdown({ user, project }) {
         )}
       </span>
       <DropdownSelect
+        portal
         value={project?.study?.id || ""}
         options={studyOptions}
         searchableSingle

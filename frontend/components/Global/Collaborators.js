@@ -63,6 +63,7 @@ export default function Collaborators({
   return (
     <DropdownSelect
       multiple
+      portal
       value={selectedIds}
       options={options}
       placeholder={placeholder}

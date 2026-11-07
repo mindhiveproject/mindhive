@@ -1,7 +1,6 @@
 import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-import LinkClass from "./LinkClass";
 import Collaborators from "../../../../Global/Collaborators";
 import Button from "../../../../DesignSystem/Button";
 import IconButton from "../../../../DesignSystem/IconButton";
@@ -96,10 +95,6 @@ export default function ConnectModal({
             )
           </p>
         )}
-        <h2 className="MH-Type-Title-Small">
-          {t("connectModal.selectClass", {}, { default: "Select the class" })}
-        </h2>
-        <LinkClass study={study} handleChange={handleChange} />
         <h2 className="MH-Type-Title-Small">
           {t("connectModal.addCollaborators", {}, {
             default: "Add collaborators",

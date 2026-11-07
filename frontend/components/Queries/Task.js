@@ -61,6 +61,9 @@ export const PUBLIC_TASKS = gql`
       featured
       description
       descriptionForParticipants
+      copiedFrom {
+        id
+      }
       author {
         id
       }
@@ -87,6 +90,9 @@ export const MY_TASKS = gql`
       description
       taskType
       runtimeType
+      copiedFrom {
+        id
+      }
       author {
         id
       }
@@ -113,6 +119,9 @@ export const FAVORITE_TASKS = gql`
       public
       description
       descriptionForParticipants
+      copiedFrom {
+        id
+      }
       author {
         id
       }
@@ -170,6 +179,12 @@ export const MY_TASK = gql`
   query MY_TASK($id: ID!) {
     task(where: { id: $id }) {
       id
+      copiedFrom {
+        id
+      }
+      author {
+        id
+      }
       title
       i18nContent
       slug
@@ -330,6 +345,9 @@ export const TASK_TO_EDIT = gql`
   query TASK_TO_EDIT($id: ID!) {
     task(where: { id: $id }) {
       id
+      copiedFrom {
+        id
+      }
       title
       i18nContent
       slug
@@ -416,6 +434,24 @@ export const MY_FAVORITE_TASKS = gql`
           title
           i18nContent
         }
+      }
+    }
+  }
+`;
+
+// who owns a task, and whether it is a study's copy of another task
+export const TASK_OWNERSHIP = gql`
+  query TASK_OWNERSHIP($id: ID!) {
+    task(where: { id: $id }) {
+      id
+      author {
+        id
+      }
+      collaborators {
+        id
+      }
+      copiedFrom {
+        id
       }
     }
   }

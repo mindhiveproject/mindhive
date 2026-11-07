@@ -20,10 +20,13 @@ export default function ParticipantsTable({
   components,
   users,
   guests,
+  loading,
 }) {
   const { t } = useTranslation("builder");
   // participants
   const [participants, setParticipants] = useState([]);
+  // whether the rows have been built from loaded data at least once
+  const [rowsBuilt, setRowsBuilt] = useState(false);
 
   // Get translated study statuses
   const studyStatuses = getTranslatedStudyStatuses(t);
@@ -34,7 +37,9 @@ export default function ParticipantsTable({
     const studyInfo = participant?.studiesInfo?.[study?.id];
     const path = studyInfo?.info?.path || [];
 
-    const startedAt = path?.length && path[0]?.timestampFinished;
+    // null (shown blank) when the participant has no path in this study, e.g.
+    // a researcher of it who never ran it
+    const startedAt = path[0]?.timestampFinished || null;
 
     // Compute duration
     // Get the event timestamps
@@ -47,7 +52,9 @@ export default function ParticipantsTable({
     const minTimestamp = Math.min(...timestamps);
     const maxTimestamp = Math.max(...timestamps);
     // Calculate the duration in minutes (this will be used for filter)
-    const duration = (maxTimestamp - minTimestamp) / (1000 * 60);
+    const duration = timestamps.length
+      ? (maxTimestamp - minTimestamp) / (1000 * 60)
+      : null;
 
     // compute the number of completed tasks
     const numberCompleted = participant?.datasets?.filter(
@@ -118,14 +125,18 @@ export default function ParticipantsTable({
   // get participants and order them by the time moment when they joined the study
   useEffect(() => {
     async function getParticipants() {
+      // rows read the participant's path for this study, so wait for the study
+      // and the participants to load
+      if (loading || !study?.id) return;
       const allParticipants = [...users, ...guests];
       const processed = allParticipants.map((participant) =>
         processParticipant({ participant })
       );
       setParticipants(processed);
+      setRowsBuilt(true);
     }
     getParticipants();
-  }, [study, users, guests]);
+  }, [study, users, guests, loading]);
 
   return (
     <div className="collectBoard">
@@ -134,8 +145,14 @@ export default function ParticipantsTable({
         slug={study.slug}
         participants={participants}
         components={components}
+        loading={loading || !rowsBuilt}
       />
-      <Grid query={query} studyId={study?.id} participants={participants} />
+      <Grid
+        query={query}
+        studyId={study?.id}
+        participants={participants}
+        loading={loading || !rowsBuilt}
+      />
     </div>
   );
 }

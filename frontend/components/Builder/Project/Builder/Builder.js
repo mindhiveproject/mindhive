@@ -13,12 +13,14 @@ import TaskPreview from "../../../Tasks/Preview/Main";
 import { StyledCanvasBuilder } from "../../../styles/StyledBuilder";
 import Modal from "./Modal/Main";
 import StudyPreview from "../../../Studies/Preview/Main";
+import StudyTitle from "./StudyTitle";
 
 import InDev from "../../../Global/InDev";
 import { GET_CLASSES } from "../../../Queries/Classes";
 import StudyConnector from "../../../Projects/StudyConnector/Main";
 import Button from "../../../DesignSystem/Button";
 import IconButton from "../../../DesignSystem/IconButton";
+import { FeedbackIcon } from "../../../DesignSystem/Icons";
 
 export default function Builder({
   query,
@@ -36,7 +38,6 @@ export default function Builder({
   onBeforeCanvasMutation,
   onAfterCanvasMutation,
   onModelReplaced,
-  persistStudy,
 }) {
   const { t } = useTranslation("builder");
   const [node, setNode] = useState(null);
@@ -139,6 +140,20 @@ export default function Builder({
     setMenuTab("flow");
   };
 
+  // Same result as selecting the block and pressing Backspace: the block and
+  // its links leave the canvas (one undo step); its task is kept.
+  const deleteNodeFromCanvas = () => {
+    if (isCanvasLocked || !node) return;
+    onBeforeCanvasMutation?.();
+    try {
+      node.remove();
+    } finally {
+      onAfterCanvasMutation?.();
+    }
+    engine?.repaintCanvas?.();
+    closeComponentModal();
+  };
+
   const openBlockPreview = useCallback(() => {
     setIsPreviewOpen(true);
   }, []);
@@ -165,6 +180,9 @@ export default function Builder({
           details: addFunctions.shorten(task?.description),
           subtitle: addFunctions.shorten(task?.subtitle),
           askDataUsageQuestion: task?.askDataUsageQuestion,
+          // the node now holds its own copy, so editing it again updates
+          // that copy instead of copying the original once more
+          ...(operation === "create" ? { createCopy: false } : {}),
         });
       }
     });
@@ -257,6 +275,8 @@ export default function Builder({
           onBeforeCanvasMutation={onBeforeCanvasMutation}
           onAfterCanvasMutation={onAfterCanvasMutation}
           onModelReplaced={onModelReplaced}
+          onTaskNodeAdded={addFunctions?.onTaskNodeAdded}
+          onDesignNodeAdded={addFunctions?.openNodeSettings}
         />
         <div
           className={clsx(
@@ -296,8 +316,18 @@ export default function Builder({
               updateCanvas={updateCanvas}
               addFunctions={lockedAddFunctions}
               node={node}
+              sharesTask={
+                !!node?.options?.componentID &&
+                (engine?.model?.getNodes() || []).some(
+                  (n) =>
+                    n !== node &&
+                    n?.options?.componentID === node?.options?.componentID
+                )
+              }
               onOpenPreview={openBlockPreview}
-              persistStudy={persistStudy}
+              onDeleteFromCanvas={
+                isCanvasLocked ? undefined : deleteNodeFromCanvas
+              }
             />
           )}
           {sidepanelMode === "design" && node && (
@@ -330,50 +360,68 @@ export default function Builder({
             onOpenSettings={openDataSourceSettings}
           />
         )}
-        <div className="boardTopActions">
-          <Button
-            id="commentButton"
-            type="button"
-            variant="filled"
-            style={{ background: "#5D5763" }}
-            onClick={lockedAddFunctions.addComment}
-            disabled={isCanvasLocked}
-          >
-            {t("builder.addComment", {}, { default: "Add a comment" })}
-          </Button>
-          {needsStartingPoint && (
-            <Button
-              type="button"
-              variant="tonal"
-              onClick={lockedAddFunctions.addAnchor}
-              disabled={isCanvasLocked}
-            >
-              {t("builder.addStartingPoint", {}, {
-                default: "Add starting point",
-              })}
-            </Button>
-          )}
-          {typeof undoCanvas === "function" &&
-            canUndo &&
-            !isCanvasLocked && (
-              <IconButton
-                id="undoButton"
-                type="button"
-                variant="text"
-                onClick={undoCanvas}
-                ariaLabel={t("builder.undo", {}, { default: "Undo" })}
-                title={t("builder.undo", {}, { default: "Undo" })}
-                icon={
-                  <img
-                    src="/assets/tiptapIcons/undo.svg"
-                    alt=""
-                    width="24"
-                    height="24"
-                  />
-                }
-              />
+        {!isPreviewOpen && (
+          <div
+            className={clsx(
+              "boardTopBar",
+              (sidepanelMode === "block" || sidepanelMode === "design") &&
+                "boardTopBar--wideSidepanel"
             )}
-        </div>
+          >
+            <StudyTitle
+              study={study}
+              projectId={project?.id}
+              disabled={isCanvasLocked}
+              onSaved={(title) =>
+                handleChange?.({ target: { name: "title", value: title } })
+              }
+            />
+            <div className="boardTopActions">
+              {typeof undoCanvas === "function" &&
+                canUndo &&
+                !isCanvasLocked && (
+                  <IconButton
+                    id="undoButton"
+                    type="button"
+                    variant="text"
+                    onClick={undoCanvas}
+                    ariaLabel={t("builder.undo", {}, { default: "Undo" })}
+                    title={t("builder.undo", {}, { default: "Undo" })}
+                    icon={
+                      <img
+                        src="/assets/tiptapIcons/undo.svg"
+                        alt=""
+                        width="24"
+                        height="24"
+                      />
+                    }
+                  />
+                )}
+              <Button
+                id="commentButton"
+                type="button"
+                variant="subtle"
+                onClick={lockedAddFunctions.addComment}
+                disabled={isCanvasLocked}
+                leadingIcon={(<FeedbackIcon />)}
+              >
+                {t("builder.addComment", {}, { default: "Add a comment" })}
+              </Button>
+              {needsStartingPoint && (
+                <Button
+                  type="button"
+                  variant="tonal"
+                  onClick={lockedAddFunctions.addAnchor}
+                  disabled={isCanvasLocked}
+                >
+                  {t("builder.addStartingPoint", {}, {
+                    default: "Add starting point",
+                  })}
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {isPreviewOpen && componentId && (

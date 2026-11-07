@@ -19,7 +19,18 @@ import {
   animals,
 } from "unique-names-generator";
 
-import { isAdmin } from "../access";
+import { canViewGuestData, isAdmin } from "../access";
+
+const signedIn = ({ session }: any) => !!session?.itemId;
+// A request may read back the guest it just created: createGuest hands a new
+// guest their code, which the join page puts in their link.
+const createdInRequest = new WeakMap<object, Set<string>>();
+// Denied reads resolve to null.
+const guestDataRead = {
+  read: ({ context, item }: any) =>
+    !!createdInRequest.get(context?.req)?.has(String(item?.id)) ||
+    canViewGuestData(context, item?.id),
+};
 const customConfig: Config = {
   dictionaries: [adjectives, colors, animals],
   separator: "-",
@@ -32,18 +43,28 @@ export const Guest = list({
       query: () => true,
       // Guests are anonymous participants: createGuest stays open. Later
       // writes go through updateGuestStudiesInfo (keyed by publicId, sudo),
-      // so generated updates and deletes are admin-only.
+      // so generated updates and deletes are admin-only. Reads of a guest's
+      // code and details are limited field by field: other pages only count
+      // a study's guests.
       create: () => true,
       update: isAdmin,
       delete: isAdmin,
     },
   },
+  hooks: {
+    afterOperation: ({ operation, item, context }: any) => {
+      if (operation !== "create" || !context?.req) return;
+      const created = createdInRequest.get(context.req) || new Set<string>();
+      created.add(String(item.id));
+      createdInRequest.set(context.req, created);
+    },
+  },
   fields: {
     publicId: text({
       isIndexed: "unique",
-      isFilterable: true,
+      isFilterable: signedIn,
       access: {
-        read: () => true,
+        ...guestDataRead,
         create: () => true,
         update: () => true,
       },
@@ -57,9 +78,9 @@ export const Guest = list({
     }),
     publicReadableId: text({
       isIndexed: "unique",
-      isFilterable: true,
+      isFilterable: signedIn,
       access: {
-        read: () => true,
+        ...guestDataRead,
         create: () => true,
         update: () => true,
       },
@@ -77,11 +98,11 @@ export const Guest = list({
       ],
       defaultValue: "GUEST",
     }),
-    info: json(),
-    generalInfo: json(),
-    studiesInfo: json(),
-    consentsInfo: json(),
-    tasksInfo: json(),
+    info: json({ access: guestDataRead }),
+    generalInfo: json({ access: guestDataRead }),
+    studiesInfo: json({ access: guestDataRead }),
+    consentsInfo: json({ access: guestDataRead }),
+    tasksInfo: json({ access: guestDataRead }),
     guestAccountExpiry: text(),
     participantIn: relationship({
       ref: "Study.guests",

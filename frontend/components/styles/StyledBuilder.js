@@ -468,9 +468,9 @@ export const StyledCanvasBuilder = styled.div`
     background: #ffffff;
     /* Top padding is dropped here and re-added inside .sidepanelNavbar so that
        the navbar can sit flush at top:0 when the panel scrolls. Keep this in
-       sync with the navbar's rendered height (16px top pad + 40px row + 8px
+       sync with the navbar's rendered height (16px top pad + 43px row + 7px
        bottom pad). */
-    --sidepanel-nav-h: 64px;
+    --sidepanel-nav-h: 66px;
     padding: 0 16px 16px;
     margin: 8px;
     border-radius: 12px;
@@ -507,8 +507,11 @@ export const StyledCanvasBuilder = styled.div`
     .sidepanelDefaultHost {
       display: flex;
       flex-direction: column;
-      flex: 1;
-      min-height: 0;
+      /* Grow with the content rather than being capped at the panel height:
+         the sticky navbar and search row inside it can only stay stuck while
+         this box extends below them, so a capped box pushed them out of view
+         once the panel was scrolled past its height. */
+      flex: 1 0 auto;
       min-width: 0;
       width: 100%;
     }
@@ -1191,7 +1194,7 @@ export const StyledCanvasBuilder = styled.div`
     position: relative;
     overflow: hidden;
 
-    > *:not(.sidepanel):not(.boardTopActions):not(.dataSourcesPanel) {
+    > *:not(.sidepanel):not(.boardTopBar):not(.dataSourcesPanel) {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -1206,15 +1209,106 @@ export const StyledCanvasBuilder = styled.div`
     }
   }
 
-  .boardTopActions {
+  /* Floating card at the top of the canvas, styled and spaced like the side
+     panel (8px inset, same border, radius and shadow), ending 8px before it. */
+  .boardTopBar {
     position: absolute;
     z-index: 10;
-    left: 10px;
-    top: 10px;
+    top: 8px;
+    left: 8px;
+    right: calc(max(280px, min(548px, 46%)) + 16px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 56px;
+    padding: 8px 8px 8px 16px;
+    box-sizing: border-box;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    border-radius: 12px;
+    box-shadow: 0px 4px 7.5px 0px rgba(0, 0, 0, 0.02);
+    transition: right 220ms ease;
+
+    &.boardTopBar--wideSidepanel {
+      right: calc(max(280px, min(700px, 65%)) + 16px);
+    }
+  }
+
+  .boardTopBarTitle {
+    flex: 0 1 auto;
+    margin: 0 0 0 -8px;
+    min-width: 0;
+    max-width: 100%;
+    padding: 6px 8px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
+    color: var(--MH-Theme-Neutrals-Black, #171717);
+  }
+
+  .boardTopBarTitleButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: text;
+
+    .boardTopBarTitleText {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .boardTopBarTitleEditIcon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    &:hover:not(:disabled) .boardTopBarTitleEditIcon,
+    &:focus-visible .boardTopBarTitleEditIcon {
+      opacity: 1;
+    }
+
+    &:hover:not(:disabled) {
+      background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  .boardTopBarTitleInput {
+    flex: 1 1 auto;
+    border-color: var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    outline: none;
+
+    &:focus {
+      border-color: var(--MH-Theme-Primary-Dark, #336f8a);
+    }
+  }
+
+  .boardTopActions {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: flex-end;
     gap: 8px;
+    flex-shrink: 0;
   }
 
   .dataSourcesPanel {
@@ -2245,22 +2339,27 @@ export const StyledParticipantPage = styled.div`
 export const StyledCollectPage = styled.div`
   display: grid;
   width: 100%;
-  overflow-y: scroll;
-  background: rgb(229, 229, 229);
+  overflow-y: auto;
+  /* same canvas as the Project Board tab */
+  background: #f7f9f8;
+  padding: 24px 20px;
+  box-sizing: border-box;
+  align-content: start;
   .clickable {
     cursor: pointer;
   }
   .collectBoard {
     display: grid;
     max-width: 1600px;
-    margin: 45px 0px 45px 0px;
+    margin: 0;
     width: 100%;
+    min-width: 0;
     justify-self: center;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       "header"
       "participants";
-    grid-gap: 20px;
+    grid-gap: 24px;
     align-content: baseline;
 
     .header {
@@ -2274,43 +2373,79 @@ export const StyledCollectPage = styled.div`
     .noresponses {
     }
 
+    /* the three header sections (share link, all data, data by task) are each
+       a card, like the sections of the Project Board */
     .study {
-      background: #ffffff;
-      padding: 2rem;
       display: grid;
-      grid-gap: 20px;
-      grid-template-columns: 1fr 1fr 1fr;
-      border-radius: 4px;
-      align-items: baseline;
+      grid-gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      align-items: stretch;
+
+      & > div {
+        display: grid;
+        align-content: start;
+        grid-gap: 12px;
+        min-width: 0;
+        background: var(--MH-Theme-Neutrals-White, #ffffff);
+        border: 1.5px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+        border-radius: 8px;
+        padding: 24px;
+      }
+
+      h3 {
+        margin: 0;
+        font: var(--MH-Type-Title-Base);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Black, #171717);
+      }
+      p {
+        margin: 0;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
+        color: var(--MH-Theme-Neutrals-Dark, #6a6a6a);
+      }
 
       .shareStudy {
-        display: grid;
-        align-items: baseline;
-      }
-
-      .downloadOptions {
-        display: grid;
-        grid-gap: 15px;
-        grid-template-columns: 1fr;
-        .downloadArea {
-          display: grid;
-          grid-gap: 5px;
-          grid-template-columns: auto 1fr;
-          align-items: center;
-          cursor: pointer;
+        .studyLink {
+          max-width: 100%;
         }
       }
-      .downloadByComponent {
+
+      /* why a download card shows no download buttons */
+      p.downloadEmpty {
+        padding: 12px;
+        background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+        border-radius: 8px;
+        font: var(--MH-Type-Body-Small, var(--MH-Type-Body-Base));
+      }
+
+      /* design system download buttons, stacked */
+      .downloadOptions,
+      .downloadButtons {
+        justify-items: start;
+      }
+      .downloadButtons {
         display: grid;
-        grid-gap: 10px;
-        cursor: pointer;
+        grid-gap: 12px;
       }
       .buttons {
-        display: grid;
-        grid-gap: 5px;
-        grid-template-columns: auto auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
         justify-content: start;
         align-items: center;
+        margin-top: 4px;
+      }
+    }
+
+    /* participants table: match the board's card border and radius */
+    #collectTable {
+      --ag-border-color: var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      --ag-wrapper-border-radius: 8px;
+      --ag-header-background-color: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+      --ag-font-family: inherit;
+      .ag-root-wrapper {
+        border-width: 1.5px;
       }
     }
 
@@ -2372,25 +2507,29 @@ export const StyledCollectPage = styled.div`
   .participantPage {
     display: grid;
     max-width: 1100px;
-    margin: 45px 0px 45px 0px;
+    margin: 0;
     width: 100%;
     justify-self: center;
     grid-template-columns: 1fr;
-    grid-gap: 20px;
+    grid-gap: 24px;
     align-content: baseline;
     .resultItem {
       display: grid;
-      margin: 5px 0px;
-      padding: 10px;
+      margin: 6px 0px;
+      padding: 12px;
       grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
-      background: white;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      border-radius: 8px;
     }
     .infoItem {
       display: grid;
-      margin: 5px 0px;
-      padding: 10px;
+      margin: 6px 0px;
+      padding: 12px;
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      background: white;
+      background: var(--MH-Theme-Neutrals-White, #ffffff);
+      border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+      border-radius: 8px;
     }
     .ui.toggle.checkbox input:checked ~ .box:before,
     .ui.toggle.checkbox input:checked ~ label:before {

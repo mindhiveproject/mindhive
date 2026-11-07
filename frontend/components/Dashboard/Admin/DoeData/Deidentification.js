@@ -1,6 +1,6 @@
-// Monthly DOE de-identification, under admins' control
+// DOE de-identification reviews, under admins' control
 // (keystone/mutations/runDeidentification.ts):
-//   - "Run automatically" lets the monthly schedule act on its own; off by
+//   - "Run automatically" lets the scheduled runs act on their own; off by
 //     default, the schedule then only previews and logs;
 //   - Preview lists who would be warned or de-identified now;
 //   - Approve and run acts on the ticked accounts only, after typing APPROVE.
@@ -84,11 +84,13 @@ export default function Deidentification() {
 
   return (
     <section>
-      <h2>Monthly de-identification</h2>
+      <h2>De-identification reviews</h2>
       <p>
-        DOE accounts with no sign-in for 23 months get a warning email; 30 days after the
-        warning, accounts with no sign-in for two years are de-identified. Nothing happens
-        unless an admin approves it here, or turns on automatic runs.
+        Review twice a year, between semesters, in two runs at least 30 days apart: the
+        first sends warnings, the second de-identifies the accounts warned. In each run, DOE
+        accounts with no sign-in for 23 months get a warning email, and accounts with no
+        sign-in for two years that were warned at least 30 days ago are de-identified.
+        Nothing happens unless an admin approves it here, or turns on automatic runs.
       </p>
 
       <ToggleSwitch
@@ -99,10 +101,10 @@ export default function Deidentification() {
         }
         label={
           auto
-            ? "Runs automatically on the 1st of each month"
-            : "Automatic runs are off: the monthly run only previews"
+            ? "Runs automatically on the scheduled review dates"
+            : "Automatic runs are off: scheduled runs only preview"
         }
-        aria-label="Run de-identification automatically each month"
+        aria-label="Run de-identification automatically on the review dates"
       />
       {settingsInfo?.updatedAt && (
         <p>

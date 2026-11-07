@@ -1,4 +1,4 @@
-// Admin tool for the NYC DOE data agreement: the monthly de-identification
+// Admin tool for the NYC DOE data agreement: de-identification reviews
 // (canRunRetention, see Deidentification.js), and checking, exporting and
 // deleting the DOE data of one person (DOE request), one school (school stops
 // using MindHive) or all of it (termination), with a printable record of each
@@ -26,7 +26,7 @@ const TERMINATION_PHRASE = "DELETE ALL DOE DATA";
 const DBN = /^\d{2}[MXKQR]\d{3}$/;
 
 const TRIGGERS = {
-  SCHEDULE: "Monthly schedule",
+  SCHEDULE: "Scheduled run",
   MANUAL: "Run by an admin",
   DOE_REQUEST: "DOE request",
   SCHOOL: "School stopped using MindHive",
@@ -163,8 +163,8 @@ function Plan({ result }) {
       {!result.dryRun && (
         <p className={result.verified ? "ok" : "error"}>
           {result.verified
-            ? "Checked afterwards: nothing is left in this scope."
-            : "Checked afterwards: some data is still in this scope. Run it again or investigate."}
+            ? "Checked afterwards: everything selected for deletion is gone."
+            : "Checked afterwards: some selected data is still there. Run it again or investigate."}
         </p>
       )}
     </div>
@@ -237,10 +237,10 @@ function printRun(run) {
 <tr><td>Verified empty afterwards</td><td>${run.verified ? "yes" : "no"}</td></tr>
 </table>
 <h2>Deleted</h2><table><tr><td>raw study folders</td><td>${counts.rawFolders || 0}</td></tr>${rows(counts.deleted)}</table>
-<h2>Kept (shared with people outside the scope, or teaching materials)</h2><table>${rows(counts.kept)}</table>
-<h2>Remaining in scope after deletion</h2><table>${rows(counts.remaining)}</table>
+<h2>Kept (shared with people outside the scope, their data in shared studies, or teaching materials)</h2><table>${rows(counts.kept)}</table>
+<h2>Still present after deletion</h2><table>${rows(counts.remaining)}</table>
 <h2>Method</h2>
-<p>Purge. Records were permanently deleted from the MindHive production database (DigitalOcean Managed PostgreSQL), and raw study files and uploaded files were deleted from the application server's disk, through the MindHive admin tool. Database backups are kept for 7 days and expire on their own; the application server's disk has no backups. After deletion the same scope was searched again, with the result above.</p>
+<p>Purge. Records were permanently deleted from the MindHive production database (DigitalOcean Managed PostgreSQL), and raw study files and uploaded files were deleted from the application server's disk, through the MindHive admin tool. Database backups are kept for 7 days and expire on their own; the application server's disk has no backups. After deletion every record selected for deletion was looked up again by id and the same scope was searched again, with the result above.</p>
 </body></html>`;
   const win = window.open("", "_blank");
   if (!win) return;

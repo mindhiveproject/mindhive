@@ -4,6 +4,8 @@ import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../DesignSystem/Button";
 import IconButton from "../../DesignSystem/IconButton";
+import MessageCard from "../../DesignSystem/MessageCard";
+import { TrashIcon } from "../../DesignSystem/Icons";
 
 import { StyledBuilderArea } from "../../styles/StyledBuilder";
 import StyledTaskBuilder from "../../styles/StyledTaskBuilder";
@@ -18,6 +20,7 @@ import JsPsychArchive from "./Template/JsPsychArchive";
 import JsPsychVersion from "./Template/JsPsychVersion";
 import TaskPreview from "../../Tasks/Preview/Main";
 import { getLocalizedField } from "../../../lib/i18nContent";
+import { blockRelation } from "../../../lib/blockOwnership";
 
 export default function ComponentForm({
   user,
@@ -32,12 +35,16 @@ export default function ComponentForm({
   close,
   isInStudyBuilder,
   openPreview,
+  onDeleteFromCanvas,
 }) {
   const { t } = useTranslation("builder");
   const router = useRouter();
   const { locale } = router;
   const title = getLocalizedField(inputs, "title", locale);
   const taskType = inputs?.taskType?.toLowerCase();
+  // the author's original task (the one in the task bank), on its own page
+  const isOwnOriginal =
+    !!inputs?.id && !!blockRelation(inputs, user?.id) && !inputs?.copiedFrom?.id;
 
   const [tab, setTab] = useState(
     isTemplateAuthor ? "template" : isInStudyBuilder ? "parameters" : "basic",
@@ -138,6 +145,30 @@ export default function ComponentForm({
                   })}
                 </Button>
               ) : null}
+              {onDeleteFromCanvas ? (
+                <Button
+                  variant="subtle"
+                  type="button"
+                  onClick={onDeleteFromCanvas}
+                  style={{
+                    background: "var(--MH-Theme-Danger-Light)",
+                    color: "var(--MH-Theme-Danger-Dark)",
+                  }}
+                  leadingIcon={
+                    <TrashIcon
+                      style={{
+                        color: "var(--MH-Theme-Danger-Dark)",
+                        width: "20px",
+                        height: "20px",
+                      }}
+                    />
+                  }
+                >
+                  {t("blockPanel.deleteFromCanvas", {}, {
+                    default: "Delete",
+                  })}
+                </Button>
+              ) : null}
             </div>
             <IconButton
               variant="subtle"
@@ -171,6 +202,17 @@ export default function ComponentForm({
         isTemplateAuthor={isTemplateAuthor}
         close={close}
       />
+      {isOwnOriginal && (
+        <div className="originalTaskNotice" style={{ margin: "16px 24px 0" }}>
+          <MessageCard
+            variant="information"
+            message={t("originalTask.pageNotice", {}, {
+              default:
+                "This is your original task template. Other people's studies run their own copy, so your changes here don't reach them. Blocks in your own studies that still use the original will update.",
+            })}
+          />
+        </div>
+      )}
       {buildArea}
     </StyledTaskBuilder>
   );

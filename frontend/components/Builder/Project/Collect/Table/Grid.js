@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import moment from "moment";
 import "moment-duration-format";
@@ -12,8 +13,27 @@ import { AgGridReact } from "ag-grid-react";
 import ChangeDatasetStatuses from "./ChangeStatuses";
 import { collectHref } from "../../../shared/identity";
 
-export default function Grid({ query, studyId, participants }) {
+export default function Grid({ query, studyId, participants, loading }) {
   const { t } = useTranslation("builder");
+  const [gridApi, setGridApi] = useState(null);
+
+  // While the study's data is still being fetched, show a loading notice
+  // instead of the grid's "No Rows To Show".
+  useEffect(() => {
+    if (!gridApi) return;
+    if (loading) {
+      gridApi.showLoadingOverlay();
+    } else if (!participants?.length) {
+      gridApi.showNoRowsOverlay();
+    } else {
+      gridApi.hideOverlay();
+    }
+  }, [gridApi, loading, participants]);
+
+  const loadingMessage = t(
+    "grid.loadingParticipants",
+    "Loading participant data…"
+  );
   const OpenButtonRenderer = (props) => {
     return (
       <Link
@@ -76,13 +96,14 @@ export default function Grid({ query, studyId, participants }) {
       field: "startedAt",
       headerName: t("grid.startedAt", "Started At"),
       valueFormatter: (params) =>
-        moment(params.value).format("MM/DD/YYYY hh:mm A"),
+        params.value ? moment(params.value).format("MM/DD/YYYY hh:mm A") : "",
       filter: "agDateColumnFilter", // Use the date filter
     },
     {
       field: "duration",
       headerName: t("grid.duration", "Duration"),
       valueFormatter: (params) => {
+        if (params.value == null || Number.isNaN(params.value)) return "";
         const duration = moment.duration(
           params.value * 1000 * 60,
           "milliseconds"
@@ -160,12 +181,16 @@ export default function Grid({ query, studyId, participants }) {
       style={{ height: "65vh" }} // the Data Grid will fill the size of the parent container
     >
       <AgGridReact
-        rowData={participants}
+        // null (not []) while loading, so the grid starts on its loading
+        // overlay rather than flashing "No Rows To Show" before it is ready
+        rowData={loading ? null : participants}
         columnDefs={colDefs}
         pagination={pagination}
         paginationPageSize={paginationPageSize}
         paginationPageSizeSelector={paginationPageSizeSelector}
         autoSizeStrategy={autoSizeStrategy}
+        onGridReady={(params) => setGridApi(params.api)}
+        overlayLoadingTemplate={`<span class="ag-overlay-loading-center">${loadingMessage}</span>`}
       />
     </div>
   );

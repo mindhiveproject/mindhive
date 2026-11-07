@@ -27,7 +27,8 @@ import {
 import { newPublicId, newPublicReadableId } from "../lib/publicIds";
 
 // Read rules for private profile fields. Denied reads resolve to null.
-// Contact details for other users belong in publicMail, which stays public.
+// Contact details for other users belong in publicMail, which any signed-in
+// user can read.
 // Email: private-profile readers plus the contacts that run the profile's
 // networks, organizations, opportunities and matching rounds (see access.ts).
 const contactEmailRead = {
@@ -41,6 +42,16 @@ const ownerOnlyRead = {
     !!session?.itemId &&
     (String(item?.id) === String(session.itemId) ||
       !!permissions.canManageUsers({ session })),
+};
+
+// Personal details and the public codes need an account, to read and to search
+// on. No signed-out page shows them; those pages show at most a username.
+const signedIn = ({ session }: any) => !!session?.itemId;
+const signedInRead = { access: { read: signedIn } };
+const signedInOnly = {
+  ...signedInRead,
+  isFilterable: signedIn,
+  isOrderable: signedIn,
 };
 
 export const Profile = list({
@@ -76,9 +87,10 @@ export const Profile = list({
     username: text({ validation: { isRequired: true } }),
     publicId: text({
       isIndexed: "unique",
-      isFilterable: true,
+      isFilterable: signedIn,
+      isOrderable: signedIn,
       access: {
-        read: () => true,
+        read: signedIn,
         create: () => true,
         update: () => true,
       },
@@ -92,9 +104,10 @@ export const Profile = list({
     }),
     publicReadableId: text({
       isIndexed: "unique",
-      isFilterable: true,
+      isFilterable: signedIn,
+      isOrderable: signedIn,
       access: {
-        read: () => true,
+        read: signedIn,
         create: () => true,
         update: () => true,
       },
@@ -153,11 +166,11 @@ export const Profile = list({
         update: rules.canManageUsers,
       },
     }),
-    facebook: text(),
-    twitter: text(),
-    instagram: text(),
-    publicMail: text(),
-    website: text(),
+    facebook: text(signedInOnly),
+    twitter: text(signedInOnly),
+    instagram: text(signedInOnly),
+    publicMail: text(signedInOnly),
+    website: text(signedInOnly),
     dateCreated: timestamp({
       defaultValue: { kind: "now" },
     }),
@@ -443,7 +456,7 @@ export const Profile = list({
       defaultValue: "individual",
     }),
     // CUSP Capstone sponsor fields — only shown to organization profiles.
-    department: text(),
+    department: text(signedInOnly),
     primaryDomain: select({
       options: [
         { label: "Academic Institution", value: "academic" },
@@ -453,7 +466,7 @@ export const Profile = list({
         { label: "Other", value: "other" },
       ],
     }),
-    timeCommitment: text(),
+    timeCommitment: text(signedInOnly),
     opportunitiesCreated: relationship({
       ref: "Opportunity.mentor",
       many: true,
@@ -572,6 +585,7 @@ export const Profile = list({
       many: true,
     }),
     image: relationship({
+      ...signedInRead,
       ref: "ProfileImage.profile",
       ui: {
         displayMode: "cards",
@@ -580,9 +594,10 @@ export const Profile = list({
         inlineEdit: { fields: ["keystoneImage", "image", "altText"] },
       },
     }),
-    firstName: text(),
-    lastName: text(),
+    firstName: text(signedInOnly),
+    lastName: text(signedInOnly),
     pronouns: select({
+      ...signedInOnly,
       options: [
         { label: "she/her/hers", value: "she" },
         { label: "he/him/his", value: "he" },
@@ -590,19 +605,20 @@ export const Profile = list({
         { label: "Prefer not to say", value: "preferNotToSay" },
       ],
     }),
-    location: text(),
-    organization: text(),
-    tagline: text(),
-    passion: text(),
-    bio: text(),
-    bioInformal: text(),
-    occupation: text(),
-    education: json(), // a list of institutions and degrees
-    languages: json(), // a list of languages
-    introVideo: json(), // unused legacy field; superseded by introVideoFile (kept to avoid a migration)
-    introVideoFile: file({ storage: "profile_videos" }),
-    involvement: json(),
+    location: text(signedInOnly),
+    organization: text(signedInOnly),
+    tagline: text(signedInOnly),
+    passion: text(signedInOnly),
+    bio: text(signedInOnly),
+    bioInformal: text(signedInOnly),
+    occupation: text(signedInOnly),
+    education: json(signedInRead), // a list of institutions and degrees
+    languages: json(signedInRead), // a list of languages
+    introVideo: json(signedInRead), // unused legacy field; superseded by introVideoFile (kept to avoid a migration)
+    introVideoFile: file({ storage: "profile_videos", ...signedInRead }),
+    involvement: json(signedInRead),
     mentorPreferGrade: select({
+      ...signedInOnly,
       options: [
         { label: "Middle School", value: "middle" },
         { label: "9 - 10 Grade", value: "nine" },
@@ -611,6 +627,7 @@ export const Profile = list({
       ],
     }),
     mentorPreferGroup: select({
+      ...signedInOnly,
       options: [
         { label: "Individual", value: "individual" },
         { label: "Group", value: "group" },
@@ -618,6 +635,7 @@ export const Profile = list({
       ],
     }),
     mentorPreferClass: select({
+      ...signedInOnly,
       options: [
         { label: "Accelerated", value: "accelerated" },
         { label: "Non Accelerated", value: "nonAccelerated" },
@@ -629,11 +647,12 @@ export const Profile = list({
       ref: "Tag.profiles",
       many: true,
     }),
-    availableStartDate: calendarDay(),
-    availableEndDate: calendarDay(),
-    availableStartTime: text(),
-    availableEndTime: text(),
+    availableStartDate: calendarDay(signedInOnly),
+    availableEndDate: calendarDay(signedInOnly),
+    availableStartTime: text(signedInOnly),
+    availableEndTime: text(signedInOnly),
     availableDays: multiselect({
+      ...signedInRead,
       options: [
         { label: "Monday", value: "mon" },
         { label: "Tuesday", value: "tue" },

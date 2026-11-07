@@ -3,10 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { StyledCollectPage } from "../../../styles/StyledBuilder";
 
-import {
-  GET_STUDY_PARTICIPANTS,
-  GET_STUDY_GUESTS,
-} from "../../../Queries/User";
+import { GET_STUDY_COLLECT_DATA } from "../../../Queries/User";
 import { GET_STUDY_RESULTS } from "../../../Queries/Study";
 
 import Navigation from "../Navigation/Main";
@@ -22,17 +19,21 @@ export default function Collect({ query, user, tab, studyId }) {
     return <div>{t("collect.noStudyFound", "No study found, please save your study first.")}</div>;
   }
 
-  const { data: participantsData } = useQuery(GET_STUDY_PARTICIPANTS, {
+  const {
+    data: collectData,
+    loading: collectLoading,
+    error: collectError,
+  } = useQuery(GET_STUDY_COLLECT_DATA, {
     variables: { studyId: studyId },
   });
-  const users = participantsData?.profiles || [];
+  const users = collectData?.studyCollectData?.participants || [];
+  const guests = collectData?.studyCollectData?.guests || [];
 
-  const { data: guestsData } = useQuery(GET_STUDY_GUESTS, {
-    variables: { studyId: studyId },
-  });
-  const guests = guestsData?.guests || [];
-
-  const { data: studyData } = useQuery(GET_STUDY_RESULTS, {
+  const {
+    data: studyData,
+    loading: studyLoading,
+    error: studyError,
+  } = useQuery(GET_STUDY_RESULTS, {
     variables: { id: studyId },
   });
   const study = studyData?.study || { participants: [], guests: [] };
@@ -81,6 +82,13 @@ export default function Collect({ query, user, tab, studyId }) {
             participantId={participantId}
             type={type}
           />
+        ) : collectError || studyError ? (
+          <div>
+            {t(
+              "collect.loadError",
+              "The study's data could not be loaded. If you work on this study and see this message, please contact tech support at support.mindhive@nyu.edu."
+            )}
+          </div>
         ) : (
           <Table
             query={query}
@@ -88,6 +96,7 @@ export default function Collect({ query, user, tab, studyId }) {
             components={components}
             users={users}
             guests={guests}
+            loading={collectLoading || studyLoading}
           />
         )}
       </StyledCollectPage>

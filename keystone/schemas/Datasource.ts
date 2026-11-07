@@ -38,10 +38,14 @@ export const Datasource = list({
       delete: ({ session }) => !!session?.itemId,
     },
     filter: {
-      query: ({ session }) =>
-        canUseSimulatedDatasets(session)
+      query: ({ session }) => {
+        // Data Journals are for signed-in users; a filter rather than a closed
+        // list, so anything that links to a datasource just sees none.
+        if (!session?.itemId) return { id: { in: [] } };
+        return canUseSimulatedDatasets(session)
           ? true
-          : { dataOrigin: { not: { equals: "SIMULATED" } } },
+          : { dataOrigin: { not: { equals: "SIMULATED" } } };
+      },
     },
     item: {
       update: async ({ session, item, context }) => {

@@ -72,8 +72,12 @@ export function groupByStudent(
 export default function useClassDashboardData(classId) {
   const options = { variables: { classId }, skip: !classId };
   const roster = useQuery(CLASS_ROSTER_QUERY, options);
-  const projects = useQuery(CLASS_DASHBOARD_PROJECTS_QUERY, options);
-  const studies = useQuery(CLASS_DASHBOARD_STUDIES_QUERY, options);
+  // Projects and studies come as JSON, not normalized ProposalBoards and
+  // Studies: edits made on other pages don't reach the cache, so show the
+  // cached copy and refresh it on every visit.
+  const jsonOptions = { ...options, fetchPolicy: "cache-and-network" };
+  const projects = useQuery(CLASS_DASHBOARD_PROJECTS_QUERY, jsonOptions);
+  const studies = useQuery(CLASS_DASHBOARD_STUDIES_QUERY, jsonOptions);
   const mentors = useQuery(CLASS_DASHBOARD_MENTORS_QUERY, options);
 
   const ready = Boolean(
@@ -85,8 +89,8 @@ export default function useClassDashboardData(classId) {
         ? {
             profiles: groupByStudent(
               roster.data.profiles,
-              projects.data.proposalBoards,
-              studies.data.studies,
+              projects.data.classDashboardProjects,
+              studies.data.classDashboardStudies,
               new Set(mentors.data.profiles.map((profile) => profile.id))
             ),
           }

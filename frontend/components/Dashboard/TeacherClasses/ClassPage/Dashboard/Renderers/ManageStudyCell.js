@@ -1,7 +1,6 @@
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../../../../DesignSystem/Button";
-import DashboardAssetIcon from "../DashboardAssetIcon";
 
 const COMPACT_BUTTON_STYLE = {
   height: 32,
@@ -18,7 +17,6 @@ export function ManageStudyCell(props) {
   return (
     <Button
       variant="subtle"
-      leadingIcon={<DashboardAssetIcon src="/assets/icons/education.svg" />}
       onClick={(event) => {
         event.stopPropagation();
         props.onManageStudy?.(props.data);

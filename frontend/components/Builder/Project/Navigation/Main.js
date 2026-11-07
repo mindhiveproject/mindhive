@@ -203,6 +203,13 @@ export default function Navigation({
           user={user}
           study={studyForNav}
           project={mode === "project" ? project : undefined}
+          linkSection={
+            mode === "project" && tab === "board"
+              ? "study"
+              : ["builder", "page", "collect"].includes(tab)
+              ? "class"
+              : null
+          }
           variant="popover"
         />
 

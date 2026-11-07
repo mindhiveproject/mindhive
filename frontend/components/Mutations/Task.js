@@ -117,3 +117,13 @@ export const UPDATE_TASK_I18N = gql`
     }
   }
 `;
+
+// the signed-in user's own copy of a task, for a study block
+export const COPY_TASK_FOR_STUDY = gql`
+  mutation COPY_TASK_FOR_STUDY($id: ID!) {
+    copyTaskForStudy(id: $id) {
+      id
+      title
+    }
+  }
+`;
