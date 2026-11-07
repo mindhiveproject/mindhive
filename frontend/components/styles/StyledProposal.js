@@ -989,6 +989,16 @@ export const StyledProposal = styled.div`
           border-color: #4A4550;
         }
       }
+      /* Study linked: a static success chip (no hover change); still opens
+         the Study builder on click. */
+      &.linked {
+        background: var(--MH-Theme-Primary-Light, #DEF8FB);
+        border-color: transparent;
+        .studyLinkIcon {
+          width: 20px;
+          height: 20px;
+        }
+      }
       &.list {
         background: #DEF8FB;
         border-color: #F3F3F3;

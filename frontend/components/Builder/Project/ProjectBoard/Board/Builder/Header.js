@@ -272,26 +272,35 @@ export default function ProposalHeader({
                     </div>
                   )}
                 </div>
-                {!isLinked && (
-                  <button
-                    className="studyLinkChip board"
-                    onClick={() => router.push({
-                      pathname: router.pathname,
-                      query: { ...router.query, tab: "builder" },
-                    })}
-                  >
-                    <div className="studyLinkChipContent">
-                      <img
-                        src="/assets/icons/unlink.svg"
-                        alt="Unlink"
-                        className="studyLinkIcon"
-                      />
-                      <span className="studyLinkText">
-                        {t("header.unlinked", "Unlinked")}
-                      </span>
-                    </div>
-                  </button>
-                )}
+                <button
+                  type="button"
+                  className={isLinked ? "studyLinkChip linked" : "studyLinkChip board"}
+                  title={
+                    isLinked
+                      ? t("header.openStudyBuilder", {}, {
+                          default: "Open the Study builder",
+                        })
+                      : undefined
+                  }
+                  onClick={() => router.push({
+                    pathname: router.pathname,
+                    query: { ...router.query, tab: "builder" },
+                  })}
+                >
+                  <div className="studyLinkChipContent">
+                    <img
+                      src={isLinked ? "/assets/icons/project/builder.svg" : "/assets/icons/unlink.svg"}
+                      alt=""
+                      aria-hidden="true"
+                      className="studyLinkIcon"
+                    />
+                    <span>
+                      {isLinked
+                        ? t("header.studyLinked", {}, { default: "Study Link" })
+                        : t("header.unlinked", "Unlinked")}
+                    </span>
+                  </div>
+                </button>
                 
                 <div className="collaboratorArray">
                   {collaborators.map((collab) => (

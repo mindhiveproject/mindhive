@@ -1470,6 +1470,8 @@
 		"testStudy": "Test your study",
 		"titlePlaceholder": "Enter project board title",
 		"unlinked": "No study linked",
+		"studyLinked": "Study Link",
+		"openStudyBuilder": "Open the Study builder",
 		"updateCollaboratorsFailed": "Failed to update collaborators. Please try again.",
 		"userNoClasses": "You are not associated with any classes."
 	},
