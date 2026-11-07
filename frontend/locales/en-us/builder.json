@@ -1,4 +1,20 @@
 {
+	"mainProject": {
+		"tooltipMember": "This is your main project for this class. It shows your teacher that this is the project you'll keep working on. Click to change this.",
+		"unsetTitle": "Remove as main project?",
+		"unsetConfirm": "Remove as main project",
+		"unsetExplanation": "This project will no longer be your main project. Until you choose another one, your teacher won't see which project you're focusing on in this class.",
+		"unsetShared": "This project is shared, so it will stop being the main project for everyone working on it.",
+		"setShared": "This project is shared, so it will become the main project for everyone working on it.",
+		"label": "Main project",
+		"setAsMain": "Set as main project",
+		"tooltip": "This is your main project for this class. It shows your teacher that this is the project you'll keep working on.",
+		"modalTitle": "Make this your main project?",
+		"explanation": "Your main project shows your teacher which project you'll keep working on in this class. You can have one main project per class.",
+		"replaces": "{{titles}} will no longer be your main project.",
+		"cancel": "Cancel",
+		"confirm": "Set as main project"
+	},
 	"studyOptions": {
 		"linkedStudy": "Linked study",
 		"changeLinkedClass": "Change linked class",

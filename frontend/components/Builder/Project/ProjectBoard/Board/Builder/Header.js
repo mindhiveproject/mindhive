@@ -15,6 +15,7 @@ import ButtonGroup from "../../../../../DesignSystem/ButtonGroup";
 import Chip from "../../../../../DesignSystem/Chip";
 import IconButton from "../../../../../DesignSystem/IconButton";
 import Tooltip from "../../../../../DesignSystem/Tooltip";
+import MainProjectChip from "./MainProjectChip";
 import { AddIcon, PencilIcon } from "../../../../../DesignSystem/Icons";
 
 import { useRef, useState } from "react";
@@ -301,7 +302,8 @@ export default function ProposalHeader({
                     </span>
                   </div>
                 </button>
-                
+                <MainProjectChip proposalId={proposal?.id} user={user} />
+
                 <div className="collaboratorArray">
                   {collaborators.map((collab) => (
                     <Chip

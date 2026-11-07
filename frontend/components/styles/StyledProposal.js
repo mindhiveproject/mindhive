@@ -999,6 +999,34 @@ export const StyledProposal = styled.div`
           height: 20px;
         }
       }
+      /* Main project: static, star filled; explained by its tooltip. */
+      &.mainProject {
+        background: var(--MH-Theme-Primary-Light, #def8fb);
+        border-color: transparent;
+        cursor: default;
+        &:focus-visible {
+          outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+          outline-offset: 2px;
+        }
+      }
+      &.mainProject--editable {
+        cursor: pointer;
+        &:hover {
+          background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
+        }
+      }
+      /* Not main yet: an outlined chip that opens the "set as main" modal. */
+      &.setMainProject {
+        background: var(--MH-Theme-Neutrals-White, #ffffff);
+        border: 1px dashed var(--MH-Theme-Neutrals-Medium, #a1a1a1);
+        &:hover {
+          background: var(--MH-Theme-Neutrals-Lighter, #f3f3f3);
+        }
+        &:focus-visible {
+          outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+          outline-offset: 2px;
+        }
+      }
       &.list {
         background: #DEF8FB;
         border-color: #F3F3F3;
