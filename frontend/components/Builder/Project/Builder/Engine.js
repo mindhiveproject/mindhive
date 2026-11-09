@@ -34,6 +34,8 @@ import { isStudyLocked } from "../../../../lib/studyLock";
 import useAutoSave from "../../../../lib/useAutoSave";
 import { TASK_OWNERSHIP } from "../../../Queries/Task";
 import { COPY_TASK_FOR_STUDY } from "../../../Mutations/Task";
+import { STUDY_DATA_SOURCES } from "../../../Queries/DataSourceBlock";
+import { UPDATE_STUDY_DATA_SOURCE } from "../../../Mutations/DataSourceBlock";
 
 export default function Engine({
   query,
@@ -536,6 +538,108 @@ export default function Engine({
     });
   };
 
+  // Data sources limited to some blocks (`scope: { steps: [...] }`) that run
+  // during `sourceBlockId` also run during `newBlockId`, so a duplicated block
+  // records the same way as the one it was made from.
+  const copyBlockDataSources = async (sourceBlockId, newBlockId) => {
+    if (!study?.id) return;
+    try {
+      const { data } = await apolloClient.query({
+        query: STUDY_DATA_SOURCES,
+        variables: { studyId: study.id },
+        fetchPolicy: "network-only",
+      });
+      const rows = (data?.studyDataSources || []).filter(
+        (row) =>
+          Array.isArray(row.scope?.steps) &&
+          row.scope.steps.includes(sourceBlockId) &&
+          !row.scope.steps.includes(newBlockId)
+      );
+      await Promise.all(
+        rows.map((row) =>
+          apolloClient.mutate({
+            mutation: UPDATE_STUDY_DATA_SOURCE,
+            variables: {
+              id: row.id,
+              data: {
+                scope: { ...row.scope, steps: [...row.scope.steps, newBlockId] },
+              },
+            },
+          })
+        )
+      );
+    } catch (error) {
+      console.error("Could not add the duplicated block to its data sources", error);
+    }
+  };
+
+  // Blocks whose duplicate is being made, so a double click makes only one
+  const duplicatingRef = useRef(new Set());
+
+  // Puts a copy of a task block on the canvas, with the parameters set on
+  // that block: the block's own task is copied first (copyTaskForStudy), then
+  // the new block points at that copy, so editing one block never changes the
+  // other. The new block is placed next to the original and is not linked to
+  // anything, so it stays out of the study flow until the user connects it.
+  const duplicateNode = async (node) => {
+    if (isCanvasLockedRef.current) {
+      alert(t("engine.studyLocked", {}, { default: "The study has been locked" }));
+      return;
+    }
+    const sourceTaskId = node?.options?.componentID;
+    const sourceBlockId = node?.getID?.();
+    if (!sourceTaskId || !sourceBlockId) return;
+    if (duplicatingRef.current.has(sourceBlockId)) return;
+    duplicatingRef.current.add(sourceBlockId);
+    try {
+      let copyId;
+      try {
+        const res = await apolloClient.mutate({
+          mutation: COPY_TASK_FOR_STUDY,
+          variables: { id: sourceTaskId },
+        });
+        copyId = res?.data?.copyTaskForStudy?.id;
+      } catch (error) {
+        console.error(error);
+      }
+      if (!copyId) {
+        alert(
+          t(
+            "engine.duplicateFailed",
+            {},
+            { default: "This block could not be duplicated. Please try again." }
+          )
+        );
+        return;
+      }
+      const eng = engineRef.current || engine;
+      if (!eng || isCanvasLockedRef.current) return;
+
+      let newNode;
+      withHistorySnapshot(() => {
+        newNode = new TaskModel({
+          color: node.color || "white",
+          name: node.options?.name,
+          details: node.options?.details,
+          componentID: copyId,
+          testId: uniqid.time(),
+          taskType: node.options?.taskType,
+          subtitle: node.options?.subtitle,
+          askDataUsageQuestion: node.options?.askDataUsageQuestion,
+        });
+        const { x = 0, y = 0 } = node.getPosition?.() || {};
+        newNode.setPosition(x + 40, y + 40);
+        eng.getModel().addNode(newNode);
+      });
+      if (!newNode) return;
+      forceUpdate();
+      eng.repaintCanvas?.();
+      await copyBlockDataSources(sourceBlockId, newNode.getID());
+    } finally {
+      duplicatingRef.current.delete(sourceBlockId);
+    }
+  };
+
   const addStudyTemplateToCanvas = ({ study: templateStudy }) => {
     if (isCanvasLocked) {
       alert(t("engine.studyLocked", {}, { default: "The study has been locked" }));
@@ -651,6 +755,7 @@ export default function Engine({
 
   const addFunctions = {
     addComponentToCanvas,
+    duplicateNode,
     giveNodeOwnTask,
     onTaskNodeAdded,
     openNodeSettings,

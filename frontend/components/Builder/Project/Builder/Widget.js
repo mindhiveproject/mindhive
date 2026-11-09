@@ -11,6 +11,7 @@ export default function Widget({
   onModelReplaced,
   onTaskNodeAdded,
   onDesignNodeAdded,
+  onDuplicateNode,
 }) {
   if (engine) {
     return (
@@ -25,6 +26,7 @@ export default function Widget({
         onModelReplaced={onModelReplaced}
         onTaskNodeAdded={onTaskNodeAdded}
         onDesignNodeAdded={onDesignNodeAdded}
+        onDuplicateNode={onDuplicateNode}
       />
     );
   }

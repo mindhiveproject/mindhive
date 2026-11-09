@@ -32,7 +32,7 @@ export const StyledNode = styled.div`
 
   .node-header-icons {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-flow: column;
     grid-gap: 2px;
     align-items: end;
   }

@@ -18,6 +18,7 @@ export const CreatorWidget = props => {
   diagramEngine.openDesignSettings = props.openDesignSettings;
   diagramEngine.openStudyPreview = props.openStudyPreview;
   diagramEngine.studyId = props.studyId;
+  diagramEngine.duplicateNode = props.onDuplicateNode;
 
   // disable touchpad zooming
   const scrollRef = React.useRef();
