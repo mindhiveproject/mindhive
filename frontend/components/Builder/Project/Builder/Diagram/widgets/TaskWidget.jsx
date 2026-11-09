@@ -6,11 +6,13 @@ import useTranslation from 'next-translate/useTranslation';
 import { TASK_TO_PARTICIPATE } from '../../../../../Queries/Task';
 import { STUDY_DATA_SOURCES } from '../../../../../Queries/DataSourceBlock';
 import { useQuery } from '@apollo/client';
+import { useState } from 'react';
 
 import { RecordDotIcon } from '../../../../../DesignSystem/Icons';
 
 export const TaskWidget = props => {
   const { t } = useTranslation('builder');
+  const [isDuplicating, setIsDuplicating] = useState(false);
 
    const { data, error, loading } = useQuery(TASK_TO_PARTICIPATE, {
     variables: { id: props.node?.options?.componentID },
@@ -56,6 +58,28 @@ export const TaskWidget = props => {
         >
           <img src="/assets/icons/builder/settings.svg" />
         </div>
+
+        {props.engine?.duplicateNode && (
+          <div
+            className="icon"
+            role="button"
+            id="blockDuplicate"
+            title={t('engine.duplicate', {}, { default: 'Duplicate block' })}
+            aria-label={t('engine.duplicate', {}, { default: 'Duplicate block' })}
+            style={{ opacity: isDuplicating ? 0.5 : 1 }}
+            onClick={async () => {
+              if (isDuplicating) return;
+              setIsDuplicating(true);
+              try {
+                await props.engine.duplicateNode(props.node);
+              } finally {
+                setIsDuplicating(false);
+              }
+            }}
+          >
+            <img src="/assets/icons/builder/duplicate.svg" />
+          </div>
+        )}
 
         <div
           className="icon"

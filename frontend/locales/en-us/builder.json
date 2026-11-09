@@ -1422,6 +1422,8 @@
 		"copyFailed": "This block could not get its own copy of the task. Remove it and add it again.",
 		"cycleLinkPrevented": "This connection would create a circular flow with no valid end. Choose a different path so the study can finish.",
 		"cycleLinkPreventedTitle": "Circular flow not allowed",
+		"duplicate": "Duplicate block",
+		"duplicateFailed": "This block could not be duplicated. Please try again.",
 		"save": "Save",
 		"saveFailed": "The study could not be saved: {{message}}. Please check your connection and try again.",
 		"saveVersion": "Save version",

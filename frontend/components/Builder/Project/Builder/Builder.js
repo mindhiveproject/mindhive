@@ -268,6 +268,7 @@ export default function Builder({
           onAfterCanvasMutation={onAfterCanvasMutation}
           onModelReplaced={onModelReplaced}
           onTaskNodeAdded={addFunctions?.onTaskNodeAdded}
+          onDuplicateNode={addFunctions?.duplicateNode}
           onDesignNodeAdded={addFunctions?.openNodeSettings}
         />
         <div

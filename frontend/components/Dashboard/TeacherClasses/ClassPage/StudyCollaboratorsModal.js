@@ -26,7 +26,7 @@ export default function StudyCollaboratorsModal({
   }, [study]);
 
   const [updateStudy, { loading }] = useMutation(UPDATE_STUDY, {
-    refetchQueries: ["GET_CLASS"],
+    refetchQueries: ["GET_CLASS", "STUDENT_CLASS_QUERY"],
     awaitRefetchQueries: true,
   });
 

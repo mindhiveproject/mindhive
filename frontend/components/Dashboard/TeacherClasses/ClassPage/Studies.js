@@ -143,7 +143,7 @@ export default function Studies({ myclass, user, readOnly = false }) {
     {
       field: "participants",
       headerName: t("studies.participants"),
-      valueGetter: (params) => params?.data?.participants?.length ?? 0,
+      valueGetter: (params) => params?.data?.participantsCount ?? 0,
       filter: "agNumberColumnFilter",
       sortable: true,
       flex: 0,

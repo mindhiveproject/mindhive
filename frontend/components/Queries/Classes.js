@@ -77,6 +77,48 @@ export const CLASS_JOIN_PREVIEW = gql`
   }
 `;
 
+// The student class page: only what its header and Studies tab read. The
+// Projects, Assignments and Opportunities tabs load their own data. GET_CLASS
+// is the teacher's query: on a large class its roster (every member's email,
+// each checked by a per-profile access query, plus each student's boards)
+// took ~21 s for a student, who only ever sees nulls for those emails.
+export const STUDENT_CLASS_QUERY = gql`
+  query STUDENT_CLASS_QUERY($code: String!) {
+    class(where: { code: $code }) {
+      id
+      title
+      description
+      code
+      creator {
+        id
+        username
+      }
+      mentors {
+        id
+        username
+      }
+      studies {
+        id
+        slug
+        title
+        author {
+          id
+          username
+        }
+        collaborators {
+          id
+          username
+        }
+        participantsCount
+        createdAt
+      }
+      settings
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const GET_CLASS = gql`
   query GET_CLASS($code: String!) {
     class(where: { code: $code }) {
@@ -141,9 +183,7 @@ export const GET_CLASS = gql`
           id
           username
         }
-        participants {
-          id
-        }
+        participantsCount
         createdAt
       }
       networks {

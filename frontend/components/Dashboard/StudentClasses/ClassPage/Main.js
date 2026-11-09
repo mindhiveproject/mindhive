@@ -10,7 +10,7 @@ import ClassStudies from "./Studies";
 import ClassProjects from "./Projects";
 import ClassOpportunities from "./Opportunities/Main";
 
-import { GET_CLASS } from "../../../Queries/Classes";
+import { STUDENT_CLASS_QUERY } from "../../../Queries/Classes";
 import { NavbarItem, SectionNavbar } from "../../../DesignSystem/Navbar";
 import JustOneSecondNotice from "../../../DesignSystem/JustOneSecondNotice";
 import MessageCard from "../../../DesignSystem/MessageCard";
@@ -68,7 +68,7 @@ export default function ClassPage({ code, user, query }) {
   const { t } = useTranslation("classes");
   const router = useRouter();
 
-  const { data, loading, error } = useQuery(GET_CLASS, {
+  const { data, loading, error } = useQuery(STUDENT_CLASS_QUERY, {
     variables: { code },
   });
 
