@@ -1261,6 +1261,7 @@ export const StyledCanvasBuilder = styled.div`
       min-width: 0;
       overflow: hidden;
       white-space: nowrap;
+      font: var(--MH-Type-Title-Large);
       text-overflow: ellipsis;
     }
 
