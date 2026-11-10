@@ -322,6 +322,10 @@ export const GET_USER = gql`
         id
         title
         isMain
+        usedInClass {
+          id
+          title
+        }
         isHidden
         createdAt
         updatedAt
@@ -330,6 +334,10 @@ export const GET_USER = gql`
         id
         title
         isMain
+        usedInClass {
+          id
+          title
+        }
         isHidden
         createdAt
         updatedAt

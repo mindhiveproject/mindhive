@@ -164,6 +164,18 @@ export const GET_CLASS = gql`
             title
           }
         }
+        authorOfProposal {
+          id
+          title
+          isMain
+          usedInClass {
+            id
+          }
+          clonedFrom {
+            id
+            title
+          }
+        }
       }
       mentors {
         id

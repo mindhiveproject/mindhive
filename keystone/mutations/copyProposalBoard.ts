@@ -3,6 +3,8 @@ import { provisionFormDefinitionForMilestone } from "./createTemplateMilestone";
 import { syncClassTemplateBoards } from "./utils/classTemplateBoards";
 import { isAdmin } from "../access";
 
+const { isFirstBoardInClass } = require("../lib/mainProject");
+
 // Copies run with limited parallelism. Creating every section, card and
 // assignment at once (each insert also access-checks what it connects)
 // exhausted the database connection pool on large boards: the copy failed
@@ -148,23 +150,18 @@ async function copyProposalBoard(
     }
   }
 
-  // Determine if this should be the first (main) board for this user in the given class
+  // The students' first board in the class starts as their main project.
+  // Counted over the students on the new board, not its author: a teacher who
+  // creates a board for a student is the author but not a member
+  // (lib/mainProject.js).
   let shouldBeMain = false;
   if (classIdUsed) {
     try {
-      const existingBoardsForClassAndAuthor =
-        await context.query.ProposalBoard.findMany({
-          where: {
-            author: { id: { equals: sesh.itemId } },
-            usedInClass: { id: { equals: classIdUsed } },
-          },
-          query: "id",
-          take: 1,
-        });
-
-      // If there are no existing boards authored by this user for this class,
-      // mark the new board as main.
-      shouldBeMain = !existingBoardsForClassAndAuthor.length;
+      shouldBeMain = await isFirstBoardInClass({
+        prisma: context.prisma,
+        classId: classIdUsed,
+        memberIds: [String(sesh.itemId), ...(collaborators || [])],
+      });
     } catch (error) {
       // On any failure, fall back to not setting isMain automatically.
       shouldBeMain = false;

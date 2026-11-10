@@ -367,6 +367,8 @@
 		"error": "Error",
 		"failedToUpdateProjectStatus": "Failed to update project status. Please try again.",
 		"mainProject": "Main Project",
+		"class": "Class",
+		"mainProjectIn": "★ Main project in {{title}}",
 		"menuTitle": "Created projects",
 		"noProjectsYet": "The student hasn’t created any projects yet.",
 		"openInNewTab": "Open project in new tab",

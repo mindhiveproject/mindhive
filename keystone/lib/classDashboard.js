@@ -35,6 +35,7 @@ const BOARD_SELECT = {
   projectReportOpenForComments: true,
   usedInClassId: true,
   clonedFromId: true,
+  author: PROFILE_SELECT,
   collaborators: PROFILE_SELECT,
   study: {
     select: {
@@ -88,6 +89,7 @@ function toProjectOutput(board, jsonAsText) {
     projectReportOpenForComments: board.projectReportOpenForComments,
     usedInClass: idRef(board.usedInClassId),
     clonedFrom: idRef(board.clonedFromId),
+    author: board.author || null,
     collaborators: board.collaborators,
     study: study
       ? {

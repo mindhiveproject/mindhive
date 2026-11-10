@@ -344,6 +344,14 @@ export default function Dashboard({ myclass }) {
   );
 
   const students = data?.profiles || [];
+  const studentIds = useMemo(
+    () => new Set(students.map((student) => student?.id)),
+    [students]
+  );
+  const templateBoardIds = useMemo(
+    () => new Set(templateBoards.map((board) => board.id)),
+    [templateBoards]
+  );
 
   const studentsProcessed = useMemo(
     () =>
@@ -358,7 +366,18 @@ export default function Dashboard({ myclass }) {
               (project) => project?.clonedFrom?.id === selectedBoardId
             )
           : classProjects;
-        if (selectedBoardId && !boardProjects.length) return [];
+        // Projects in this class that were not made from any of its project
+        // boards (moved in from another class, or older than the boards).
+        // They are counted under none of the boards, so they are flagged
+        // instead of being left out.
+        const offBoardProjects = templateBoards.length
+          ? (classProjects || []).filter(
+              (project) => !templateBoardIds.has(project?.clonedFrom?.id)
+            )
+          : [];
+        if (selectedBoardId && !boardProjects.length && !offBoardProjects.length) {
+          return [];
+        }
 
         let project;
         let projects;
@@ -366,10 +385,29 @@ export default function Dashboard({ myclass }) {
         let projectTitle;
         let studyId;
         let studyTitle;
+        let otherMainTitles = [];
+        let mainSharedWith = [];
 
         if (boardProjects && boardProjects.length) {
           const mainProjects = boardProjects.filter((p) => p?.isMain);
           project = (mainProjects.length && mainProjects[0]) || boardProjects[0];
+          // More than one main project: the first is shown, the rest are named.
+          otherMainTitles = mainProjects.slice(1).map((p) => p?.title || "");
+          // The other students of the class whose main project this is too.
+          if (project?.isMain) {
+            mainSharedWith = [
+              ...new Map(
+                [project.author, ...(project.collaborators || [])]
+                  .filter(
+                    (person) =>
+                      person?.id &&
+                      person.id !== student?.id &&
+                      studentIds.has(person.id)
+                  )
+                  .map((person) => [person.id, person.username])
+              ).values(),
+            ];
+          }
           projects = classProjects;
           projectId = project?.id;
           projectTitle = project?.title;
@@ -403,10 +441,22 @@ export default function Dashboard({ myclass }) {
           studies,
           studyId,
           studyTitle,
+          otherMainTitles,
+          mainSharedWith,
+          offBoardTitles: offBoardProjects.map((p) => p?.title || ""),
           milestones: milestoneEntries,
         }];
       }),
-    [students, myclass?.id, selectedBoardId, selectedMilestones, milestones]
+    [
+      students,
+      studentIds,
+      myclass?.id,
+      selectedBoardId,
+      selectedMilestones,
+      milestones,
+      templateBoards,
+      templateBoardIds,
+    ]
   );
 
   const completionByKey = useMemo(() => {
@@ -478,6 +528,10 @@ export default function Dashboard({ myclass }) {
         default: "Main Project",
       }),
       cellRenderer: MainProjectCell,
+      // The cell's alert opens the same panel as Manage Projects.
+      cellRendererParams: {
+        onManageProject: setProjectRow,
+      },
       minWidth: 200,
       width: 260,
     });

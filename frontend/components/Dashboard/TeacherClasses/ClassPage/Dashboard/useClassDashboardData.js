@@ -49,12 +49,17 @@ export function groupByStudent(
     collaborators: withRoles(study.collaborators),
   }));
 
+  // A project also belongs to its author, who is not always among its
+  // collaborators.
   const byCollaborator = (items) => {
     const map = new Map();
     for (const item of items) {
-      for (const collaborator of item.collaborators) {
-        if (!map.has(collaborator.id)) map.set(collaborator.id, []);
-        map.get(collaborator.id).push(item);
+      const memberIds = new Set(
+        [item.author?.id, ...item.collaborators.map((c) => c.id)].filter(Boolean)
+      );
+      for (const memberId of memberIds) {
+        if (!map.has(memberId)) map.set(memberId, []);
+        map.get(memberId).push(item);
       }
     }
     return map;

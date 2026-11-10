@@ -7,9 +7,18 @@ import Modal from "../../../../../DesignSystem/Modal";
 import Tooltip from "../../../../../DesignSystem/Tooltip";
 import { StarIcon, StarFilledIcon } from "../../../../../DesignSystem/Icons";
 import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
+import {
+  boardRuleMessage,
+  boardStudentIds,
+  classStaffIds,
+  isSharedBoard,
+  splitOtherMains,
+} from "../../../../../../lib/mainProject";
 
 // "Main project" is stored on the board (ProposalBoard.isMain), so it is the
-// same for everyone on the board. A student has one main project per class.
+// same for every student on the board. A student has one main project per
+// class; the server enforces it (keystone/lib/mainProject.js) and swaps the
+// students' other main projects when this one is set.
 const BOARD_MAIN_STATE = gql`
   query BOARD_MAIN_STATE($id: ID!) {
     proposalBoard(where: { id: $id }) {
@@ -24,14 +33,23 @@ const BOARD_MAIN_STATE = gql`
       }
       usedInClass {
         id
+        creator {
+          id
+        }
+        teachingTeam {
+          id
+        }
+        mentors {
+          id
+        }
       }
     }
   }
 `;
 
-// The user's other main projects in the same class.
+// The other main projects, in the same class, of the students on this board.
 const OTHER_MAIN_BOARDS = gql`
-  query OTHER_MAIN_BOARDS($id: ID!, $classId: ID!, $userId: ID!) {
+  query OTHER_MAIN_BOARDS($id: ID!, $classId: ID!, $studentIds: [ID!]!) {
     proposalBoards(
       where: {
         id: { not: { equals: $id } }
@@ -39,8 +57,8 @@ const OTHER_MAIN_BOARDS = gql`
         isHidden: { equals: false }
         usedInClass: { id: { equals: $classId } }
         OR: [
-          { author: { id: { equals: $userId } } }
-          { collaborators: { some: { id: { equals: $userId } } } }
+          { author: { id: { in: $studentIds } } }
+          { collaborators: { some: { id: { in: $studentIds } } } }
         ]
       }
     ) {
@@ -63,16 +81,13 @@ const memberIds = (board) =>
     )
   );
 
-// Shared with other people: its main flag is theirs too, so it is never
-// listed or changed from here.
-const isShared = (board) => memberIds(board).size > 1;
-
 const ICON = { width: 18, height: 18 };
 
 export default function MainProjectChip({ proposalId, user }) {
   const { t } = useTranslation("builder");
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [refusal, setRefusal] = useState(null);
 
   const { data, refetch } = useQuery(BOARD_MAIN_STATE, {
     variables: { id: proposalId },
@@ -81,18 +96,27 @@ export default function MainProjectChip({ proposalId, user }) {
   const board = data?.proposalBoard;
   const classId = board?.usedInClass?.id;
   const isMember = !!user?.id && memberIds(board).has(user.id);
+  // Teachers and mentors of the class are not counted as being on the board.
+  const staffIds = classStaffIds(board?.usedInClass);
+  const studentIds = [...boardStudentIds(board, staffIds)];
+  const isShared = isSharedBoard(board, staffIds);
 
   const { data: othersData, refetch: refetchOthers } = useQuery(
     OTHER_MAIN_BOARDS,
     {
-      variables: { id: proposalId, classId, userId: user?.id },
-      skip: !open || !classId || !user?.id,
+      variables: { id: proposalId, classId, studentIds },
+      skip: !open || !classId || !studentIds.length,
       fetchPolicy: "network-only",
     }
   );
-  const currentMains = (othersData?.proposalBoards || []).filter(
-    (b) => !isShared(b)
+  // Replaced: every student on it is on this board. Blocking: shared with a
+  // student who is not, so the server refuses instead of changing it for them.
+  const { replaced: currentMains, blocking } = splitOtherMains(
+    board,
+    othersData?.proposalBoards,
+    staffIds
   );
+  const titles = (boards) => boards.map((b) => `"${b.title}"`).join(", ");
 
   const [updateBoard] = useMutation(UPDATE_PROJECT_BOARD);
 
@@ -166,7 +190,7 @@ export default function MainProjectChip({ proposalId, user }) {
                 "This project will no longer be your main project. Until you choose another one, your teacher won't see which project you're focusing on in this class.",
             })}
           </p>
-          {isShared(board) && (
+          {isShared && (
             <p>
               {t("mainProject.unsetShared", {}, {
                 default:
@@ -207,16 +231,12 @@ export default function MainProjectChip({ proposalId, user }) {
   const confirm = async () => {
     setSaving(true);
     try {
-      for (const other of currentMains) {
-        await updateBoard({
-          variables: { id: other.id, input: { isMain: false } },
-        });
-      }
+      // The server un-mains the replaced boards with this one update.
       await updateBoard({ variables: { id: board.id, input: { isMain: true } } });
       await Promise.all([refetch(), refetchOthers?.()]);
       setOpen(false);
     } catch (err) {
-      alert(err?.message);
+      setRefusal(boardRuleMessage(err));
     } finally {
       setSaving(false);
     }
@@ -227,7 +247,10 @@ export default function MainProjectChip({ proposalId, user }) {
       <button
         type="button"
         className="studyLinkChip setMainProject"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setRefusal(null);
+          setOpen(true);
+        }}
       >
         <span className="studyLinkChipContent">
           <StarIcon style={ICON} aria-hidden="true" />
@@ -252,7 +275,11 @@ export default function MainProjectChip({ proposalId, user }) {
             >
               {t("mainProject.cancel", {}, { default: "Cancel" })}
             </Button>
-            <Button variant="filled" disabled={saving} onClick={confirm}>
+            <Button
+              variant="filled"
+              disabled={saving || blocking.length > 0}
+              onClick={confirm}
+            >
               {t("mainProject.confirm", {}, { default: "Set as main project" })}
             </Button>
           </>
@@ -264,7 +291,7 @@ export default function MainProjectChip({ proposalId, user }) {
               "Your main project shows your teacher which project you'll keep working on in this class. You can have one main project per class.",
           })}
         </p>
-        {isShared(board) && (
+        {isShared && (
           <p>
             {t("mainProject.setShared", {}, {
               default:
@@ -274,17 +301,39 @@ export default function MainProjectChip({ proposalId, user }) {
         )}
         {currentMains.length > 0 && (
           <p>
+            {/* On a shared board the replaced boards can be other students'
+                mains, so "your" would be wrong. */}
+            {isShared
+              ? t(
+                  "mainProject.replacesShared",
+                  { titles: titles(currentMains) },
+                  {
+                    default: `${titles(currentMains)} will no longer be marked as main project.`,
+                  }
+                )
+              : t(
+                  "mainProject.replaces",
+                  { titles: titles(currentMains) },
+                  {
+                    default: `${titles(currentMains)} will no longer be your main project.`,
+                  }
+                )}
+          </p>
+        )}
+        {blocking.length > 0 && !refusal && (
+          <p role="alert">
             {t(
-              "mainProject.replaces",
-              { titles: currentMains.map((b) => `"${b.title}"`).join(", ") },
+              "mainProject.blockedByShared",
+              { titles: titles(blocking) },
               {
-                default: `${currentMains
-                  .map((b) => `"${b.title}"`)
-                  .join(", ")} will no longer be your main project.`,
+                default: `You can have one main project per class, and ${titles(
+                  blocking
+                )} is already a main project in this class. It is shared with other students, so it is not changed automatically. Open it and remove it as main project first.`,
               }
             )}
           </p>
         )}
+        {refusal && <p role="alert">{refusal}</p>}
       </Modal>
     </>
   );
