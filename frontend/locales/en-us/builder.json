@@ -875,6 +875,7 @@
 					"fallbackNumberOfConditions": "number of"
 				},
 				"common": {
+					"searchOrTypeVariable": "Search or type your own",
 					"help": {
 						"ariaLabel": "Resources and help",
 						"resourcesIntro": "Use the buttons below to open a reference in a new tab when a link is available."

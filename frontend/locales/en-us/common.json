@@ -165,7 +165,8 @@
 	},
 	"dropdownSelect": {
 		"noMatchingOptions": "No matching options",
-		"searchPlaceholder": "Search options"
+		"searchPlaceholder": "Search options",
+		"useCustomValue": "Use “{{value}}”"
 	},
 	"email": {
 		"currentEmail": "Current Email",

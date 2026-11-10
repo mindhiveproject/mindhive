@@ -1952,33 +1952,67 @@ export const StyledDataWorkspace = styled.div`
       }
     }
 
+    .hypvis-corr-field {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0px 10px;
+    }
+
+    .hypvis-corr-note {
+      margin: 0;
+      padding: 0px 10px;
+      color: var(--MH-Theme-Neutrals-Dark, #625b71);
+    }
+    .hypvis-corr-note--warning {
+      color: var(--MH-Theme-Warning-Dark, #8a4b0f);
+    }
+
+    .hypvis-corr-preview {
+      box-sizing: border-box;
+      width: calc(100% - 20px);
+      margin: 0px 10px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background: var(--MH-Theme-Primary-Lighter, #f4f8f7);
+      color: var(--MH-Theme-Neutrals-Black, #171717);
+      overflow-wrap: anywhere;
+    }
+
     .fill-in-the-blanks {
       display: flex;
       padding: 0px 10px;
       align-items: center;
       align-content: center;
-      gap: 8px;
+      gap: 10px 6px;
       align-self: stretch;
       flex-wrap: wrap;
 
       .text {
         color: var(--MH-Theme-Neutrals-Black, #171717);
 
-        /* MH-Theme/body/small */
-        font: var(--MH-Type-Body-Base);
+        /* Smaller than body/base so a hypothesis sentence wraps less. */
+        font: 400 14px/20px "Inter", sans-serif;
         font-style: normal;
         letter-spacing: 0;
       }
 
+      /* One blank = a DesignSystem DropdownSelect (portaled, so never clipped). */
       .a-blank {
-        border: none;
-        border-radius: 0px;
-        display: flex;
-        align-items: center;
+        display: inline-flex;
+        flex: 0 1 auto;
+        min-width: 120px;
+        max-width: 100%;
 
-        border-bottom: 1px solid var(--MH-Theme-Primary-Medium, #a3d6db);
-        margin-bottom: -1px;
-        background: var(--MH-Theme-Neutrals-White, #ffffff);
+        .DesignSystem-DropdownSelect {
+          min-width: 120px;
+        }
+
+        .DesignSystem-DropdownSelect-trigger--default {
+          padding: 6px 10px;
+          gap: 4px;
+          font-size: 13px;
+          line-height: 18px;
+        }
       }
     }
 
@@ -2015,15 +2049,16 @@ export const StyledDataWorkspace = styled.div`
         letter-spacing: 0;
       }
 
+      /* One blank = a DesignSystem DropdownSelect (portaled, so never clipped). */
       .a-blank {
-        border: none;
-        border-radius: 0px;
-        display: flex;
-        align-items: center;
+        display: inline-flex;
+        flex: 0 1 auto;
+        min-width: 160px;
+        max-width: 100%;
 
-        border-bottom: 1px solid var(--MH-Theme-Primary-Medium, #a3d6db);
-        margin-bottom: -1px;
-        background: var(--MH-Theme-Neutrals-White, #ffffff);
+        .DesignSystem-DropdownSelect {
+          min-width: 160px;
+        }
       }
     }
   }
