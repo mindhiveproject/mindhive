@@ -50,6 +50,7 @@ import doeDataSummary from "./doeDataSummary";
 import studyCollectData from "./studyCollectData";
 import classDashboardProjects from "./classDashboardProjects";
 import classDashboardStudies from "./classDashboardStudies";
+import classDeidentificationNotices from "./classDeidentificationNotices";
 import {
   canReadDatasourceFile,
   readableDatasetTokens,
@@ -406,8 +407,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           dryRun: Boolean
         ): BackfillTicketPermissionsResult!
         # DOE de-identification job, run twice a year: warns DOE accounts silent for
-        # 23 months, de-identifies those silent for two years and warned 30
-        # days ago. canRunRetention, or the RETENTION_SECRET for the
+        # 23 months (and emails their class teachers, counts only),
+        # de-identifies those silent for two years and warned 30 days ago. canRunRetention, or the RETENTION_SECRET for the
         # scheduled workflow, which only previews unless autoDeidentify is
         # on. Dry run unless dryRun:false; an admin's real run acts only on
         # the profileIds they approved from a dry run's preview.
@@ -689,6 +690,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # studies { ... } in CLASS_DASHBOARD_STUDIES_QUERY; each study's
         # classes are limited to those the caller may read.
         classDashboardStudies(classId: ID!): JSON!
+        # Students of a class warned that their identity will be removed, as
+        # [{ id, date }]. The class's teacher and co-teachers, or admins.
+        classDeidentificationNotices(classId: ID!): JSON!
         # The DOE retention switches. canRunRetention only.
         doeRetentionSettings: JSON
         canReadDatasourceFile(datasourceId: ID!, token: String!): Boolean!
@@ -755,6 +759,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         studyCollectData,
         classDashboardProjects,
         classDashboardStudies,
+        classDeidentificationNotices,
         doeRetentionSettings: retentionSettings,
         canReadDatasourceFile,
         guestForRun,

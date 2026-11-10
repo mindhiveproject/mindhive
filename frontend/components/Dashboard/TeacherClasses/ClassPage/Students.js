@@ -11,6 +11,7 @@ import { AgGridReact } from "ag-grid-react";
 import {
   GET_CLASSES,
   GET_CLASS,
+  CLASS_DEIDENTIFICATION_NOTICES,
   teacherClassesWhere,
   teacherClassesRefetch,
 } from "../../../Queries/Classes";
@@ -39,6 +40,28 @@ export default function ClassStudents({ myclass, user, query }) {
   const { data } = useQuery(GET_CLASSES, {
     variables: { input: teacherClassesWhere(user?.id) },
   });
+
+  // Students warned that their identity will be removed unless they sign in
+  // (DOE data agreement). Only the class's teacher and co-teachers may ask;
+  // mentors skip the query.
+  const isClassTeacher =
+    !!user?.id &&
+    (myclass?.creator?.id === user.id ||
+      (myclass?.teachingTeam || []).some((member) => member?.id === user.id));
+  const { data: noticeData } = useQuery(CLASS_DEIDENTIFICATION_NOTICES, {
+    variables: { classId: myclass?.id },
+    skip: !isClassTeacher || !myclass?.id,
+  });
+  const removalDateById = useMemo(() => {
+    const map = new Map();
+    for (const notice of noticeData?.classDeidentificationNotices || []) {
+      if (notice?.id) map.set(notice.id, notice.date);
+    }
+    return map;
+  }, [noticeData]);
+  const formatDate = (date) =>
+    date ? new Date(`${date}T00:00:00`).toLocaleDateString() : "";
+  const earliestRemovalDate = [...removalDateById.values()].sort()[0];
 
   const classes = data?.classes || [];
   const otherClasses = classes.filter((cl) => cl?.id !== myclass?.id);
@@ -154,14 +177,30 @@ export default function ClassStudents({ myclass, user, query }) {
   const UsernameRenderer = (params) => {
     const student = params?.data;
     if (!student) return null;
+    const removalDate = removalDateById.get(student.id);
     return (
-      <Link
-        href={{ pathname: `/dashboard/students/${student?.publicId}` }}
-        className="MH-Type-Label-Base"
-        style={{ color: "inherit", textDecoration: "none" }}
+      <span
+        style={{ display: "inline-flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}
       >
-        {student.username}
-      </Link>
+        <Link
+          href={{ pathname: `/dashboard/students/${student?.publicId}` }}
+          className="MH-Type-Label-Base"
+          style={{ color: "inherit", textDecoration: "none" }}
+        >
+          {student.username}
+        </Link>
+        {removalDate && (
+          <Chip
+            variant="static"
+            tone="warning"
+            label={t(
+              "studentsTab.signInBy",
+              { date: formatDate(removalDate) },
+              { default: "Needs to sign in before {{date}}" }
+            )}
+          />
+        )}
+      </span>
     );
   };
 
@@ -410,6 +449,21 @@ export default function ClassStudents({ myclass, user, query }) {
               }
             )}
           </p>
+          {removalDateById.size > 0 && (
+            <p role="status">
+              {t(
+                "studentsTab.identityRemovalNotice",
+                {
+                  count: removalDateById.size,
+                  date: formatDate(earliestRemovalDate),
+                },
+                {
+                  default:
+                    "{{count}} students marked below have not signed in for two years or close to it. On or after {{date}}, their names, email addresses and other personal details will be removed and they will leave the class, unless they sign in to MindHive before then.",
+                }
+              )}
+            </p>
+          )}
         </div>
         {students.length === 0 ? (
           <div className="classTabEmpty">

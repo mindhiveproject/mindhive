@@ -1583,7 +1583,9 @@
 		"rosterDescription": "",
 		"shareMessage": "与您的学生分享以下链接，邀请他们加入您的课堂",
 		"student": "学生/用户名",
-		"tab": "学生"
+		"tab": "学生",
+		"signInBy": "需在 {{date}} 前登录",
+		"identityRemovalNotice": "下方标记的 {{count}} 名学生已有两年左右未登录。自 {{date}} 起，他们的姓名、电子邮件地址和其他个人信息将被删除，并将离开本班级，除非他们在此之前登录 MindHive。"
 	},
 	"studentsWillHaveAccessTo": "您的学生将可以访问：",
 	"studentUsername": "学生/用户名",

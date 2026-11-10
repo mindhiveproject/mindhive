@@ -1583,7 +1583,9 @@
 		"rosterDescription": "{{count}} estudiantes matriculados en esta clase.",
 		"shareMessage": "Comparte el siguiente enlace con tus alumnos para invitarles a unirse a tu clase",
 		"student": "Estudiante/Nombre de usuario",
-		"tab": "Estudiantes"
+		"tab": "Estudiantes",
+		"signInBy": "Debe iniciar sesión antes del {{date}}",
+		"identityRemovalNotice": "{{count}} estudiantes marcados abajo no han iniciado sesión en dos años o casi. A partir del {{date}}, se eliminarán sus nombres, direcciones de correo electrónico y otros datos personales, y dejarán la clase, a menos que inicien sesión en MindHive antes de esa fecha."
 	},
 	"studentsWillHaveAccessTo": "Sus estudiantes tendrán acceso a:",
 	"studentUsername": "Estudiante/Nombre de usuario",
