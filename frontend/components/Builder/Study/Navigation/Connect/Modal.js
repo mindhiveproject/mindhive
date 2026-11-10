@@ -5,10 +5,8 @@ import Collaborators from "../../../../Global/Collaborators";
 import Button from "../../../../DesignSystem/Button";
 import IconButton from "../../../../DesignSystem/IconButton";
 import Modal from "../../../../DesignSystem/Modal";
-import {
-  CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE,
-  ConnectFacepileChevron,
-} from "../../../Project/Navigation/ConnectFacepile";
+import { GroupIcon } from "../../../../DesignSystem/Icons";
+import { CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE } from "../../../Project/Navigation/ConnectFacepile";
 
 function isAdminUser(user) {
   return (user?.permissions || []).some((p) => p?.name === "ADMIN");
@@ -53,7 +51,7 @@ export default function ConnectModal({
         elevated={false}
         ariaLabel={t("connectModal.open", {}, { default: "Connect" })}
         title={t("connectModal.open", {}, { default: "Connect" })}
-        icon={<ConnectFacepileChevron />}
+        icon={<GroupIcon style={{ width: "20px", height: "20px" }} />}
         style={CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE}
         onClick={() => setOpen(true)}
       />

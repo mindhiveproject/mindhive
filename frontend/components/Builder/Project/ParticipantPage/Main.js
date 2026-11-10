@@ -406,6 +406,8 @@ export default function ParticipantPage({ query, user, tab }) {
           user={user}
           study={inputs}
           isLocked={isLocked}
+          // an auto-saved study is renamed on purpose, with a confirmation
+          isTitleGuarded={isAutoSaveEnabled}
           handleChange={handleStudyChange}
           handleMultipleUpdate={handleStudyMultipleUpdate}
           captureFile={captureStudyFile}

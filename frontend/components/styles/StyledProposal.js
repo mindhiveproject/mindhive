@@ -925,7 +925,7 @@ export const StyledProposal = styled.div`
         flex-shrink: 0;
         width: 24px;
         height: 24px;
-        opacity: 0;
+        opacity: 1;
         transition: opacity 0.15s;
       }
       &:hover,

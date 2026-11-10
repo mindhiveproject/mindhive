@@ -71,6 +71,12 @@ export default function Navigation({
       ? project?.title || t("header.myProjectBoard", "My Project Board")
       : study?.title || t("myStudies", "My Studies");
 
+  // In study mode, only show the study title when the study is linked to a
+  // project board.
+  const hideTitle =
+    mode !== "project" &&
+    !((study?.proposal?.length ?? 0) > 0 || !!study?.proposalMain?.id);
+
   const tryToLeave = (e) => {
     if (hasStudyChanged) {
       if (!confirm(t("unsavedChangesWarning"))) {
@@ -129,11 +135,13 @@ export default function Navigation({
           router.push({ pathname: dashboardBackPath(area) });
         }}
       />
-      <div className="navTitle">
-        <Tooltip content={title} side="bottom" delayMs={650} maxWidth={400}>
-          <span className="studyTitle">{title}</span>
-        </Tooltip>
-      </div>
+      {!hideTitle && (
+        <div className="navTitle">
+          <Tooltip content={title} side="bottom" delayMs={650} maxWidth={400}>
+            <span className="studyTitle">{title}</span>
+          </Tooltip>
+        </div>
+      )}
       <div className="builderNavbar" ref={navRef}>
         <Navbar variant="underline" dense hoverUnderline id="menue">
           {navItems.map((item) => {
