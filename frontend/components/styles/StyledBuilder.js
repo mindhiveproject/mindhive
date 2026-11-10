@@ -408,6 +408,14 @@ export const StyledBuilderArea = styled.div`
 `;
 
 export const StyledCanvasBuilder = styled.div`
+  #commentButton {
+    background: var(--MH-Theme-Accent-Light) !important;
+    color: var(--MH-Theme-Accent-Dark) !important;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  #commentButton:hover:not(:disabled) {
+    background: var(--MH-Theme-Accent-Medium) !important;
+  }
   display: grid;
   grid-template-columns: 1fr;
   padding: 0px;
@@ -1269,7 +1277,7 @@ export const StyledCanvasBuilder = styled.div`
       flex-shrink: 0;
       width: 20px;
       height: 20px;
-      opacity: 0;
+      opacity: 1;
       transition: opacity 0.15s;
     }
 
@@ -2036,6 +2044,43 @@ export const StyledParticipantPage = styled.div`
     color: #1a1a1a;
     margin-bottom: 8px;
   }
+  /* An auto-saved study's title reads as text; Rename opens a draft */
+  .titleDisplay {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    h1.title {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+      padding: 4px 0;
+      font: var(--MH-Type-Heading-Large);
+      color: #1a1a1a;
+      overflow-wrap: anywhere;
+    }
+    .titleRenameButton {
+      flex-shrink: 0;
+    }
+  }
+  .titleRename {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+    /* The field's outline lines up with the message card below it, instead of
+       bleeding into the gutter like the in-place fields do */
+    .editable.title {
+      margin: 0;
+      box-sizing: border-box;
+    }
+  }
+  .titleRenameActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
   .editable.description {
     font: var(--MH-Type-Body-Large);
     color: #4a4a4a;

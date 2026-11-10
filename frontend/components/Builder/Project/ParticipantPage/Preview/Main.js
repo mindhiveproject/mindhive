@@ -1,4 +1,5 @@
 import Tabs from "./Tabs";
+import TitleField from "./TitleField";
 import useTranslation from "next-translate/useTranslation";
 import { getStudyImageUrl } from "../../../../../lib/profileStudyImageUrls";
 import Button from "../../../../DesignSystem/Button";
@@ -14,6 +15,7 @@ export default function Preview({
   handleMultipleUpdate,
   captureFile,
   isLocked,
+  isTitleGuarded,
 }) {
   const { t } = useTranslation("builder");
   const infoBlocks =
@@ -121,16 +123,10 @@ export default function Preview({
 
               <div className="studyTitleDescriptionBtns">
                 <div id="studyTitle">
-                  <textarea
-                    id="title"
-                    name="title"
-                    aria-label={t("preview.title")}
-                    placeholder={t("preview.title")}
-                    value={study.title || ""}
-                    onChange={handleChange}
-                    required
-                    rows={1}
-                    className="editable title"
+                  <TitleField
+                    title={study.title}
+                    handleChange={handleChange}
+                    isGuarded={isTitleGuarded}
                   />
                 </div>
 

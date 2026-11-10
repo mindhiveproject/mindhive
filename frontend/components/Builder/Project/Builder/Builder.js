@@ -395,7 +395,7 @@ export default function Builder({
                 variant="subtle"
                 onClick={lockedAddFunctions.addComment}
                 disabled={isCanvasLocked}
-                leadingIcon={(<FeedbackIcon />)}
+                leadingIcon={(<FeedbackIcon style={{ width: "20px", height: "20px" }} />)}
               >
                 {t("builder.addComment", {}, { default: "Add a comment" })}
               </Button>
