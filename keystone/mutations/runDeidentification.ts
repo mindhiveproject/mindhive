@@ -1,6 +1,11 @@
 import { createHash, timingSafeEqual } from "crypto";
 
-import { findDoeData } from "../lib/doe/findDoeData";
+import {
+  TWO_YEARS_MS,
+  WARNING_MS,
+  identityRemovalDate,
+} from "../lib/doe/doe";
+import { findDoeData, inChunks } from "../lib/doe/findDoeData";
 import { deidentifyProfile } from "../lib/purge/deidentify";
 import { changeStoredJson, stripPersonalKeys } from "../lib/purge/personal";
 import { sendNotificationEmail } from "../lib/mail";
@@ -13,10 +18,17 @@ import { getRetentionSettings } from "./retentionSettings";
 // due. For DOE accounts only:
 //   1. no sign-in for 23 months and no warning yet -> warning email, and
 //      deidentificationWarnedAt is set (a sign-in clears it, auth.ts);
-//   2. no sign-in for two years and warned at least 30 days ago ->
+//   2. the teacher and co-teachers of every class a warned student is in
+//      get one email each, with how many of their students are due per class
+//      and a link to the class's Students page, never names: the email
+//      service keeps sent emails, and erasing a person's emails there finds
+//      them by recipient. Once per warning: deidentificationTeachersNotifiedAt
+//      (also cleared by a sign-in). Students due for step 3 are left out,
+//      since the email asks them to sign in before the date;
+//   3. no sign-in for two years and warned at least 30 days ago ->
 //      lib/purge/deidentify. Accounts past two years on the first run (the
 //      backfill dated many) are warned first and de-identified at a later run.
-//   3. guests in DOE studies whose participation is over two years old ->
+//   4. guests in DOE studies whose participation is over two years old ->
 //      the personal details on the guest record are stripped.
 // It never deletes accounts or study data; full deletion is the admin tool.
 // Staff accounts (admins, Admin UI users, retention operators) are skipped.
@@ -29,13 +41,11 @@ import { getRetentionSettings } from "./retentionSettings";
 // Nothing happens without an admin's say, unless they switch it on:
 //   - the scheduled run acts only when RetentionSetting.autoDeidentify is on;
 //     otherwise it is forced to a dry run and only logs what it would do;
-//   - an admin's dry run returns the accounts it would warn or de-identify,
-//     and an admin's real run must name the accounts it approves
-//     (profileIds): only those that are still due are acted on.
+//   - an admin's dry run returns the accounts it would warn, tell teachers
+//     about, or de-identify, and an admin's real run must name the accounts
+//     it approves (profileIds): only those that are still due are acted on.
+//     Approving a warning approves the teachers' email about it.
 
-const DAY_MS = 24 * 60 * 60 * 1000;
-const TWO_YEARS_MS = 730 * DAY_MS;
-const WARNING_MS = 30 * DAY_MS;
 const DEFAULT_LIMIT = 100;
 const CHUNK = 5000;
 
@@ -68,6 +78,31 @@ function canEmail(email: unknown): email is string {
     typeof email === "string" &&
     email.includes("@") &&
     !email.toLowerCase().endsWith(".invalid")
+  );
+}
+
+const frontendUrl = () => process.env.FRONTEND_URL || "https://mindhive.science";
+
+type TeacherNotice = {
+  email: string;
+  classes: Map<string, { title: string; code: string; students: Set<string> }>;
+};
+
+function teacherNoticeText(notice: TeacherNotice, dateOf: Map<string, string>) {
+  const classes = [...notice.classes.values()].map((c) => {
+    const n = c.students.size;
+    const date = [...c.students].map((id) => dateOf.get(id)!).sort()[0];
+    return `${c.title || "Untitled class"}: ${n} ${n === 1 ? "student" : "students"}, on or after ${date}`;
+  });
+  return (
+    "Some students in your MindHive classes have not signed in for two years or " +
+    "close to it. Unless they sign in before the date shown, their identity will " +
+    "be removed from their accounts: their names, email addresses and other " +
+    "personal details will be deleted, the accounts will no longer be linked to " +
+    "them, and they will leave your classes. " +
+    `${classes.join("; ")}. ` +
+    "The Students page of each class shows which students. To keep their " +
+    "accounts, they only need to sign in."
   );
 }
 
@@ -130,6 +165,7 @@ async function runDeidentification(
           email: true,
           lastSignInAt: true,
           deidentificationWarnedAt: true,
+          deidentificationTeachersNotifiedAt: true,
           permissions: {
             select: { canManageUsers: true, canAccessAdminUI: true, canRunRetention: true },
           },
@@ -157,44 +193,34 @@ async function runDeidentification(
     warned: 0,
     warnedWithoutEmail: 0,
     warningFailed: 0,
+    teacherNoticeStudents: 0,
+    teachersNotified: 0,
+    teacherNoticeFailed: 0,
+    studentsWithoutTeacher: 0,
     deidentified: 0,
     dueLeftForNextRun: Math.max(0, due.length - batch),
     deidentification: {},
     guestsStripped: 0,
   };
 
-  // What this run would do, account by account: returned to an admin for
-  // approval, never logged and never sent to the scheduled workflow.
-  const preview = scheduled
-    ? undefined
-    : [
-        ...toWarn.map((a) => ({ action: "warn", account: a })),
-        ...due.slice(0, batch).map((a) => ({ action: "deidentify", account: a })),
-      ].map(({ action, account }) => ({
-        id: account.id,
-        username: account.username,
-        lastSignInAt: account.lastSignInAt,
-        warnedAt: account.deidentificationWarnedAt,
-        action,
-      }));
-
-  // 1. Warnings.
-  const loginUrl = `${process.env.FRONTEND_URL || "https://mindhive.science"}/login`;
+  // 1. Warnings. Accounts warned now or before, for the teachers' step.
+  const warned = new Set<string>(
+    eligible.filter((a) => a.deidentificationWarnedAt).map((a) => a.id)
+  );
+  const loginUrl = `${frontendUrl()}/login`;
   for (const account of toWarn) {
-    const date = new Date(
-      Math.max(account.lastSignInAt.getTime() + TWO_YEARS_MS, now + WARNING_MS)
-    ).toISOString().slice(0, 10);
+    const date = identityRemovalDate(account.lastSignInAt, startedAt);
     if (!canEmail(account.email)) {
       counts.warnedWithoutEmail++;
     } else if (!isDry) {
       try {
         await sendNotificationEmail(
           account.email,
-          "Your MindHive account will be de-identified",
+          "Sign in to keep your MindHive account",
           `You have not signed in to MindHive for two years or close to it. On or after ${date}, ` +
-            "your account will be de-identified: your name, email address and " +
-            "other personal details will be deleted, and your account will no " +
-            "longer be linked to you. To keep your account, sign in before then.",
+            "your identity will be removed from your account: your name, email " +
+            "address and other personal details will be deleted, and the account " +
+            "will no longer be linked to you. To keep your account, sign in before then.",
           loginUrl
         );
         counts.warned++;
@@ -212,9 +238,107 @@ async function runDeidentification(
         data: { deidentificationWarnedAt: new Date(now) },
       });
     }
+    warned.add(account.id);
   }
 
-  // 2. De-identification, one account at a time.
+  // 2. Teachers of the warned students, one email per teacher.
+  const dueIds = new Set(due.map((a) => a.id));
+  const notifyAbout = eligible.filter(
+    (a) => warned.has(a.id) && !dueIds.has(a.id) && !a.deidentificationTeachersNotifiedAt
+  );
+  const dateOf = new Map<string, string>(
+    notifyAbout.map((a) => [
+      a.id,
+      identityRemovalDate(a.lastSignInAt, a.deidentificationWarnedAt || startedAt),
+    ])
+  );
+  // One flat query per chunk: classes through the indexed _Class_students
+  // join table, with only the chunk's students and the teachers' email.
+  const teacherSelect = { select: { id: true, email: true, deidentifiedAt: true } };
+  const classRows = await inChunks(
+    notifyAbout.map((a) => a.id),
+    (part) =>
+      prisma.class.findMany({
+        where: { students: { some: { id: { in: part } } } },
+        select: {
+          id: true,
+          title: true,
+          code: true,
+          creator: teacherSelect,
+          teachingTeam: teacherSelect,
+          students: { where: { id: { in: part } }, select: { id: true } },
+        },
+      })
+  );
+  const notices = new Map<string, TeacherNotice>();
+  const teachersOf = new Map<string, Set<string>>();
+  for (const klass of classRows as any[]) {
+    const teachers = [klass.creator, ...klass.teachingTeam].filter(
+      (t: any) => t && !t.deidentifiedAt && !dueIds.has(t.id) && canEmail(t.email)
+    );
+    for (const { id: studentId } of klass.students) {
+      for (const teacher of teachers) {
+        if (teacher.id === studentId) continue;
+        let notice = notices.get(teacher.id);
+        if (!notice) notices.set(teacher.id, (notice = { email: teacher.email, classes: new Map() }));
+        let entry = notice.classes.get(klass.id);
+        if (!entry) {
+          notice.classes.set(
+            klass.id,
+            (entry = { title: klass.title, code: klass.code, students: new Set() })
+          );
+        }
+        entry.students.add(studentId);
+        if (!teachersOf.has(studentId)) teachersOf.set(studentId, new Set());
+        teachersOf.get(studentId)!.add(teacher.id);
+      }
+    }
+  }
+  const failedTeachers = new Set<string>();
+  for (const [teacherId, notice] of notices) {
+    if (isDry) {
+      counts.teachersNotified++;
+      continue;
+    }
+    const only = notice.classes.size === 1 ? [...notice.classes.values()][0] : null;
+    const link = only
+      ? `${frontendUrl()}/dashboard/myclasses/${encodeURIComponent(only.code)}?page=students`
+      : `${frontendUrl()}/dashboard/myclasses`;
+    try {
+      await sendNotificationEmail(
+        notice.email,
+        "Some of your MindHive students need to sign in",
+        teacherNoticeText(notice, dateOf),
+        link
+      );
+      counts.teachersNotified++;
+    } catch (error: any) {
+      failedTeachers.add(teacherId);
+      counts.teacherNoticeFailed++;
+      console.error(`[runDeidentification] teacher email failed: ${error?.message}`);
+    }
+  }
+  // A student is done once every one of their teachers got the email; a
+  // student with no teacher to email is done too. A failure leaves the
+  // student for the next run, which may email their other teachers again.
+  const notified: string[] = [];
+  for (const account of notifyAbout) {
+    const teachers = teachersOf.get(account.id);
+    if (!teachers) counts.studentsWithoutTeacher++;
+    else counts.teacherNoticeStudents++;
+    if (![...(teachers || [])].some((id) => failedTeachers.has(id))) notified.push(account.id);
+  }
+  if (!isDry) {
+    await inChunks(notified, async (part) => {
+      await prisma.profile.updateMany({
+        where: { id: { in: part } },
+        data: { deidentificationTeachersNotifiedAt: startedAt },
+      });
+      return [];
+    });
+  }
+
+  // 3. De-identification, one account at a time.
   for (const account of due.slice(0, batch)) {
     const result = await deidentifyProfile(context, account.id, { dryRun: isDry });
     if (result.skipped) continue;
@@ -223,7 +347,7 @@ async function runDeidentification(
     sum(counts.deidentification, numbers);
   }
 
-  // 3. Guests in DOE studies, after two years.
+  // 4. Guests in DOE studies, after two years.
   const guests: any[] = [];
   for (let i = 0; i < doe.guestIds.length; i += CHUNK) {
     guests.push(
@@ -243,6 +367,27 @@ async function runDeidentification(
     counts.guestsStripped++;
     if (!isDry) await prisma.guest.update({ where: { id: guest.id }, data });
   }
+
+  // What this run would do, account by account: returned to an admin for
+  // approval, never logged and never sent to the scheduled workflow.
+  const teacherCount = (id: string) => teachersOf.get(id)?.size || 0;
+  const toWarnIds = new Set(toWarn.map((a) => a.id));
+  const preview = scheduled
+    ? undefined
+    : [
+        ...toWarn.map((a) => ({ action: "warn", account: a })),
+        ...notifyAbout
+          .filter((a) => !toWarnIds.has(a.id))
+          .map((a) => ({ action: "notifyTeachers", account: a })),
+        ...due.slice(0, batch).map((a) => ({ action: "deidentify", account: a })),
+      ].map(({ action, account }) => ({
+        id: account.id,
+        username: account.username,
+        lastSignInAt: account.lastSignInAt,
+        warnedAt: account.deidentificationWarnedAt,
+        action,
+        teachers: action === "deidentify" ? 0 : teacherCount(account.id),
+      }));
 
   await context.sudo().db.RetentionRun.createOne({
     data: {

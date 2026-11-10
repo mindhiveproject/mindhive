@@ -1,7 +1,8 @@
 name: De-identify inactive DOE accounts
 
 # The DOE data agreement: a DOE account with no sign-in for two years is
-# de-identified, after a warning email 30 days before. This runs the backend
+# de-identified, after a warning email 30 days before (the teachers of its
+# classes are emailed too, with counts only). This runs the backend
 # job that does both (keystone/mutations/runDeidentification.ts) for the two
 # reviews a year, between semesters. Each review is two runs at least 30 days
 # apart, so accounts warned by the first are due at the second.

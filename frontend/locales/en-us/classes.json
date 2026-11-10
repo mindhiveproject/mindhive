@@ -2482,7 +2482,9 @@
 		"tab": "Student roster",
 		"templateBoard": "Template board",
 		"templateNotInClass": "{{title}} (not in class)",
-		"noTemplateNotInClass": "Not linked to class template"
+		"noTemplateNotInClass": "Not linked to class template",
+		"signInBy": "Needs to sign in before {{date}}",
+		"identityRemovalNotice": "{{count}} students marked below have not signed in for two years or close to it. On or after {{date}}, their names, email addresses and other personal details will be removed and they will leave the class, unless they sign in to MindHive before then."
 	},
 	"studentsWillHaveAccessTo": "Your students will have access to:",
 	"studentUsername": "Student/Username",

@@ -391,3 +391,11 @@ export const GET_MENTOR_CLASSES = gql`
     }
   }
 `;
+// Students of a class warned that their identity will be removed after two
+// years without a sign-in (DOE data agreement), as [{ id, date }]. The class's
+// teacher and co-teachers only (keystone/mutations/classDeidentificationNotices).
+export const CLASS_DEIDENTIFICATION_NOTICES = gql`
+  query CLASS_DEIDENTIFICATION_NOTICES($classId: ID!) {
+    classDeidentificationNotices(classId: $classId)
+  }
+`;
