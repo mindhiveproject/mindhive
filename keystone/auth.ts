@@ -236,7 +236,11 @@ const session: typeof baseSession = {
       try {
         await args.context.prisma.profile.update({
           where: { id: String(data.itemId) },
-          data: { lastSignInAt: new Date(), deidentificationWarnedAt: null },
+          data: {
+            lastSignInAt: new Date(),
+            deidentificationWarnedAt: null,
+            deidentificationTeachersNotifiedAt: null,
+          },
         });
       } catch (error: any) {
         console.error(`[lastSignInAt] sign-in not recorded: ${error?.message}`);
