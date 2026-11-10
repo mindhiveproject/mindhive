@@ -1,26 +1,13 @@
 import absoluteUrl from "next-absolute-url";
-import { Icon, Button, Message } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
 import moment from "moment";
 import styled from "styled-components";
-import { useMutation } from "@apollo/client";
 import useTranslation from 'next-translate/useTranslation';
 import Link from "next/link";
-
-import { GET_USER } from "../../Queries/User";
-import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal";
 
 export default function Projects({ query, user, profile }) {
   const { t } = useTranslation('common');
   const { origin } = absoluteUrl();
-
-  const [updateProject, { loading, error }] = useMutation(
-    UPDATE_PROJECT_BOARD,
-    {
-      refetchQueries: [
-        { query: GET_USER, variables: { id: profile?.publicId } },
-      ],
-    }
-  );
 
   // Remove duplicates by creating a map of projects, prioritizing "Author" role
   const projectMap = new Map();
@@ -47,21 +34,6 @@ export default function Projects({ query, user, profile }) {
 
   const projects = Array.from(projectMap.values());
 
-  const toggleProjectAsMain = async ({ projectId, isMain }) => {
-    try {
-      await updateProject({
-        variables: {
-          id: projectId,
-          input: {
-            isMain,
-          },
-        },
-      });
-    } catch (err) {
-      console.error("Error toggling main project:", err);
-    }
-  };
-
   if (projects.length === 0) {
     return (
       <EmptyState>
@@ -72,18 +44,12 @@ export default function Projects({ query, user, profile }) {
 
   return (
     <ProjectsContainer>
-      {error && (
-        <Message negative>
-          <Message.Header>{t('projects.error', 'Error')}</Message.Header>
-          <p>{t('projects.failedToUpdateProjectStatus', 'Failed to update project status. Please try again.')}</p>
-        </Message>
-      )}
       <Header>
         <div>{t('projects.projectTitle', 'Project Title')}</div>
         <div>{t('projects.role', 'Role')}</div>
         <div>{t('projects.dateCreated', 'Date Created')}</div>
         <div>{t('projects.dateUpdated', 'Date Updated')}</div>
-        <div>{t('projects.mainProject', 'Main Project')}</div>
+        <div>{t('projects.class', 'Class')}</div>
       </Header>
       {projects.map((project) => (
         <Row
@@ -117,19 +83,16 @@ export default function Projects({ query, user, profile }) {
               moment(project.updatedAt).format("MMMM D, YYYY, h:mma")
             )}
           </Cell>
+          {/* Read-only: the main project is set on the project board or in
+              the class dashboard, where the one-per-class rule is explained. */}
           <Cell>
-            <Button
-              toggle
-              active={project?.isMain}
-              onClick={() =>
-                toggleProjectAsMain({
-                  projectId: project?.id,
-                  isMain: !project?.isMain,
-                })
-              }
-              disabled={loading || project?.isHidden}
-              aria-label={t('projects.setAsMainAria', { title: project?.title }, `Set ${project?.title} as main project`)}
-            />
+            {project?.isMain && project?.usedInClass?.id
+              ? t(
+                  'projects.mainProjectIn',
+                  { title: project.usedInClass.title },
+                  `★ Main project in ${project.usedInClass.title}`
+                )
+              : project?.usedInClass?.title || ''}
           </Cell>
         </Row>
       ))}

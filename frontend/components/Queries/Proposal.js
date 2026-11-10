@@ -960,6 +960,7 @@ export const CLASS_PROJECTS_QUERY = gql`
       slug
       description
       isSubmitted
+      isMain
       settings
       author {
         id

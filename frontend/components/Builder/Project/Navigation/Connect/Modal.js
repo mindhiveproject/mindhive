@@ -2,11 +2,13 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import LinkClass from "./LinkClass";
+import SecondMainWarning from "../../ProjectBoard/Board/Builder/SecondMainWarning";
 import Collaborators from "../../../../Global/Collaborators";
 import { StyledInput } from "../../../../styles/StyledForm";
 import Button from "../../../../DesignSystem/Button";
 import IconButton from "../../../../DesignSystem/IconButton";
 import Modal from "../../../../DesignSystem/Modal";
+import MessageCard from "../../../../DesignSystem/MessageCard";
 import {
   CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE,
   ConnectFacepileChevron,
@@ -21,6 +23,8 @@ export default function ConnectModal({
   user,
   handleChange,
   updateProject,
+  saveError,
+  savedProject,
 }) {
   const { t } = useTranslation("builder");
   const [open, setOpen] = useState(false);
@@ -60,9 +64,8 @@ export default function ConnectModal({
             </Button>
             <Button
               variant="filled"
-              onClick={() => {
-                updateProject();
-                setOpen(false);
+              onClick={async () => {
+                if (await updateProject()) setOpen(false);
               }}
             >
               {t("connectModal.saveAndClose", {}, { default: "Save & Close" })}
@@ -101,7 +104,10 @@ export default function ConnectModal({
         <h2 className="MH-Type-Title-Small">
           {t("connectModal.linkedClass", {}, { default: "Linked class" })}
         </h2>
-        <LinkClass project={project} handleChange={handleChange} />
+        <LinkClass project={project} user={user} handleChange={handleChange} />
+        {saveError && (
+          <MessageCard variant="warning" message={saveError} />
+        )}
         <h2 className="MH-Type-Title-Small">
           {t("connectModal.projectBoardCollaborators", {}, {
             default: "Project board collaborators",
@@ -111,6 +117,13 @@ export default function ConnectModal({
           userClasses={userClasses}
           collaborators={collaborators}
           handleChange={handleChange}
+        />
+        <SecondMainWarning
+          boardId={project?.id}
+          classId={savedProject?.usedInClass?.id}
+          newIds={collaborators.filter(
+            (id) => !(savedProject?.collaborators || []).some((c) => c?.id === id)
+          )}
         />
       </Modal>
     </>

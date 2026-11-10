@@ -357,6 +357,13 @@ export const UPDATE_PROJECT_BOARD = gql`
   mutation UPDATE_PROJECT_BOARD($id: ID!, $input: ProposalBoardUpdateInput!) {
     updateProposalBoard(where: { id: $id }, data: $input) {
       id
+      # The server may change these with the update (see
+      # keystone/lib/mainProject.js): a board that changes class stops being
+      # a main project.
+      isMain
+      usedInClass {
+        id
+      }
       milestoneStatus
       submitProposalStatus
       submitProposalOpenForComments

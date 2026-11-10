@@ -94,7 +94,15 @@ export default function ClassStudents({ myclass, user, query }) {
 
   // Main projects in this class → parent template boards (deduped by template id).
   const getStudentMainProjectTemplates = (student) => {
-    const mainProjects = (student?.collaboratorInProposal || []).filter(
+    // A student's projects: the ones they collaborate on and the ones they
+    // authored (an author is not always among the collaborators).
+    const projectsById = new Map(
+      [
+        ...(student?.collaboratorInProposal || []),
+        ...(student?.authorOfProposal || []),
+      ].map((project) => [project?.id, project])
+    );
+    const mainProjects = [...projectsById.values()].filter(
       (project) =>
         project?.usedInClass?.id === myclass?.id && project?.isMain
     );

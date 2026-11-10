@@ -12,6 +12,9 @@
 		"modalTitle": "Make this your main project?",
 		"explanation": "Your main project shows your teacher which project you'll keep working on in this class. You can have one main project per class.",
 		"replaces": "{{titles}} will no longer be your main project.",
+		"replacesShared": "{{titles}} will no longer be marked as main project.",
+		"secondMainWarning": "This is a main project, and {{names}} already has a main project in this class. If you add them, they will have two main projects, and their teacher will see both until one is removed as main project.",
+		"blockedByShared": "You can have one main project per class, and {{titles}} is already a main project in this class. It is shared with other students, so it is not changed automatically. Open it and remove it as main project first.",
 		"cancel": "Cancel",
 		"confirm": "Set as main project"
 	},
@@ -1566,7 +1569,12 @@
 	"link": "Link",
 	"linkClass": {
 		"notLinked": "Not linked to a class",
-		"doNotConnectClass": "Do not connect to class"
+		"doNotConnectClass": "Do not connect to class",
+		"lockedMain": "This is a main project in {{title}}, so it cannot be moved to another class. You can have one main project per class. To move it, remove it as main project first, or ask the support team for help.",
+		"lockedSubmitted": "This project has work that was submitted or reviewed in {{title}}, so it cannot be moved to another class. If it is in the wrong class, the support team can help.",
+		"firstLinkNotice": "Check that this is the right class. Its teacher will see this project, and you can have one main project per class. Once this is your main project or you have submitted work, it can no longer be moved to another class.",
+		"moveNotice": "This takes the project out of {{title}}: its teacher will no longer see it. It can only move to a class that uses the same project board.",
+		"staffMoveNotice": "This takes the project out of {{title}}. If it is a main project, it will stop being one."
 	},
 	"main": {
 		"errorLoadingStudy": "Error loading study: {{errorMessage}}",
