@@ -14,7 +14,8 @@ import { readClassPrefs, writeClassPrefs } from "./classPagePrefs";
 
 // Class project board bar shown between the class header and the tabs on every
 // tab. Each board is a split button: the main part picks the board the
-// Dashboard shows, the small right part opens its editor. Managing boards
+// Dashboard shows, the small right part opens its editor. With a single board
+// there is nothing to pick, so both parts open its editor. Managing boards
 // (settings, library, new templates) lives in the Settings tab.
 export default function ClassTemplateBoardPicker({ myclass, page }) {
   const { t } = useTranslation("classes");
@@ -37,6 +38,8 @@ export default function ClassTemplateBoardPicker({ myclass, page }) {
           readClassPrefs(classId)?.dashboard?.template,
           getPrimaryTemplateBoardId(myclass),
         ].find(isKnown) || boards[0].id;
+
+  const onlyBoard = boards.length === 1;
 
   const goTo = (query) =>
     router.push({ pathname: `/dashboard/myclasses/${myclass?.code}`, query });
@@ -67,21 +70,27 @@ export default function ClassTemplateBoardPicker({ myclass, page }) {
             default: "Untitled template",
           });
         const isSelected = board.id === selectedId;
+        const editLabel = t("main.editBoardNamed", { board: title }, {
+          default: "Edit {{board}}",
+        });
+        const edit = () => goTo({ page, editBoard: board.id });
         return (
           <SplitButton
             key={board.id}
             label={title}
             variant={isSelected ? "filled" : "outline"}
             selected={isSelected}
-            title={t("main.showOnDashboard", { board: title }, {
-              default: "Show {{board}} on the dashboard",
-            })}
-            onClick={() => select(board.id)}
+            title={
+              onlyBoard
+                ? editLabel
+                : t("main.showOnDashboard", { board: title }, {
+                    default: "Show {{board}} on the dashboard",
+                  })
+            }
+            onClick={onlyBoard ? edit : () => select(board.id)}
             trailingIcon={<EditIcon />}
-            trailingAriaLabel={t("main.editBoardNamed", { board: title }, {
-              default: "Edit {{board}}",
-            })}
-            onTrailingClick={() => goTo({ page, editBoard: board.id })}
+            trailingAriaLabel={editLabel}
+            onTrailingClick={edit}
           />
         );
       })}
