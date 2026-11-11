@@ -9,7 +9,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { StudentPageLink } from "./Renderers/StudentPageLink";
 import { ManageProjectCell } from "./Renderers/ManageProjectCell";
-import { ManageStudyCell } from "./Renderers/ManageStudyCell";
+import { MainStudyCell } from "./Renderers/MainStudyCell";
 import { MainProjectCell } from "./Renderers/MainProjectCell";
 import { MilestoneStatusCell } from "./Renderers/MilestoneStatusCell";
 import { MilestoneColumnHeader } from "./Renderers/MilestoneColumnHeader";
@@ -38,7 +38,6 @@ import {
 } from "./dashboardUtils";
 import { SelectedStudentsModal } from "./Modals/SelectedStudents";
 import ProjectManager from "./Modals/ProjectManager";
-import StudyManager from "./Modals/StudyManager";
 import SubmissionStatusManager from "./Modals/SubmissionStatusManager";
 import StudySubmissionStatusManager from "./Modals/StudySubmissionStatusManager";
 import useClassDashboardData from "./useClassDashboardData";
@@ -334,13 +333,24 @@ export default function Dashboard({ myclass }) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [bulkMilestoneKey, setBulkMilestoneKey] = useState(null);
   const [projectRow, setProjectRow] = useState(null);
-  const [studyRow, setStudyRow] = useState(null);
   const [statusTarget, setStatusTarget] = useState(null);
   const [search, setSearch] = useState("");
 
   const openStatusManager = useCallback(
     (row, milestone) => setStatusTarget({ rowKey: rowKey(row), milestone }),
     []
+  );
+
+  // The study chip opens the Studies tab, searched to the main project's study.
+  const openStudyInStudiesTab = useCallback(
+    (row) => {
+      if (!myclass?.code || !row?.studyTitle) return;
+      router.push({
+        pathname: `/dashboard/myclasses/${myclass.code}`,
+        query: { page: "studies", study: row.studyTitle },
+      });
+    },
+    [myclass?.code, router]
   );
 
   const students = data?.profiles || [];
@@ -574,16 +584,15 @@ export default function Dashboard({ myclass }) {
         width: 220,
       },
       {
-        colId: "manageStudy",
+        colId: "mainStudy",
         field: "studyTitle",
-        headerName: t("dashboard.manageStudy", {}, {
-          default: "Manage study",
+        headerName: t("dashboard.mainStudyChip.header", {}, {
+          default: "Main project study",
         }),
-        cellRenderer: ManageStudyCell,
+        cellRenderer: MainStudyCell,
         cellRendererParams: {
-          onManageStudy: setStudyRow,
+          onOpenStudy: openStudyInStudiesTab,
         },
-        sortable: false,
         filter: false,
         minWidth: 200,
         width: 220,
@@ -597,6 +606,7 @@ export default function Dashboard({ myclass }) {
     completionByKey,
     studentsProcessed.length,
     openStatusManager,
+    openStudyInStudiesTab,
   ]);
 
   const defaultColDef = useMemo(
@@ -847,17 +857,6 @@ export default function Dashboard({ myclass }) {
           data={projectRow}
           classId={myclass?.id}
           classProposalBoardId={selectedBoardId || primaryBoardId}
-        />
-      ) : null}
-
-      {studyRow ? (
-        <StudyManager
-          key={studyRow.id}
-          open
-          onClose={() => setStudyRow(null)}
-          data={studyRow}
-          classId={myclass?.id}
-          classCode={myclass?.code}
         />
       ) : null}
 

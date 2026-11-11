@@ -334,6 +334,31 @@ export const CLASS_DASHBOARD_MENTORS_QUERY = gql`
   }
 `;
 
+// The class's teaching team (teacher, co-teachers, mentors) who hold a mentor
+// or teacher permission: the people a teacher can add as a study's mentors.
+export const CLASS_TEACHING_STAFF_QUERY = gql`
+  query CLASS_TEACHING_STAFF_QUERY($ids: [ID!]) {
+    profiles(
+      where: {
+        AND: [
+          { id: { in: $ids } }
+          {
+            permissions: {
+              some: { name: { in: ["MENTOR", "TEACHER"] } }
+            }
+          }
+        ]
+      }
+      orderBy: { username: asc }
+    ) {
+      id
+      username
+      firstName
+      lastName
+    }
+  }
+`;
+
 // The class's studies with their classes and collaborators, loaded by the
 // backend with one class access check for all studies
 // (keystone/lib/classDashboard.js) instead of one per study. Plain JSON, like
