@@ -2481,13 +2481,6 @@
 		"copyParticipantLink": "Copy link",
 		"copyParticipantLinkAria": "Copy the participant page link of {{title}}",
 		"rowActions": "Actions for {{title}}",
-		"review": {
-			"header": "Review",
-			"submitted": "Submitted, to review",
-			"submittedHint": "A student's main project study, submitted for data collection.",
-			"mainProject": "Main project",
-			"mainProjectHint": "Linked to a student's main project."
-		},
 		"newStudy": {
 			"button": "New study",
 			"title": "New study",
@@ -2524,7 +2517,28 @@
 			"title": "Mentors of “{{title}}”",
 			"hint": "Mentors can edit the study. You can add people from this class's teaching team who have a mentor or teacher account.",
 			"pick": "Add mentors",
-			"empty": "No one on this class's teaching team has a mentor or teacher account yet."
+			"empty": "No one on this class's teaching team has a mentor or teacher account yet. Go to your class settings to add people to your teaching team."
+		},
+		"participation": {
+			"real": "{{count}} real",
+			"test": "{{count}} test",
+			"realHint": "Real: {{count}} ({{guests}} guests). Took part while the study was collecting data, and is not the study's author or a collaborator.",
+			"testHint": "Test: {{count}} ({{guests}} guests). The study's author or collaborators trying it, or anyone who only took part before data collection started.",
+			"includedHint": "Included in data: {{count}}. Completed a run that is ticked for inclusion on the study's Collect page.",
+			"scopeHint": "Counts people (accounts and guests) with at least one recorded run.",
+			"headerHint": "Real participants took part while the study was collecting data and are not on the study team. Test participants are the team trying the study, or runs before data collection. Hover a count for details."
+		},
+		"openBuilderNewTab": "Open {{title}} in the study builder (new tab)",
+		"status": {
+			"header": "Status",
+			"collecting": "Collecting data",
+			"collectingHint": "Submitted for data collection: the study is locked and open to participants.",
+			"notSubmitted": "Not submitted",
+			"notSubmittedHint": "Not yet submitted for data collection.",
+			"collectingCount_one": "{{count}} study collecting data",
+			"collectingCount_other": "{{count}} studies collecting data",
+			"showOnly": "Show only these",
+			"showAll": "Show all studies"
 		}
 	},
 	"studiesTab": "Studies",

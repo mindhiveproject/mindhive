@@ -26,12 +26,14 @@ import {
 } from "./StudiesTab/studyProjects";
 import {
   ParticipantLinkCell,
+  ParticipantsCell,
   ProjectCell,
-  REVIEW_NONE,
-  ReviewCell,
+  STATUS_COLLECTING,
+  STATUS_NONE,
+  StatusCell,
   StudyActionsCell,
   StudyBuilderCell,
-  reviewRankOf,
+  statusRankOf,
 } from "./StudiesTab/StudyCells";
 
 const WRAP_CELL = {
@@ -92,10 +94,8 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
     }
   };
 
-  const { projects, projectsByStudyId, mentorIds } = useClassStudyProjects(
-    myclass,
-    { skip: readOnly }
-  );
+  const { projects, projectsByStudyId, participationByStudyId, mentorIds } =
+    useClassStudyProjects(myclass, { skip: readOnly });
   const { staff } = useClassTeachingStaff(myclass, { skip: readOnly });
 
   // Study collaborators shown in the Mentors column instead of Collaborators:
@@ -124,13 +124,28 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
       return {
         ...study,
         linkedProjects,
-        reviewRank: reviewRankOf(linkedProjects),
+        participation: participationByStudyId.get(study.id) || null,
+        statusRank: statusRankOf(linkedProjects),
       };
     });
     return readOnly
       ? withProjects
-      : withProjects.sort((a, b) => a.reviewRank - b.reviewRank);
-  }, [studies, projectsByStudyId, readOnly]);
+      : withProjects.sort((a, b) => a.statusRank - b.statusRank);
+  }, [studies, projectsByStudyId, participationByStudyId, readOnly]);
+
+  // "N studies collecting data · Show only these" above the table.
+  const [onlyCollecting, setOnlyCollecting] = useState(false);
+  const collectingCount = rows.filter(
+    (row) => row.statusRank === STATUS_COLLECTING
+  ).length;
+  const showOnlyCollecting = onlyCollecting && collectingCount > 0;
+  const visibleRows = useMemo(
+    () =>
+      showOnlyCollecting
+        ? rows.filter((row) => row.statusRank === STATUS_COLLECTING)
+        : rows,
+    [rows, showOnlyCollecting]
+  );
 
   // The author and collaborators, without the mentors (their own column).
   const getCollaborators = useCallback(
@@ -211,14 +226,14 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
     ...(!readOnly
       ? [
           {
-            colId: "review",
-            headerName: t("studies.review.header", {}, { default: "Review" }),
-            valueGetter: (params) => params?.data?.reviewRank ?? REVIEW_NONE,
-            cellRenderer: ReviewCell,
+            colId: "status",
+            headerName: t("studies.status.header", {}, { default: "Status" }),
+            valueGetter: (params) => params?.data?.statusRank ?? STATUS_NONE,
+            cellRenderer: StatusCell,
             filter: false,
             sortable: true,
             flex: 0,
-            minWidth: 190,
+            minWidth: 170,
             cellStyle: { display: "flex", alignItems: "center" },
           },
           {
@@ -234,7 +249,11 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
             flex: 1,
             minWidth: 180,
             autoHeight: true,
-            cellStyle: { display: "flex", alignItems: "center" },
+            cellStyle: {
+              display: "flex",
+              alignItems: "center",
+              overflow: "hidden",
+            },
           },
         ]
       : []),
@@ -283,12 +302,30 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
     {
       field: "participants",
       headerName: t("studies.participants"),
-      valueGetter: (params) => params?.data?.participantsCount ?? 0,
+      ...(readOnly
+        ? {
+            valueGetter: (params) => params?.data?.participantsCount ?? 0,
+            minWidth: 120,
+            maxWidth: 140,
+          }
+        : {
+            // Sorts and filters on real participants; the cell shows both.
+            valueGetter: (params) =>
+              params?.data?.participation?.real ??
+              params?.data?.participantsCount ??
+              0,
+            cellRenderer: ParticipantsCell,
+            headerTooltip: t("studies.participation.headerHint", {}, {
+              default:
+                "Real participants took part while the study was collecting data and are not on the study team. Test participants are the team trying the study, or runs before data collection. Hover a count for details.",
+            }),
+            minWidth: 150,
+            maxWidth: 180,
+            cellStyle: { display: "flex", alignItems: "center" },
+          }),
       filter: "agNumberColumnFilter",
       sortable: true,
       flex: 0,
-      minWidth: 120,
-      maxWidth: 140,
     },
     {
       field: "createdAt",
@@ -310,6 +347,7 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
       flex: 0,
       minWidth: 150,
       maxWidth: 170,
+      autoHeight: true,
       cellStyle: CENTER_CELL,
     },
     ...(!readOnly
@@ -321,8 +359,9 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
             filter: false,
             sortable: false,
             flex: 0,
-            minWidth: 140,
-            maxWidth: 160,
+            minWidth: 180,
+            maxWidth: 200,
+            autoHeight: true,
             cellStyle: CENTER_CELL,
           },
           {
@@ -340,6 +379,7 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
             width: 64,
             minWidth: 64,
             maxWidth: 64,
+            autoHeight: true,
             cellStyle: CENTER_CELL,
           },
         ]
@@ -404,6 +444,34 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
                 />
               </div>
             ) : null}
+            {!readOnly && collectingCount > 0 ? (
+              <div
+                className="MH-Type-Body-Small"
+                style={{ display: "flex", alignItems: "center", gap: 4 }}
+              >
+                <span>
+                  {t(
+                    "studies.status.collectingCount",
+                    { count: collectingCount },
+                    { default: "{{count}} studies collecting data" }
+                  )}
+                </span>
+                <span aria-hidden="true">·</span>
+                <Button
+                  variant="text"
+                  aria-pressed={showOnlyCollecting}
+                  onClick={() => setOnlyCollecting((on) => !on)}
+                >
+                  {showOnlyCollecting
+                    ? t("studies.status.showAll", {}, {
+                        default: "Show all studies",
+                      })
+                    : t("studies.status.showOnly", {}, {
+                        default: "Show only these",
+                      })}
+                </Button>
+              </div>
+            ) : null}
             {!readOnly ? (
               <Button
                 variant="filled"
@@ -422,7 +490,8 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
         ) : (
           <div className="classTabTable ag-theme-quartz">
             <AgGridReact
-              rowData={rows}
+              domLayout="autoHeight"
+              rowData={visibleRows}
               columnDefs={columnDefs}
               getRowId={(params) => params.data?.id}
               quickFilterText={search}
