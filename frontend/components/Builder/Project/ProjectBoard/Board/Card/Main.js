@@ -293,7 +293,7 @@ export default function ProposalCard({
   const homeworkStatusByAssignmentId = useMemo(
     () =>
       statusByAssignmentForAuthors(
-        cardHomeworkData?.homeworks,
+        cardHomeworkData?.cardAssignmentHomeworks,
         homeworkAuthorsKey ? homeworkAuthorsKey.split(",") : [],
       ),
     [cardHomeworkData, homeworkAuthorsKey],

@@ -169,6 +169,10 @@
 		"studentTaskSelection": "Student task & survey selection",
 		"studentTaskSelectionOff": "Off",
 		"studentTaskSelectionOn": "Students can pick tasks and surveys",
+		"studentTaskSelectionSaving": "Saving…",
+		"studentTaskSelectionUpdating": "Updating student boards… This can take a minute.",
+		"studentTaskSelectionSaveError": "Couldn't save this setting. Please try again.",
+		"studentTaskSelectionPushError": "Saved on the template, but student boards weren't updated. Save the card to try again.",
 		"studentTaskSelectionText": "Let students pick tasks and surveys for their copy of this card, from the ones their class can use."
 	},
 	"cardNavigation": {

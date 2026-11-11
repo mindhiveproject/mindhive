@@ -136,7 +136,10 @@ export default function BuilderProposalCard({
   const [createCard, { loading: createLoading }] = useMutation(CREATE_CARD);
   const [creating, setCreating] = useState(false);
   const [saveCardSettings] = useMutation(UPDATE_CARD_SETTINGS);
-  const [savingTaskSelection, setSavingTaskSelection] = useState(false);
+  // Student task selection toggle: "saving" (this card), "updating" (student
+  // boards), or null; a failure is kept to tell the teacher.
+  const [taskSelectionPhase, setTaskSelectionPhase] = useState(null);
+  const [taskSelectionError, setTaskSelectionError] = useState(null);
 
   const { data: boardData } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposal?.id },
@@ -439,7 +442,8 @@ export default function BuilderProposalCard({
     // A new card has nothing to save yet; the flag goes with its creation.
     if (isCreateMode || !proposalCard?.id) return;
 
-    setSavingTaskSelection(true);
+    setTaskSelectionError(null);
+    setTaskSelectionPhase("saving");
     try {
       await saveCardSettings({
         variables: {
@@ -449,24 +453,42 @@ export default function BuilderProposalCard({
           }),
         },
       });
-      const hasClones = proposal?.prototypeFor?.length > 0;
-      if (hasClones && autoUpdateStudentBoards && propagateToClones) {
-        await propagateToClones({
-          contentChangedCardIds: contentChangedCardIds(false),
-        });
-        savedNotPropagated.current = { any: false, contentChanged: false };
-      } else if (hasClones) {
-        savedNotPropagated.current = {
-          ...savedNotPropagated.current,
-          any: true,
-        };
-        onTemplateChangedWithoutPropagation?.();
-      }
     } catch (e) {
       console.error("Saving student task selection failed:", e);
-    } finally {
-      setSavingTaskSelection(false);
+      // Not saved: show the switch as it is on the server.
+      handleChange({
+        target: {
+          name: "settings",
+          value: { ...(inputs?.settings || {}), studentTaskSelection: !checked },
+        },
+      });
+      setTaskSelectionError("save");
+      setTaskSelectionPhase(null);
+      return;
     }
+
+    const hasClones = proposal?.prototypeFor?.length > 0;
+    if (hasClones && autoUpdateStudentBoards && propagateToClones) {
+      setTaskSelectionPhase("updating");
+      try {
+        const result = await propagateToClones({
+          contentChangedCardIds: contentChangedCardIds(false),
+        });
+        if (result?.errors?.length) throw new Error(result.errors.join("; "));
+        savedNotPropagated.current = { any: false, contentChanged: false };
+      } catch (e) {
+        console.error("Updating student boards failed:", e);
+        // Saved on the template only: keep the pending-update banner so the
+        // teacher can push again.
+        savedNotPropagated.current = { ...savedNotPropagated.current, any: true };
+        onTemplateChangedWithoutPropagation?.();
+        setTaskSelectionError("push");
+      }
+    } else if (hasClones) {
+      savedNotPropagated.current = { ...savedNotPropagated.current, any: true };
+      onTemplateChangedWithoutPropagation?.();
+    }
+    setTaskSelectionPhase(null);
   };
 
   // Calculate total linked items
@@ -886,7 +908,7 @@ export default function BuilderProposalCard({
             </div>
             <ToggleSwitch
               checked={!!inputs?.settings?.studentTaskSelection}
-              loading={savingTaskSelection}
+              loading={!!taskSelectionPhase}
               onChange={handleStudentTaskSelectionChange}
               aria-label={tBuilder(
                 "cardBuilder.studentTaskSelection",
@@ -894,7 +916,22 @@ export default function BuilderProposalCard({
                 { default: "Student task & survey selection" }
               )}
               label={
-                inputs?.settings?.studentTaskSelection
+                taskSelectionPhase === "saving"
+                  ? tBuilder(
+                      "cardBuilder.studentTaskSelectionSaving",
+                      {},
+                      { default: "Saving…" }
+                    )
+                  : taskSelectionPhase === "updating"
+                  ? tBuilder(
+                      "cardBuilder.studentTaskSelectionUpdating",
+                      {},
+                      {
+                        default:
+                          "Updating student boards… This can take a minute.",
+                      }
+                    )
+                  : inputs?.settings?.studentTaskSelection
                   ? tBuilder(
                       "cardBuilder.studentTaskSelectionOn",
                       {},
@@ -907,6 +944,28 @@ export default function BuilderProposalCard({
                     )
               }
             />
+            {taskSelectionError && (
+              <div
+                role="alert"
+                className="cardSubheaderComment"
+                style={{ color: "var(--MH-Theme-Error, #b3261e)", marginTop: "8px" }}
+              >
+                {taskSelectionError === "save"
+                  ? tBuilder(
+                      "cardBuilder.studentTaskSelectionSaveError",
+                      {},
+                      { default: "Couldn't save this setting. Please try again." }
+                    )
+                  : tBuilder(
+                      "cardBuilder.studentTaskSelectionPushError",
+                      {},
+                      {
+                        default:
+                          "Saved on the template, but student boards weren't updated. Save the card to try again.",
+                      }
+                    )}
+              </div>
+            )}
           </div>
 
           <div className="proposalCardComments">

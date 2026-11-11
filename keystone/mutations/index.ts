@@ -48,6 +48,8 @@ import toggleReviewUpvote from "./toggleReviewUpvote";
 import classJoinPreview from "./classJoinPreview";
 import doeDataSummary from "./doeDataSummary";
 import studyCollectData from "./studyCollectData";
+import studyResults from "./studyResults";
+import cardAssignmentHomeworks from "./cardAssignmentHomeworks";
 import classDashboardProjects from "./classDashboardProjects";
 import classDashboardStudies from "./classDashboardStudies";
 import classDeidentificationNotices from "./classDeidentificationNotices";
@@ -682,6 +684,16 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # A study's participants, guests and results for its Collect page,
         # checked once: the caller must be able to edit the study.
         studyCollectData(studyId: ID!): StudyCollectData!
+        # A study's results (runs, summary results, data source records) for
+        # its Collect page and downloads, in the shape GET_STUDY_RESULTS read
+        # under study { ... }. Checked once: the caller must be able to edit
+        # the study. See lib/studyResults.js.
+        studyResults(studyId: ID!): JSON!
+        # Homework of these authors on these assignments, as [{ id settings
+        # assignment { id } author { id } }], for a project card's assignment
+        # status chips. Read under Homework's read filter, without resolving
+        # each row's assignment and author. See lib/cardAssignmentHomeworks.js.
+        cardAssignmentHomeworks(assignmentIds: [ID!]!, authorIds: [ID!]!): JSON!
         # A class's project boards for its teacher dashboard, in the shape of
         # proposalBoards { ... } in CLASS_DASHBOARD_PROJECTS_QUERY. The caller
         # must be able to read the class. See lib/classDashboard.js.
@@ -757,6 +769,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         classJoinPreview,
         readableDatasetTokens,
         studyCollectData,
+        studyResults,
+        cardAssignmentHomeworks,
         classDashboardProjects,
         classDashboardStudies,
         classDeidentificationNotices,

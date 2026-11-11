@@ -62,28 +62,23 @@ const TEMPLATE_QUERY = `
   }
 `;
 
-const CLONE_BOARD_QUERY = `
-  id
-  sections {
-    id
-    publicId
-    title
-    position
-    cards {
-      id
-      publicId
-      title
-      position
-      section { id }
-      settings
-      milestone { id }
-      resources { id }
-      assignments { id }
-      studies { id }
-      tasks { id }
-    }
-  }
-`;
+// Clone boards are read in one Prisma query (see getTemplateAndClones).
+const CLONE_CARD_SELECT = {
+  id: true,
+  publicId: true,
+  title: true,
+  description: true,
+  type: true,
+  shareType: true,
+  position: true,
+  settings: true,
+  sectionId: true,
+  milestoneId: true,
+  resources: { select: { id: true } },
+  assignments: { select: { id: true } },
+  studies: { select: { id: true } },
+  tasks: { select: { id: true } },
+} as const;
 
 export type TemplateBoard = {
   id: string;
@@ -121,11 +116,15 @@ export type CloneBoard = {
     id: string;
     publicId?: string | null;
     title: string;
+    description?: string | null;
     position: number | null;
     cards: Array<{
       id: string;
       publicId?: string | null;
       title: string;
+      description?: string | null;
+      type?: string | null;
+      shareType?: string | null;
       position: number | null;
       section: { id: string };
       settings?: Record<string, unknown> | null;
@@ -138,10 +137,54 @@ export type CloneBoard = {
   }>;
 };
 
+type CloneCard = CloneBoard["sections"][number]["cards"][number];
+
 function sortByPosition<T extends { position?: number | null }>(arr: T[]): T[] {
   return [...arr].sort(
     (a, b) => (a.position ?? 0) - (b.position ?? 0)
   );
+}
+
+// JSON settings come back parsed from Postgres and as a string from SQLite.
+function parseJsonSettings(value: unknown): Record<string, unknown> | null {
+  if (value == null) return null;
+  if (typeof value === "string") {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return null;
+    }
+  }
+  return value as Record<string, unknown>;
+}
+
+// Key-order-independent JSON, to tell whether settings actually changed.
+function stableStringify(value: unknown): string {
+  if (Array.isArray(value)) {
+    return `[${value.map(stableStringify).join(",")}]`;
+  }
+  if (value && typeof value === "object") {
+    const obj = value as Record<string, unknown>;
+    return `{${Object.keys(obj)
+      .filter((k) => obj[k] !== undefined)
+      .sort()
+      .map((k) => `${JSON.stringify(k)}:${stableStringify(obj[k])}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value) ?? "null";
+}
+
+function sameIds(
+  a: Array<{ id: string }> | string[] | undefined,
+  b: Array<{ id: string }> | string[] | undefined
+): boolean {
+  const ids = (arr: Array<{ id: string }> | string[] | undefined) =>
+    (arr ?? [])
+      .map((x) => (typeof x === "string" ? x : x?.id))
+      .filter(Boolean)
+      .sort()
+      .join(",");
+  return ids(a) === ids(b);
 }
 
 /**
@@ -205,7 +248,9 @@ function cloneCardTaskIds(
 
 /**
  * Fetch the template board and all clone boards (boards that have clonedFrom =
- * boardId and are not themselves class templates).
+ * boardId and are not themselves class templates). Pass a sudo context once
+ * the caller's right to edit the template is checked (see
+ * applyTemplateBoardChanges): clones are read through Prisma either way.
  */
 export async function getTemplateAndClones(
   context: any,
@@ -228,40 +273,51 @@ export async function getTemplateAndClones(
     sections: sortByPosition(templateSections),
   };
 
-  const clones = await context.query.ProposalBoard.findMany({
-    where: { clonedFrom: { id: { equals: templateBoardId } } },
-    query: CLONE_BOARD_QUERY,
-  });
-
+  // All clones in one Prisma query: a GraphQL read resolves every nested
+  // relationship per row (and, as the caller, runs list access filters on
+  // each), which on a template with ~100 student boards exhausted the
+  // connection pool.
+  //
   // A board that is itself a class template is a teacher's own copy, not a
   // student clone: it diverges on purpose and must not be overwritten (nor
   // relay the change to its students). Excluded even if it still carries a
-  // legacy clonedFrom link (see backfillDetachClassTemplateClones). Read as
-  // sudo: as the caller, class links outside their classes would come back
-  // empty and the teacher's board would be treated as a student clone.
-  const classTemplateCloneIds = new Set(
-    (
-      await context.sudo().query.ProposalBoard.findMany({
-        where: {
-          clonedFrom: { id: { equals: templateBoardId } },
-          OR: [
-            { templatesForClass: { some: {} } },
-            { templateForClasses: { some: {} } },
-          ],
+  // legacy clonedFrom link (see backfillDetachClassTemplateClones).
+  const clones = await context.prisma.proposalBoard.findMany({
+    where: {
+      clonedFromId: templateBoardId,
+      templateForClasses: { none: {} },
+      templatesForClass: { none: {} },
+    },
+    select: {
+      id: true,
+      sections: {
+        select: {
+          id: true,
+          publicId: true,
+          title: true,
+          description: true,
+          position: true,
+          cards: { select: CLONE_CARD_SELECT },
         },
-        query: "id",
-      })
-    ).map((b: { id: string }) => b.id)
-  );
+      },
+    },
+  });
 
-  const normalizedClones = (clones ?? [])
-    .filter((c: any) => !classTemplateCloneIds.has(c.id))
-    .map((c: any) => ({
-    ...c,
+  const normalizedClones: CloneBoard[] = (clones ?? []).map((c: any) => ({
+    id: c.id,
     sections: sortByPosition(
       (c.sections ?? []).map((s: any) => ({
         ...s,
-        cards: sortByPosition(s.cards ?? []),
+        cards: sortByPosition(
+          (s.cards ?? []).map(
+            ({ sectionId, milestoneId, settings, ...card }: any) => ({
+              ...card,
+              settings: parseJsonSettings(settings),
+              section: { id: sectionId },
+              milestone: milestoneId ? { id: milestoneId } : null,
+            })
+          )
+        ),
       }))
     ),
   }));
@@ -326,15 +382,21 @@ export async function syncSectionsToClone(
           ts
         );
       }
-      await context.db.ProposalSection.updateOne({
-        where: { id: existing.id },
-        data: {
-          title: ts.title,
-          description: ts.description ?? undefined,
-          position,
-          publicId,
-        },
-      });
+      // Write only what differs: most pushes change one card, and rewriting
+      // every section of every clone is what made pushes slow.
+      const sectionData: Record<string, unknown> = {};
+      if (existing.title !== ts.title) sectionData.title = ts.title;
+      if (ts.description != null && existing.description !== ts.description) {
+        sectionData.description = ts.description;
+      }
+      if (existing.position !== position) sectionData.position = position;
+      if (existing.publicId !== publicId) sectionData.publicId = publicId;
+      if (Object.keys(sectionData).length > 0) {
+        await context.db.ProposalSection.updateOne({
+          where: { id: existing.id },
+          data: sectionData,
+        });
+      }
       // Keep in-memory clone row aligned for card sync within this pass.
       existing.publicId = publicId;
       templateSectionIdsToCloneSectionIds.set(ts.id, existing.id);
@@ -430,9 +492,7 @@ export async function syncCardsToClone(
 
     const templateCards = tSection.cards ?? [];
     const cloneSection = clone.sections?.find((s) => s.id === cloneSectionId);
-    const cloneCards = cloneSection
-      ? (cloneSection as any).cards ?? []
-      : [];
+    const cloneCards: CloneCard[] = cloneSection?.cards ?? [];
 
     const plans = planRowMatches(templateCards, cloneCards);
     const matchedCloneCardIds = new Set<string>();
@@ -464,54 +524,75 @@ export async function syncCardsToClone(
 
         const overwriteContent = contentUpdateSet.has(tc.id);
         const mergedSettings = mergeSettingsPreservingStatus(
-          (existing as { settings?: Record<string, unknown> | null }).settings,
+          existing.settings,
           tc.settings
         );
-        await context.db.ProposalCard.updateOne({
-          where: { id: existing.id },
-          data: {
-            title: tc.title,
-            description: tc.description ?? undefined,
-            type: tc.type ?? undefined,
-            shareType: tc.shareType ?? undefined,
-            position,
-            ...(overwriteContent
-              ? {
-                  content: tc.content ?? undefined,
-                  // Keystone text() is NOT NULL, so pass "" rather than null
-                  // ("Yjs State is required"). Empty string is falsy in
-                  // collab-server onLoadDocument, so the next open re-seeds
-                  // from the freshly propagated HTML instead of a stale CRDT.
-                  yjsState: "",
-                }
-              : {}),
-            publicId,
-            settings: mergedSettings,
-            resources: { set: (tc.resources ?? []).map((r) => ({ id: r.id })) },
-            assignments: {
-              set: (tc.assignments ?? []).map((a) => ({ id: a.id })),
-            },
-            studies: { set: (tc.studies ?? []).map((s) => ({ id: s.id })) },
-            tasks: {
-              set: cloneCardTaskIds(
-                tc,
-                existing as {
-                  settings?: Record<string, unknown> | null;
-                  tasks?: Array<{ id: string }>;
-                }
-              ).map((id) => ({ id })),
-            },
-            // Template-owned: follow the template card, including when the
-            // teacher removed its milestone (the clone would otherwise keep
-            // reporting a review step the template no longer has).
-            ...((tc as any).milestone?.id
-              ? { milestone: { connect: { id: (tc as any).milestone.id } } }
-              : (existing as { milestone?: { id: string } | null }).milestone
-                    ?.id
-                ? { milestone: { disconnect: true } }
-                : {}),
-          },
-        });
+        const taskIds = cloneCardTaskIds(tc, existing);
+        const templateMilestoneId: string | null =
+          (tc as any).milestone?.id ?? null;
+        const cloneMilestoneId = existing.milestone?.id ?? null;
+
+        // Write only what differs, so a push that changed one card writes
+        // one card per clone instead of every card (each relationship `set`
+        // is several queries).
+        const data: Record<string, unknown> = {};
+        if (existing.title !== tc.title) data.title = tc.title;
+        if (tc.description != null && existing.description !== tc.description) {
+          data.description = tc.description;
+        }
+        if (tc.type != null && existing.type !== tc.type) data.type = tc.type;
+        if (tc.shareType != null && existing.shareType !== tc.shareType) {
+          data.shareType = tc.shareType;
+        }
+        if (existing.position !== position) data.position = position;
+        if (existing.publicId !== publicId) data.publicId = publicId;
+        if (overwriteContent) {
+          data.content = tc.content ?? undefined;
+          // Keystone text() is NOT NULL, so pass "" rather than null
+          // ("Yjs State is required"). Empty string is falsy in
+          // collab-server onLoadDocument, so the next open re-seeds
+          // from the freshly propagated HTML instead of a stale CRDT.
+          data.yjsState = "";
+        }
+        if (
+          stableStringify(existing.settings ?? {}) !==
+          stableStringify(mergedSettings)
+        ) {
+          data.settings = mergedSettings;
+        }
+        if (!sameIds(existing.resources, tc.resources)) {
+          data.resources = {
+            set: (tc.resources ?? []).map((r) => ({ id: r.id })),
+          };
+        }
+        if (!sameIds(existing.assignments, tc.assignments)) {
+          data.assignments = {
+            set: (tc.assignments ?? []).map((a) => ({ id: a.id })),
+          };
+        }
+        if (!sameIds(existing.studies, tc.studies)) {
+          data.studies = {
+            set: (tc.studies ?? []).map((st) => ({ id: st.id })),
+          };
+        }
+        if (!sameIds(existing.tasks, taskIds)) {
+          data.tasks = { set: taskIds.map((id) => ({ id })) };
+        }
+        // Template-owned: follow the template card, including when the
+        // teacher removed its milestone (the clone would otherwise keep
+        // reporting a review step the template no longer has).
+        if (templateMilestoneId && templateMilestoneId !== cloneMilestoneId) {
+          data.milestone = { connect: { id: templateMilestoneId } };
+        } else if (!templateMilestoneId && cloneMilestoneId) {
+          data.milestone = { disconnect: true };
+        }
+
+        if (Object.keys(data).length > 0) {
+          await context.db.ProposalCard.updateOne({
+            where: { id: existing.id },
+            data,
+          });
+        }
         continue;
       }
 
@@ -584,7 +665,11 @@ export async function applyTemplateToClones(
   context: any,
   templateBoardId: string,
   options?: ApplyTemplateOptions
-): Promise<{ updatedCloneCount: number; errors: string[] }> {
+): Promise<{
+  template: TemplateBoard | null;
+  updatedCloneCount: number;
+  errors: string[];
+}> {
   const { template, clones } = await getTemplateAndClones(
     context,
     templateBoardId
@@ -592,10 +677,10 @@ export async function applyTemplateToClones(
   const errors: string[] = [];
   if (!template) {
     errors.push("Template board not found.");
-    return { updatedCloneCount: 0, errors };
+    return { template: null, updatedCloneCount: 0, errors };
   }
   if (clones.length === 0) {
-    return { updatedCloneCount: 0, errors };
+    return { template, updatedCloneCount: 0, errors };
   }
 
   const syncOptions: SyncCardsOptions = {
@@ -618,6 +703,7 @@ export async function applyTemplateToClones(
   }
 
   return {
+    template,
     updatedCloneCount: clones.length - errors.length,
     errors,
   };
