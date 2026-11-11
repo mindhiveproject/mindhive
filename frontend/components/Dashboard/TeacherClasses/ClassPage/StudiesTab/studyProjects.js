@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import {
   CLASS_DASHBOARD_MENTORS_QUERY,
   CLASS_DASHBOARD_PROJECTS_QUERY,
+  CLASS_DASHBOARD_STUDIES_QUERY,
   CLASS_TEACHING_STAFF_QUERY,
   GET_CLASS,
 } from "../../../../Queries/Classes";
@@ -32,9 +33,10 @@ const byMainThenTitle = (a, b) =>
   (a.title || "").localeCompare(b.title || "");
 
 /**
- * The class's student projects (with their linked study) and the ids of the
- * class's mentors, for the Studies tab's project column, review order and the
- * link / create study actions. Skipped for read-only viewers.
+ * The class's student projects (with their linked study), the ids of the
+ * class's mentors and each study's participant totals, for the Studies tab's
+ * project and participants columns, review order and the link / create study
+ * actions. Skipped for read-only viewers.
  */
 export function useClassStudyProjects(myclass, { skip = false } = {}) {
   const classId = myclass?.id;
@@ -46,6 +48,12 @@ export function useClassStudyProjects(myclass, { skip = false } = {}) {
     { ...options, fetchPolicy: "cache-and-network" }
   );
   const { data: mentorsData } = useQuery(CLASS_DASHBOARD_MENTORS_QUERY, options);
+  // Real / test / included participant totals per study
+  // (keystone/lib/classDashboard.js).
+  const { data: studiesData } = useQuery(CLASS_DASHBOARD_STUDIES_QUERY, {
+    ...options,
+    fetchPolicy: "cache-and-network",
+  });
 
   const projects = useMemo(
     () =>
@@ -75,7 +83,24 @@ export function useClassStudyProjects(myclass, { skip = false } = {}) {
     return map;
   }, [projects]);
 
-  return { projects, projectsByStudyId, mentorIds, loading };
+  const participationByStudyId = useMemo(
+    () =>
+      new Map(
+        (studiesData?.classDashboardStudies || []).map((study) => [
+          study.id,
+          study.participation,
+        ])
+      ),
+    [studiesData]
+  );
+
+  return {
+    projects,
+    projectsByStudyId,
+    participationByStudyId,
+    mentorIds,
+    loading,
+  };
 }
 
 /**

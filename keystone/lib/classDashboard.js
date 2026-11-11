@@ -134,9 +134,88 @@ async function loadClassDashboardProjects(context, classId, jsonAsText) {
 const STUDY_SELECT = {
   id: true,
   title: true,
+  authorId: true,
   classes: { select: { id: true, title: true } },
   collaborators: PROFILE_SELECT,
 };
+
+// Who took part in each study, from the runs (datasets) already recorded:
+// every run keeps the study status it was recorded under. A person — an
+// account or a guest — counts as a real participant when they have a run
+// recorded while the study was collecting data (the rule the review pages
+// use) and are not the study's author or a collaborator; everyone else with a
+// run is a test participant (the team trying their own study, or runs before
+// data collection started). `included` counts people with a completed run
+// ticked for inclusion on the study's Collect page. Only totals leave here.
+const PARTICIPATION_BY = [
+  "studyId",
+  "profileId",
+  "guestId",
+  "studyStatus",
+  "isCompleted",
+  "isIncluded",
+];
+
+function emptyParticipation() {
+  return {
+    real: 0,
+    realGuests: 0,
+    test: 0,
+    testGuests: 0,
+    included: 0,
+  };
+}
+
+function summarizeParticipation(studies, runs) {
+  const teams = new Map(
+    studies.map((study) => [
+      study.id,
+      new Set(
+        [study.authorId, ...study.collaborators.map((c) => c.id)].filter(
+          Boolean
+        )
+      ),
+    ])
+  );
+  // studyId -> person key -> { guest, real, included }
+  const people = new Map();
+  for (const run of runs) {
+    const key = run.profileId
+      ? `p:${run.profileId}`
+      : run.guestId
+      ? `g:${run.guestId}`
+      : null;
+    if (!run.studyId || !key) continue;
+    if (!people.has(run.studyId)) people.set(run.studyId, new Map());
+    const byPerson = people.get(run.studyId);
+    const person = byPerson.get(key) || {
+      guest: !run.profileId,
+      real: false,
+      included: false,
+    };
+    const onTeam =
+      !!run.profileId && !!teams.get(run.studyId)?.has(run.profileId);
+    if (run.studyStatus === "COLLECTING_DATA" && !onTeam) person.real = true;
+    if (run.isCompleted && run.isIncluded) person.included = true;
+    byPerson.set(key, person);
+  }
+  const totals = new Map();
+  for (const [studyId, byPerson] of people) {
+    const total = emptyParticipation();
+    for (const person of byPerson.values()) {
+      if (person.real) {
+        total.real += 1;
+        if (person.guest) total.realGuests += 1;
+      } else {
+        total.test += 1;
+        if (person.guest) total.testGuests += 1;
+      }
+      if (person.included) total.included += 1;
+    }
+    totals.set(studyId, total);
+  }
+  return totals;
+}
 
 // The class's studies, in the shape CLASS_DASHBOARD_STUDIES_QUERY used to
 // return. A study's `classes` lists only the classes the caller may read, as
@@ -155,11 +234,19 @@ async function loadClassDashboardStudies(context, classId) {
     ? await context.db.Class.findMany({ where: { id: { in: classIds } } })
     : [];
   const readableIds = new Set(readable.map((item) => String(item.id)));
+  const runs = studies.length
+    ? await context.prisma.dataset.groupBy({
+        by: PARTICIPATION_BY,
+        where: { studyId: { in: studies.map((study) => study.id) } },
+      })
+    : [];
+  const participation = summarizeParticipation(studies, runs);
   return studies.map((study) => ({
     id: study.id,
     title: study.title,
     classes: study.classes.filter((item) => readableIds.has(item.id)),
     collaborators: study.collaborators,
+    participation: participation.get(study.id) || emptyParticipation(),
   }));
 }
 

@@ -1295,10 +1295,10 @@ const StyledClass = styled.div`
       color: #625b71;
     }
 
+    /* Grids grow with their rows (domLayout="autoHeight"; they're
+       paginated) so the page scrolls instead of the grid. */
     .classTabTable {
       width: 100%;
-      min-height: 400px;
-      height: 600px;
     }
 
     .classTabEmpty {

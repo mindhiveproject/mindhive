@@ -219,6 +219,7 @@ export default function ClassProjects({
         ) : (
           <div className="classTabTable ag-theme-quartz">
             <AgGridReact
+              domLayout="autoHeight"
               rowData={projects}
               columnDefs={columnDefs}
               getRowId={(params) => params.data?.id}

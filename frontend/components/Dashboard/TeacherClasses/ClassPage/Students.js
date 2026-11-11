@@ -485,6 +485,7 @@ export default function ClassStudents({ myclass, user, query }) {
         ) : (
           <div className="classTabTable ag-theme-quartz">
             <AgGridReact
+              domLayout="autoHeight"
               rowData={students}
               columnDefs={columnDefs}
               getRowId={(params) => params.data?.id}

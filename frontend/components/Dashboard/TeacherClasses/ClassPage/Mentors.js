@@ -256,6 +256,7 @@ export default function ClassMentors({ myclass, user }) {
         ) : (
           <div className="classTabTable ag-theme-quartz">
             <AgGridReact
+              domLayout="autoHeight"
               rowData={mentors}
               columnDefs={columnDefs}
               getRowId={(params) => params.data?.id}

@@ -123,7 +123,7 @@ export default function StudyMentorsModal({
         <p className="MH-Type-Body-Small" style={{ margin: 0 }}>
           {t("studies.mentorsModal.empty", {}, {
             default:
-              "No one on this class's teaching team has a mentor or teacher account yet.",
+              "No one on this class's teaching team has a mentor or teacher account yet. Go to your class settings to add people to your teaching team.",
           })}
         </p>
       )}

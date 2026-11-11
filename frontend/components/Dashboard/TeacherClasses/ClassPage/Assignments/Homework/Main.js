@@ -24,7 +24,6 @@ const statusTone = (status) =>
 
 const GridContainer = styled.div`
   width: 100%;
-  height: 500px;
   margin-top: 24px;
   
   .ag-theme-alpine {
@@ -169,8 +168,9 @@ export default function HomeworkMain({
 
   return (
     <GridContainer>
-      <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
+      <div className="ag-theme-alpine" style={{ width: '100%' }}>
         <AgGridReact
+            domLayout="autoHeight"
           rowData={rowData}
           columnDefs={columnDefs}
           pagination={pagination}
