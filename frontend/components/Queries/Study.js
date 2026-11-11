@@ -380,64 +380,14 @@ export const STUDY_COMPONENTS = gql`
 `;
 
 // get study datasets, summary results and consents
+// A study's runs, summary results and data source records for its Collect
+// page and downloads, read server-side in a few flat queries (see keystone
+// lib/studyResults.js). Same shape as the old study { ... } selection:
+// id slug flow datasets summaryResults dataSourceRecords consent versions
+// versionHistory.
 export const GET_STUDY_RESULTS = gql`
   query GET_STUDY_RESULTS($id: ID!) {
-    study(where: { id: $id }) {
-      id
-      slug
-      flow
-      datasets {
-        date
-        token
-        task {
-          id
-          slug
-        }
-        isCompleted
-        isIncluded
-        testVersion
-        dataPolicy
-      }
-      summaryResults {
-        data
-        user {
-          publicId
-        }
-        guest {
-          publicId
-        }
-        study {
-          title
-        }
-        task {
-          id
-          slug
-          title
-        }
-        testVersion
-        metadataId
-        createdAt
-      }
-      dataSourceRecords {
-        profile {
-          publicId
-        }
-        guest {
-          publicId
-        }
-        steps
-      }
-      consent {
-        id
-        title
-      }
-      versions {
-        id
-        name
-        legacyId
-      }
-      versionHistory
-    }
+    studyResults(studyId: $id)
   }
 `;
 

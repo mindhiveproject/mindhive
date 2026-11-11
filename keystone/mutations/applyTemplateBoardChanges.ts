@@ -11,7 +11,12 @@
  * their own templateForClasses relationship. Assignments linked on its cards
  * are connected to those classes the same way.
  */
-import { applyTemplateToClones, getTemplateAndClones } from "./utils/boardPropagation";
+import { applyTemplateToClones } from "./utils/boardPropagation";
+import {
+  CLASS_TEMPLATE_BOARD_ACCESS_QUERY,
+  canMutateClassTemplateBoard,
+  isAdmin,
+} from "../access";
 import { connectAssignmentsToTemplateClasses } from "./utils/classTemplateBoards";
 
 async function applyTemplateBoardChanges(
@@ -30,15 +35,34 @@ async function applyTemplateBoardChanges(
     throw new Error("You must be logged in to apply template changes.");
   }
 
-  const templateExists = await context.query.ProposalBoard.findOne({
+  const sudo = context.sudo();
+  const board = await sudo.query.ProposalBoard.findOne({
     where: { id: templateBoardId },
-    query: "id",
+    query: CLASS_TEMPLATE_BOARD_ACCESS_QUERY,
   });
-  if (!templateExists) {
+  if (!board) {
     throw new Error("Template board not found.");
   }
+  // The push reads and writes student boards as sudo (below), so only
+  // someone who may edit the template can run it: admins, the board's
+  // creator, author or collaborators, and the staff of the class(es) using
+  // it as a template.
+  const me = String(sesh.itemId);
+  const mayEdit =
+    isAdmin({ session: sesh } as any) ||
+    board.creator?.id === me ||
+    board.author?.id === me ||
+    (board.collaborators ?? []).some((c: { id: string }) => c?.id === me) ||
+    canMutateClassTemplateBoard(me, board);
+  if (!mayEdit) {
+    throw new Error("You can't update student boards for this template.");
+  }
 
-  const result = await applyTemplateToClones(context, templateBoardId, {
+  // As sudo: as the caller, every linked item on every student card ran its
+  // list's access filter (Assignment's is expensive), and a template with
+  // ~100 student boards exhausted the connection pool. sudo keeps the
+  // session, so hooks still see who made the change.
+  const result = await applyTemplateToClones(sudo, templateBoardId, {
     cardIdsWithContentUpdate: cardIdsWithContentUpdate ?? undefined,
   });
 
@@ -50,8 +74,7 @@ async function applyTemplateBoardChanges(
   // after a propagation the caller was allowed to run, and as the caller a
   // co-teacher of only some of the template's classes would link resources
   // to those classes only.
-  const sudo = context.sudo();
-  const { template } = await getTemplateAndClones(sudo, templateBoardId);
+  const { template } = result;
   if (template) {
     const templateClasses = [
       ...(template.templateForClasses ?? []),
