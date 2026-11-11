@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useApolloClient } from "@apollo/client";
 import { v1 as uuidv1 } from "uuid";
-import { CREATE_CARD, UPDATE_CARD_CONTENT } from "../../Mutations/Proposal";
+import {
+  CREATE_CARD,
+  UPDATE_CARD_CONTENT,
+  UPDATE_CARD_SETTINGS,
+} from "../../Mutations/Proposal";
+import { mergeCardSettings } from "../../Utils/mergeCardSettings";
 import {
   PROPOSAL_BOARD_VIEW_QUERY,
   PROPOSAL_QUERY,
@@ -130,6 +135,8 @@ export default function BuilderProposalCard({
     useMutation(UPDATE_CARD_CONTENT);
   const [createCard, { loading: createLoading }] = useMutation(CREATE_CARD);
   const [creating, setCreating] = useState(false);
+  const [saveCardSettings] = useMutation(UPDATE_CARD_SETTINGS);
+  const [savingTaskSelection, setSavingTaskSelection] = useState(false);
 
   const { data: boardData } = useQuery(PROPOSAL_QUERY, {
     variables: { id: proposal?.id },
@@ -416,6 +423,49 @@ export default function BuilderProposalCard({
       } catch (e) {
         console.error("Propagate to clones failed:", e);
       }
+    }
+  };
+
+  // Student task selection saves as soon as it is toggled, and reaches
+  // student boards right away when auto-update is on. Only the flag is
+  // written: the card's other unsaved edits wait for the usual save.
+  const handleStudentTaskSelectionChange = async (checked) => {
+    handleChange({
+      target: {
+        name: "settings",
+        value: { ...(inputs?.settings || {}), studentTaskSelection: checked },
+      },
+    });
+    // A new card has nothing to save yet; the flag goes with its creation.
+    if (isCreateMode || !proposalCard?.id) return;
+
+    setSavingTaskSelection(true);
+    try {
+      await saveCardSettings({
+        variables: {
+          id: proposalCard.id,
+          settings: mergeCardSettings(proposalCard?.settings, {
+            studentTaskSelection: checked,
+          }),
+        },
+      });
+      const hasClones = proposal?.prototypeFor?.length > 0;
+      if (hasClones && autoUpdateStudentBoards && propagateToClones) {
+        await propagateToClones({
+          contentChangedCardIds: contentChangedCardIds(false),
+        });
+        savedNotPropagated.current = { any: false, contentChanged: false };
+      } else if (hasClones) {
+        savedNotPropagated.current = {
+          ...savedNotPropagated.current,
+          any: true,
+        };
+        onTemplateChangedWithoutPropagation?.();
+      }
+    } catch (e) {
+      console.error("Saving student task selection failed:", e);
+    } finally {
+      setSavingTaskSelection(false);
     }
   };
 
@@ -836,17 +886,8 @@ export default function BuilderProposalCard({
             </div>
             <ToggleSwitch
               checked={!!inputs?.settings?.studentTaskSelection}
-              onChange={(checked) =>
-                handleChange({
-                  target: {
-                    name: "settings",
-                    value: {
-                      ...(inputs?.settings || {}),
-                      studentTaskSelection: checked,
-                    },
-                  },
-                })
-              }
+              loading={savingTaskSelection}
+              onChange={handleStudentTaskSelectionChange}
               aria-label={tBuilder(
                 "cardBuilder.studentTaskSelection",
                 {},
