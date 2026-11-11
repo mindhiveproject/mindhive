@@ -97,3 +97,27 @@ export const VISUAL_DATA_SOURCES = gql`
     }
   }
 `;
+
+// The devices the visual tasks on a study's canvas read from, so the study's
+// data sources panel can suggest linking the ones the study is missing.
+export const STUDY_VISUAL_DEVICES = gql`
+  query STUDY_VISUAL_DEVICES($taskIds: [ID!]) {
+    tasks(where: { id: { in: $taskIds }, runtimeType: { equals: P5 } }) {
+      id
+      visual {
+        id
+        title
+        dataSources(orderBy: [{ order: asc }]) {
+          id
+          label
+          inputBindings
+          block {
+            id
+            title
+            requirementLabel
+          }
+        }
+      }
+    }
+  }
+`;

@@ -11,7 +11,6 @@ import Chip from "../../../DesignSystem/Chip";
 import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import IconButton from "../../../DesignSystem/IconButton";
 import Input from "../../../DesignSystem/Input";
-import Modal from "../../../DesignSystem/Modal";
 import Slider from "../../../DesignSystem/Slider";
 import {
   AddIcon,
@@ -28,6 +27,7 @@ import {
   isStreamMappable,
   isToggle,
   labelFor,
+  mappedChannels,
   typeLabel,
 } from "../../Helpers/bindings";
 import { addParameter, keyFromName } from "../../Runtime/parametersFile";
@@ -46,7 +46,7 @@ const BANNER_STYLE = {
   font: "var(--MH-Type-Body-Base)",
 };
 
-const CARD_STYLE = {
+export const CARD_STYLE = {
   boxSizing: "border-box",
   display: "flex",
   flexDirection: "column",
@@ -60,11 +60,11 @@ const CARD_STYLE = {
 
 // Selected and expanded look the same on purpose: both mean "this is the row
 // you are working on", and a row can be either without being the other.
-const CARD_ACTIVE_STYLE = {
+export const CARD_ACTIVE_STYLE = {
   background: "var(--MH-Theme-Neutrals-Light-Green, #F6F9F8)",
 };
 
-const ROW_STYLE = {
+export const ROW_STYLE = {
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
@@ -72,7 +72,7 @@ const ROW_STYLE = {
   padding: "12px 16px",
 };
 
-const NAME_BLOCK_STYLE = {
+export const NAME_BLOCK_STYLE = {
   display: "flex",
   flexDirection: "column",
   minWidth: 0,
@@ -80,7 +80,7 @@ const NAME_BLOCK_STYLE = {
 };
 
 // MH-Theme/title/base
-const NAME_STYLE = {
+export const NAME_STYLE = {
   margin: 0,
   font: "var(--MH-Type-Title-Base)",
   color: "var(--MH-Theme-Neutrals-Black, #171717)",
@@ -90,7 +90,7 @@ const NAME_STYLE = {
 };
 
 // MH-Theme/body/base
-const TYPE_STYLE = {
+export const TYPE_STYLE = {
   margin: 0,
   font: "var(--MH-Type-Body-Base)",
   color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)",
@@ -195,7 +195,9 @@ export default function ParametersPanel() {
   } = useVisualBuilder();
 
   const [expanded, setExpanded] = useState(null);
-  const [adding, setAdding] = useState(false);
+  // A parameter just written to the file, waiting for the sketch to declare it
+  // before its detail panel can open on it.
+  const [pendingKey, setPendingKey] = useState(null);
 
   const keys = Object.keys(declared || {});
   const unmapped = keys.filter((key) => !bindingFor(bindings, key).mapping);
@@ -215,7 +217,22 @@ export default function ParametersPanel() {
 
   const parametersFile = files.find((file) => file.role === "parameters");
 
-  function onAdd(name, key) {
+  useEffect(() => {
+    if (!pendingKey || !(pendingKey in (declared || {}))) return;
+    openPanel({ paramKey: pendingKey, initialTab: "settings", focusName: true });
+    setPendingKey(null);
+  }, [pendingKey, declared, openPanel]);
+
+  // Named in sequence — "New Parameter 1", "New Parameter 2" — and renamed from
+  // the detail panel it opens on.
+  function onAdd() {
+    let name;
+    let key;
+    for (let n = 1; ; n += 1) {
+      name = t("newParameterName", "New Parameter {{n}}").replace("{{n}}", n);
+      key = keyFromName(name);
+      if (!keys.includes(key)) break;
+    }
     updateFile(
       parametersFile.id,
       addParameter(parametersFile.content || "", key, {
@@ -226,7 +243,7 @@ export default function ParametersPanel() {
         max: 1,
       })
     );
-    setAdding(false);
+    setPendingKey(key);
   }
 
   return (
@@ -238,7 +255,7 @@ export default function ParametersPanel() {
             variant="filled"
             tone="accent"
             leadingIcon={<AddIcon />}
-            onClick={() => setAdding(true)}
+            onClick={onAdd}
             disabled={!parametersFile}
           >
             {t("addNew", "Add New")}
@@ -361,91 +378,12 @@ export default function ParametersPanel() {
           );
         })
       )}
-
-      <AddParameterModal
-        open={adding}
-        keys={keys}
-        onAdd={onAdd}
-        onClose={() => setAdding(false)}
-      />
     </Panel>
   );
 }
 
-/**
- * Asks what a new parameter is called before anything is written. The name is
- * what the author calls it; the key the sketch reads it by is spelled from it,
- * and shown, so there is nothing left to rename in the code afterwards.
- */
-function AddParameterModal({ open, keys, onAdd, onClose }) {
-  const { t } = useTranslation("visuals");
-  const [name, setName] = useState("");
-
-  // Every opening starts empty rather than with the last name typed.
-  useEffect(() => {
-    if (open) setName("");
-  }, [open]);
-
-  const trimmed = name.trim();
-  const key = keyFromName(trimmed);
-  const error = !trimmed
-    ? null
-    : !key
-    ? t("nameNeedsLetter", "Start the name with a letter.")
-    : keys.includes(key)
-    ? t("nameTaken", "There is already a parameter called “{{key}}”.").replace(
-        "{{key}}",
-        key
-      )
-    : null;
-  const ready = !!key && !error;
-
-  return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      title={t("addParameter", "Add Parameter")}
-      actions={
-        <>
-          <Button variant="text" onClick={onClose}>
-            {t("cancel", "Cancel")}
-          </Button>
-          <Button
-            variant="filled"
-            tone="accent"
-            disabled={!ready}
-            onClick={() => onAdd(trimmed, key)}
-          >
-            {t("add", "Add")}
-          </Button>
-        </>
-      }
-    >
-      <Input
-        label={t("name", "Name")}
-        autoFocus
-        value={name}
-        invalid={!!error}
-        hint={
-          error ||
-          (ready
-            ? t("usedInCode", "Read in your sketch as params.{{key}}").replace(
-                "{{key}}",
-                key
-              )
-            : undefined)
-        }
-        onChange={setName}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" && ready) onAdd(trimmed, key);
-        }}
-      />
-    </Modal>
-  );
-}
-
 /** One line of the panel talking about itself, in the panel's own hue. */
-function Notice({ children }) {
+export function Notice({ children }) {
   return (
     <div style={BANNER_STYLE} role="status">
       <span style={{ flex: "1 1 auto", minWidth: 0 }}>{children}</span>
@@ -498,7 +436,7 @@ function NumberField({ value, step, onChange, ...rest }) {
  * only while its source is actually streaming — a mapping to a device nobody
  * has connected is not live, and shouldn't look it.
  */
-function MapChip({ binding, dataSources, sourceApis, onClick }) {
+export function MapChip({ binding, dataSources, sourceApis, onClick }) {
   const { t } = useTranslation("visuals");
   const mapping = binding.mapping;
 
@@ -513,14 +451,23 @@ function MapChip({ binding, dataSources, sourceApis, onClick }) {
   }
 
   const source = dataSources.find((row) => row.id === mapping.sourceId);
-  const channel = (source?.block?.outputs || [])
-    .find((output) => outputKey(output) === mapping.output)
-    ?.channels?.find((entry) => entry.index === mapping.channel);
+  const output = (source?.block?.outputs || []).find(
+    (entry) => outputKey(entry) === mapping.output
+  );
+  // A vector is named by its point; the point may be wider than the vector
+  // (a landmark's x, y and z feeding a 2D vector), so it matches on the start.
+  const channels = mappedChannels(mapping);
+  const label =
+    mapping.channels === undefined
+      ? output?.channels?.find((entry) => entry.index === mapping.channel)?.label
+      : sourceApis[mapping.sourceId]?.points?.[output?.node]?.find((point) =>
+          channels.every((index, i) => point.indices[i] === index)
+        )?.label;
   const live = !!source && !!sourceApis[source.id]?.streaming;
 
   return (
     <Chip
-      label={channel?.label || t("missingOutput", "Missing output")}
+      label={label || t("missingOutput", "Missing output")}
       leading={<WaveformIcon width={18} height={18} />}
       style={live ? CHIP_LIVE_STYLE : CHIP_MAPPED_STYLE}
       title={

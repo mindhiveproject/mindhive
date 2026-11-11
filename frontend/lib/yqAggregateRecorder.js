@@ -269,6 +269,10 @@ export default class AggregateRecorder {
     }
     const channelCount = this.getChannelCount(packet);
     const declared = findOutput(source.outputs, nodeId, packet);
+    // A receiver can publish streams the block never declared — the face
+    // landmarker's mesh, which only exists for the preview overlay. Those are
+    // not part of what a study collects.
+    if (!declared) return;
     foldPacket(source.session, packet, channelCount, source.excludedChannels, declared);
     foldPacket(source.step, packet, channelCount, source.excludedChannels, declared);
   }

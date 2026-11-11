@@ -57,6 +57,10 @@ const TONES = {
     edge: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
     edgePressed: "var(--MH-Theme-Additional-Accent-Light, #F5F2FF)",
     label: "var(--MH-Theme-Additional-Accent-Base, #6F26CE)",
+    // An Accent Dark tint, like warning's below, so the text variant reads on
+    // the purple Accent Light of an information MessageCard.
+    textHover: "rgba(63, 40, 143, 0.08)",
+    textPressed: "rgba(63, 40, 143, 0.16)",
   },
   // The hue the data sources mockups give link/unlink and catalog actions, so
   // that area reads as one group set apart from the platform's Primary chrome.
@@ -262,7 +266,8 @@ const ICON_WRAPPER_STYLE = {
  *
  * @param {"filled"|"outline"|"tonal"|"text"|"subtle"} [variant="filled"] - Visual style.
  * @param {"primary"|"accent"|"tertiary"|"neutral"|"warning"} [tone="primary"] - Colour family. `accent` paints
- *   the filled, outline and text variants in Additional Accent, `tertiary` in
+ *   the filled, outline and text variants in Additional Accent (its text variant
+ *   hovers with an Accent tint so it also reads on an information MessageCard), `tertiary` in
  *   Tertiary (the data sources area's link/unlink actions), `neutral` in grey
  *   (a quieter secondary action, e.g. "Disconnect"), `warning` in Warning
  *   (a destructive action; its text variant hovers with a Warning tint so it

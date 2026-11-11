@@ -87,8 +87,13 @@ function runSketch(code) {
   let init = null;
   const context = vm.createContext({});
   context.window = context;
+  const updates = [];
   context.MindHive = {
     params: {},
+    sources: [],
+    declare: (parameters) =>
+      calls.push(['declare', JSON.parse(JSON.stringify(parameters))]),
+    onUpdate: (callback) => updates.push(callback),
     marker: (label, value) =>
       calls.push(['marker', label, JSON.parse(JSON.stringify(value ?? null))]),
     fail: (message) => calls.push(['fail', message]),
@@ -114,6 +119,11 @@ function runSketch(code) {
       Object.assign(context.MindHive.params, params);
       init(context.MindHive);
     },
+    sendUpdate({ values, sources }) {
+      if (values) Object.assign(context.MindHive.params, values);
+      if (sources) context.MindHive.sources = sources;
+      updates.forEach((callback) => callback(context.MindHive));
+    },
   };
 }
 
@@ -123,7 +133,10 @@ test('p5 waits for init, so setup sees the task parameters', () => {
     function setup() { window.seen = { size: params.size, label: data.label }; sendEvent("onset", { n: 1 }); }
     function draw() {}`);
   assert.equal(typeof sketch.context.setup, 'undefined');
-  assert.deepEqual(sketch.calls, []);
+  assert.deepEqual(sketch.calls, [
+    ['declare', { size: { default: 0.5 }, label: { default: 'a' } }],
+  ]);
+  sketch.calls.length = 0;
   sketch.sendInit({ size: 0.9 });
   assert.deepEqual(JSON.parse(JSON.stringify(sketch.context.seen)), {
     size: 0.9,
@@ -132,6 +145,28 @@ test('p5 waits for init, so setup sees the task parameters', () => {
   assert.deepEqual(sketch.calls, [
     ['p5 started'],
     ['marker', 'onset', { n: 1 }],
+    ['ready'],
+  ]);
+});
+
+test('a yq sketch declares, reads live values and marks like a MindHive one', () => {
+  const sketch = runSketch(`
+    yq.declareParameters({ size: { type: "number", default: 0.5 } });
+    function setup() { yq.sendEvent("onset", 1); }
+    function draw() { window.drawn = yq.params.size; window.seenSources = yq.sources.length; }`);
+  assert.deepEqual(sketch.calls, [
+    ['declare', { size: { type: 'number', default: 0.5 } }],
+  ]);
+  sketch.sendInit({});
+  assert.equal(sketch.context.drawn, 0.5);
+  sketch.sendUpdate({ values: { size: 0.8 }, sources: [{ id: 's1' }] });
+  sketch.context.draw();
+  assert.equal(sketch.context.drawn, 0.8);
+  assert.equal(sketch.context.seenSources, 1);
+  assert.equal(sketch.context.sources.length, 1);
+  assert.deepEqual(sketch.calls.slice(1), [
+    ['p5 started'],
+    ['marker', 'onset', 1],
     ['ready'],
   ]);
 });

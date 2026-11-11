@@ -19,7 +19,7 @@ const HEADER_STYLE = {
   justifyContent: "space-between",
   gap: 8,
   flexShrink: 0,
-  padding: "16px 16px 0",
+  padding: "16px 16px 12px",
 };
 
 // MH-Theme/title/large
@@ -40,8 +40,8 @@ const ACTIONS_STYLE = {
 };
 
 // The 12px above the first row is the panel's own gap in Figma rather than a
-// margin on whatever lands there, so it holds for every panel — including the
-// flush ones, whose content only gives up its horizontal edges.
+// margin on whatever lands there, so it holds for every panel. It lives in the
+// header's bottom padding, not here, so it stays put while the body scrolls.
 const BODY_STYLE = {
   display: "flex",
   flexDirection: "column",
@@ -50,7 +50,7 @@ const BODY_STYLE = {
   flex: "1 1 0%",
   overflowY: "auto",
   overflowX: "hidden",
-  padding: "12px 16px 16px",
+  padding: "0 16px 16px",
 };
 
 // Same trick the Modal body uses: still scrolls, just without the gutter.
@@ -91,7 +91,7 @@ export default function Panel({
         className={hideScrollbar ? "Visuals-Panel-Body--hideScrollbar" : undefined}
         style={
           flush
-            ? { ...BODY_STYLE, gap: 0, padding: "12px 0 0", overflow: "hidden" }
+            ? { ...BODY_STYLE, gap: 0, padding: 0, overflow: "hidden" }
             : BODY_STYLE
         }
       >

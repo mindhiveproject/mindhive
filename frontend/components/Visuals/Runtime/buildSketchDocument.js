@@ -29,18 +29,17 @@ export const PARAMETERS_TEMPLATE = `// You can write your parameters here or in 
 //   { type: "vector2", default: [0, 0], min: -1, max: 1 }
 //   { type: "vector3", default: [0, 0, 0] }
 
-declareParameters({
+yq.declareParameters({
   size: { type: "number", label: "Size", default: 0.5, min: 0, max: 1 },
 });
 `;
 
 export const ENTRY_TEMPLATE = `
 
-// Hey! This is a normal p5-sketch with a few custom functions
-//   params.<name>       References the parameters declared in code or dashboard
-//   sources             the linked data sources and whether each is connected.
-//   sendEvent(label, v) used to send event markers.
-
+// Hey! This is a normal p5-sketch with a few extras under "yq":
+//   yq.params.<name>       the live value of a parameter.
+//   yq.sources             the linked data sources and whether each is connected.
+//   yq.sendEvent(label, v) used to send event markers.
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -50,7 +49,7 @@ function setup() {
 function draw() {
   background(23);
   fill(236, 64, 222);
-  circle(width / 2, height / 2, params.size * min(width, height));
+  circle(width / 2, height / 2, yq.params.size * min(width, height));
 }
 
 function windowResized() {
@@ -58,13 +57,13 @@ function windowResized() {
 }
 `;
 
-/** Tag on every message between the app and the frame, in the style of yq-data's `yq-data/1`. */
+/** Tag on every message between the app and the frame, in the style of yq-data's `yq-stream` protocol. */
 export const PROTOCOL = "yq-visual/1";
 
 /**
- * Runs before any user code. Sets up the things the sketch talks to — the live
- * `params` object, `declareParameters` and `sendEvent` — plus the log/error
- * relay and the channel back to the app.
+ * Runs before any user code. Sets up the things the sketch talks to — the
+ * `yq` namespace holding the live `params`, `sources`, `declareParameters` and
+ * `sendEvent` — plus the log/error relay and the channel back to the app.
  *
  * The channel is a private `MessagePort`. The frame is sandboxed *without*
  * `allow-same-origin`, so its origin is opaque: it can only reach the parent
@@ -127,6 +126,21 @@ function preamble(nonce) {
   window.sendEvent = function (label, value) {
     post({ type: "event", label: String(label), value: value, time: Date.now() });
   };
+
+  // Everything the platform gives a sketch lives under "yq", so it can't
+  // collide with a name the sketch picks for itself. The bare globals above stay
+  // for sketches written before the namespace, but the templates don't teach
+  // them. "params" is updated in place, so the same object serves both;
+  // "sources" is replaced whole, hence the getter.
+  window.yq = {
+    params: window.params,
+    declareParameters: window.declareParameters,
+    sendEvent: window.sendEvent,
+  };
+  Object.defineProperty(window.yq, "sources", {
+    enumerable: true,
+    get: function () { return window.sources; },
+  });
 
   function apply(values) {
     Object.assign(window.params, values);

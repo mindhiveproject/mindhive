@@ -136,6 +136,8 @@ export default function SettingsPanel({ user, onDirtyChange }) {
   useEffect(() => setDraft(fromVisual(visual)), [visual]);
 
   const isOwner = visual?.author?.id === user?.id;
+  // Visuals as study steps are still in development.
+  const isAdmin = !!user?.permissions?.some((p) => p?.name === "ADMIN");
   const dirty = JSON.stringify(draft) !== JSON.stringify(fromVisual(visual));
 
   // The draft lives here, so the shell can't see it. Reported up so leaving
@@ -155,6 +157,11 @@ export default function SettingsPanel({ user, onDirtyChange }) {
           description: draft.description,
           participationMode: draft.participationMode,
           docsVisible: draft.docsVisible,
+          // Only an authored visual can be a study step.
+          includeInStudies:
+            draft.participationMode === "authored" && draft.includeInStudies,
+          // Writing `published` at all is refused for anyone but an admin.
+          ...(isAdmin && { published: draft.published }),
           ...sharingUpdate(draft),
         },
       },
@@ -290,6 +297,59 @@ export default function SettingsPanel({ user, onDirtyChange }) {
                 }
               />
             </div>
+            {isAdmin && draft.participationMode === "authored" ? (
+              <CardSection style={{ padding: "0 12px 12px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ flex: "1 1 auto", minWidth: 0 }}>
+                    <span style={FIELD_LABEL_STYLE}>
+                      {t("includeInStudies", "Include in studies")}
+                    </span>
+                    <p style={HELP_STYLE}>
+                      {t(
+                        "includeInStudiesHelp",
+                        "Lets researchers add this visual as a step in their study. Its data sources come from the devices linked to the study."
+                      )}
+                    </p>
+                  </div>
+                  <Checkbox
+                    checked={draft.includeInStudies}
+                    disabled={!canEdit}
+                    ariaLabel={t("includeInStudies", "Include in studies")}
+                    onChange={(next) =>
+                      setDraft((c) => ({ ...c, includeInStudies: next }))
+                    }
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    marginTop: 12,
+                  }}
+                >
+                  <div style={{ flex: "1 1 auto", minWidth: 0 }}>
+                    <span style={FIELD_LABEL_STYLE}>
+                      {t("published", "Published")}
+                    </span>
+                    <p style={HELP_STYLE}>
+                      {t(
+                        "publishedHelp",
+                        "Makes this visual visible to everyone and, when included in studies, available to every researcher. Unpublished visuals stay personal."
+                      )}
+                    </p>
+                  </div>
+                  <Checkbox
+                    checked={draft.published}
+                    disabled={!canEdit}
+                    ariaLabel={t("published", "Published")}
+                    onChange={(next) =>
+                      setDraft((c) => ({ ...c, published: next }))
+                    }
+                  />
+                </div>
+              </CardSection>
+            ) : null}
           </Card>
         </div>
       </Section>
@@ -332,6 +392,8 @@ function fromVisual(visual) {
     description: visual?.description || "",
     participationMode: visual?.participationMode || "sandbox",
     docsVisible: !!visual?.docsVisible,
+    includeInStudies: !!visual?.includeInStudies,
+    published: !!visual?.published,
     ...sharingDraft(visual),
   };
 }

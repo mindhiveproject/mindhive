@@ -93,6 +93,7 @@ export function getVisualFilterQuery(session?: Session) {
       OR: [
         { privacy: { equals: "public" } },
         { privacy: { equals: "unlisted" } },
+        { published: { equals: true } },
       ],
     };
   }
@@ -109,6 +110,8 @@ export function getVisualFilterQuery(session?: Session) {
       { viewers: { some: { id: { equals: session.itemId } } } },
       // Public visuals
       { privacy: { equals: "public" } },
+      // Published by an admin — open to everyone, whatever the privacy says
+      { published: { equals: true } },
       // Unlisted visuals
       { privacy: { equals: "unlisted" } },
       // You have liked & they are unlisted or for friends
@@ -240,7 +243,12 @@ export const Visual = list({
     extensions: json({ defaultValue: [] }),
     docs: json(),
     docsVisible: checkbox(),
-    published: checkbox({ access: { update: ownerOnlyUpdate } }),
+    // The admin-curated gate: a published visual is visible to everyone and,
+    // with `includeInStudies`, offered to every study builder. Anyone else's
+    // visuals stay personal — they can still add their own to their studies.
+    published: checkbox({
+      access: { update: ({ session }) => isAdmin(session) },
+    }),
     lastTimeEdited: timestamp(),
     yjsState: text({
       ui: {
@@ -281,5 +289,55 @@ export const Visual = list({
       ],
       defaultValue: "sandbox",
     }),
+    // Offers an authored visual to the study builder as a step — to its
+    // author's own studies, and to everyone's once an admin publishes it. Only
+    // means something in Authored mode; the hook below keeps the Task it runs as.
+    includeInStudies: checkbox(),
+  },
+  hooks: {
+    // A study step is a Task — the flow, startRun, Datasets and Collect all
+    // key on one — so a visual offered to studies runs through a p5 Task
+    // pointing back at it. Keep one, named after the visual, for the study
+    // builder to add.
+    async afterOperation({ operation, inputData, item, context }) {
+      if (operation === "delete" || !item?.includeInStudies) return;
+      // A like toggle is an update too, by anyone who can see the visual.
+      if (
+        operation === "update" &&
+        !["includeInStudies", "title", "description"].some(
+          (key) => key in (inputData ?? {})
+        )
+      ) {
+        return;
+      }
+      const sudo = context.sudo();
+      const [task] = await sudo.query.Task.findMany({
+        where: {
+          visual: { id: { equals: String(item.id) } },
+          runtimeType: { equals: "P5" },
+        },
+        orderBy: [{ createdAt: "asc" }],
+        take: 1,
+        query: "id title description",
+      });
+      const description = item.description || "";
+      if (!task) {
+        // As the editor rather than sudo: Task's author hook reads the session.
+        await context.query.Task.createOne({
+          data: {
+            title: item.title,
+            description,
+            taskType: "TASK",
+            runtimeType: "P5",
+            visual: { connect: { id: String(item.id) } },
+          },
+        });
+      } else if (task.title !== item.title || task.description !== description) {
+        await sudo.query.Task.updateOne({
+          where: { id: task.id },
+          data: { title: item.title, description },
+        });
+      }
+    },
   },
 });

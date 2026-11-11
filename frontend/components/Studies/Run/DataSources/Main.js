@@ -25,6 +25,15 @@ import PreviewPanel from "./PreviewPanel";
  */
 export const DataSourceFlushContext = createContext(null);
 
+/**
+ * The study's live data sources, for a task that reads them (a p5 visual
+ * mapping its parameters onto a device) or marks events on them: the active
+ * rows, their runtime apis by row id, and `mark(label, time)`, which passes an
+ * event to every connected marker input so it is recorded on the devices'
+ * clock. Null outside a study run.
+ */
+export const StudySourcesContext = createContext(null);
+
 function isActiveForStep(scope, stepId) {
   if (!scope || scope === "study") return true;
   if (Array.isArray(scope?.steps)) return scope.steps.includes(stepId);
@@ -51,12 +60,31 @@ export function SourceRuntime({ row, onStatus }) {
   useEffect(() => {
     onStatus(row.id, api);
     // `api`'s functions are stable (useCallback); only report up again when
-    // the connection state actually changed.
+    // the connection state actually changed, or the pipeline booted and `points`
+    // came in.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [row.id, statusSignature, api.streaming, api.requiredConnected]);
+  }, [row.id, statusSignature, api.streaming, api.requiredConnected, api.points]);
 
   return null;
 }
+
+// The window is split between the status bar and the study under it, so the
+// page itself never scrolls. The study scrolls inside its own pane, and tells
+// anything that sizes itself to the window (a task frame, a lab.js page) to
+// size to the pane instead through --MH-Run-Height.
+const RUN_STYLE = {
+  display: "flex",
+  flexDirection: "column",
+  height: "100vh",
+};
+
+const RUN_CONTENT_STYLE = {
+  position: "relative",
+  flex: "1 1 0%",
+  minHeight: 0,
+  overflowY: "auto",
+  "--MH-Run-Height": "100%",
+};
 
 function defaultLeave(study, user) {
   window.location.href =
@@ -98,6 +126,22 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
 
   const [gatePassed, setGatePassed] = useState(false);
   const [previewRowId, setPreviewRowId] = useState(null);
+
+  const studySources = useMemo(
+    () => ({
+      rows: activeRows,
+      apis,
+      mark: (label, timestamp) => {
+        activeRows.forEach((row) => {
+          (row.block.inputs || []).forEach((input) => {
+            if (input.receiver !== "marker") return;
+            apis[row.id]?.getReceiver(input.id)?.mark(label, { timestamp });
+          });
+        });
+      },
+    }),
+    [activeRows, apis]
+  );
 
   const recorderRef = useRef(null);
   if (!recorderRef.current) recorderRef.current = new AggregateRecorder();
@@ -230,7 +274,9 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
   if (!activeRows.length) {
     return (
       <DataSourceFlushContext.Provider value={flush}>
-        {children}
+        <StudySourcesContext.Provider value={studySources}>
+          {children}
+        </StudySourcesContext.Provider>
       </DataSourceFlushContext.Provider>
     );
   }
@@ -246,39 +292,41 @@ export default function StudyDataSourcesRuntime({ study, user, currentStepId, ch
 
   return (
     <DataSourceFlushContext.Provider value={flush}>
-      {!released &&
-        activeRows.map((row) => (
-          <SourceRuntime key={row.id} row={row} onStatus={onStatus} />
-        ))}
+      <StudySourcesContext.Provider value={studySources}>
+        {!released &&
+          activeRows.map((row) => (
+            <SourceRuntime key={row.id} row={row} onStatus={onStatus} />
+          ))}
 
-      {!gatePassed ? (
-        <ConnectScreen
-          study={study}
-          rows={activeRows}
-          apis={apis}
-          allRequiredConnected={allRequiredConnected}
-          onContinue={() => setGatePassed(true)}
-          onPreview={togglePreview}
-          onLeave={() => defaultLeave(study, user)}
-        />
-      ) : released ? (
-        children
-      ) : (
-        <>
-          <StatusBar
+        {!gatePassed ? (
+          <ConnectScreen
             study={study}
             rows={activeRows}
             apis={apis}
-            activeRowId={previewRowId}
-            onOpenPreview={togglePreview}
+            allRequiredConnected={allRequiredConnected}
+            onContinue={() => setGatePassed(true)}
+            onPreview={togglePreview}
+            onLeave={() => defaultLeave(study, user)}
           />
-          {children}
-        </>
-      )}
+        ) : released ? (
+          children
+        ) : (
+          <div style={RUN_STYLE}>
+            <StatusBar
+              study={study}
+              rows={activeRows}
+              apis={apis}
+              activeRowId={previewRowId}
+              onOpenPreview={togglePreview}
+            />
+            <div style={RUN_CONTENT_STYLE}>{children}</div>
+          </div>
+        )}
 
-      {!released && previewRow && apis[previewRow.id] && canViewSignal(previewRow) && (
-        <PreviewPanel row={previewRow} api={apis[previewRow.id]} onClose={() => setPreviewRowId(null)} />
-      )}
+        {!released && previewRow && apis[previewRow.id] && canViewSignal(previewRow) && (
+          <PreviewPanel row={previewRow} api={apis[previewRow.id]} onClose={() => setPreviewRowId(null)} />
+        )}
+      </StudySourcesContext.Provider>
     </DataSourceFlushContext.Provider>
   );
 }

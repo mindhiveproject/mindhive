@@ -13,11 +13,12 @@
 
 export const EMPTY_BINDING = {
   // null | { kind: "manual", value }
-  //      | { kind: "stream", sourceId, output, channel }
+  //      | { kind: "stream", sourceId, output, channel | channels }
   //          sourceId — the VisualDataSource row
   //          output   — the block output's `outputKey` ("<node>[/<stream>]"),
   //                     never a stream ID, which carries the device's runtime id
-  //          channel  — the channel's `index` within that output
+  //          channel  — the channel's `index` within that output (a number)
+  //          channels — one channel `index` per component (a vector)
   //      | { kind: "column", datasetId, column, mode, samplingRate }
   mapping: null,
   rangeOverride: null,
@@ -99,7 +100,7 @@ const VECTOR_SIZES = { vector2: 2, vector3: 3 };
  * falling back silently is how a typo in `type` turns into a slider nobody
  * asked for.
  *
- * @param {Record<string, object>} raw - What the sketch passed to `declareParameters`.
+ * @param {Record<string, object>} raw - What the sketch passed to `yq.declareParameters`.
  * @returns {{ parameters: Record<string, object>, warnings: string[] }}
  */
 export function normalizeDeclarations(raw) {
@@ -232,13 +233,34 @@ export function resolveValues(declared, bindings, live = {}) {
 }
 
 /**
- * Whether a parameter can take a device output. Only numbers can for now: a
- * stream channel carries one number per sample, and a number is the one kind
- * that means the same thing on both sides. Categorical streams onto category
- * and text parameters are the next step.
+ * Whether a parameter can take a device output: a number reads one channel, a
+ * vector one channel per component. Categorical streams onto category and text
+ * parameters are the next step.
  */
 export function isStreamMappable(declaration, binding) {
-  return declaration?.type === "number" && binding?.allowMapping !== false;
+  const type = declaration?.type;
+  return (
+    (type === "number" || !!VECTOR_SIZES[type]) && binding?.allowMapping !== false
+  );
+}
+
+/** The channel indices a stream mapping reads, in component order. */
+export function mappedChannels(mapping) {
+  return mapping.channels ?? [mapping.channel];
+}
+
+/**
+ * The points of an output a vector parameter can read, from `Pipeline.describe()`:
+ * a point is a set of channels that belong together, like one landmark's x, y
+ * and z. A point with more channels than the vector has components still fits,
+ * and feeds its first ones (a 2D vector takes a landmark's x and y). Each comes
+ * back with exactly the indices the vector reads.
+ */
+export function pointsFor(points, declaration) {
+  const size = VECTOR_SIZES[declaration?.type];
+  return (points || [])
+    .filter((point) => point.indices.length >= size)
+    .map((point) => ({ ...point, indices: point.indices.slice(0, size) }));
 }
 
 /**
@@ -263,11 +285,11 @@ export function labelFor(key, declaration) {
 }
 
 // What an author picks from, in the order they are offered. A kind is a
-// declared `type` plus the two spellings the panel tells apart on sight: a
-// number that steps by 1, and a category of exactly `[false, true]`.
+// declared `type` plus the spelling the panel tells apart on sight: a category
+// of exactly `[false, true]`. A whole number is not a kind of its own but a
+// setting of a number — see `isWholeNumber`.
 export const KIND_LABELS = {
   number: "Number",
-  integer: "Whole Number",
   checkbox: "Checkbox",
   category: "Category",
   text: "Text",
@@ -290,13 +312,27 @@ export function isToggle(declaration) {
 /** The kind of a normalized declaration — a key of `KIND_LABELS`. */
 export function kindOf(declaration) {
   if (isToggle(declaration)) return "checkbox";
-  if (declaration?.type === "number" && declaration.step === 1) return "integer";
   return KIND_LABELS[declaration?.type] ? declaration.type : "number";
 }
 
 /** Human label for a declaration's kind. */
 export function typeLabel(declaration) {
   return KIND_LABELS[kindOf(declaration)];
+}
+
+/** Whether a number steps by 1, which is all a whole number is. */
+export function isWholeNumber(declaration) {
+  return declaration?.type === "number" && declaration.step === 1;
+}
+
+/**
+ * The declaration fields that make a number whole, or not, for
+ * `updateParameter`. Turning it on rounds the default to a value it allows.
+ */
+export function wholeNumberFields(declaration, whole) {
+  return whole
+    ? { step: 1, default: Math.round(toNumber(declaration?.default)) }
+    : { step: undefined };
 }
 
 const CLEARED = { min: undefined, max: undefined, step: undefined, options: undefined };
@@ -323,15 +359,6 @@ export function retype(declaration, kind) {
 
   if (kind === "number") {
     return { ...CLEARED, ...range, type: "number", default: toNumber(given) };
-  }
-  if (kind === "integer") {
-    return {
-      ...CLEARED,
-      ...range,
-      type: "number",
-      step: 1,
-      default: Math.round(toNumber(given)),
-    };
   }
   if (kind === "checkbox") {
     return { ...CLEARED, type: "boolean", default: false };

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 
-import Button from "../../DesignSystem/Button";
 import IconButton from "../../DesignSystem/IconButton";
 import { ChevronLeftIcon } from "../../DesignSystem/Icons";
 
@@ -43,11 +42,20 @@ const NAME_STYLE = {
   whiteSpace: "nowrap",
 };
 
+// Trailing actions, or the mode chip when the visual is only being viewed.
+const ACTIONS_STYLE = {
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+  flexShrink: 0,
+};
+
 /**
- * The builder's top bar: back out of the editor, what you're editing, and the
- * actions that apply to the visual as a whole.
+ * The top bar shared by the builder and the viewer: back out to the visuals,
+ * which visual this is, and whatever applies to it as a whole — Share while
+ * building, the mode it is being viewed in otherwise.
  */
-export default function TopBar({ title, onShare, onBack }) {
+export default function TopBar({ title, onBack, children }) {
   const { t } = useTranslation("visuals");
 
   return (
@@ -67,9 +75,7 @@ export default function TopBar({ title, onShare, onBack }) {
         <p style={EYEBROW_STYLE}>{t("visualBlock", "Visual Block")}</p>
         <h1 style={NAME_STYLE}>{title}</h1>
       </div>
-      <Button variant="filled" onClick={onShare}>
-        {t("share", "Share")}
-      </Button>
+      <div style={ACTIONS_STYLE}>{children}</div>
     </div>
   );
 }

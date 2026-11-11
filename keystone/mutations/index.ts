@@ -2,6 +2,7 @@ import { mergeSchemas } from "@graphql-tools/schema";
 
 import sendEmail from "./sendEmail";
 import copyProposalBoard from "./copyProposalBoard";
+import copyVisual from "./copyVisual";
 import deleteProposal from "./deleteProposal";
 import archiveStudy from "./archiveStudy";
 import googleSignup from "./googleSignup";
@@ -113,6 +114,7 @@ import {
   ingestRunMessage,
   runtimeAssetPreviewToken,
   runtimeRunContext,
+  runtimeVisualConfig,
   runtimeVisualSource,
   startRun,
   updateRunDataPolicy,
@@ -213,6 +215,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           collaborators: [ID]
           isTemplate: Boolean
         ): ProposalBoard
+        # "Copy & Edit": a private copy of a visual the caller can read.
+        copyVisual(id: ID!): Visual
         deleteProposal(id: ID!): ProposalBoard
         archiveStudy(study: ID!, isArchived: Boolean!): Profile
         # invitationCode: the class's mentor invitation code (mentors only).
@@ -650,6 +654,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         runtimeVersionStatus(taskId: ID!): RuntimeVersionStatus!
         # A p5 task's code, for the frontend task route; needs a p5 asset token.
         runtimeVisualSource(assetToken: String!): [RuntimeVisualFile!]!
+        # A p5 task's parameter bindings and data sources; same token.
+        runtimeVisualConfig(assetToken: String!): JSON!
         """
         One ticket, for a CLI or agent with no session. Shared-secret
         authenticated, read-only, single-id. See mutations/ticketForAgent.ts.
@@ -748,6 +754,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         runtimeRunContext,
         runtimeAssetPreviewToken,
         runtimeVisualSource,
+        runtimeVisualConfig,
         runtimeVersionStatus,
         ticketForAgent,
         supportTicketPreviews,
@@ -777,6 +784,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         saveStudyDataSourceRecord,
         sendEmail,
         copyProposalBoard,
+        copyVisual,
         deleteProposal,
         archiveStudy,
         googleSignup,

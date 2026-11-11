@@ -13,6 +13,8 @@ import {
   VisibilityOffIcon,
 } from "../../../DesignSystem/Icons";
 import CameraCanvas from "./CameraCanvas";
+import CameraSelect from "./CameraSelect";
+import { overlayLayers } from "./receivers";
 import WaveformCanvas from "./WaveformCanvas";
 import { channelKey } from "../../../../lib/yqOutputs";
 
@@ -39,7 +41,7 @@ const DIVIDER_STYLE = {
   margin: "0 16px",
 };
 
-function InputRow({ input, status, onConnect, onDisconnect, videoElement }) {
+function InputRow({ input, status, onConnect, onDisconnect, onSelectCamera, videoElement, receiver }) {
   const connected = status?.status === "connected";
   const connecting = status?.status === "connecting";
   return (
@@ -68,14 +70,21 @@ function InputRow({ input, status, onConnect, onDisconnect, videoElement }) {
         </Button>
       </div>
 
-      {connected && input.receiver === "video" && videoElement && (
+      {connected && videoElement && (
         <>
-          <CameraCanvas videoElement={videoElement} />
-          <Chip variant="static" tone="neutral" label={status.deviceLabel} style={{ alignSelf: "flex-start" }} />
+          <CameraCanvas
+            videoElement={videoElement}
+            receiver={receiver}
+            layers={overlayLayers(input.receiver)}
+          />
+          <CameraSelect
+            status={status}
+            onSelect={(deviceId) => onSelectCamera(input.id, deviceId)}
+          />
         </>
       )}
 
-      {connected && input.receiver !== "video" && status.deviceLabel && (
+      {connected && !videoElement && status.deviceLabel && (
         <span
           className="MH-Type-Body-Base"
           style={{ color: "var(--MH-Theme-Neutrals-Dark, #6A6A6A)", paddingLeft: 8 }}
@@ -179,7 +188,9 @@ export default function PreviewPanel({ row, api, onClose }) {
               status={api.inputStatus[input.id]}
               onConnect={api.connect}
               onDisconnect={api.disconnect}
+              onSelectCamera={api.selectCamera}
               videoElement={api.getVideoElement(input.id)}
+              receiver={api.getReceiver(input.id)}
             />
           ))}
       </div>
