@@ -63,17 +63,27 @@ export function useClassTablePrefs(
   const savedRef = useRef(saved);
   savedRef.current = saved;
 
+  // Latest layout the teacher left the table in; re-applied whenever the
+  // column definitions are rebuilt (e.g. once mentors or projects load), which
+  // would otherwise reset AG Grid to the definition order.
+  const latestRef = useRef(saved);
   const applyingRef = useRef(false);
   const apiRef = useRef(null);
   const timeoutRef = useRef(null);
   const classIdRef = useRef(classId);
   const tableIdRef = useRef(tableId);
 
-  const persistTo = useCallback((targetClassId, targetTableId) => {
-    if (!targetClassId || !targetTableId || applyingRef.current) return;
+  const capture = useCallback(() => {
     const api = apiRef.current;
-    if (!api) return;
+    if (!api || applyingRef.current) return;
+    if (typeof api.isDestroyed === "function" && api.isDestroyed()) return;
     const next = collectTableState(api);
+    if (next) latestRef.current = next;
+  }, []);
+
+  const persistTo = useCallback((targetClassId, targetTableId) => {
+    if (!targetClassId || !targetTableId) return;
+    const next = latestRef.current;
     if (!next) return;
     writeClassTablePrefs(targetClassId, targetTableId, next);
   }, []);
@@ -84,15 +94,15 @@ export function useClassTablePrefs(
 
   const schedulePersist = useCallback(() => {
     if (applyingRef.current) return;
+    capture();
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       timeoutRef.current = null;
       persist();
     }, DEBOUNCE_MS);
-  }, [persist]);
+  }, [capture, persist]);
 
-  const restore = useCallback((api) => {
-    const state = savedRef.current;
+  const restore = useCallback((api, state = latestRef.current) => {
     if (!api || !state) return;
     applyingRef.current = true;
     try {
@@ -113,14 +123,16 @@ export function useClassTablePrefs(
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
       }
+      capture();
       persistTo(prevClassId, prevTableId);
     }
     classIdRef.current = classId;
     tableIdRef.current = tableId;
-    if (apiRef.current && tableChanged) {
-      restore(apiRef.current);
+    if (tableChanged) {
+      latestRef.current = savedRef.current;
+      if (apiRef.current) restore(apiRef.current);
     }
-  }, [classId, tableId, persistTo, restore]);
+  }, [classId, tableId, capture, persistTo, restore]);
 
   useEffect(
     () => () => {
@@ -143,6 +155,11 @@ export function useClassTablePrefs(
     [restore]
   );
 
+  // Fired when columnDefs are replaced after the grid is ready.
+  const onNewColumnsLoaded = useCallback(() => {
+    if (apiRef.current) restore(apiRef.current);
+  }, [restore]);
+
   const onColumnResized = useCallback(
     (params) => {
       if (params?.finished === false) return;
@@ -155,6 +172,8 @@ export function useClassTablePrefs(
 
   return {
     onGridReady,
+    onNewColumnsLoaded,
+    maintainColumnOrder: true,
     onColumnResized,
     onColumnMoved: schedulePersist,
     onColumnVisible: schedulePersist,

@@ -10,11 +10,17 @@ import { AgGridReact } from "ag-grid-react";
 
 import Button from "../../../DesignSystem/Button";
 import Input from "../../../DesignSystem/Input";
+import ToggleSwitch from "../../../DesignSystem/ToggleSwitch";
 import { AddIcon } from "../../../DesignSystem/Icons";
+import { getClassTemplateBoards } from "../../../../lib/classTemplateBoards";
 import { UPDATE_PROJECT_BOARD } from "../../../Mutations/Proposal";
 import OwnedItemsShowcase from "./utils/OwnedItemsShowcase";
 import { filterOwnedClassItems } from "./utils/ownedClassItems";
 import { useClassTablePrefs } from "./useClassTablePrefs";
+import {
+  readClassTableOption,
+  writeClassTableOption,
+} from "./classPagePrefs";
 import StudyCollaboratorsModal from "./StudyCollaboratorsModal";
 import StudyMentorsModal from "./StudiesTab/StudyMentorsModal";
 import NewStudyModal from "./StudiesTab/NewStudyModal";
@@ -112,6 +118,10 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
     refetchQueries: studyRefetchQueries(myclass),
   });
 
+  // No project board template → students have no class projects to link,
+  // so the Project column would always be empty.
+  const hasProjectTemplate = getClassTemplateBoards(myclass).length > 0;
+
   const studies = myclass?.studies || NO_STUDIES;
   const ownedStudies =
     readOnly && user?.id
@@ -134,7 +144,20 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
   }, [studies, projectsByStudyId, participationByStudyId, readOnly]);
 
   // "N studies collecting data · Show only these" above the table.
-  const [onlyCollecting, setOnlyCollecting] = useState(false);
+  // Remembered per class in a cookie; read after mount to keep SSR in sync.
+  const [onlyCollecting, setOnlyCollectingState] = useState(false);
+  useEffect(() => {
+    setOnlyCollectingState(
+      readClassTableOption(myclass?.id, "studies", "onlyCollecting") === true
+    );
+  }, [myclass?.id]);
+  const setOnlyCollecting = useCallback(
+    (next) => {
+      setOnlyCollectingState(next);
+      writeClassTableOption(myclass?.id, "studies", "onlyCollecting", next);
+    },
+    [myclass?.id]
+  );
   const collectingCount = rows.filter(
     (row) => row.statusRank === STATUS_COLLECTING
   ).length;
@@ -236,6 +259,10 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
             minWidth: 170,
             cellStyle: { display: "flex", alignItems: "center" },
           },
+        ]
+      : []),
+    ...(!readOnly && hasProjectTemplate
+      ? [
           {
             colId: "project",
             headerName: t("studies.projectColumn", {}, { default: "Project" }),
@@ -387,6 +414,7 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
   ], [
     t,
     readOnly,
+    hasProjectTemplate,
     getCollaborators,
     getMentors,
     openLinkProject,
@@ -430,6 +458,15 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
         />
         {studies.length > 0 || !readOnly ? (
           <div className="classTabActionBar">
+            {!readOnly ? (
+              <Button
+                variant="filled"
+                leadingIcon={<AddIcon />}
+                onClick={() => setCreatingStudy(true)}
+              >
+                {t("studies.newStudy.button", {}, { default: "New study" })}
+              </Button>
+            ) : null}
             {studies.length > 0 ? (
               <div style={{ flex: "1 1 280px", maxWidth: 480, minWidth: 0 }}>
                 <Input
@@ -445,41 +482,18 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
               </div>
             ) : null}
             {!readOnly && collectingCount > 0 ? (
-              <div
-                className="MH-Type-Body-Small"
-                style={{ display: "flex", alignItems: "center", gap: 4 }}
-              >
-                <span>
-                  {t(
-                    "studies.status.collectingCount",
-                    { count: collectingCount },
-                    { default: "{{count}} studies collecting data" }
-                  )}
-                </span>
-                <span aria-hidden="true">·</span>
-                <Button
-                  variant="text"
-                  aria-pressed={showOnlyCollecting}
-                  onClick={() => setOnlyCollecting((on) => !on)}
-                >
-                  {showOnlyCollecting
-                    ? t("studies.status.showAll", {}, {
-                        default: "Show all studies",
-                      })
-                    : t("studies.status.showOnly", {}, {
-                        default: "Show only these",
-                      })}
-                </Button>
-              </div>
-            ) : null}
-            {!readOnly ? (
-              <Button
-                variant="filled"
-                leadingIcon={<AddIcon />}
-                onClick={() => setCreatingStudy(true)}
-              >
-                {t("studies.newStudy.button", {}, { default: "New study" })}
-              </Button>
+              <ToggleSwitch
+                checked={showOnlyCollecting}
+                onChange={setOnlyCollecting}
+                label={t(
+                  "studies.status.onlyCollecting",
+                  { count: collectingCount },
+                  {
+                    default:
+                      "Show only the {{count}} studies collecting data",
+                  }
+                )}
+              />
             ) : null}
           </div>
         ) : null}
