@@ -14,7 +14,7 @@ export default function ProjectCard({
   projectsInfo,
 }) {
   const { t } = useTranslation("builder");
-  const imageURL = getStudyImageUrl(project);
+  const imageURL = getStudyImageUrl(project?.study ?? project?.studyMain);
 
   return (
     <StyledStudyCard>

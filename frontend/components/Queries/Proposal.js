@@ -796,6 +796,29 @@ export const GET_MY_PROJECT_BOARDS = gql`
       createdAt
       study {
         id
+        image {
+          id
+          keystoneImage {
+            id
+            url
+          }
+          image {
+            publicUrlTransformed
+          }
+        }
+      }
+      studyMain {
+        id
+        image {
+          id
+          keystoneImage {
+            id
+            url
+          }
+          image {
+            publicUrlTransformed
+          }
+        }
       }
       templateForClasses {
         id
@@ -854,6 +877,29 @@ export const TEACHER_PROJECT_BOARDS = gql`
       createdAt
       study {
         id
+        image {
+          id
+          keystoneImage {
+            id
+            url
+          }
+          image {
+            publicUrlTransformed
+          }
+        }
+      }
+      studyMain {
+        id
+        image {
+          id
+          keystoneImage {
+            id
+            url
+          }
+          image {
+            publicUrlTransformed
+          }
+        }
       }
       templateForClasses {
         id
