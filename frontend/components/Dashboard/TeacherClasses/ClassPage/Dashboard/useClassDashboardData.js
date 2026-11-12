@@ -1,6 +1,8 @@
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
 
+import useRefetchOnFocus from "../useRefetchOnFocus";
+
 import {
   CLASS_DASHBOARD_MENTORS_QUERY,
   CLASS_DASHBOARD_PROJECTS_QUERY,
@@ -84,6 +86,12 @@ export default function useClassDashboardData(classId) {
   const projects = useQuery(CLASS_DASHBOARD_PROJECTS_QUERY, jsonOptions);
   const studies = useQuery(CLASS_DASHBOARD_STUDIES_QUERY, jsonOptions);
   const mentors = useQuery(CLASS_DASHBOARD_MENTORS_QUERY, options);
+  // Students submit and finish milestones from their own screens: refresh
+  // when the teacher comes back to this page.
+  useRefetchOnFocus(
+    ["CLASS_DASHBOARD_PROJECTS_QUERY", "CLASS_DASHBOARD_STUDIES_QUERY"],
+    { skip: !classId }
+  );
 
   const ready = Boolean(
     roster.data && projects.data && studies.data && mentors.data

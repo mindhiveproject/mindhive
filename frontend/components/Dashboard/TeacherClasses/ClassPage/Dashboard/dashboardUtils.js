@@ -17,12 +17,21 @@ export function isCompleteStatus(status) {
 
 // Submitted work can be reopened; a study only while it's submitted (locked).
 export function canReopenMilestone(status, isStudy) {
-  return isStudy ? status === "SUBMITTED" : isCompleteStatus(status);
+  // A study is reopened once submitted, or after its data collection is
+  // finished (both lock it).
+  return isStudy
+    ? status === "SUBMITTED" || status === "FINISHED"
+    : isCompleteStatus(status);
 }
 
 export function milestoneStatusLabel(status, t, isStudy) {
   // A study is either submitted for data collection (locked) or not.
   if (isStudy) {
+    if (status === "FINISHED") {
+      return t("dashboard.dataCollectionFinished", {}, {
+        default: "Data collection finished",
+      });
+    }
     return status === "SUBMITTED"
       ? t("dashboard.submittedForDataCollection", {}, {
           default: "Submitted for data collection",
@@ -42,7 +51,8 @@ export function milestoneStatusLabel(status, t, isStudy) {
   }
 }
 
-// Study milestones are two-state: SUBMITTED (study locked) or NOT_STARTED.
+// Study milestones are three-state: SUBMITTED (collecting, locked), FINISHED
+// (data collection finished, still locked) or NOT_STARTED (anything else).
 // Otherwise a stored status wins; a board still at NOT_STARTED reads as
 // IN_PROGRESS once any card included in the milestone has moved off
 // "Not started".
@@ -51,7 +61,9 @@ export function deriveMilestoneStatus(project, milestone, milestones = []) {
     readMilestoneStatus(project, milestone?.key, milestones)?.status ||
     "NOT_STARTED";
   if (milestone?.statusTarget === "study") {
-    return stored === "SUBMITTED" ? "SUBMITTED" : "NOT_STARTED";
+    return stored === "SUBMITTED" || stored === "FINISHED"
+      ? stored
+      : "NOT_STARTED";
   }
   if (stored !== "NOT_STARTED") return stored;
 

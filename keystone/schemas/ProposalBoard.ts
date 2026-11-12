@@ -14,6 +14,10 @@ import slugify from "slugify";
 import { signedInWrites, isAdmin } from "../access";
 
 const {
+  changedStudyMilestoneStatuses,
+  isTrustedSession,
+} = require("../lib/studyDataCollection");
+const {
   resolveClassChange,
   checkClassChange,
   checkSetMain,
@@ -56,6 +60,26 @@ export const ProposalBoard = list({
       addValidationError,
     }) {
       if (operation !== "update" || !item?.id) return;
+
+      // A study milestone's status (data collection) moves with the study,
+      // on every linked board at once: only setStudyDataCollection writes it
+      // (lib/studyDataCollection.js). Other milestones' entries are free.
+      if (
+        resolvedData.milestoneStatus !== undefined &&
+        context.session?.itemId &&
+        !isTrustedSession(context.session) &&
+        !isAdmin({ session: context.session }) &&
+        changedStudyMilestoneStatuses(
+          item.milestoneStatus,
+          resolvedData.milestoneStatus
+        ).length
+      ) {
+        addValidationError(
+          "A study's data collection is submitted, finished or reopened from its data-collection card or by a teacher."
+        );
+        return;
+      }
+
       const setsMain = resolvedData.isMain === true;
       if (!resolvedData.usedInClass && !setsMain) return;
 

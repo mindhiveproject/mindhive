@@ -49,6 +49,10 @@ import toggleReviewUpvote from "./toggleReviewUpvote";
 import classJoinPreview from "./classJoinPreview";
 import doeDataSummary from "./doeDataSummary";
 import studyCollectData from "./studyCollectData";
+import {
+  setStudyDataCollection,
+  studyDataCollection,
+} from "./studyDataCollection";
 import studyResults from "./studyResults";
 import cardAssignmentHomeworks from "./cardAssignmentHomeworks";
 import classDashboardProjects from "./classDashboardProjects";
@@ -180,7 +184,62 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         draftPreferenceItemIds: [ID!]!
         draftPreferenceId: ID
       }
+      # A study's data-collection lifecycle, shared by every board linked
+      # to it. See keystone/lib/studyDataCollection.js.
+      type StudyDataCollectionPerson {
+        id: ID!
+        username: String
+        boards: [String!]!
+      }
+      type StudyDataCollectionBoard {
+        id: ID!
+        title: String
+        classId: ID
+        classTitle: String
+        milestoneKey: String
+        supervising: Boolean!
+      }
+      type StudyDataCollectionState {
+        studyId: ID!
+        supervised: Boolean!
+        locked: Boolean!
+        stage: String!
+        open: Boolean!
+        canEdit: Boolean!
+        canManage: Boolean!
+        boards: [StudyDataCollectionBoard!]!
+        people: [StudyDataCollectionPerson!]!
+        submittedBy: String
+        submittedAt: String
+        # Newest first: who submitted, finished, reopened, resumed or
+        # opened/closed participation, and when (from the study's logs).
+        history: [StudyDataCollectionEvent!]!
+      }
+      type StudyDataCollectionEvent {
+        action: String!
+        by: String
+        at: String
+        open: Boolean
+        stage: String
+        confirmed: Boolean!
+        sharedWith: [String!]!
+      }
       type Mutation {
+        # The only way to submit, finish, reopen or resume a study's data
+        # collection, open or close its participation, or set the label of a
+        # self-managed study. Updates the study and every linked board's
+        # data-collection milestone together. action: SUBMIT | FINISH |
+        # REOPEN | RESUME | SET_PARTICIPATION | SET_LABEL.
+        setStudyDataCollection(
+          studyId: ID!
+          action: String!
+          open: Boolean
+          stage: String
+          acknowledgedProfileIds: [ID!]
+          # Required (true) to SUBMIT or FINISH: the caller ticked the
+          # confirmation. Recorded in the log with their name and the time.
+          confirmed: Boolean
+        ): StudyDataCollectionState!
         startRun(
           taskId: ID!
           studyId: ID!
@@ -655,6 +714,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       }
 
       extend type Query {
+        # A study's data-collection state, who shares it and what the caller
+        # may change.
+        studyDataCollection(studyId: ID!): StudyDataCollectionState!
         runtimeRunContext(runToken: String!): RuntimeRunContext!
         # Lets a jsPsych or p5 task be previewed without starting a run.
         runtimeAssetPreviewToken(taskId: ID!): String!
@@ -768,6 +830,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
     resolvers: {
       Opportunity: opportunityMultiselectResolvers,
       Query: {
+        studyDataCollection,
         runtimeRunContext,
         runtimeAssetPreviewToken,
         runtimeVisualSource,
@@ -795,6 +858,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         searchConnectUsersCount,
       },
       Mutation: {
+        setStudyDataCollection,
         startRun,
         ingestRunMessage,
         updateRunDataPolicy,

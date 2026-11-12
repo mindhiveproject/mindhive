@@ -140,7 +140,6 @@ export default function Builder({ query, user, tab }) {
     diagram,
     descriptionInProposalCardId,
     tags,
-    status,
     createVersion = false,
   }) => {
     const shouldCreate =
@@ -180,7 +179,6 @@ export default function Builder({ query, user, tab }) {
               sonaId: false,
               minorsBlocked: false,
             },
-            status,
           },
         },
       });
@@ -235,7 +233,8 @@ export default function Builder({ query, user, tab }) {
             ? { connect: { id: descriptionInProposalCardId } }
             : null,
           tags: tags?.length ? { set: tags } : { set: [] },
-          status,
+          // `status` is not saved here: setStudyDataCollection owns it (see
+          // lib/studyLifecycle.js), and an autosave would resend a stale one.
           ...(shouldAdvanceCollectionVersion
             ? { currentVersion: newVersionId }
             : {}),

@@ -5,31 +5,22 @@ import Chip from "../../../../DesignSystem/Chip";
 import CopyButton from "../../../../DesignSystem/CopyButton";
 import Tooltip from "../../../../DesignSystem/Tooltip";
 import {
+  ArrowDropDownIcon,
+  CheckIcon,
   LinkIcon,
   LinkOffIcon,
   OpenInNewIcon,
+  PauseIcon,
+  PlayIcon,
+  UnlockIcon,
 } from "../../../../DesignSystem/Icons";
 import RowActionsMenu from "../RowActionsMenu";
+import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
+import { studyLifecycle } from "../../../../../lib/studyLifecycle";
 
 // Cell renderers of the class Studies table. Defined at module level so AG Grid
 // keeps each cell mounted across re-renders (the copy chip's "Copied" state
 // survives typing in the search, for instance).
-
-// Status order, from the study milestone of a student's main project:
-// collecting data (submitted), then not submitted, then studies not linked to
-// a main project. The milestone has no teacher review step: submitting locks
-// the study and opens it to participants.
-export const STATUS_COLLECTING = 0;
-export const STATUS_NOT_SUBMITTED = 1;
-export const STATUS_NONE = 2;
-
-export function statusRankOf(linkedProjects) {
-  if (!linkedProjects.some((p) => p?.isMain)) return STATUS_NONE;
-  const submitted = linkedProjects.some(
-    (p) => p?.study?.dataCollectionStatus === "SUBMITTED"
-  );
-  return submitted ? STATUS_COLLECTING : STATUS_NOT_SUBMITTED;
-}
 
 // Button cells sit in auto-height columns: this padding lets the row grow
 // around the button instead of the button touching the row borders.
@@ -55,39 +46,159 @@ const CHIP_ROW = {
 
 const CHIP_IN_ROW = { maxWidth: "100%" };
 
-export function StatusCell({ data }) {
-  const { t } = useTranslation("classes");
-  if (data?.statusRank === STATUS_COLLECTING) {
-    return (
-      <Chip
-        variant="static"
-        tone="success"
-        label={t("studies.status.collecting", {}, {
-          default: "Collecting data",
-        })}
-        title={t("studies.status.collectingHint", {}, {
-          default:
-            "Submitted for data collection: the study is locked and open to participants.",
-        })}
-      />
-    );
-  }
-  if (data?.statusRank === STATUS_NOT_SUBMITTED) {
-    return (
-      <Chip
-        variant="static"
-        tone="neutral"
-        label={t("studies.status.notSubmitted", {}, {
-          default: "Not submitted",
-        })}
-        title={t("studies.status.notSubmittedHint", {}, {
-          default: "Not yet submitted for data collection.",
-        })}
-      />
-    );
-  }
-  return null;
+// Status of each study, from lib/studyLifecycle.js. A study linked to a
+// class project is supervised by its data-collection milestone: submitting
+// locks it and opens it to participants, students can pause participation,
+// and only the teaching team reopens it. A study with no class project is
+// self-managed: its status is the students' own label and never locks it.
+// Order: supervised (collecting, not submitted, finished), then self-managed.
+const STAGE_ORDER = { COLLECTING: 0, DESIGNING: 1, FINISHED: 2 };
+
+export function studyStatusOf(study, linkedProjects) {
+  const life = studyLifecycle(study, { supervised: linkedProjects.length > 0 });
+  const supervised = life.supervised || life.locked;
+  return {
+    ...life,
+    supervised,
+    collecting: life.stage === "COLLECTING",
+    rank: (supervised ? 0 : 3) + STAGE_ORDER[life.stage],
+  };
 }
+
+function statusChip(t, status) {
+  const open = t("studies.status.open", {}, { default: "Open" });
+  const paused = t("studies.status.paused", {}, { default: "Paused" });
+  const closed = t("studies.status.closed", {}, { default: "Closed" });
+  if (!status.supervised) {
+    const stage = {
+      COLLECTING: t("studies.status.collecting", {}, { default: "Collecting data" }),
+      DESIGNING: t("studies.status.designing", {}, { default: "Designing" }),
+      FINISHED: t("studies.status.finished", {}, { default: "Finished" }),
+    }[status.stage];
+    // The "Self-managed" caption sits under the chip (StatusCell), so the
+    // chip stays short enough for the column.
+    return {
+      // Neutral: a quiet fill that also survives as an interactive chip (an
+      // interactive chip ignores the "default" tone).
+      tone: "neutral",
+      caption: t("studies.status.selfManaged", {}, { default: "Self-managed" }),
+      label: `${stage}${
+        status.stage === "FINISHED" ? "" : ` · ${status.open ? open : closed}`
+      }`,
+      title: t("studies.status.selfManagedHint", {}, {
+        default:
+          "Status set by the students. No class milestone supervises this study (it is not linked to a class project), so it is never locked. You can still open or close participation.",
+      }),
+    };
+  }
+  if (status.stage === "COLLECTING") {
+    return status.open
+      ? {
+          tone: "success",
+          label: `${t("studies.status.collecting", {}, { default: "Collecting data" })} · ${open}`,
+          title: t("studies.status.collectingHint", {}, {
+            default:
+              "Submitted for data collection: the study is locked and open to participants.",
+          }),
+        }
+      : {
+          tone: "warning",
+          label: `${t("studies.status.collecting", {}, { default: "Collecting data" })} · ${paused}`,
+          title: t("studies.status.pausedHint", {}, {
+            default:
+              "Submitted for data collection and locked, but participation was closed by a student or teacher.",
+          }),
+        };
+  }
+  if (status.stage === "FINISHED") {
+    return {
+      tone: "info",
+      label: t("studies.status.finished", {}, { default: "Finished" }),
+      title: t("studies.status.finishedHint", {}, {
+        default:
+          "Data collection is finished: participation is closed and the study stays locked. You can resume or reopen it.",
+      }),
+    };
+  }
+  return {
+    tone: "neutral",
+    label: t("studies.status.notSubmitted", {}, { default: "Not submitted" }),
+    title: t("studies.status.notSubmittedHint", {}, {
+      default: "Not yet submitted for data collection.",
+    }),
+  };
+}
+
+// The status chip opens the same data-collection actions as the row menu
+// (open/close participation, finish, resume, reopen) when there are any.
+export function StatusCell({ data, onDataCollection }) {
+  const { t } = useTranslation("classes");
+  if (!data?.studyStatus) return null;
+  const chip = statusChip(t, data.studyStatus);
+  const items = dataCollectionItems(t, data, onDataCollection);
+  const label = t("studies.status.actionsFor", { title: data.title }, {
+    default: "Change the status of {{title}}",
+  });
+  return (
+    <div style={STATUS_STACK}>
+      {items.length ? (
+        // The menu's wrapper sizes to its content; this one takes the cell's
+        // width so the chip truncates instead of spilling into the next column.
+        <div style={MENU_IN_CELL}>
+        <DropdownMenu
+          ariaLabel={label}
+          // Portal: AG Grid clips overflow inside cells (see RowActionsMenu).
+          portal
+          items={items}
+          renderTrigger={({ onClick, open }) => (
+            <Chip
+              tone={chip.tone}
+              label={chip.label}
+              title={chip.title}
+              ariaLabel={`${chip.label}. ${label}`}
+              trailing={<ArrowDropDownIcon />}
+              onClick={onClick}
+              pressed={open}
+              style={CHIP_IN_ROW}
+            />
+          )}
+        />
+        </div>
+      ) : (
+        <Chip
+          variant="static"
+          tone={chip.tone}
+          label={chip.label}
+          title={chip.title}
+          style={CHIP_IN_ROW}
+        />
+      )}
+      {chip.caption ? (
+        <span className="MH-Type-Label-Small" style={STATUS_CAPTION}>
+          {chip.caption}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+// Chip with an optional caption under it, in an auto-height column.
+const STATUS_STACK = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-start",
+  gap: 2,
+  padding: "6px 0",
+  width: "100%",
+  minWidth: 0,
+  maxWidth: "100%",
+};
+
+const MENU_IN_CELL = { width: "100%", minWidth: 0 };
+
+const STATUS_CAPTION = {
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+};
 
 export function ProjectCell({ data }) {
   const { t } = useTranslation("classes");
@@ -210,10 +321,73 @@ export function StudyBuilderCell({ data }) {
   );
 }
 
-export function StudyActionsCell({ data, onLinkProject, onUnlinkProject }) {
+// Data-collection actions a teacher can take from the row
+// (setStudyDataCollection; see keystone/lib/studyDataCollection.js).
+function dataCollectionItems(t, data, onDataCollection) {
+  const status = data?.studyStatus;
+  if (!status || !onDataCollection) return [];
+  const items = [];
+  if (status.stage === "COLLECTING" || !status.supervised) {
+    if (status.stage !== "FINISHED") {
+      items.push({
+        key: "participation",
+        label: status.open
+          ? t("studies.dataCollection.closeParticipation", {}, {
+              default: "Close participation",
+            })
+          : t("studies.dataCollection.openParticipation", {}, {
+              default: "Open participation",
+            }),
+        // Pause closes participation, play opens it.
+        icon: status.open ? <PauseIcon /> : <PlayIcon />,
+        onClick: () =>
+          onDataCollection(data, "SET_PARTICIPATION", { open: !status.open }),
+      });
+    }
+  }
+  if (status.supervised && status.stage === "COLLECTING") {
+    items.push({
+      key: "finish",
+      label: t("studies.dataCollection.finish", {}, {
+        default: "Mark data collection finished",
+      }),
+      icon: <CheckIcon />,
+      onClick: () => onDataCollection(data, "FINISH"),
+    });
+  }
+  if (status.supervised && status.stage === "FINISHED") {
+    items.push({
+      key: "resume",
+      label: t("studies.dataCollection.resume", {}, {
+        default: "Resume data collection",
+      }),
+      icon: <PlayIcon />,
+      onClick: () => onDataCollection(data, "RESUME"),
+    });
+  }
+  if (status.supervised && status.stage !== "DESIGNING") {
+    items.push({
+      key: "reopen",
+      label: t("studies.dataCollection.reopen", {}, {
+        default: "Reopen for editing",
+      }),
+      icon: <UnlockIcon />,
+      onClick: () => onDataCollection(data, "REOPEN"),
+    });
+  }
+  return items;
+}
+
+export function StudyActionsCell({
+  data,
+  onLinkProject,
+  onUnlinkProject,
+  onDataCollection,
+}) {
   const { t } = useTranslation("classes");
   if (!data?.id) return null;
   const items = [
+    ...dataCollectionItems(t, data, onDataCollection),
     {
       key: "link",
       label: t("studies.linkProject.action", {}, {
