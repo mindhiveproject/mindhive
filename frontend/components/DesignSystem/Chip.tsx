@@ -124,8 +124,18 @@ const StyledChip = styled.div`
   &.DesignSystem-Chip--selected.DesignSystem-Chip--hoverable:hover {
     background-color: #c0eaef;
   }
-  &.DesignSystem-Chip--hoverable:not(.DesignSystem-Chip--selected):hover {
+  &.DesignSystem-Chip--hoverable:not(.DesignSystem-Chip--selected):not(.DesignSystem-Chip--toned):hover {
     background-color: #f3f3f3;
+  }
+  /* Interactive chip with a tone (e.g. a status that opens a menu): keeps the
+     tone's fill with no visible outline (fill or outline, never both); the
+     border stays transparent so the chip keeps its size. Hover deepens the
+     same hue with a thin layer of ink instead of switching to grey. */
+  &.DesignSystem-Chip--toned {
+    border-color: transparent;
+  }
+  &.DesignSystem-Chip--toned.DesignSystem-Chip--hoverable:hover {
+    box-shadow: inset 0 0 0 999px rgba(23, 23, 23, 0.06);
   }
 
   /* Figma: a chip with a leading (or trailing) 18px icon tightens the padding on
@@ -226,7 +236,12 @@ export interface ChipProps {
    *    no close/trailing. For read-only tags and statuses.
    */
   variant?: ChipVariant;
-  /** Static chips only: semantic fill/text pair for statuses. @default "default" */
+  /**
+   * Semantic fill/text pair for statuses. Static chips always use it; an
+   * interactive chip uses it only when set to something other than
+   * `"default"` (and not selected), keeping the fill with no outline — e.g. a
+   * status chip that opens a menu. @default "default"
+   */
   tone?: ChipTone;
   /** Selected state (interactive only): primary-light fill + primary border. @default false */
   selected?: boolean;
@@ -333,6 +348,8 @@ export default function Chip({
   const canHover = isInteractive && (isClickable || hasClose);
   const isPressed = typeof pressed === "boolean" ? pressed : selected;
   const isSelected = !isStatic && (selected || isPressed);
+  // An interactive chip given an explicit tone keeps that tone's fill.
+  const tonedInteractive = !isStatic && !isSelected && tone !== "default";
 
   const labelStyle: React.CSSProperties = {
     ...(multilineLabel
@@ -393,7 +410,8 @@ export default function Chip({
         "DesignSystem-Chip",
         "MH-Type-Label-Base",
         isStatic && "DesignSystem-Chip--static",
-        isStatic && `DesignSystem-Chip--tone-${tone}`,
+        (isStatic || tonedInteractive) && `DesignSystem-Chip--tone-${tone}`,
+        tonedInteractive && "DesignSystem-Chip--toned",
         dashed && !isStatic && "DesignSystem-Chip--dashed",
         isSelected && "DesignSystem-Chip--selected",
         isSelected && `DesignSystem-Chip--accent-${accent}`,

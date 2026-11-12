@@ -739,6 +739,14 @@ export const PlayIcon = filledIcon(
   "M8 19V5L19 12L8 19ZM9.5 16.275L16.225 12L9.5 7.725V16.275Z",
 );
 
+/** Pause — Material Symbols "pause" (outlined), the counterpart of PlayIcon. */
+export const PauseIcon = filledIcon(
+  "PauseIcon",
+  0,
+  0,
+  "M13 19V5H19V19H13ZM5 19V5H11V19H5ZM15 17H17V7H15V17ZM7 17H9V7H7V17Z",
+);
+
 /**
  * Shown / hidden — Material Symbols "visibility" / "visibility_off" (outlined),
  * exported from Figma on an 18px grid and scaled up into the 24x24 box.

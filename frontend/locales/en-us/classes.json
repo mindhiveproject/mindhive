@@ -2547,7 +2547,8 @@
 			"selfManaged": "Self-managed",
 			"selfManagedHint": "Status set by the students. No class milestone supervises this study (it is not linked to a class project), so it is never locked. You can still open or close participation.",
 			"pausedHint": "Submitted for data collection and locked, but participation was closed by a student or teacher.",
-			"finishedHint": "Data collection is finished: participation is closed and the study stays locked. You can resume or reopen it."
+			"finishedHint": "Data collection is finished: participation is closed and the study stays locked. You can resume or reopen it.",
+			"actionsFor": "Change the status of {{title}}"
 		},
 		"dataCollection": {
 			"openParticipation": "Open participation",

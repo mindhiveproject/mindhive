@@ -5,14 +5,17 @@ import Chip from "../../../../DesignSystem/Chip";
 import CopyButton from "../../../../DesignSystem/CopyButton";
 import Tooltip from "../../../../DesignSystem/Tooltip";
 import {
+  ArrowDropDownIcon,
   CheckIcon,
   LinkIcon,
   LinkOffIcon,
   OpenInNewIcon,
+  PauseIcon,
   PlayIcon,
   UnlockIcon,
 } from "../../../../DesignSystem/Icons";
 import RowActionsMenu from "../RowActionsMenu";
+import DropdownMenu from "../../../../DesignSystem/DropdownMenu";
 import { studyLifecycle } from "../../../../../lib/studyLifecycle";
 
 // Cell renderers of the class Studies table. Defined at module level so AG Grid
@@ -36,6 +39,7 @@ const CHIP_ROW = {
   flexWrap: "wrap",
   gap: 4,
   padding: "6px 0",
+  width: "100%",
   minWidth: 0,
   overflow: "hidden",
 };
@@ -74,7 +78,9 @@ function statusChip(t, status) {
     // The "Self-managed" caption sits under the chip (StatusCell), so the
     // chip stays short enough for the column.
     return {
-      tone: "default",
+      // Neutral: a quiet fill that also survives as an interactive chip (an
+      // interactive chip ignores the "default" tone).
+      tone: "neutral",
       caption: t("studies.status.selfManaged", {}, { default: "Self-managed" }),
       label: `${stage}${
         status.stage === "FINISHED" ? "" : ` · ${status.open ? open : closed}`
@@ -123,19 +129,50 @@ function statusChip(t, status) {
   };
 }
 
-export function StatusCell({ data }) {
+// The status chip opens the same data-collection actions as the row menu
+// (open/close participation, finish, resume, reopen) when there are any.
+export function StatusCell({ data, onDataCollection }) {
   const { t } = useTranslation("classes");
   if (!data?.studyStatus) return null;
   const chip = statusChip(t, data.studyStatus);
+  const items = dataCollectionItems(t, data, onDataCollection);
+  const label = t("studies.status.actionsFor", { title: data.title }, {
+    default: "Change the status of {{title}}",
+  });
   return (
     <div style={STATUS_STACK}>
-      <Chip
-        variant="static"
-        tone={chip.tone}
-        label={chip.label}
-        title={chip.title}
-        style={CHIP_IN_ROW}
-      />
+      {items.length ? (
+        // The menu's wrapper sizes to its content; this one takes the cell's
+        // width so the chip truncates instead of spilling into the next column.
+        <div style={MENU_IN_CELL}>
+        <DropdownMenu
+          ariaLabel={label}
+          // Portal: AG Grid clips overflow inside cells (see RowActionsMenu).
+          portal
+          items={items}
+          renderTrigger={({ onClick, open }) => (
+            <Chip
+              tone={chip.tone}
+              label={chip.label}
+              title={chip.title}
+              ariaLabel={`${chip.label}. ${label}`}
+              trailing={<ArrowDropDownIcon />}
+              onClick={onClick}
+              pressed={open}
+              style={CHIP_IN_ROW}
+            />
+          )}
+        />
+        </div>
+      ) : (
+        <Chip
+          variant="static"
+          tone={chip.tone}
+          label={chip.label}
+          title={chip.title}
+          style={CHIP_IN_ROW}
+        />
+      )}
       {chip.caption ? (
         <span className="MH-Type-Label-Small" style={STATUS_CAPTION}>
           {chip.caption}
@@ -156,6 +193,8 @@ const STATUS_STACK = {
   minWidth: 0,
   maxWidth: "100%",
 };
+
+const MENU_IN_CELL = { width: "100%", minWidth: 0 };
 
 const STATUS_CAPTION = {
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
@@ -299,7 +338,8 @@ function dataCollectionItems(t, data, onDataCollection) {
           : t("studies.dataCollection.openParticipation", {}, {
               default: "Open participation",
             }),
-        icon: <PlayIcon />,
+        // Pause closes participation, play opens it.
+        icon: status.open ? <PauseIcon /> : <PlayIcon />,
         onClick: () =>
           onDataCollection(data, "SET_PARTICIPATION", { open: !status.open }),
       });
