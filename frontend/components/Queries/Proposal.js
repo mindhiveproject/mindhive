@@ -478,6 +478,9 @@ export const GET_CARD_CONTENT = gql`
         author {
           id
         }
+        classes {
+          id
+        }
       }
       tasks {
         id

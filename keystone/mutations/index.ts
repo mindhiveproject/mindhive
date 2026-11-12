@@ -17,6 +17,7 @@ import backfillOpportunityProposalData from "./backfillOpportunityProposalData";
 import backfillOpportunityMultiselectFields from "./backfillOpportunityMultiselectFields";
 import backfillClassNetworkAdmins from "./backfillClassNetworkAdmins";
 import backfillTemplateAssignmentClasses from "./backfillTemplateAssignmentClasses";
+import repairClassTemplateAssignments from "./repairClassTemplateAssignments";
 import backfillTemplateResourcePublishing from "./backfillTemplateResourcePublishing";
 import backfillClassNetworkPublicIds from "./backfillClassNetworkPublicIds";
 import {
@@ -132,6 +133,12 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
   mergeSchemas({
     schemas: [schema],
     typeDefs: graphql`
+      type RepairClassTemplateAssignmentsResult {
+        boardsScanned: Int!
+        assignmentsSplit: Int!
+        cardsRepointed: Int!
+        homeworkMoved: Int!
+      }
       type ApplyTemplateBoardChangesResult {
         id: ID!
         updatedCloneCount: Int!
@@ -271,6 +278,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityMultiselectFields(limit: Int, dryRun: Boolean): Int!
         backfillClassNetworkAdmins(limit: Int, dryRun: Boolean): Int!
         backfillTemplateAssignmentClasses(dryRun: Boolean): Int!
+        repairClassTemplateAssignments(
+          boardId: ID
+          dryRun: Boolean
+        ): RepairClassTemplateAssignmentsResult!
         backfillTemplateResourcePublishing(dryRun: Boolean): Int!
         addClassNetworkAdmin(
           networkId: ID!
@@ -807,6 +818,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillOpportunityMultiselectFields,
         backfillClassNetworkAdmins,
         backfillTemplateAssignmentClasses,
+        repairClassTemplateAssignments,
         backfillTemplateResourcePublishing,
         addClassNetworkAdmin,
         addClassNetworkMemberProfile,

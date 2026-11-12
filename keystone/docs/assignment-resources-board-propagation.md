@@ -115,9 +115,9 @@ Same logic is used for:
 
 ---
 
-## 5. copyProposalBoard (initial student board)
+## 5. copyProposalBoard (student boards and class template copies)
 
-When a student gets their board by copying the class template:
+`copyProposalBoard` serves two cases: a student (or teacher on a student's behalf) gets a working board from the class template (`classIdUsed`, no `classIdTemplate`), and a teacher copies any board — a platform template or another class's template — into a class template (`classIdTemplate`).
 
 ```mermaid
 sequenceDiagram
@@ -127,20 +127,30 @@ sequenceDiagram
 
   Teacher->>API: copyProposalBoard(templateId, classIdTemplate, classIdUsed, …)
   API->>DB: Load template (sections, cards, resources, assignments, …)
-  API->>DB: Create new board (clonedFrom=template, usedInClass=classIdUsed)
+  API->>DB: Create new board (clonedFrom=template only for student boards)
   loop For each section/card
     API->>DB: Create section/card with same publicId, position, content
     Note over API,DB: Resources/studies/tasks: connect same IDs
-    alt Template is class template (templateForClasses set)
+    alt Student copy of a class template (no classIdTemplate)
       API->>DB: Assignments: connect same IDs (no new Assignment rows)
-    else Platform template
-      API->>DB: Create new Assignment per card, link to new card
+    else Any other copy
+      API->>API: Record which new cards link each source assignment
     end
   end
+  API->>DB: Create ONE new Assignment per source assignment, linked to all its new cards
 ```
 
 - **Resources / studies / tasks:** Clone cards are connected to the **same** resource/study/task IDs as the template (shared across class).
-- **Assignments:** If the template is a **class template** (`templateForClasses` set), clone cards reuse the **same** assignment IDs. Otherwise (e.g. platform template), new assignments are created and linked to the new cards.
+- **Assignments** (rule in `lib/classAssignmentCopies.js`, `shouldReuseAssignments`):
+  - A **student/working copy** of a class template reuses the template's assignment IDs: students answer their class's assignments.
+  - A **copy into a class template** (`classIdTemplate`) always creates new rows, whatever the source (platform template or another class's template). Each class owns its assignments, so publishing, editing or deleting in one class never affects another. New rows: `classes` = `classIdTemplate`, `public: false`, `isTemplate: false`, `templateSource` → source row, tags carried, author = the caller.
+  - Any other copy (e.g. a personal copy of a platform template) also creates new rows; they keep the source's `public` unless the source board is a platform template.
+  - One copy is made per source assignment, linked to every new card that had it.
+- **Editing from the card:** class staff (creator, co-teachers, mentors) of one of an assignment's `classes` can edit and publish it from the card modal (`frontend/lib/linkedItemActions.js`), matching `assignmentUpdateFilter`. Deleting stays author-only.
+
+### Repairing boards that share assignment rows
+
+Class template boards copied from another class before this rule shared that class's assignment rows (often without being linked to the new class, so they never showed in its Assignments tab). The admin-only mutation `repairClassTemplateAssignments(boardId: ID, dryRun: Boolean)` (`mutations/repairClassTemplateAssignments.ts`) fixes them. For each class template board (or only `boardId`), every linked non-template assignment that is connected to a class the board is not a template for gets an unpublished copy for the board's classes (author = the board's author, `templateSource` → original); the board's cards and its student clones' cards are re-pointed to the copy; homework on the original by the board's classes' students moves to the copy; and the original loses its links to the board's classes. It writes from the Assignment side so the ProposalCard hook cannot re-link the original, is idempotent, and returns `{ boardsScanned assignmentsSplit cardsRepointed homeworkMoved }` (the same counts with `dryRun: true`, which writes nothing).
 
 ---
 
