@@ -424,30 +424,14 @@ export const StyledCanvasBuilder = styled.div`
   box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
   position: relative;
 
+  /* Warning MessageCard pinned under the study title, on the canvas side:
+     the side panel takes up to 46% of the width (see .sidepanel). */
   .lockedMessageOverlay {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 230, 230, 0.95);
-    border: 1px solid #cc0000;
-    color: #cc0000;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    max-width: 400px;
-    z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    h3 {
-      margin: 0 0 10px;
-      font: var(--MH-Type-Title-Large);
-      letter-spacing: 0;
-    }
-    p {
-      margin: 0;
-      font: var(--MH-Type-Body-Base);
-      letter-spacing: 0;
-    }
+    position: absolute;
+    top: 88px;
+    left: 16px;
+    width: min(440px, calc(54% - 40px));
+    z-index: 3;
   }
 
   .sidepanel {

@@ -20,6 +20,7 @@ import { GET_CLASSES } from "../../../Queries/Classes";
 import StudyConnector from "../../../Projects/StudyConnector/Main";
 import Button from "../../../DesignSystem/Button";
 import IconButton from "../../../DesignSystem/IconButton";
+import MessageCard from "../../../DesignSystem/MessageCard";
 import { FeedbackIcon } from "../../../DesignSystem/Icons";
 
 export default function Builder({
@@ -238,18 +239,26 @@ export default function Builder({
   return (
     <StyledCanvasBuilder>
       {isCanvasLocked && (
+        // Pinned to the canvas, clear of the side panel (whose Settings tab
+        // holds the study status controls).
         <div className="lockedMessageOverlay">
-          <h3>{t("builder.studyBuilderLocked", {}, { default: "Study Builder Locked" })}</h3>
-          <p>
-            {t(
-              "builder.lockedMessage",
-              {},
-              {
-                default:
-                  "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study.",
-              }
-            )}
-          </p>
+          <MessageCard
+            variant="warning"
+            message={
+              <>
+                <strong>
+                  {t("builder.studyBuilderLocked", {}, {
+                    default: "Study Builder Locked",
+                  })}
+                </strong>
+                {". "}
+                {t("builder.lockedMessage", {}, {
+                  default:
+                    "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study.",
+                })}
+              </>
+            }
+          />
         </div>
       )}
       <div

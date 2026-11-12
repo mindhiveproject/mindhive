@@ -876,7 +876,6 @@ export default function Engine({
       diagram,
       descriptionInProposalCardId: study?.descriptionInProposalCardId,
       tags: study?.tags?.map((tag) => ({ id: tag?.id })) || [],
-      status: study?.status,
       createVersion,
     });
   };

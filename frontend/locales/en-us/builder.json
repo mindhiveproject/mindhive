@@ -1968,7 +1968,7 @@
 		"downloadTooltip": "Download content is based on the status and review step filters selected below.",
 		"preview": "Preview",
 		"previewInfo": "Content from cards marked as \"complete\" in edit mode will appear here, in preview mode, displaying what your reviewers will see.",
-		"submittedLocked": "The proposal has been submitted and locked 🔒",
+		"submittedLocked": "The proposal has been submitted and locked",
 		"viewBoard": "Board View",
 		"viewFlattenBoard": "List View"
 	},
@@ -2608,7 +2608,13 @@
 		"submitForDataCollection": "Submit your study for data collection",
 		"submitForFeedbackIntro": "Once you submit your study for feedback:",
 		"submittedForReview": "The proposal was submitted for review",
-		"unlockedForParticipation": "The study was unlocked for participation"
+		"unlockedForParticipation": "The study was unlocked for participation",
+		"dataCollectionFinished": "Data collection is finished",
+		"finishedLocked": "Participation is closed and the study stays locked. Only a teacher can resume data collection.",
+		"submittedLocked": "The study is locked for everyone who shares it. Only a teacher can reopen it for editing.",
+		"markFinished": "Mark data collection as finished",
+		"lockedForEveryone": "The study is locked for everyone who shares it. Only a teacher can reopen it.",
+		"sharedWith": "Shared study ({{count}} boards) with {{people}}. Submitting submits it for everyone: agree on it together first."
 	},
 	"surveyBuilder": {
 		"addExamplePage": "Show example",
@@ -2941,5 +2947,75 @@
 		"upload": "Upload a new version (zip)",
 		"uploadHint": "Blocks keep the version they run until someone updates them.",
 		"uploadButton": "Upload version"
+	},
+	"dataCollection": {
+		"stage": {
+			"designing": "Designing",
+			"collecting": "Collecting data",
+			"finished": "Data collection finished"
+		},
+		"untitledBoard": "Untitled project",
+		"saveFirst": "Save your study to set its status.",
+		"supervisedBy": "Supervised by {{classes}}",
+		"supervised": "Supervised by a class",
+		"selfManaged": "Self-managed",
+		"supervisedHint": "The data-collection milestone of your project board ({{boards}}) sets this status. Your teacher follows it.",
+		"selfManagedHint": "No class milestone follows this study. The status below is a label for you and your collaborators: no teacher reviews it, and it never locks your study.",
+		"open": "Open",
+		"paused": "Paused",
+		"previously": "Previously: {{label}}",
+		"designingHint": "When your study is ready, submit it for data collection. It is then locked, and only your teacher can reopen it.",
+		"submit": "Submit for data collection",
+		"submittedBy": "Submitted by {{name}} on {{date}}.",
+		"teacherLockedHint": "Changes you make here update the milestone on every linked board.",
+		"finishedHint": "Participation is closed. Only your teacher can resume data collection.",
+		"lockedHint": "This study is locked for everyone who shares it. Only your teacher can reopen it for editing.",
+		"participationOpen": "Participation open",
+		"participationClosed": "Participation closed",
+		"markFinished": "Mark data collection as finished",
+		"sharedWith": "Shared with {{people}}. Submitting or finishing applies to all of you.",
+		"dialog": {
+			"submitTitle": "Submit “{{title}}” for data collection?",
+			"finishTitle": "Mark data collection of “{{title}}” as finished?",
+			"cancel": "Cancel",
+			"saving": "Saving",
+			"finishConfirm": "Mark as finished",
+			"submitForEveryone": "Submit for everyone",
+			"submit": "Submit",
+			"sharedSubmit": "This study is shared. Submitting it submits it for everyone:",
+			"sharedFinish": "This study is shared. Finishing closes participation for everyone:",
+			"boards": "The data-collection milestone of these {{count}} project boards will be updated:",
+			"submitLock": "The study will be locked for everyone: no one can edit its flow or participant page. Only a teacher can reopen it.",
+			"finishLock": "Participation closes and the study stays locked. Only a teacher can resume data collection.",
+			"public": "Your name and the time are recorded and shown to your collaborators and teachers.",
+			"agreeSubmit": "I've checked with my collaborators and we agree it's time to submit.",
+			"agreeFinish": "I've checked with my collaborators and we agree data collection is finished.",
+			"confirmSubmit": "I confirm this study is ready to collect data.",
+			"confirmFinish": "I confirm data collection for this study is finished.",
+			"reopenTitle": "Reopen “{{title}}” for editing?",
+			"reopenConfirm": "Reopen for editing",
+			"sharedReopen": "This study is shared. Reopening it unlocks it for everyone:",
+			"reopenInfo": "Participation closes and the data-collection milestone of every linked board goes back to in progress. Students can edit the study again and submit it later."
+		},
+		"history": {
+			"someone": "Someone",
+			"submitted": "{{name}} submitted the study for data collection",
+			"finished": "{{name}} marked data collection as finished",
+			"reopened": "{{name}} reopened the study for editing",
+			"resumed": "{{name}} resumed data collection",
+			"opened": "{{name}} opened participation",
+			"closed": "{{name}} closed participation",
+			"label": "{{name}} changed the status",
+			"withAgreement": "(confirmed agreement with {{people}})",
+			"see": "See activity ({{count}})",
+			"hide": "Hide activity"
+		}
+	},
+	"linkedBoardPeople": {
+		"author": "Study author: {{username}}",
+		"noAuthor": "No author",
+		"untitledBoard": "Untitled project",
+		"title": "Also on linked project boards",
+		"note": "They can edit this study through their project board. Add or remove them from the board's own Connect menu."
 	}
 }

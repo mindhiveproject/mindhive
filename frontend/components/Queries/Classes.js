@@ -197,6 +197,9 @@ export const GET_CLASS = gql`
         }
         participantsCount
         createdAt
+        status
+        dataCollectionStatus
+        dataCollectionOpenForParticipation
       }
       networks {
         id

@@ -2199,7 +2199,7 @@
 		"previewInfo": "Content from cards marked as 'complete' in edit mode will appear here, in preview mode, displaying what your reviewers will see.",
 		"projectBoardName": "Project board name",
 		"selectProjectTemplate": "Select project template",
-		"submittedAndLocked": "The proposal has been submitted and locked 🔒"
+		"submittedAndLocked": "The proposal has been submitted and locked"
 	},
 	"projects": {
 		"edit": "Edit",
@@ -2538,7 +2538,23 @@
 			"collectingCount_one": "{{count}} study collecting data",
 			"collectingCount_other": "{{count}} studies collecting data",
 			"onlyCollecting_one": "Show only the {{count}} study collecting data",
-			"onlyCollecting_other": "Show only the {{count}} studies collecting data"
+			"onlyCollecting_other": "Show only the {{count}} studies collecting data",
+			"open": "Open",
+			"paused": "Paused",
+			"closed": "Closed",
+			"designing": "Designing",
+			"finished": "Finished",
+			"selfManaged": "Self-managed",
+			"selfManagedHint": "Status set by the students. No class milestone supervises this study (it is not linked to a class project), so it is never locked. You can still open or close participation.",
+			"pausedHint": "Submitted for data collection and locked, but participation was closed by a student or teacher.",
+			"finishedHint": "Data collection is finished: participation is closed and the study stays locked. You can resume or reopen it."
+		},
+		"dataCollection": {
+			"openParticipation": "Open participation",
+			"closeParticipation": "Close participation",
+			"finish": "Mark data collection finished",
+			"resume": "Resume data collection",
+			"reopen": "Reopen for editing"
 		}
 	},
 	"studiesTab": "Studies",

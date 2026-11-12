@@ -1,12 +1,7 @@
-import { useQuery, useMutation } from "@apollo/client";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import absoluteUrl from "next-absolute-url";
-import { UPDATE_STUDY } from "../../../../../../Mutations/Study";
-import { UPDATE_PROJECT_BOARD } from "../../../../../../Mutations/Proposal";
-import { PROPOSAL_QUERY } from "../../../../../../Queries/Proposal";
-import { CREATE_LOG } from "../../../../../../Mutations/Log";
 import useTranslation from "next-translate/useTranslation";
-import { buildDualWriteUpdate } from "../../../../../../../lib/milestoneStatus";
 import { useBoardMilestones } from "../../../../../../../lib/useBoardMilestones";
 import { resolveMilestoneFromCard } from "../../../../../../../lib/milestones";
 
@@ -14,10 +9,21 @@ import NavigationSubmitStudy from "./NavigationSubmitStudy";
 import { cardTypes } from "../../Builder/Actions/ActionCard";
 import { builderHref } from "../../../../../shared/identity";
 import Button from "../../../../../../DesignSystem/Button";
+import MessageCard from "../../../../../../DesignSystem/MessageCard";
+import SubmitStudyDialog from "../../../../../shared/studyDataCollection/SubmitStudyDialog";
+import {
+  otherPeople,
+  useStudyDataCollection,
+} from "../../../../../shared/studyDataCollection/useStudyDataCollection";
+import DataCollectionHistory from "../../../../../shared/studyDataCollection/DataCollectionHistory";
 
 import { StyledActionPage } from "../../../../../../styles/StyledReview";
 import { StyledStudyPreview } from "../../../../../../styles/StyledStudyPage";
 
+// The data-collection card of a project board. Submitting, finishing and
+// opening/closing participation go through setStudyDataCollection, which
+// updates the study and every board linked to it (another student's board
+// included), so the decision is confirmed in SubmitStudyDialog first.
 export default function Proposal({
   query,
   tab,
@@ -40,11 +46,6 @@ export default function Proposal({
 
   const { milestones } = useBoardMilestones(proposal?.id || proposalId);
   const milestone = resolveMilestoneFromCard(proposalCard, milestones);
-  // Write through the milestone (board milestoneStatus + linked study) so the
-  // teacher dashboard sees the change — custom milestones have no legacy
-  // study column to fall back on.
-  const writesThroughMilestone =
-    !!milestone?.key && milestone?.statusTarget === "study";
   const defaultStep = cardTypes[proposalCard?.type];
   const heading =
     (!defaultStep && milestone?.title) ||
@@ -52,96 +53,31 @@ export default function Proposal({
   const stepTitle = defaultStep?.title || heading;
 
   const allCardsCompleted = true;
-  const isStudySubmitted =
-    !isPreview && study?.dataCollectionStatus === "SUBMITTED";
-  const isParticipationLocked = !study?.dataCollectionOpenForParticipation;
-  const [updateStudy, { loading }] = useMutation(UPDATE_STUDY, {
-    refetchQueries: [
-      {
-        query: PROPOSAL_QUERY,
-        variables: { id: proposal?.id },
-      },
-    ],
-  });
+  const {
+    state,
+    saving,
+    run,
+  } = useStudyDataCollection(study?.id, { skip: isPreview || !hasStudy });
+  const stage = state?.stage || "DESIGNING";
+  const isStudySubmitted = !isPreview && stage !== "DESIGNING";
+  const isParticipationLocked = !(state ? state.open : study?.dataCollectionOpenForParticipation);
+  const others = otherPeople(state, user?.id);
+  const [dialogMode, setDialogMode] = useState(null);
 
-  const [updateProposal] = useMutation(UPDATE_PROJECT_BOARD, {
-    refetchQueries: [
-      {
-        query: PROPOSAL_QUERY,
-        variables: { id: proposal?.id },
-      },
-    ],
-  });
-
-  const [createLog] = useMutation(CREATE_LOG);
-
-  // Returns true once the write lands.
-  const writeDataCollectionStatus = async ({ status, openForParticipation }) => {
-    if (writesThroughMilestone) {
-      const input = buildDualWriteUpdate(
-        milestone,
-        { status, openForParticipation },
-        proposal?.milestoneStatus
-      );
-      if (status === "SUBMITTED") {
-        input.study.update.status = "COLLECTING_DATA";
-      }
-      const res = await updateProposal({
-        variables: { id: proposal?.id, input },
-      });
-      return !!res?.data?.updateProposalBoard?.id;
-    }
-    const res = await updateStudy({
-      variables: {
-        id: study?.id,
-        input: {
-          ...(status === "SUBMITTED" ? { status: "COLLECTING_DATA" } : {}),
-          dataCollectionStatus: status,
-          dataCollectionOpenForParticipation: openForParticipation,
-        },
-      },
+  const confirmDialog = async (acknowledgedProfileIds) => {
+    const done = await run(dialogMode, {
+      acknowledgedProfileIds,
+      confirmed: true,
     });
-    return !!res?.data?.updateStudy?.id;
-  };
-
-  const submitStudy = async () => {
-    if (!hasStudy) return;
-    const submitted = await writeDataCollectionStatus({
-      status: "SUBMITTED",
-      openForParticipation: true,
-    });
-    await createLog({
-      variables: {
-        input: {
-          event:
-            milestone?.logEventName || "STUDY_SUBMITTED_FOR_DATA_COLLECTION",
-          user: {
-            connect: { id: user?.id },
-          },
-          proposal: {
-            connect: { id: proposalId },
-          },
-          class: {
-            connect: { id: proposal?.usedInClass?.id },
-          },
-          content: {
-            proposalSnapshot: "No cards submitted",
-          },
-        },
-      },
-    });
-    if (submitted) {
-      alert(t("submitStudy.submittedForReview", "The proposal was submitted for review"));
-    }
+    if (done) setDialogMode(null);
   };
 
   const switchFeedbackLock = async () => {
-    const updated = await writeDataCollectionStatus({
-      status: study?.dataCollectionStatus || "SUBMITTED",
-      openForParticipation: isParticipationLocked,
+    const updated = await run("SET_PARTICIPATION", {
+      open: isParticipationLocked,
     });
     if (updated) {
-      if (isParticipationLocked) {
+      if (updated.open) {
         alert(t("submitStudy.unlockedForParticipation", "The study was unlocked for participation"));
       } else {
         alert(t("submitStudy.lockedForParticipation", "The study was locked for participation"));
@@ -159,15 +95,24 @@ export default function Proposal({
           proposalId={proposalId}
           cardId={cardId}
           saveBtnName={t("submitStudy.submitFor", { title: stepTitle }, `Submit for ${stepTitle}`)}
-          saveBtnFunction={() => {
-            submitStudy();
-          }}
+          saveBtnFunction={() => setDialogMode("SUBMIT")}
           isStudySubmitted={isStudySubmitted}
-          canSubmit={hasStudy}
+          canSubmit={hasStudy && !!state?.canEdit && !saving}
           switchFeedbackLock={switchFeedbackLock}
           isParticipationLocked={isParticipationLocked}
+          showParticipationToggle={stage === "COLLECTING" && !!state?.canEdit}
         />
       )}
+      <SubmitStudyDialog
+        open={!!dialogMode}
+        mode={dialogMode || "SUBMIT"}
+        studyTitle={study?.title}
+        state={state}
+        userId={user?.id}
+        saving={saving}
+        onCancel={() => setDialogMode(null)}
+        onConfirm={confirmDialog}
+      />
       <StyledActionPage>
         <div className="board">
           <div className="proposal">
@@ -200,8 +145,32 @@ export default function Proposal({
               <>
                 <div className="iconTitle">
                   <img src="/assets/icons/eye.svg" />
-                  <div className="title MH-Type-Title-Base">{t("submitStudy.studyWasSubmitted", "The study was submitted")}</div>
+                  <div className="title MH-Type-Title-Base">
+                    {stage === "FINISHED"
+                      ? t("submitStudy.dataCollectionFinished", "Data collection is finished")
+                      : t("submitStudy.studyWasSubmitted", "The study was submitted")}
+                  </div>
                 </div>
+                <MessageCard
+                  variant="warning"
+                  message={
+                    stage === "FINISHED"
+                      ? t("submitStudy.finishedLocked", "Participation is closed and the study stays locked. Only a teacher can resume data collection.")
+                      : t("submitStudy.submittedLocked", "The study is locked for everyone who shares it. Only a teacher can reopen it for editing.")
+                  }
+                />
+                {stage === "COLLECTING" && state?.canEdit ? (
+                  <div>
+                    <Button
+                      variant="outline"
+                      disabled={saving}
+                      onClick={() => setDialogMode("FINISH")}
+                    >
+                      {t("submitStudy.markFinished", "Mark data collection as finished")}
+                    </Button>
+                  </div>
+                ) : null}
+                <DataCollectionHistory history={state?.history} />
               </>
             ) : (
               <>
@@ -213,8 +182,26 @@ export default function Proposal({
                   {t("submitStudy.submitForFeedbackIntro", "Once you submit your study for feedback:")}
                   <ul>
                     <li>{t("submitStudy.appearInFeedbackCenter", "Your study will appear in the Feedback Center.")}</li>
+                    <li>{t("submitStudy.lockedForEveryone", "The study is locked for everyone who shares it. Only a teacher can reopen it.")}</li>
                   </ul>
                 </div>
+
+                {others.length ? (
+                  <MessageCard
+                    variant="information"
+                    message={t(
+                      "submitStudy.sharedWith",
+                      {
+                        count: (state?.boards || []).filter((b) => b.milestoneKey).length,
+                        people: others.map((p) => p.username).join(", "),
+                      },
+                      {
+                        default:
+                          "Shared study ({{count}} boards) with {{people}}. Submitting submits it for everyone: agree on it together first.",
+                      }
+                    )}
+                  />
+                ) : null}
 
                 {!hasStudy && (
                   <>

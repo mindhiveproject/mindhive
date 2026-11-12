@@ -22,6 +22,7 @@ import {
   writeClassTableOption,
 } from "./classPagePrefs";
 import StudyCollaboratorsModal from "./StudyCollaboratorsModal";
+import useRefetchOnFocus from "./useRefetchOnFocus";
 import StudyMentorsModal from "./StudiesTab/StudyMentorsModal";
 import NewStudyModal from "./StudiesTab/NewStudyModal";
 import LinkStudyProjectModal from "./StudiesTab/LinkStudyProjectModal";
@@ -34,13 +35,14 @@ import {
   ParticipantLinkCell,
   ParticipantsCell,
   ProjectCell,
-  STATUS_COLLECTING,
-  STATUS_NONE,
   StatusCell,
   StudyActionsCell,
   StudyBuilderCell,
-  statusRankOf,
+  studyStatusOf,
 } from "./StudiesTab/StudyCells";
+import { SET_STUDY_DATA_COLLECTION } from "../../../Queries/Study";
+import { DATA_COLLECTION_REFETCH } from "../../../Builder/shared/studyDataCollection/useStudyDataCollection";
+import StudyDataCollectionDialog from "../../../Builder/shared/studyDataCollection/StudyDataCollectionDialog";
 
 const WRAP_CELL = {
   whiteSpace: "normal",
@@ -102,6 +104,11 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
 
   const { projects, projectsByStudyId, participationByStudyId, mentorIds } =
     useClassStudyProjects(myclass, { skip: readOnly });
+  // Students change their studies' status from their own screens.
+  useRefetchOnFocus(
+    ["GET_CLASS", "CLASS_DASHBOARD_PROJECTS_QUERY", "CLASS_DASHBOARD_STUDIES_QUERY"],
+    { skip: readOnly }
+  );
   const { staff } = useClassTeachingStaff(myclass, { skip: readOnly });
 
   // Study collaborators shown in the Mentors column instead of Collaborators:
@@ -118,6 +125,32 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
     refetchQueries: studyRefetchQueries(myclass),
   });
 
+  // Submit/finish/reopen/participation, on the study and every board linked
+  // to it (keystone/lib/studyDataCollection.js).
+  const [setDataCollection] = useMutation(SET_STUDY_DATA_COLLECTION, {
+    refetchQueries: [...studyRefetchQueries(myclass), ...DATA_COLLECTION_REFETCH],
+  });
+  // Finishing (with a ticked box) and reopening are confirmed in the shared
+  // dialog, which lists who the change affects; native confirm() is blocked
+  // in some browsers.
+  const [dialogFor, setDialogFor] = useState(null);
+  const runDataCollection = useCallback(
+    async (study, action, variables = {}) => {
+      if (action === "FINISH" || action === "REOPEN") {
+        setDialogFor({ study, mode: action });
+        return;
+      }
+      try {
+        await setDataCollection({
+          variables: { studyId: study.id, action, ...variables },
+        });
+      } catch (err) {
+        alert(err?.message);
+      }
+    },
+    [setDataCollection, t]
+  );
+
   // No project board template → students have no class projects to link,
   // so the Project column would always be empty.
   const hasProjectTemplate = getClassTemplateBoards(myclass).length > 0;
@@ -131,11 +164,13 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
   const rows = useMemo(() => {
     const withProjects = studies.map((study) => {
       const linkedProjects = projectsByStudyId.get(study.id) || [];
+      const studyStatus = studyStatusOf(study, linkedProjects);
       return {
         ...study,
         linkedProjects,
         participation: participationByStudyId.get(study.id) || null,
-        statusRank: statusRankOf(linkedProjects),
+        studyStatus,
+        statusRank: studyStatus.rank,
       };
     });
     return readOnly
@@ -158,14 +193,15 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
     },
     [myclass?.id]
   );
+  // Collecting data, supervised or self-managed.
   const collectingCount = rows.filter(
-    (row) => row.statusRank === STATUS_COLLECTING
+    (row) => row.studyStatus?.collecting
   ).length;
   const showOnlyCollecting = onlyCollecting && collectingCount > 0;
   const visibleRows = useMemo(
     () =>
       showOnlyCollecting
-        ? rows.filter((row) => row.statusRank === STATUS_COLLECTING)
+        ? rows.filter((row) => row.studyStatus?.collecting)
         : rows,
     [rows, showOnlyCollecting]
   );
@@ -251,12 +287,13 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
           {
             colId: "status",
             headerName: t("studies.status.header", {}, { default: "Status" }),
-            valueGetter: (params) => params?.data?.statusRank ?? STATUS_NONE,
+            valueGetter: (params) => params?.data?.statusRank ?? 99,
             cellRenderer: StatusCell,
             filter: false,
             sortable: true,
             flex: 0,
-            minWidth: 170,
+            minWidth: 200,
+            autoHeight: true,
             cellStyle: { display: "flex", alignItems: "center" },
           },
         ]
@@ -398,6 +435,7 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
             cellRendererParams: {
               onLinkProject: openLinkProject,
               onUnlinkProject: unlinkProject,
+              onDataCollection: runDataCollection,
             },
             filter: false,
             sortable: false,
@@ -418,6 +456,7 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
     getCollaborators,
     getMentors,
     openLinkProject,
+    runDataCollection,
     unlinkProject,
   ]);
 
@@ -540,6 +579,15 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
           study={studies.find((s) => s?.id === linkStudyId)}
           projects={projects}
           onClose={() => setLinkStudyId(null)}
+        />
+      )}
+      {dialogFor && (
+        <StudyDataCollectionDialog
+          studyId={dialogFor.study.id}
+          studyTitle={dialogFor.study.title}
+          mode={dialogFor.mode}
+          userId={user?.id}
+          onClose={() => setDialogFor(null)}
         />
       )}
       {creatingStudy && (
