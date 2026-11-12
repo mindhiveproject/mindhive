@@ -54,6 +54,7 @@ import { PreviewSection } from "../../../../../Proposal/Card/Forms/PreviewSectio
 import { Modal, Icon } from "semantic-ui-react";
 import Button from "../../../../../DesignSystem/Button";
 import Chip from "../../../../../DesignSystem/Chip";
+import { isPublishedToClassId } from "../../../../../Mutations/Resource";
 import {
   MilestoneCompletedIcon,
   MilestoneIcon,
@@ -386,6 +387,32 @@ export default function ProposalCard({
   // listed in settings.studentTaskIds so template propagation keeps them.
   const showStudentTaskPicker = allowsStudentTaskSelection(proposalCard);
   const linkedTasks = getTemplateLinkedTasks(inputs);
+
+  // Items the class template links stay hidden from students until the
+  // teacher publishes them: resources per class (settings.publishedToClassIds,
+  // hidden for everyone on a class board), assignments via `public` (hidden
+  // unless the viewer is the class's teacher, teaching team or mentor, who
+  // still see the greyed chip). Permissions alone can't tell: a teacher's
+  // account may hold the STUDENT permission.
+  const usedInClass = proposal?.usedInClass;
+  const isStaffViewer =
+    !!user?.id &&
+    !!boardClassId &&
+    ([
+      ...(user?.teacherIn || []),
+      ...(user?.teachingTeamIn || []),
+      ...(user?.mentorIn || []),
+    ].some((cl) => cl?.id === boardClassId) ||
+      usedInClass?.creator?.id === user.id ||
+      [...(usedInClass?.teachingTeam || []), ...(usedInClass?.mentors || [])].some(
+        (p) => p?.id === user.id,
+      ));
+  const visibleResources = (inputs?.resources || []).filter((r) =>
+    boardClassId ? isPublishedToClassId(r?.settings, boardClassId) : true,
+  );
+  const visibleAssignments = (inputs?.assignments || []).filter(
+    (a) => isStaffViewer || a?.public,
+  );
   const handleStudentTasksChange = (picks) => {
     const { tasks, settings } = withStudentPicks(inputs, picks);
     handleChange({ target: { name: "tasks", value: tasks } });
@@ -1590,15 +1617,15 @@ export default function ProposalCard({
             </div>
             <div className="infoBoard">
               {/* Display Linked Items: Assignments first, then combined Resources */}
-              {(inputs?.assignments?.length > 0 ||
-                inputs?.resources?.length > 0 ||
+              {(visibleAssignments.length > 0 ||
+                visibleResources.length > 0 ||
                 linkedTasks.length > 0 ||
                 inputs?.studies?.length > 0) && (
                 <div className="linkedItemsSection">
-                  {inputs?.assignments?.length > 0 && (
+                  {visibleAssignments.length > 0 && (
                     <PreviewSection
                       title={t("board.expendedCard.previewLinkedAssignments", "Linked Assignments")}
-                      items={inputs.assignments}
+                      items={visibleAssignments}
                       type="assignment"
                       proposal={proposal}
                       classId={proposal?.usedInClass?.id}
@@ -1607,14 +1634,14 @@ export default function ProposalCard({
                       homeworkStatusByAssignmentId={homeworkStatusByAssignmentId}
                     />  
                   )}
-                  {(inputs?.resources?.length > 0 ||
+                  {(visibleResources.length > 0 ||
                     linkedTasks.length > 0 ||
                     inputs?.studies?.length > 0) && (
                     <PreviewSection
                       title={t("board.expendedCard.previewLinkedResources", "Linked Resources")}
                       sections={[
-                        ...(inputs?.resources?.length > 0
-                          ? [{ items: inputs.resources, type: "resource" }]
+                        ...(visibleResources.length > 0
+                          ? [{ items: visibleResources, type: "resource" }]
                           : []),
                         ...(linkedTasks.length > 0
                           ? [{ items: linkedTasks, type: "task" }]
