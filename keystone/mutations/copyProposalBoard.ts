@@ -1,9 +1,13 @@
 import uniqid from "uniqid";
 import { provisionFormDefinitionForMilestone } from "./createTemplateMilestone";
-import { syncClassTemplateBoards } from "./utils/classTemplateBoards";
+import {
+  isClassTemplateBoard,
+  syncClassTemplateBoards,
+} from "./utils/classTemplateBoards";
 import { isAdmin } from "../access";
 
 const { isFirstBoardInClass } = require("../lib/mainProject");
+const { shouldReuseAssignments } = require("../lib/classAssignmentCopies");
 
 // Copies run with limited parallelism. Creating every section, card and
 // assignment at once (each insert also access-checks what it connects)
@@ -177,8 +181,8 @@ async function copyProposalBoard(
 
   // Whether the source is a class template depends on its class links, which
   // a caller outside those classes cannot read (they would come back empty
-  // and the copy would duplicate assignments instead of reusing them). Only
-  // the link ids are read, as sudo.
+  // and a student's copy would duplicate assignments instead of reusing
+  // them). Only the link ids are read, as sudo.
   if (template) {
     const links = await context.sudo().query.ProposalBoard.findOne({
       where: { id },
@@ -347,6 +351,15 @@ async function copyProposalBoard(
       )
     : new Map<string, string>();
 
+  // Whether this copy reuses the source's assignment rows; see
+  // shouldReuseAssignments (lib/classAssignmentCopies).
+  const reuseAssignments = shouldReuseAssignments({
+    classIdTemplate,
+    sourceIsClassTemplate: isClassTemplateBoard(template),
+  });
+  // Source assignment id → its row and the new cards that link it.
+  const assignmentCopies = new Map<string, { source: any; cardIds: string[] }>();
+
   // create new sections
   await forEachLimited(
     template.sections || [],
@@ -439,25 +452,19 @@ async function copyProposalBoard(
             "id"
           );
 
-          // Handle assignments based on whether this is a student copy or teacher copy.
-          // When a teacher copies a platform/admin template into a class template
-          // (classIdTemplate is provided, template.templateForClasses is empty),
-          // any new assignments should be associated with that class so they
-          // immediately appear in the class assignment context.
-          // The assignment writes below run as sudo (approved by the project
+          // Assignments: a student/working copy of a class template links the
+          // template's own rows (the students answer the class's
+          // assignments). Every other copy gets its own rows, created once
+          // per source assignment after all cards exist (below); here we
+          // only record which new cards link each source assignment.
+          // The assignment writes run as sudo (approved by the project
           // owner, 2026-10-06). Every assignment id here came from `template`,
           // which was read as the caller, so it is one the caller may read.
           // Re-checking each id via connect ran the expensive assignment
           // access filter once per link and timed out copies of large boards.
           // sudo keeps the session, so author hooks still credit the caller.
           if (templateCard.assignments?.length > 0) {
-            // Check if the template board is a class template (has templateForClasses set)
-            const isClassTemplate =
-              (template.templateForClasses && template.templateForClasses.length > 0)
-              || (template.templatesForClass && template.templatesForClass.length > 0);
-            
-            if (isClassTemplate) {
-              // Student copying from teacher's template: reuse the same assignment IDs
+            if (reuseAssignments) {
               await context.sudo().db.ProposalCard.updateOne({
                 where: { id: newCard.id },
                 data: {
@@ -467,46 +474,57 @@ async function copyProposalBoard(
                 },
               });
             } else {
-              // Teacher copying from platform template: create new assignments.
-              // If this copy is being used as a class template (classIdTemplate),
-              // also associate the new assignments with that class.
-              await forEachLimited(
-                templateCard.assignments,
-                1,
-                async (a: any) => {
-                  await context.sudo().db.Assignment.createOne(
-                    {
-                      data: {
-                        title: a.title,
-                        content: a.content,
-                        placeholder: a.placeholder,
-                        settings: a.settings,
-                        public: template.isTemplate ? false : a.public,
-                        isTemplate: false,
-                        templateSource: { connect: { id: a.id } },
-                        // carry tags
-                        tags:
-                          a.tags?.length > 0
-                            ? { connect: a.tags.map((t: any) => ({ id: t.id })) }
-                            : undefined,
-                        ...(classIdTemplate
-                          ? {
-                              classes: {
-                                connect: [{ id: classIdTemplate }],
-                              },
-                            }
-                          : {}),
-                        // link to the new card
-                        proposalCards: { connect: [{ id: newCard.id }] },
-                      },
-                    },
-                    "id"
-                  );
-                }
-              );
+              for (const a of templateCard.assignments) {
+                const entry = assignmentCopies.get(a.id) || {
+                  source: a,
+                  cardIds: [] as string[],
+                };
+                entry.cardIds.push(String(newCard.id));
+                assignmentCopies.set(a.id, entry);
+              }
             }
           }
         }
+      );
+    }
+  );
+
+  // One copy per source assignment, linked to every new card that had it (an
+  // assignment linked on two cards stays one assignment). A copy made into a
+  // class template (classIdTemplate) belongs to that class only and starts
+  // unpublished: the class's staff decide when its students see it. Linking
+  // from the Assignment side skips the ProposalCard hook; the new rows are
+  // already connected to the class.
+  await forEachLimited(
+    [...assignmentCopies.values()],
+    1,
+    async ({ source: a, cardIds }) => {
+      await context.sudo().db.Assignment.createOne(
+        {
+          data: {
+            title: a.title,
+            content: a.content,
+            placeholder: a.placeholder,
+            settings: a.settings,
+            public: classIdTemplate || template.isTemplate ? false : a.public,
+            isTemplate: false,
+            templateSource: { connect: { id: a.id } },
+            // carry tags
+            tags:
+              a.tags?.length > 0
+                ? { connect: a.tags.map((t: any) => ({ id: t.id })) }
+                : undefined,
+            ...(classIdTemplate
+              ? {
+                  classes: {
+                    connect: [{ id: classIdTemplate }],
+                  },
+                }
+              : {}),
+            proposalCards: { connect: cardIds.map((cardId) => ({ id: cardId })) },
+          },
+        },
+        "id"
       );
     }
   );

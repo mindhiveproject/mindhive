@@ -1395,6 +1395,7 @@
 		"archivedProjects": "Archived projects",
 		"classFilterPlaceholder": "Select classes",
 		"empty": "No projects to show.",
+		"loading": "Loading your projects…",
 		"filterByClass": "Filter by class",
 		"filterByStatus": "Filter by status",
 		"unnamedClass": "Class"
@@ -1403,6 +1404,7 @@
 	"developStudies": {
 		"classFilterPlaceholder": "Select classes",
 		"empty": "No studies to show.",
+		"loading": "Loading your studies…",
 		"filterByClass": "Filter by class",
 		"filterByStatus": "Filter by status",
 		"unnamedClass": "Class"
@@ -1414,6 +1416,7 @@
 		"filterCreatedByMe": "Created by me",
 		"filterFavorited": "Favorited",
 		"filterPublic": "Public",
+		"loading": "Loading…",
 		"tabBlocks": "Blocks",
 		"tabSurveys": "Surveys",
 		"tabTasks": "Tasks"

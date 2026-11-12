@@ -6,6 +6,7 @@ import { MY_TASKS } from "../../Queries/Task";
 import TaskCard from "./TaskCard";
 import Chip from "../../DesignSystem/Chip";
 import MessageCard from "../../DesignSystem/MessageCard";
+import LoadingIcon from "../../DesignSystem/LoadingIcon";
 import useHiddenTaskIds from "./useHiddenTaskIds";
 import { excludeHiddenTasks } from "../../../lib/taskBankFilter";
 
@@ -64,7 +65,7 @@ export default function DevelopTaskBank({ user, taskType }) {
   const [filter, setFilter] = useState("favorited");
   const hiddenTaskIds = useHiddenTaskIds();
 
-  const { data } = useQuery(MY_TASKS, {
+  const { data, loading } = useQuery(MY_TASKS, {
     variables: {
       where: buildWhere({ filter, taskType, userId: user?.id, hiddenTaskIds }),
     },
@@ -103,7 +104,17 @@ export default function DevelopTaskBank({ user, taskType }) {
         })}
       </div>
 
-      {tasks.length === 0 ? (
+      {loading && !data ? (
+        <MessageCard
+          variant="neutral"
+          message={
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <LoadingIcon size={20} />
+              {t("developTasks.loading", {}, { default: "Loading…" })}
+            </span>
+          }
+        />
+      ) : tasks.length === 0 ? (
         <MessageCard
           variant="neutral"
           message={t(emptyCopy.key, {}, { default: emptyCopy.default })}

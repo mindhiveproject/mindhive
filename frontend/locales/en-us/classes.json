@@ -2537,8 +2537,8 @@
 			"notSubmittedHint": "Not yet submitted for data collection.",
 			"collectingCount_one": "{{count}} study collecting data",
 			"collectingCount_other": "{{count}} studies collecting data",
-			"showOnly": "Show only these",
-			"showAll": "Show all studies"
+			"onlyCollecting_one": "Show only the {{count}} study collecting data",
+			"onlyCollecting_other": "Show only the {{count}} studies collecting data"
 		}
 	},
 	"studiesTab": "Studies",
