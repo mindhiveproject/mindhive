@@ -27,12 +27,13 @@ import Navigation from "../Navigation/Main";
 import Builder from "./Builder";
 import { setCycleWarningHandler } from "../../shared/diagramCycle";
 import CycleLinkPreventedModal from "../../shared/CycleLinkPreventedModal";
+import VersionChoiceModal from "./VersionChoiceModal";
 import {
   configureStrictDiagramLinks,
 } from "../../shared/strictDiagramLinks";
 import { isStudyLocked } from "../../../../lib/studyLock";
 import useAutoSave from "../../../../lib/useAutoSave";
-import { TASK_OWNERSHIP } from "../../../Queries/Task";
+import { MY_TASK_VERSION_USAGE, TASK_OWNERSHIP } from "../../../Queries/Task";
 import { COPY_TASK_FOR_STUDY } from "../../../Mutations/Task";
 import { STUDY_DATA_SOURCES } from "../../../Queries/DataSourceBlock";
 import { UPDATE_STUDY_DATA_SOURCE } from "../../../Mutations/DataSourceBlock";
@@ -427,9 +428,55 @@ export default function Engine({
 
   // Points a block just added to the canvas at the user's own copy of its
   // task, so later edits to the original (by its author) never change this
-  // study. Blocks of a task the user owns keep the original unless `always`
-  // is set ("Create a copy"); the Study Builder never edits that original
-  // either, see Component/Wrapper.js.
+  // study. Blocks of a task the user built themselves keep the original unless
+  // `always` is set ("Create a copy"); the Study Builder never edits that
+  // original either, see Component/Wrapper.js. The user's own versions are
+  // reused when unused, otherwise the user picks (VersionChoiceModal).
+  // Version choice dialog: resolves with "copy" or "cancel".
+  const [versionChoice, setVersionChoice] = useState(null);
+  const askVersionChoice = (details) =>
+    new Promise((resolve) => {
+      setVersionChoice({ ...details, resolve });
+    });
+  const chooseVersion = (choice) => {
+    versionChoice?.resolve?.(choice);
+    setVersionChoice(null);
+  };
+
+  // Where one of the user's versions is used, besides the block just added:
+  // other blocks on this canvas, other studies' saved diagrams, and whether
+  // it holds collected data.
+  const getVersionUsage = async (task, node) => {
+    const onCanvas = engine
+      .getModel()
+      .getNodes()
+      .some(
+        (other) =>
+          other?.getID?.() !== node.getID() &&
+          other?.options?.componentID === task.id
+      );
+    const { data } = await apolloClient.query({
+      query: MY_TASK_VERSION_USAGE,
+      variables: { userId: user?.id, taskIds: [task.id] },
+      fetchPolicy: "network-only",
+    });
+    const usedIn = (data?.studies || [])
+      .filter(
+        (other) =>
+          other?.id !== study?.id &&
+          typeof other?.diagram === "string" &&
+          other.diagram.includes(task.id)
+      )
+      .map((other) => other.title);
+    const hasData = (data?.tasks?.[0]?.datasetsCount || 0) > 0;
+    return {
+      usedIn,
+      onCanvas,
+      hasData,
+      used: onCanvas || hasData || usedIn.length > 0,
+    };
+  };
+
   const giveNodeOwnTask = async (node, { always = false } = {}) => {
     const originalId = node?.options?.componentID;
     if (!originalId) return;
@@ -443,12 +490,33 @@ export default function Engine({
       const owns =
         task?.author?.id === user?.id ||
         (task?.collaborators || []).some((c) => c?.id === user?.id);
-      if (owns && !always) return;
+      const isOwnCopy = !!task?.copiedFrom?.id && !task?.public;
+      if (owns && !always && !isOwnCopy) return;
+
+      // One of the user's own versions: reuse it when nothing else uses it,
+      // otherwise ask. A task never ends up behind two study blocks.
+      if (owns && isOwnCopy && !always) {
+        const usage = await getVersionUsage(task, node);
+        if (!usage.used) return;
+        const choice = await askVersionChoice({ title: task?.title, ...usage });
+        if (choice === "cancel") {
+          if (engine.getModel().getNode(node.getID())) {
+            node.remove();
+            engine.repaintCanvas();
+            markStudyChanged();
+            forceUpdate();
+          }
+          return;
+        }
+      }
+
       const res = await apolloClient.mutate({
         mutation: COPY_TASK_FOR_STUDY,
         variables: { id: originalId },
       });
       const copyId = res?.data?.copyTaskForStudy?.id;
+      // The new copy belongs in the panel's "My versions" list right away.
+      apolloClient.refetchQueries({ include: ["MY_TASKS"] }).catch(() => {});
       // the block may have been removed while the copy was being made
       if (!copyId || !engine.getModel().getNode(node.getID())) return;
       node.updateOptions({ componentID: copyId, createCopy: false });
@@ -1020,6 +1088,7 @@ export default function Engine({
         open={cycleWarningOpen}
         onClose={() => setCycleWarningOpen(false)}
       />
+      <VersionChoiceModal choice={versionChoice} onChoose={chooseVersion} />
     </>
   );
 }

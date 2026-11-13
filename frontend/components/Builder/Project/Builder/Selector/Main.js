@@ -1,12 +1,17 @@
 import { useMemo, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import ReactHtmlParser from "react-html-parser";
 import useTranslation from "next-translate/useTranslation";
 
 import Chip from "../../../../DesignSystem/Chip";
 import ToggleSwitch from "../../../../DesignSystem/ToggleSwitch";
-import { MY_TASKS, PUBLIC_TASKS } from "../../../../Queries/Task";
+import {
+  MY_TASKS,
+  MY_TASK_VERSION_USAGE,
+  PUBLIC_TASKS,
+} from "../../../../Queries/Task";
+import { DELETE_TASK } from "../../../../Mutations/Task";
 import { STUDY_TEMPLATES } from "../../../../Queries/Study";
 import useHiddenTaskIds from "../../../../Tasks/Bank/useHiddenTaskIds";
 import useHiddenStudyIds from "../../../../Tasks/Bank/useHiddenStudyIds";
@@ -67,6 +72,10 @@ const DESCRIPTIONS = {
   },
 };
 
+// A private task copied from another one: the copy a study block got when it
+// was added. These are "My versions", hidden from the default list.
+const isOwnVersion = (task) => !task?.public && !!task?.copiedFrom?.id;
+
 const textOf = (value) => (typeof value === "string" ? value : "");
 
 const byTitle = (a, b) =>
@@ -79,12 +88,15 @@ export default function ComponentSelector({
   user,
   addFunctions,
   onOpenStudyFlow,
+  studyId,
 }) {
   const { t } = useTranslation("builder");
   const router = useRouter();
   const locale = router.locale || "en-us";
   const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [versionsOnly, setVersionsOnly] = useState(false);
   const [search, setSearch] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
   const [activeType, setActiveType] = useState("ALL");
 
   // Students only: what their classes hide from the bank.
@@ -148,22 +160,94 @@ export default function ComponentSelector({
   const tasks = allTasks.filter(
     (task) =>
       task?.slug !== SURVEY_BUILDER_SLUG &&
+      isOwnVersion(task) === versionsOnly &&
       (!favoritesOnly || favoriteIds.has(task?.id)) &&
-      matches(task?.title, task?.description)
+      matches(task?.title, task?.description, task?.copiedFrom?.title)
   );
 
-  // Templates can't be favorited, so the Favorite toggle empties them.
-  const templates = favoritesOnly
-    ? []
-    : (templatesData?.studies || [])
-        .filter(
-          (study) =>
-            !!study?.diagram &&
-            study?.public &&
-            !hiddenStudyIds.includes(study?.id) &&
-            matches(study?.title, study?.slug)
+  // Where each version is used. This study counts what is on the canvas now
+  // (saved or not); other studies count their saved diagram.
+  const versionIds = versionsOnly ? tasks.map((task) => task.id) : [];
+  const { data: usageData } = useQuery(MY_TASK_VERSION_USAGE, {
+    variables: { userId: user?.id, taskIds: versionIds },
+    skip: !versionsOnly || !user?.id || !versionIds.length,
+    fetchPolicy: "cache-and-network",
+  });
+  const canvasTaskIds = new Set(
+    versionsOnly
+      ? (engine?.getModel?.()?.getNodes?.() || [])
+          .map((node) => node?.options?.componentID)
+          .filter(Boolean)
+      : []
+  );
+  const thisStudyLabel = t(
+    "selector.versions.thisStudy",
+    {},
+    { default: "this study" }
+  );
+  const versionInfo = (task) => {
+    const usedIn = (usageData?.studies || [])
+      .filter(
+        (study) =>
+          study?.id !== studyId &&
+          typeof study?.diagram === "string" &&
+          study.diagram.includes(task.id)
+      )
+      .map((study) => study.title);
+    if (canvasTaskIds.has(task.id)) usedIn.unshift(thisStudyLabel);
+    const hasData =
+      (usageData?.tasks || []).find((row) => row?.id === task.id)
+        ?.datasetsCount > 0;
+    return {
+      originalTitle: task?.copiedFrom?.title,
+      usedIn,
+      hasData,
+      // Only claim "unused" once usage has loaded.
+      unused: !!usageData && !usedIn.length && !hasData,
+    };
+  };
+
+  const [deleteTask] = useMutation(DELETE_TASK, {
+    refetchQueries: ["MY_TASKS", "MY_TASK_VERSION_USAGE"],
+  });
+  const deleteVersion = async (task) => {
+    const confirmed = window.confirm(
+      t(
+        "selector.versions.deleteConfirm",
+        { title: task?.title },
+        {
+          default: `Delete this unused version of "${task?.title}"? This cannot be undone.`,
+        }
+      )
+    );
+    if (!confirmed) return;
+    try {
+      await deleteTask({ variables: { id: task.id } });
+    } catch (error) {
+      alert(
+        t(
+          "selector.versions.deleteFailed",
+          {},
+          { default: "This version could not be deleted." }
         )
-        .sort(byTitle);
+      );
+    }
+  };
+
+  // Templates can't be favorited and aren't versions, so either toggle
+  // empties them.
+  const templates =
+    favoritesOnly || versionsOnly
+      ? []
+      : (templatesData?.studies || [])
+          .filter(
+            (study) =>
+              !!study?.diagram &&
+              study?.public &&
+              !hiddenStudyIds.includes(study?.id) &&
+              matches(study?.title, study?.slug)
+          )
+          .sort(byTitle);
 
   // The between-subjects design lives in the Study Flow tab; a pointer card
   // stands in for it among the blocks and answers the same search.
@@ -172,7 +256,8 @@ export default function ComponentSelector({
     {},
     { default: "Between-subjects design" }
   );
-  const showDesignPointer = !favoritesOnly && matches(designTitle);
+  const showDesignPointer =
+    !favoritesOnly && !versionsOnly && matches(designTitle);
   const designPointer = showDesignPointer
     ? [
         {
@@ -201,6 +286,7 @@ export default function ComponentSelector({
   const showTemplates = activeType === "ALL" || activeType === "TEMPLATES";
   const showSurveyBuilder =
     !!surveyBuilder &&
+    !versionsOnly &&
     (activeType === "ALL" || activeType === "SURVEY") &&
     (!term ||
       "survey builder".includes(term) ||
@@ -220,7 +306,13 @@ export default function ComponentSelector({
 
   return (
     <div className="editPane">
-      <div className="addBlockFilters">
+      {/* Search shares the row with the toggles; while it is in use it takes
+          the whole row and the toggles move under it. */}
+      <div
+        className={`addBlockFilters${
+          searchFocused || search ? " isSearchExpanded" : ""
+        }`}
+      >
         <div className="addBlockSearch" id="search">
           <input
             type="text"
@@ -235,14 +327,24 @@ export default function ComponentSelector({
               }
             )}
             onFocus={() => {
+              setSearchFocused(true);
               engine.getModel().setLocked(true);
             }}
             onBlur={() => {
+              setSearchFocused(false);
               engine.getModel().setLocked(false);
             }}
           />
         </div>
-        <div className="addBlockFavorite">
+        {/* Keeps focus in the search box while a toggle is pressed, so the
+            row doesn't collapse under the pointer mid-click. */}
+        <div
+          className="addBlockFavorite"
+          role="presentation"
+          onMouseDown={(e) => {
+            if (searchFocused) e.preventDefault();
+          }}
+        >
           <ToggleSwitch
             id="favoritesOnly"
             checked={favoritesOnly}
@@ -252,6 +354,16 @@ export default function ComponentSelector({
                 ? t("selector.filter.favorite", {}, { default: "Favorite" })
                 : t("selector.filter.all", {}, { default: "All" })
             }
+          />
+          <ToggleSwitch
+            id="versionsOnly"
+            checked={versionsOnly}
+            onChange={setVersionsOnly}
+            label={t(
+              "selector.versions.toggle",
+              {},
+              { default: "My versions" }
+            )}
           />
         </div>
       </div>
@@ -322,6 +434,10 @@ export default function ComponentSelector({
                         addFunctions={addFunctions}
                         search={search}
                         componentType={item.taskType}
+                        version={versionsOnly ? versionInfo(item) : undefined}
+                        onDelete={
+                          versionsOnly ? () => deleteVersion(item) : undefined
+                        }
                       />
                     )
                   )}
@@ -342,13 +458,20 @@ export default function ComponentSelector({
 
               {isEmpty && (
                 <p className="blocksMenuDescription">
-                  {t(
-                    "selector.noResults",
-                    {},
-                    {
-                      default: "No blocks match your search",
-                    }
-                  )}
+                  {versionsOnly && !term
+                    ? t(
+                        "selector.versions.empty",
+                        {},
+                        {
+                          default:
+                            "No versions yet. You get your own version of a block each time you add it to a study.",
+                        }
+                      )
+                    : t(
+                        "selector.noResults",
+                        {},
+                        { default: "No blocks match your search" }
+                      )}
                 </p>
               )}
 

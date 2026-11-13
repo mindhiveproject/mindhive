@@ -1563,8 +1563,8 @@ export const StyledCanvasBuilder = styled.div`
       display: flex;
       align-items: center;
       gap: 8px;
-      flex: 2;
-      min-width: 0;
+      flex: 1 1 0;
+      min-width: 96px;
       height: 40px;
       padding: 4px 16px 4px 8px;
       border: 1px solid #a1a1a1;
@@ -1593,10 +1593,30 @@ export const StyledCanvasBuilder = styled.div`
 
     .addBlockFavorite {
       display: flex;
-      flex: 1;
+      flex: 0 0 auto;
       align-items: center;
       justify-content: flex-start;
+      gap: 12px;
+      white-space: nowrap;
+    }
+
+    /* At rest search shrinks so both toggles stay on its row (no half-empty
+       wrapped row); while searching it takes the row, toggles go below. */
+    .addBlockFilters.isSearchExpanded {
+      flex-wrap: wrap;
+      row-gap: 8px;
+
+      .addBlockSearch {
+        flex: 1 0 100%;
+      }
+    }
+
+    .blockCardVersion {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
       min-width: 0;
+      overflow-wrap: anywhere;
     }
 
     .addBlockChips {

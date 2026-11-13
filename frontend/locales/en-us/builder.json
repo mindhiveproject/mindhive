@@ -2441,6 +2441,18 @@
 			"openStudyFlowAria": "Go to Study Flow",
 			"pointerHint": "Add it from the Study Flow tab"
 		},
+		"versions": {
+			"deleteAria": "Delete this version",
+			"deleteConfirm": "Delete this unused version of \"{{title}}\"? This cannot be undone.",
+			"deleteFailed": "This version could not be deleted.",
+			"empty": "No versions yet. You get your own version of a block each time you add it to a study.",
+			"hasData": "Not in a study, but holds collected data",
+			"thisStudy": "this study",
+			"toggle": "My versions",
+			"unused": "Unused",
+			"usedIn": "Used in {{studies}}",
+			"versionOf": "Version of {{title}}"
+		},
 		"surveys": {
 			"buildOwn": "Cannot find a tool to measure one of your study constructs? Build your own with the Survey builder and teacher's help",
 			"buildOwnLine1": "Cannot find a tool to measure one of your study constructs?",
@@ -2458,6 +2470,15 @@
 			"title": "Templates",
 			"tryThisFlow": "Try this flow"
 		}
+	},
+	"versionChoice": {
+		"addCopy": "Add a copy",
+		"cancel": "Cancel",
+		"explain": "A block can only belong to one study, so this study gets its own copy with the same settings. Later edits in one won't change the other.",
+		"hasData": "\"{{title}}\" already holds data collected in an earlier study.",
+		"onCanvas": "\"{{title}}\" is already in this study.",
+		"title": "Add your version?",
+		"usedIn": "\"{{title}}\" is already used in {{studies}}."
 	},
 	"selectWhichToClone": "Select which {{taskType}} you would like to clone below.",
 	"settingsBlock": {

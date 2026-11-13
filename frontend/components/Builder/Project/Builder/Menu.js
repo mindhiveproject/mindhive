@@ -124,6 +124,7 @@ export default function Menu({
           user={user}
           addFunctions={addFunctions}
           onOpenStudyFlow={() => setTab("flow")}
+          studyId={study?.id}
         />
       )}
 
