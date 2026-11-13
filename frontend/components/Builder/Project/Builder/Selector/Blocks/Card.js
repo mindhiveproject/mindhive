@@ -6,6 +6,7 @@ import { NodesTypesContainer } from "../../Diagram/nodes-types-container/NodesTy
 import { NodeTypeLabel } from "../../Diagram/node-type-label/NodeTypeLabel";
 
 import IconButton from "../../../../../DesignSystem/IconButton";
+import Tooltip from "../../../../../DesignSystem/Tooltip";
 import { TrashIcon } from "../../../../../DesignSystem/Icons";
 import { TASK_TYPE_COLORS } from "../../../../../../lib/taskTypeColors";
 import TaskModal from "../Task/Modal";
@@ -46,6 +47,7 @@ export default function Card({
   isSurveyBuilder = false,
   version,
   onDelete,
+  isCanvasLocked = false,
 }) {
   const { t } = useTranslation("builder");
   const [showModal, setShowModal] = useState(false);
@@ -119,6 +121,7 @@ export default function Card({
                   parameters: component?.parameters,
                 }}
                 name={component?.title}
+                disabled={isCanvasLocked}
               />
             </NodesTypesContainer>
             <BlockTags task={component} user={user} hideAuthorTag />
@@ -226,23 +229,42 @@ export default function Card({
                 />
               </>
             )}
-            <IconButton
-              variant="filled"
-              ariaLabel={t(
-                "selector.addBlockAria",
+            <Tooltip
+              content={t(
+                "selector.lockedAddHint",
                 {},
                 {
-                  default: "Add block",
+                  default:
+                    "This study is locked. Ask your teacher to reopen it to add blocks.",
                 }
               )}
-              style={{
-                background: accent,
-                backgroundColor: accent,
-                color: "#FFFFFF",
-              }}
-              icon={<MediumIcon src="/assets/icons/builder/medium-add.svg" />}
-              onClick={handleAdd}
-            />
+              disabled={!isCanvasLocked}
+            >
+              <IconButton
+                variant="filled"
+                ariaLabel={t(
+                  "selector.addBlockAria",
+                  {},
+                  {
+                    default: "Add block",
+                  }
+                )}
+                // Locked: fall back to the disabled grey, and let the hover
+                // reach the tooltip's wrapper past the disabled button.
+                style={
+                  isCanvasLocked
+                    ? { pointerEvents: "none" }
+                    : {
+                        background: accent,
+                        backgroundColor: accent,
+                        color: "#FFFFFF",
+                      }
+                }
+                icon={<MediumIcon src="/assets/icons/builder/medium-add.svg" />}
+                onClick={handleAdd}
+                disabled={isCanvasLocked}
+              />
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -253,6 +275,7 @@ export default function Card({
           component={component}
           addFunctions={addFunctions}
           onModalClose={toggleModal}
+          isCanvasLocked={isCanvasLocked}
         />
       )}
     </>

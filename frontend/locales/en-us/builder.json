@@ -2414,6 +2414,7 @@
 	"selector": {
 		"loadingBlocks": "Loading blocks…",
 		"addBlockAria": "Add block",
+		"lockedAddHint": "This study is locked. Ask your teacher to reopen it to add blocks.",
 		"addFavoriteAria": "Add to favorites",
 		"basicBlocks": {
 			"description": "Want to include custom instructions to your participants or embed a link and/or video in your study's procedure? Select and edit a basic block",

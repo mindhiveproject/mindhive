@@ -35,6 +35,7 @@ export default function Menu({
   handleMultipleUpdate,
   tab,
   setTab,
+  isCanvasLocked = false,
 }) {
   const { t } = useTranslation("builder");
 
@@ -125,12 +126,16 @@ export default function Menu({
           addFunctions={addFunctions}
           onOpenStudyFlow={() => setTab("flow")}
           studyId={study?.id}
+          isCanvasLocked={isCanvasLocked}
         />
       )}
 
       {tab === "flow" && (
         <div className="studyFlow" id="studyFlow">
-          <DesignBlockCard addFunctions={addFunctions} />
+          <DesignBlockCard
+            addFunctions={addFunctions}
+            isCanvasLocked={isCanvasLocked}
+          />
           <StudyTasks study={study} />
         </div>
       )}

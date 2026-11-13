@@ -89,6 +89,7 @@ export default function ComponentSelector({
   addFunctions,
   onOpenStudyFlow,
   studyId,
+  isCanvasLocked = false,
 }) {
   const { t } = useTranslation("builder");
   const router = useRouter();
@@ -438,6 +439,7 @@ export default function ComponentSelector({
                         onDelete={
                           versionsOnly ? () => deleteVersion(item) : undefined
                         }
+                        isCanvasLocked={isCanvasLocked}
                       />
                     )
                   )}
@@ -451,6 +453,7 @@ export default function ComponentSelector({
                       key={study.id}
                       study={study}
                       addFunctions={addFunctions}
+                      isCanvasLocked={isCanvasLocked}
                     />
                   ))}
                 </div>
@@ -504,6 +507,7 @@ export default function ComponentSelector({
                     search=""
                     componentType="SURVEY"
                     isSurveyBuilder
+                    isCanvasLocked={isCanvasLocked}
                   />
                 </div>
               )}

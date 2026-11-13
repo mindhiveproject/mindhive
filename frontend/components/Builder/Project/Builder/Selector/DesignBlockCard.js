@@ -1,6 +1,7 @@
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../../../DesignSystem/Button";
+import Tooltip from "../../../../DesignSystem/Tooltip";
 import { TASK_TYPE_COLORS } from "../../../../../lib/taskTypeColors";
 import { NodesTypesContainer } from "../Diagram/nodes-types-container/NodesTypesContainer";
 import { NodeTypeLabel } from "../Diagram/node-type-label/NodeTypeLabel";
@@ -26,7 +27,10 @@ function MediumIcon({ src }) {
 
 // The between-subjects design block, offered at the top of the Study Flow tab.
 // Drag the label onto the canvas or press add to drop it at a random spot.
-export default function DesignBlockCard({ addFunctions }) {
+export default function DesignBlockCard({
+  addFunctions,
+  isCanvasLocked = false,
+}) {
   const { t } = useTranslation("builder");
   const accent = TASK_TYPE_COLORS.DESIGN;
   const name = t(
@@ -52,28 +56,51 @@ export default function DesignBlockCard({ addFunctions }) {
         <div className="blockCardBody">
           <div className="blockCardTitle movableCard">
             <NodesTypesContainer>
-              <NodeTypeLabel model={{ type: "design", name }} name={name} />
+              <NodeTypeLabel
+                model={{ type: "design", name }}
+                name={name}
+                disabled={isCanvasLocked}
+              />
             </NodesTypesContainer>
           </div>
           <div className="blockCardActions">
-            <Button
-              variant="filled"
-              style={{
-                background: accent,
-                backgroundColor: accent,
-                color: "#FFFFFF",
-              }}
-              leadingIcon={
-                <MediumIcon src="/assets/icons/builder/medium-add.svg" />
-              }
-              onClick={() => addFunctions?.addDesignToCanvas({ name })}
-            >
-              {t(
-                "selector.studyDesign.addToCanvas",
+            <Tooltip
+              content={t(
+                "selector.lockedAddHint",
                 {},
-                { default: "Add to canvas" }
+                {
+                  default:
+                    "This study is locked. Ask your teacher to reopen it to add blocks.",
+                }
               )}
-            </Button>
+              disabled={!isCanvasLocked}
+            >
+              <Button
+                variant="filled"
+                disabled={isCanvasLocked}
+                // Locked: fall back to the disabled grey, and let the hover
+                // reach the tooltip's wrapper past the disabled button.
+                style={
+                  isCanvasLocked
+                    ? { pointerEvents: "none" }
+                    : {
+                        background: accent,
+                        backgroundColor: accent,
+                        color: "#FFFFFF",
+                      }
+                }
+                leadingIcon={
+                  <MediumIcon src="/assets/icons/builder/medium-add.svg" />
+                }
+                onClick={() => addFunctions?.addDesignToCanvas({ name })}
+              >
+                {t(
+                  "selector.studyDesign.addToCanvas",
+                  {},
+                  { default: "Add to canvas" }
+                )}
+              </Button>
+            </Tooltip>
           </div>
         </div>
       </div>
