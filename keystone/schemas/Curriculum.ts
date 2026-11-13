@@ -1,4 +1,5 @@
 import { list } from "@keystone-6/core";
+const { uniqueSlug } = require("../lib/uniqueSlug");
 import {
   text,
   relationship,
@@ -9,7 +10,6 @@ import {
   checkbox,
   json,
 } from "@keystone-6/core/fields";
-import slugify from "slugify";
 
 import { signedInWrites } from "../access";
 
@@ -28,23 +28,7 @@ export const Curriculum = list({
         async resolveInput({ context, inputData }) {
           const { title } = inputData;
           if (title) {
-            let slug = slugify(title, {
-              remove: /[*+~.()'"!:@]/g, // remove characters that match regex
-              lower: true, // convert to lower case
-              strict: true, // strip special characters except replacement
-            });
-            const items = await context.query.Curriculum.findMany({
-              where: { slug: { startsWith: slug } },
-              query: "id slug",
-            });
-            if (items.length) {
-              const re = new RegExp(`${slug}-*\\d*$`);
-              const slugs = items.filter((item) => item.slug.match(re));
-              if (slugs.length) {
-                slug = `${slug}-${slugs.length}`;
-              }
-            }
-            return slug;
+            return uniqueSlug(context, "Curriculum", title);
           }
         },
       },

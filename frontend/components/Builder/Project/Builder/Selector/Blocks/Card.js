@@ -101,7 +101,7 @@ export default function Card({
                 name={component?.title}
               />
             </NodesTypesContainer>
-            <BlockTags task={component} user={user} />
+            <BlockTags task={component} user={user} hideAuthorTag />
           </div>
           <div className="blockCardActions">
             {!isSurveyBuilder && (

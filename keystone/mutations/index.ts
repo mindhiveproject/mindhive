@@ -85,6 +85,15 @@ import seedReviewForms from "./seedReviewForms";
 import seedMissingForms from "./seedMissingForms";
 import duplicateFormDefinition from "./duplicateFormDefinition";
 import copyTaskForStudy from "./copyTaskForStudy";
+import {
+  forkTaskTemplate,
+  respondToTaskShare,
+  shareTask,
+  switchTaskTemplate,
+  taskShareTargets,
+  templateUsage,
+  withdrawTaskShare,
+} from "./taskShare";
 import publishFormDefinition from "./publishFormDefinition";
 import saveClassFormDefinition from "./saveClassFormDefinition";
 import saveBoardReviewFormDefinition from "./saveBoardReviewFormDefinition";
@@ -478,6 +487,23 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         duplicateFormDefinition(id: ID!): FormDefinition
         # The signed-in user's own copy of a task for a study block.
         copyTaskForStudy(id: ID!): Task
+        # Offer people in a class their own copy of a task (TaskShareInvite).
+        # Staff may pass wholeClass; otherwise recipientIds.
+        shareTask(
+          taskId: ID!
+          classId: ID!
+          wholeClass: Boolean
+          recipientIds: [ID!]
+          message: String
+        ): TaskShareInvite
+        # Accept (make your own copy) or decline a task shared with you.
+        respondToTaskShare(inviteId: ID!, accept: Boolean!): TaskShareInvite
+        # The sender stops a share; copies already made stay.
+        withdrawTaskShare(inviteId: ID!): TaskShareInvite
+        # Give a task its own copy of its template (then copy the files and
+        # call switchTaskTemplate), so template edits stop reaching others.
+        forkTaskTemplate(taskId: ID!): TaskTemplateFork
+        switchTaskTemplate(taskId: ID!, templateId: ID!): Task
         # Teacher wizard: create/update a class-scoped opportunity form
         # with baked-in defaults. Optionally publish in the same call.
         saveClassFormDefinition(input: SaveClassFormDefinitionInput!): FormDefinition
@@ -790,6 +816,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         networkInviteContext(token: String!): NetworkInviteContext
         # Title and teacher of a class, by join code. Public; no roster.
         classJoinPreview(code: String!): ClassJoinPreview
+        # Classes the caller can share this task in, with who they can pick.
+        taskShareTargets(taskId: ID!): [TaskShareTargetClass!]!
+        # Other people's tasks that run this template (its authors only).
+        templateUsage(templateId: ID!): TemplateUsage
         # For the frontend's raw-data routes, run as the caller: which of
         # these dataset tokens they may read, and whether they may read a
         # Data Journal file of a datasource.
@@ -857,6 +887,30 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         publish: Boolean
         surface: String
       }
+      type TaskShareMember {
+        id: ID!
+        name: String!
+        role: String!
+      }
+      type TaskShareTargetClass {
+        id: ID!
+        title: String
+        code: String
+        role: String
+        canShare: Boolean!
+        canShareWithClass: Boolean!
+        studentCount: Int!
+        members: [TaskShareMember!]!
+      }
+      type TemplateUsage {
+        otherTasks: Int!
+        otherPeople: Int!
+      }
+      type TaskTemplateFork {
+        templateId: ID!
+        slug: String!
+        sourceSlug: String
+      }
       input SaveBoardReviewFormDefinitionInput {
         proposalBoardId: ID!
         definitionId: ID
@@ -882,6 +936,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         resolveMilestonesForBoard,
         networkInviteContext,
         classJoinPreview,
+        taskShareTargets,
+        templateUsage,
         readableDatasetTokens,
         studyCollectData,
         studyResults,
@@ -959,6 +1015,11 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         seedMissingForms,
         duplicateFormDefinition,
         copyTaskForStudy,
+        shareTask,
+        respondToTaskShare,
+        withdrawTaskShare,
+        forkTaskTemplate,
+        switchTaskTemplate,
         saveClassFormDefinition,
         saveBoardReviewFormDefinition,
         forkReviewFormForBoard,

@@ -102,6 +102,7 @@ export const MY_TASKS = gql`
       }
       parameters
       settings
+      sharedByName
     }
   }
 `;
@@ -131,6 +132,7 @@ export const FAVORITE_TASKS = gql`
       }
       parameters
       settings
+      sharedByName
     }
   }
 `;

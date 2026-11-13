@@ -2664,5 +2664,13 @@
 		"title": "Featured studies",
 		"visible": "Visible",
 		"visibleCount": "{{visible}} of {{total}} visible"
+	},
+	"taskSharing": {
+		"title": "Sharing between students",
+		"description": "Students can share a copy of their tasks, surveys and blocks with classmates and with this class’s teachers and mentors. Each person gets their own copy, so nobody can change someone else’s work.",
+		"enabledLabel": "Students can share with the class",
+		"disabledLabel": "Students cannot share with the class",
+		"hint": "Teachers and mentors can always share with the class. Turning this off does not remove copies students already added.",
+		"updateError": "Failed to update the sharing setting"
 	}
 }
