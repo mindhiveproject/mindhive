@@ -439,3 +439,36 @@ export const CLASS_DEIDENTIFICATION_NOTICES = gql`
     classDeidentificationNotices(classId: $classId)
   }
 `;
+
+// Whether the class supervises its studies' data collection itself, without
+// a project board template (keystone/mutations/studyDataCollection.ts).
+const CLASS_DATA_COLLECTION_FIELDS = `
+  classId
+  enabled
+  canManage
+  templateBoards {
+    id
+    title
+  }
+  carryOverCollecting
+  carryOverFinished
+  turnOffKeep
+  turnOffStaysLocked
+  turnOffSelfManaged
+`;
+
+export const CLASS_DATA_COLLECTION = gql`
+  query CLASS_DATA_COLLECTION($classId: ID!) {
+    classDataCollection(classId: $classId) {
+      ${CLASS_DATA_COLLECTION_FIELDS}
+    }
+  }
+`;
+
+export const SET_CLASS_DATA_COLLECTION = gql`
+  mutation SET_CLASS_DATA_COLLECTION($classId: ID!, $enabled: Boolean!) {
+    setClassDataCollection(classId: $classId, enabled: $enabled) {
+      ${CLASS_DATA_COLLECTION_FIELDS}
+    }
+  }
+`;

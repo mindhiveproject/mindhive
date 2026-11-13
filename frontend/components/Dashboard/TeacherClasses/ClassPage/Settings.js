@@ -36,6 +36,7 @@ import ProjectsTemplatePanel from "./Projects/ProjectsTemplatePanel";
 import MessageCard from "../../../DesignSystem/MessageCard";
 import ClassMentors from "./Mentors";
 import SettingsSectionNav from "./SettingsSectionNav";
+import DataCollectionMilestoneCard from "./StudiesTab/DataCollectionMilestoneCard";
 
 function getNotifyTeachersOfStudentPasswordReset(settings) {
   if (!settings || typeof settings !== "object") return true;
@@ -521,6 +522,12 @@ export default function Settings({ myclass, user }) {
       label: t("studyVisibility.title", {}, { default: "Featured studies" }),
     },
     {
+      id: "settings-data-collection",
+      label: t("studies.milestoneCard.title", {}, {
+        default: "Data collection milestone",
+      }),
+    },
+    {
       id: "settings-password-reset",
       label: t("passwordResetEmailSettingsTitle", {}, {
         default: "Student password reset emails",
@@ -892,6 +899,8 @@ export default function Settings({ myclass, user }) {
         <div id="settings-studies">
           <StudyVisibilitySettings myclass={myclass} />
         </div>
+
+        <DataCollectionMilestoneCard myclass={myclass} placement="settings" />
 
         <section className="settingsSection" id="settings-password-reset">
           <div className="settingsSectionHeader">

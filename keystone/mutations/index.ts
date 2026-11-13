@@ -50,6 +50,8 @@ import classJoinPreview from "./classJoinPreview";
 import doeDataSummary from "./doeDataSummary";
 import studyCollectData from "./studyCollectData";
 import {
+  classDataCollection,
+  setClassDataCollection,
   setStudyDataCollection,
   studyDataCollection,
 } from "./studyDataCollection";
@@ -208,12 +210,20 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         canEdit: Boolean!
         canManage: Boolean!
         boards: [StudyDataCollectionBoard!]!
+        # The study's classes; supervising: the class follows data
+        # collection itself (no board needed).
+        classes: [StudyDataCollectionClass!]!
         people: [StudyDataCollectionPerson!]!
         submittedBy: String
         submittedAt: String
         # Newest first: who submitted, finished, reopened, resumed or
         # opened/closed participation, and when (from the study's logs).
         history: [StudyDataCollectionEvent!]!
+      }
+      type StudyDataCollectionClass {
+        id: ID!
+        title: String
+        supervising: Boolean!
       }
       type StudyDataCollectionEvent {
         action: String!
@@ -223,6 +233,32 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         stage: String
         confirmed: Boolean!
         sharedWith: [String!]!
+        # Logged when a teacher turned on the class milestone and the
+        # study's own label was carried over.
+        carriedOver: Boolean!
+      }
+      # Whether a class supervises its studies' data collection itself
+      # (Class.settings.dataCollectionMilestone), and its template boards
+      # that already carry a data-collection milestone.
+      type ClassDataCollectionBoard {
+        id: ID!
+        title: String
+      }
+      type ClassDataCollectionState {
+        classId: ID!
+        enabled: Boolean!
+        canManage: Boolean!
+        templateBoards: [ClassDataCollectionBoard!]!
+        # Studies labelled collecting / finished by their students, which
+        # turning it on submits (and finishes) under the teacher's name.
+        carryOverCollecting: Int!
+        carryOverFinished: Int!
+        # Turning it off: studies another source still supervises, submitted
+        # ones left locked with nothing supervising them, and the rest
+        # (back to self-managed).
+        turnOffKeep: Int!
+        turnOffStaysLocked: Int!
+        turnOffSelfManaged: Int!
       }
       type Mutation {
         # The only way to submit, finish, reopen or resume a study's data
@@ -240,6 +276,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           # confirmation. Recorded in the log with their name and the time.
           confirmed: Boolean
         ): StudyDataCollectionState!
+        # Turns the class's own data-collection milestone on or off (class
+        # teachers). On: carries over the studies' labels.
+        setClassDataCollection(classId: ID!, enabled: Boolean!): ClassDataCollectionState!
         startRun(
           taskId: ID!
           studyId: ID!
@@ -717,6 +756,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # A study's data-collection state, who shares it and what the caller
         # may change.
         studyDataCollection(studyId: ID!): StudyDataCollectionState!
+        classDataCollection(classId: ID!): ClassDataCollectionState!
         runtimeRunContext(runToken: String!): RuntimeRunContext!
         # Lets a jsPsych or p5 task be previewed without starting a run.
         runtimeAssetPreviewToken(taskId: ID!): String!
@@ -831,6 +871,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       Opportunity: opportunityMultiselectResolvers,
       Query: {
         studyDataCollection,
+        classDataCollection,
         runtimeRunContext,
         runtimeAssetPreviewToken,
         runtimeVisualSource,
@@ -859,6 +900,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       },
       Mutation: {
         setStudyDataCollection,
+        setClassDataCollection,
         startRun,
         ingestRunMessage,
         updateRunDataPolicy,

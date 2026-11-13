@@ -59,12 +59,24 @@ export default function StudyStatus({ study, user }) {
   const stage = state?.stage || life.stage;
   const open = state ? state.open : life.open;
   const milestoneMode = !!state && (state.supervised || state.locked);
+  // Submitted or finished, but nothing supervises it any more (its board was
+  // unlinked or its class stopped following data collection): still locked
+  // until a teacher reopens it.
+  const orphaned = !!state && state.locked && !state.supervised;
   const canEdit = !!state?.canEdit;
   const canManage = !!state?.canManage;
   const others = otherPeople(state, user?.id);
   const supervisingBoards = (state?.boards || []).filter((b) => b.supervising);
+  // A class follows the milestone through a project board, or itself (its
+  // Studies-tab milestone card, no board needed).
+  const supervisingClasses = (state?.classes || []).filter((c) => c.supervising);
   const classTitles = [
-    ...new Set(supervisingBoards.map((b) => b.classTitle).filter(Boolean)),
+    ...new Set(
+      [
+        ...supervisingBoards.map((b) => b.classTitle),
+        ...supervisingClasses.map((c) => c.title),
+      ].filter(Boolean)
+    ),
   ];
   const stageOptions = STAGES.map((value) => ({
     value,
@@ -144,10 +156,15 @@ export default function StudyStatus({ study, user }) {
   let lockNotice = null;
   if (milestoneMode && stage !== "DESIGNING") {
     lockNotice = canManage
-      ? t("dataCollection.teacherLockedHint", {}, {
-          default:
-            "Changes you make here update the milestone on every linked board.",
-        })
+      ? supervisingBoards.length
+        ? t("dataCollection.teacherLockedHint", {}, {
+            default:
+              "Changes you make here update the milestone on every linked board.",
+          })
+        : t("dataCollection.teacherLockedHintClass", {}, {
+            default:
+              "The study is locked for its students. Changes you make here are recorded in its activity.",
+          })
       : stage === "FINISHED"
       ? t("dataCollection.finishedHint", {}, {
           default:
@@ -166,7 +183,11 @@ export default function StudyStatus({ study, user }) {
       {state ? (
         <div className="settingsField">
           <p className="settingsFieldLabel">
-            {milestoneMode
+            {orphaned
+              ? t("dataCollection.noLongerSupervised", {}, {
+                  default: "No longer supervised",
+                })
+              : milestoneMode
               ? classTitles.length
                 ? t("dataCollection.supervisedBy", { classes: classTitles.join(", ") }, {
                     default: "Supervised by {{classes}}",
@@ -177,7 +198,17 @@ export default function StudyStatus({ study, user }) {
               : t("dataCollection.selfManaged", {}, { default: "Self-managed" })}
           </p>
           <p className="settingsSectionNote">
-            {milestoneMode
+            {orphaned
+              ? t("dataCollection.noLongerSupervisedHint", {}, {
+                  default:
+                    "Locked from an earlier submission. No class milestone follows this study now. A teacher can reopen it, which makes it self-managed.",
+                })
+              : milestoneMode && !supervisingBoards.length
+              ? t("dataCollection.supervisedByClassHint", {}, {
+                  default:
+                    "Your class follows data collection: submit this study when it is ready. Your teacher follows it.",
+                })
+              : milestoneMode
               ? t("dataCollection.supervisedHint", {
                   boards: supervisingBoards
                     .map((b) => b.title)

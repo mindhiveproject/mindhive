@@ -230,6 +230,12 @@ export const StyledBuilderArea = styled.div`
       background: var(--MH-Theme-Neutrals-White, #ffffff);
       border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
 
+      /* Class-supervised study's stage (StudyStageChip), next to the title. */
+      .navStudyStage {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+      }
       .navTitle {
         flex: 0 1 auto;
         min-width: 0;
@@ -919,6 +925,11 @@ export const StyledCanvasBuilder = styled.div`
         box-sizing: border-box;
         width: 100%;
         min-width: 0;
+      }
+
+      /* Opened from the header's stage chip: clear of the panel's tabs. */
+      #studyStatus {
+        scroll-margin-top: 140px;
       }
 
       .settingsSection {

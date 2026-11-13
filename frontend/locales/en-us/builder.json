@@ -3008,8 +3008,17 @@
 			"label": "{{name}} changed the status",
 			"withAgreement": "(confirmed agreement with {{people}})",
 			"see": "See activity ({{count}})",
-			"hide": "Hide activity"
-		}
+			"hide": "Hide activity",
+			"carriedOver": "{{name}} turned on the class milestone: the study's Collecting data label was carried over as submitted",
+			"carriedOverFinished": "{{name}} turned on the class milestone: the study's Finished label was carried over"
+		},
+		"supervisedByClassHint": "Your class follows data collection: submit this study when it is ready. Your teacher follows it.",
+		"stageOpen": "Open",
+		"stageClosed": "Closed",
+		"stageChipHint": "Your class follows this study's data collection. Open Study status to submit it or see its activity.",
+		"teacherLockedHintClass": "The study is locked for its students. Changes you make here are recorded in its activity.",
+		"noLongerSupervised": "No longer supervised",
+		"noLongerSupervisedHint": "Locked from an earlier submission. No class milestone follows this study now. A teacher can reopen it, which makes it self-managed."
 	},
 	"linkedBoardPeople": {
 		"author": "Study author: {{username}}",

@@ -10,7 +10,6 @@ import { AgGridReact } from "ag-grid-react";
 
 import Button from "../../../DesignSystem/Button";
 import Input from "../../../DesignSystem/Input";
-import ToggleSwitch from "../../../DesignSystem/ToggleSwitch";
 import { AddIcon } from "../../../DesignSystem/Icons";
 import { getClassTemplateBoards } from "../../../../lib/classTemplateBoards";
 import { UPDATE_PROJECT_BOARD } from "../../../Mutations/Proposal";
@@ -43,6 +42,13 @@ import {
 import { SET_STUDY_DATA_COLLECTION } from "../../../Queries/Study";
 import { DATA_COLLECTION_REFETCH } from "../../../Builder/shared/studyDataCollection/useStudyDataCollection";
 import StudyDataCollectionDialog from "../../../Builder/shared/studyDataCollection/StudyDataCollectionDialog";
+import DataCollectionMilestoneCard, {
+  readMilestoneCardDismissed,
+  writeMilestoneCardDismissed,
+} from "./StudiesTab/DataCollectionMilestoneCard";
+import { classFollowsDataCollection } from "../../../../lib/classDataCollection";
+
+const STAGE_FILTERS = ["DESIGNING", "COLLECTING", "FINISHED"];
 
 const WRAP_CELL = {
   whiteSpace: "normal",
@@ -161,10 +167,11 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
       ? filterOwnedClassItems(studies, user.id)
       : [];
 
+  const classFollows = classFollowsDataCollection(myclass);
   const rows = useMemo(() => {
     const withProjects = studies.map((study) => {
       const linkedProjects = projectsByStudyId.get(study.id) || [];
-      const studyStatus = studyStatusOf(study, linkedProjects);
+      const studyStatus = studyStatusOf(study, linkedProjects, { classFollows });
       return {
         ...study,
         linkedProjects,
@@ -176,34 +183,50 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
     return readOnly
       ? withProjects
       : withProjects.sort((a, b) => a.statusRank - b.statusRank);
-  }, [studies, projectsByStudyId, participationByStudyId, readOnly]);
+  }, [studies, projectsByStudyId, participationByStudyId, readOnly, classFollows]);
 
-  // "N studies collecting data · Show only these" above the table.
+  // The milestone card's stage chips filter the table (one stage at a time).
   // Remembered per class in a cookie; read after mount to keep SSR in sync.
-  const [onlyCollecting, setOnlyCollectingState] = useState(false);
+  const [stageFilter, setStageFilterState] = useState(null);
   useEffect(() => {
-    setOnlyCollectingState(
-      readClassTableOption(myclass?.id, "studies", "onlyCollecting") === true
-    );
+    const saved = readClassTableOption(myclass?.id, "studies", "stageFilter");
+    setStageFilterState(STAGE_FILTERS.includes(saved) ? saved : null);
   }, [myclass?.id]);
-  const setOnlyCollecting = useCallback(
+  const setStageFilter = useCallback(
     (next) => {
-      setOnlyCollectingState(next);
-      writeClassTableOption(myclass?.id, "studies", "onlyCollecting", next);
+      setStageFilterState(next);
+      writeClassTableOption(myclass?.id, "studies", "stageFilter", next);
     },
     [myclass?.id]
   );
-  // Collecting data, supervised or self-managed.
-  const collectingCount = rows.filter(
-    (row) => row.studyStatus?.collecting
-  ).length;
-  const showOnlyCollecting = onlyCollecting && collectingCount > 0;
+  // A teacher may hide the milestone card from this tab; the same control
+  // stays in the class Settings tab, which can show the card again.
+  // Remembered per class in a cookie.
+  const [milestoneCardDismissed, setMilestoneCardDismissed] = useState(false);
+  useEffect(() => {
+    setMilestoneCardDismissed(readMilestoneCardDismissed(myclass?.id));
+  }, [myclass?.id]);
+  const dismissMilestoneCard = useCallback(() => {
+    setMilestoneCardDismissed(true);
+    writeMilestoneCardDismissed(myclass?.id, true);
+    // Its stage chips go with it: show every study again.
+    setStageFilter(null);
+  }, [myclass?.id, setStageFilter]);
+
+  const stageCounts = useMemo(() => {
+    const counts = { DESIGNING: 0, COLLECTING: 0, FINISHED: 0 };
+    rows.forEach((row) => {
+      const stage = row.studyStatus?.stage;
+      if (stage in counts) counts[stage] += 1;
+    });
+    return counts;
+  }, [rows]);
   const visibleRows = useMemo(
     () =>
-      showOnlyCollecting
-        ? rows.filter((row) => row.studyStatus?.collecting)
+      stageFilter
+        ? rows.filter((row) => row.studyStatus?.stage === stageFilter)
         : rows,
-    [rows, showOnlyCollecting]
+    [rows, stageFilter]
   );
 
   // The author and collaborators, without the mentors (their own column).
@@ -464,79 +487,78 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
   return (
     <div className="classTabPage studies">
       <section className="classTabSection">
-        <div className="classTabSectionHeader">
-          <h3>{t("main.studies", {}, { default: "Studies" })}</h3>
-          <p>
-            {t(
-              "studies.listDescription",
-              { count: studies.length },
-              {
-                default:
-                  "{{count}} studies created by students in this class.",
-              }
-            )}
-          </p>
-        </div>
-        <OwnedItemsShowcase
-          items={ownedStudies}
-          userId={user?.id}
-          title={t("studies.yourStudies", {}, { default: "Your studies" })}
-          description={t(
-            "studies.yourStudiesDescription",
-            { count: ownedStudies.length },
-            {
-              default:
-                "{{count}} studies in this class that you authored or collaborate on.",
-            }
-          )}
-          getHref={(study) =>
-            study?.id ? `/builder/studies/?selector=${study.id}` : null
-          }
-          actionLabel={t("studies.openInBuilder", {}, {
-            default: "Open in builder",
-          })}
-        />
-        {studies.length > 0 || !readOnly ? (
-          <div className="classTabActionBar">
-            {!readOnly ? (
-              <Button
-                variant="filled"
-                leadingIcon={<AddIcon />}
-                onClick={() => setCreatingStudy(true)}
-              >
-                {t("studies.newStudy.button", {}, { default: "New study" })}
-              </Button>
-            ) : null}
-            {studies.length > 0 ? (
-              <div style={{ flex: "1 1 280px", maxWidth: 480, minWidth: 0 }}>
-                <Input
-                  value={search}
-                  onChange={changeSearch}
-                  placeholder={t("studies.searchStudies", {}, {
-                    default: "Search studies, projects or people",
-                  })}
-                  aria-label={t("studies.searchStudies", {}, {
-                    default: "Search studies, projects or people",
-                  })}
-                />
-              </div>
-            ) : null}
-            {!readOnly && collectingCount > 0 ? (
-              <ToggleSwitch
-                checked={showOnlyCollecting}
-                onChange={setOnlyCollecting}
-                label={t(
-                  "studies.status.onlyCollecting",
-                  { count: collectingCount },
+        <div className="studiesTabTop">
+          <div className="studiesTabIntro">
+            <div className="classTabSectionHeader">
+              <h3>{t("main.studies", {}, { default: "Studies" })}</h3>
+              <p>
+                {t(
+                  "studies.listDescription",
+                  { count: studies.length },
                   {
                     default:
-                      "Show only the {{count}} studies collecting data",
+                      "{{count}} studies created by students in this class.",
                   }
                 )}
-              />
+              </p>
+            </div>
+            <OwnedItemsShowcase
+              items={ownedStudies}
+              userId={user?.id}
+              title={t("studies.yourStudies", {}, { default: "Your studies" })}
+              description={t(
+                "studies.yourStudiesDescription",
+                { count: ownedStudies.length },
+                {
+                  default:
+                    "{{count}} studies in this class that you authored or collaborate on.",
+                }
+              )}
+              getHref={(study) =>
+                study?.id ? `/builder/studies/?selector=${study.id}` : null
+              }
+              actionLabel={t("studies.openInBuilder", {}, {
+                default: "Open in builder",
+              })}
+            />
+            {studies.length > 0 || !readOnly ? (
+              <div className="classTabActionBar">
+                {!readOnly ? (
+                  <Button
+                    variant="filled"
+                    leadingIcon={<AddIcon />}
+                    onClick={() => setCreatingStudy(true)}
+                  >
+                    {t("studies.newStudy.button", {}, { default: "New study" })}
+                  </Button>
+                ) : null}
+                {studies.length > 0 ? (
+                  <div style={{ flex: "1 1 280px", maxWidth: 480, minWidth: 0 }}>
+                    <Input
+                      value={search}
+                      onChange={changeSearch}
+                      placeholder={t("studies.searchStudies", {}, {
+                        default: "Search studies, projects or people",
+                      })}
+                      aria-label={t("studies.searchStudies", {}, {
+                        default: "Search studies, projects or people",
+                      })}
+                    />
+                  </div>
+                ) : null}
+              </div>
             ) : null}
           </div>
-        ) : null}
+          {!readOnly && !milestoneCardDismissed ? (
+            <DataCollectionMilestoneCard
+              myclass={myclass}
+              onDismiss={dismissMilestoneCard}
+              counts={stageCounts}
+              stageFilter={stageFilter}
+              onStageFilter={setStageFilter}
+            />
+          ) : null}
+        </div>
         {studies.length === 0 ? (
           <div className="classTabEmpty">
             <div>{t("studies.noStudiesYet")}</div>
