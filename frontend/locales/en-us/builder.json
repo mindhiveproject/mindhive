@@ -2416,7 +2416,7 @@
 		"addFavoriteAria": "Add to favorites",
 		"basicBlocks": {
 			"description": "Want to include custom instructions to your participants or embed a link and/or video in your study's procedure? Select and edit a basic block",
-			"title": "Basic Blocks"
+			"title": "Blocks"
 		},
 		"filter": {
 			"all": "All",
@@ -2426,16 +2426,19 @@
 			"ownedByMe": "Owned by me"
 		},
 		"infoAria": "Block information",
+		"noResults": "No blocks match your search",
 		"previewAria": "Preview block",
 		"removeFavoriteAria": "Remove from favorites",
 		"searchPlaceholder": "Search for blocks",
 		"sectionTabs": "Block types",
 		"studyDesign": {
+			"addToCanvas": "Add to canvas",
 			"betweenSubjects": "Between-subjects design",
 			"conditionProbabilityInfo": "The probability that a participant is in this between-subjects condition (based on a simulated run of the study for 100 times).",
-			"description": "Add block to create a difference to the design in your study",
+			"description": "Split participants into conditions: add a between-subjects design block, then connect each condition to its own path.",
 			"noTasksFound": "No tasks found",
-			"title": "Study design"
+			"openStudyFlowAria": "Go to Study Flow",
+			"pointerHint": "Add it from the Study Flow tab"
 		},
 		"surveys": {
 			"buildOwn": "Cannot find a tool to measure one of your study constructs? Build your own with the Survey builder and teacher's help",
