@@ -14,6 +14,7 @@ import { Permission } from "./schemas/Permission";
 import { Class } from "./schemas/Class";
 import { ClassNetwork } from "./schemas/ClassNetwork";
 import { NetworkInvite } from "./schemas/NetworkInvite";
+import { TaskShareInvite } from "./schemas/TaskShareInvite";
 import { Report } from "./schemas/Report";
 import { Journal } from "./schemas/Journal";
 import { Post } from "./schemas/Post";
@@ -105,6 +106,7 @@ export const lists: Lists = {
   Class,
   ClassNetwork,
   NetworkInvite,
+  TaskShareInvite,
   Report,
   Journal,
   Post,

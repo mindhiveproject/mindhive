@@ -5,6 +5,8 @@ const {
   planAction,
   buildWrites,
   changedStudyMilestoneStatuses,
+  carryOverStage,
+  turnOffImpact,
 } = require("./studyDataCollection");
 
 const person = (id) => ({ id, username: id });
@@ -191,5 +193,53 @@ test("older submission logs without content still show who and when", () => {
   const history = summarizeHistory([
     { event: "STUDY_SUBMITTED_FOR_DATA_COLLECTION", content: { proposalSnapshot: "No cards submitted" }, createdAt: "2026-10-01T08:00:00.000Z", user: { username: "lea" } },
   ]);
-  assert.deepEqual(history[0], { action: "SUBMIT", by: "lea", at: "2026-10-01T08:00:00.000Z", open: null, stage: null, confirmed: false, sharedWith: [] });
+  assert.deepEqual(history[0], { action: "SUBMIT", by: "lea", at: "2026-10-01T08:00:00.000Z", open: null, stage: null, confirmed: false, sharedWith: [], carriedOver: false });
+});
+
+test("a class that follows data collection supervises its studies without a board", () => {
+  const following = { ...klass, settings: { dataCollectionMilestone: true } };
+  const s = study({ classes: [following] });
+  const summary = summarizeStudy({ study: s, boards: [], callerId: "maya", callerIsAdmin: false, callerCanEdit: true });
+  assert.equal(summary.supervised, true);
+  assert.deepEqual(summary.classes, [{ id: "c1", title: "PSY", supervising: true }]);
+  // Peers to acknowledge come from the study itself.
+  assert.deepEqual(summary.people.map((p) => p.id).sort(), ["jonah", "maya"]);
+  const teacher = summarizeStudy({ study: s, boards: [], callerId: "teacher", callerIsAdmin: false, callerCanEdit: false });
+  assert.equal(teacher.canManage, true);
+  // Off: self-managed again.
+  const off = summarizeStudy({ study: study({ classes: [{ ...klass, settings: { dataCollectionMilestone: false } }] }), boards: [], callerId: "maya", callerIsAdmin: false, callerCanEdit: true });
+  assert.equal(off.supervised, false);
+});
+
+test("board and class supervision are interchangeable: the stage stays on the study", () => {
+  const following = { ...klass, settings: JSON.stringify({ dataCollectionMilestone: true }) };
+  const s = study({ classes: [following], dataCollectionStatus: "SUBMITTED", status: "COLLECTING_DATA" });
+  const byClass = summarizeStudy({ study: s, boards: [], callerId: "maya", callerIsAdmin: false, callerCanEdit: true });
+  const byBoard = summarizeStudy({ study: { ...s, classes: [klass] }, boards: [board("b1", "maya", { milestoneStatus: {} })], callerId: "maya", callerIsAdmin: false, callerCanEdit: true });
+  assert.equal(byClass.stage, "COLLECTING");
+  assert.equal(byBoard.stage, "COLLECTING");
+});
+
+test("carry-over stage reads the students' label, never a locked study", () => {
+  assert.equal(carryOverStage({ status: "COLLECTING_DATA", dataCollectionStatus: "IN_PROGRESS" }), "COLLECTING");
+  assert.equal(carryOverStage({ status: "DATA_COLLECTION_IS_COMPLETED", dataCollectionStatus: null }), "FINISHED");
+  assert.equal(carryOverStage({ status: "WORKING" }), null);
+  assert.equal(carryOverStage({ status: "COLLECTING_DATA", dataCollectionStatus: "SUBMITTED" }), null);
+});
+
+test("turning a class milestone off: kept, left locked, or self-managed", () => {
+  const thisClass = { id: "c1", settings: { dataCollectionMilestone: true } };
+  const other = { id: "c2", settings: { dataCollectionMilestone: true } };
+  const impact = turnOffImpact(
+    [
+      { dataCollectionStatus: "IN_PROGRESS", classes: [thisClass], boardSupervised: true },
+      { dataCollectionStatus: "SUBMITTED", classes: [thisClass, other] },
+      { dataCollectionStatus: "SUBMITTED", classes: [thisClass] },
+      { dataCollectionStatus: "FINISHED", classes: [thisClass] },
+      { dataCollectionStatus: "IN_PROGRESS", classes: [thisClass] },
+      { dataCollectionStatus: null, classes: [thisClass] },
+    ],
+    "c1"
+  );
+  assert.deepEqual(impact, { keep: 2, staysLocked: 2, selfManaged: 2 });
 });

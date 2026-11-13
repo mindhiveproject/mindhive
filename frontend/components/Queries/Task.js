@@ -92,6 +92,7 @@ export const MY_TASKS = gql`
       runtimeType
       copiedFrom {
         id
+        title
       }
       author {
         id
@@ -102,6 +103,7 @@ export const MY_TASKS = gql`
       }
       parameters
       settings
+      sharedByName
     }
   }
 `;
@@ -131,6 +133,7 @@ export const FAVORITE_TASKS = gql`
       }
       parameters
       settings
+      sharedByName
     }
   }
 `;
@@ -434,6 +437,8 @@ export const TASK_OWNERSHIP = gql`
   query TASK_OWNERSHIP($id: ID!) {
     task(where: { id: $id }) {
       id
+      title
+      public
       author {
         id
       }
@@ -443,6 +448,30 @@ export const TASK_OWNERSHIP = gql`
       copiedFrom {
         id
       }
+    }
+  }
+`;
+
+// For the Study Builder's "My versions" view: which of the user's studies
+// still reference each of their task copies (the diagram holds every block,
+// connected or not) and whether a copy already holds collected data.
+export const MY_TASK_VERSION_USAGE = gql`
+  query MY_TASK_VERSION_USAGE($userId: ID!, $taskIds: [ID!]!) {
+    studies(
+      where: {
+        OR: [
+          { author: { id: { equals: $userId } } }
+          { collaborators: { some: { id: { equals: $userId } } } }
+        ]
+      }
+    ) {
+      id
+      title
+      diagram
+    }
+    tasks(where: { id: { in: $taskIds } }) {
+      id
+      datasetsCount
     }
   }
 `;

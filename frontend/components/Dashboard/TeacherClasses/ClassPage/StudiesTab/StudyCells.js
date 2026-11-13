@@ -47,19 +47,27 @@ const CHIP_ROW = {
 const CHIP_IN_ROW = { maxWidth: "100%" };
 
 // Status of each study, from lib/studyLifecycle.js. A study linked to a
-// class project is supervised by its data-collection milestone: submitting
+// class project, or in a class that follows data collection itself (its
+// Studies-tab milestone card), is supervised by the data-collection milestone: submitting
 // locks it and opens it to participants, students can pause participation,
 // and only the teaching team reopens it. A study with no class project is
 // self-managed: its status is the students' own label and never locks it.
+// The two sources are interchangeable: the stage lives on the study.
 // Order: supervised (collecting, not submitted, finished), then self-managed.
 const STAGE_ORDER = { COLLECTING: 0, DESIGNING: 1, FINISHED: 2 };
 
-export function studyStatusOf(study, linkedProjects) {
-  const life = studyLifecycle(study, { supervised: linkedProjects.length > 0 });
+export function studyStatusOf(study, linkedProjects, { classFollows = false } = {}) {
+  const life = studyLifecycle(study, {
+    supervised: classFollows || linkedProjects.length > 0,
+  });
   const supervised = life.supervised || life.locked;
   return {
     ...life,
     supervised,
+    // Submitted or finished with nothing supervising it any more (board
+    // unlinked, or the class stopped following data collection): still
+    // locked until a teacher reopens it.
+    orphaned: life.locked && !life.supervised,
     collecting: life.stage === "COLLECTING",
     rank: (supervised ? 0 : 3) + STAGE_ORDER[life.stage],
   };
@@ -87,7 +95,7 @@ function statusChip(t, status) {
       }`,
       title: t("studies.status.selfManagedHint", {}, {
         default:
-          "Status set by the students. No class milestone supervises this study (it is not linked to a class project), so it is never locked. You can still open or close participation.",
+          "Status set by the students. No class milestone supervises this study, so it is never locked. You can still open or close participation.",
       }),
     };
   }
@@ -134,7 +142,16 @@ function statusChip(t, status) {
 export function StatusCell({ data, onDataCollection }) {
   const { t } = useTranslation("classes");
   if (!data?.studyStatus) return null;
-  const chip = statusChip(t, data.studyStatus);
+  const chip = { ...statusChip(t, data.studyStatus) };
+  if (data.studyStatus.orphaned) {
+    chip.caption = t("studies.status.noLongerSupervised", {}, {
+      default: "No longer supervised",
+    });
+    chip.title = t("studies.status.noLongerSupervisedHint", {}, {
+      default:
+        "Locked from an earlier submission, but no class milestone follows it now. Reopening it makes it self-managed.",
+    });
+  }
   const items = dataCollectionItems(t, data, onDataCollection);
   const label = t("studies.status.actionsFor", { title: data.title }, {
     default: "Change the status of {{title}}",

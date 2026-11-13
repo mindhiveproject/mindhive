@@ -102,6 +102,17 @@ export const MY_STUDIES = gql`
         id
         title
         code
+        settings
+      }
+      # Data-collection stage on the study cards (StudyStageChip).
+      status
+      dataCollectionStatus
+      dataCollectionOpenForParticipation
+      proposal {
+        id
+        usedInClass {
+          id
+        }
       }
     }
   }
@@ -144,6 +155,17 @@ export const TEACHER_STUDIES = gql`
         id
         title
         code
+        settings
+      }
+      # Data-collection stage on the study cards (StudyStageChip).
+      status
+      dataCollectionStatus
+      dataCollectionOpenForParticipation
+      proposal {
+        id
+        usedInClass {
+          id
+        }
       }
     }
   }
@@ -706,6 +728,11 @@ const STUDY_DATA_COLLECTION_FIELDS = `
     milestoneKey
     supervising
   }
+  classes {
+    id
+    title
+    supervising
+  }
   people {
     id
     username
@@ -721,6 +748,7 @@ const STUDY_DATA_COLLECTION_FIELDS = `
     stage
     confirmed
     sharedWith
+    carriedOver
   }
 `;
 

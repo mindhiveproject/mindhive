@@ -4,6 +4,8 @@ import useTranslation from "next-translate/useTranslation";
 import Card from "../../DesignSystem/Card";
 import Chip from "../../DesignSystem/Chip";
 import FavoriteButton from "../../DesignSystem/FavoriteButton";
+import IconButton from "../../DesignSystem/IconButton";
+import { ShareIcon } from "../../DesignSystem/Icons";
 import ManageFavorite from "../../User/ManageFavorite";
 import BlockTags from "./BlockTags";
 import {
@@ -16,6 +18,7 @@ import { getLocalizedField } from "../../../lib/i18nContent";
  * @param {object} [user] - Shows the favorite button when given.
  * @param {object} [viewer] - Whose "Created by you" / "Collaborator" tags to
  *   show on the Develop page, without turning favorites on.
+ * @param {(task: object) => void} [onShare] - Shows a "Share a copy" button.
  */
 export default function TaskCard({
   user,
@@ -25,6 +28,7 @@ export default function TaskCard({
   id,
   name,
   domain,
+  onShare,
 }) {
   const { t } = useTranslation("common");
   const router = useRouter();
@@ -109,6 +113,22 @@ export default function TaskCard({
           >
             {title}
           </span>
+
+          {onShare && (
+            <IconButton
+              variant="subtle"
+              elevated={false}
+              icon={<ShareIcon aria-hidden />}
+              ariaLabel={t("share.cardAction", {}, { default: "Share a copy" })}
+              title={t("share.cardAction", {}, { default: "Share a copy" })}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onShare(task);
+              }}
+              data-card-action
+            />
+          )}
 
           {user && (
             <ManageFavorite

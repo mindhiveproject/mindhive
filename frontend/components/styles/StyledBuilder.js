@@ -230,6 +230,12 @@ export const StyledBuilderArea = styled.div`
       background: var(--MH-Theme-Neutrals-White, #ffffff);
       border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
 
+      /* Class-supervised study's stage (StudyStageChip), next to the title. */
+      .navStudyStage {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+      }
       .navTitle {
         flex: 0 1 auto;
         min-width: 0;
@@ -872,6 +878,20 @@ export const StyledCanvasBuilder = styled.div`
         grid-template-columns: 1fr;
       }
 
+      .studyFlowDesign {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .studyFlowDesignDescription {
+        margin: 0;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
+        color: #5d5763;
+      }
+
       .studyFlowEmpty {
         display: flex;
         flex-direction: column;
@@ -919,6 +939,11 @@ export const StyledCanvasBuilder = styled.div`
         box-sizing: border-box;
         width: 100%;
         min-width: 0;
+      }
+
+      /* Opened from the header's stage chip: clear of the panel's tabs. */
+      #studyStatus {
+        scroll-margin-top: 140px;
       }
 
       .settingsSection {
@@ -1538,8 +1563,8 @@ export const StyledCanvasBuilder = styled.div`
       display: flex;
       align-items: center;
       gap: 8px;
-      flex: 2;
-      min-width: 0;
+      flex: 1 1 0;
+      min-width: 96px;
       height: 40px;
       padding: 4px 16px 4px 8px;
       border: 1px solid #a1a1a1;
@@ -1568,10 +1593,30 @@ export const StyledCanvasBuilder = styled.div`
 
     .addBlockFavorite {
       display: flex;
-      flex: 1;
+      flex: 0 0 auto;
       align-items: center;
       justify-content: flex-start;
+      gap: 12px;
+      white-space: nowrap;
+    }
+
+    /* At rest search shrinks so both toggles stay on its row (no half-empty
+       wrapped row); while searching it takes the row, toggles go below. */
+    .addBlockFilters.isSearchExpanded {
+      flex-wrap: wrap;
+      row-gap: 8px;
+
+      .addBlockSearch {
+        flex: 1 0 100%;
+      }
+    }
+
+    .blockCardVersion {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
       min-width: 0;
+      overflow-wrap: anywhere;
     }
 
     .addBlockChips {
@@ -1592,30 +1637,6 @@ export const StyledCanvasBuilder = styled.div`
       max-width: 100%;
       padding: 8px 0;
       box-sizing: border-box;
-
-      .blocksMenuTabs {
-        width: 100%;
-        min-width: 0;
-        overflow-x: auto;
-
-        .DesignSystem-ButtonGroup
-          button.DesignSystem-ButtonGroup__segment.DesignSystem-ButtonGroup__segment--selected,
-        .DesignSystem-ButtonGroup
-          button.DesignSystem-ButtonGroup__segment.DesignSystem-ButtonGroup__segment--selected:hover:not(
-            :disabled
-          ) {
-          background: #fdf2d0;
-          color: #5d5763;
-        }
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-
-        &::-webkit-scrollbar {
-          display: none;
-          width: 0;
-          height: 0;
-        }
-      }
 
       .blocksMenuContent {
         display: flex;
@@ -1722,6 +1743,13 @@ export const StyledCanvasBuilder = styled.div`
       .subtitle {
         display: none;
       }
+    }
+
+    .blockCardHint {
+      margin: 0;
+      font: var(--MH-Type-Body-Small, var(--MH-Type-Body-Base));
+      letter-spacing: 0;
+      color: #6a6a6a;
     }
 
     .blockCardActions {

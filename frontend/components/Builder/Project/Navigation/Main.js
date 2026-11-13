@@ -12,6 +12,10 @@ import ConnectStudyOnly from "../../Study/Navigation/Connect/Main";
 import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
 import { MY_STUDY } from "../../../Queries/Study";
 import StudyOptions from "../../../Studies/Bank/StudyOptions";
+import { useStudyDataCollection } from "../../shared/studyDataCollection/useStudyDataCollection";
+import StudyStageChip, {
+  openStudyStatus,
+} from "../../shared/studyDataCollection/StudyStageChip";
 import Tooltip from "../../../DesignSystem/Tooltip";
 import Button from "../../../DesignSystem/Button";
 import IconButton from "../../../DesignSystem/IconButton";
@@ -87,6 +91,19 @@ export default function Navigation({
 
   const studyForNav = mode === "project" ? project?.study : study;
 
+  // Where a class-supervised study stands, next to the title; opens Settings
+  // → Study status in the builder (from another tab, through the builder).
+  const { state: dataCollection } = useStudyDataCollection(studyForNav?.id);
+  const openStatus = () => {
+    if (tab === "builder") {
+      openStudyStatus();
+      return;
+    }
+    router.push(
+      builderHref({ area, selector, tab: "builder", query: { panel: "status" } })
+    );
+  };
+
   // Collapse from the navbar's own width, not the viewport — same pattern as
   // the study-builder side panel (Builder/Project/Builder/Menu.js). Thresholds
   // are higher here because the project journey has five labeled tabs.
@@ -142,6 +159,11 @@ export default function Navigation({
           </Tooltip>
         </div>
       )}
+      {dataCollection ? (
+        <div className="navStudyStage">
+          <StudyStageChip state={dataCollection} onClick={openStatus} />
+        </div>
+      ) : null}
       <div className="builderNavbar" ref={navRef}>
         <Navbar variant="underline" dense hoverUnderline id="menue">
           {navItems.map((item) => {

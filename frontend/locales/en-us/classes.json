@@ -809,7 +809,9 @@
 			"noStudyHint": "The main project has no study linked yet.",
 			"untitled": "Untitled study",
 			"openInStudies": "Show “{{title}}” in the Studies tab"
-		}
+		},
+		"studiesFollowDataCollection": "This class follows data collection without a board: see where each study stands in the Studies tab.",
+		"openStudiesTab": "Open the Studies tab"
 	},
 	"dateCreated": "Date created",
 	"delete": "Delete",
@@ -2545,10 +2547,12 @@
 			"designing": "Designing",
 			"finished": "Finished",
 			"selfManaged": "Self-managed",
-			"selfManagedHint": "Status set by the students. No class milestone supervises this study (it is not linked to a class project), so it is never locked. You can still open or close participation.",
+			"selfManagedHint": "Status set by the students. No class milestone supervises this study, so it is never locked. You can still open or close participation.",
 			"pausedHint": "Submitted for data collection and locked, but participation was closed by a student or teacher.",
 			"finishedHint": "Data collection is finished: participation is closed and the study stays locked. You can resume or reopen it.",
-			"actionsFor": "Change the status of {{title}}"
+			"actionsFor": "Change the status of {{title}}",
+			"noLongerSupervised": "No longer supervised",
+			"noLongerSupervisedHint": "Locked from an earlier submission, but no class milestone follows it now. Reopening it makes it self-managed."
 		},
 		"dataCollection": {
 			"openParticipation": "Open participation",
@@ -2556,6 +2560,31 @@
 			"finish": "Mark data collection finished",
 			"resume": "Resume data collection",
 			"reopen": "Reopen for editing"
+		},
+		"milestoneCard": {
+			"title": "Data collection milestone",
+			"toggle": "Follow data collection in this class",
+			"filter": "Show studies by stage",
+			"onBoth": "Set by this class. Also on board template {{boards}}. Students submit their study, then only a teacher can reopen it.",
+			"on": "Set by this class. Students submit their study for data collection, which locks it; only a teacher can reopen it.",
+			"onBoard": "On through board template {{boards}}. Turn it on here to keep it if the template changes.",
+			"off": "Off: studies are self-managed. Students label them freely and nothing locks. Turn on to supervise submission, participation and finishing.",
+			"selfManagedCounts": "Counts use the students' own labels.",
+			"confirmOnTitle": "Follow data collection in this class?",
+			"confirmOffTitle": "Stop following data collection in this class?",
+			"cancel": "Cancel",
+			"turnOn": "Turn on",
+			"turnOff": "Turn off",
+			"confirmOnBody": "Every study in this class will follow the data-collection milestone: students submit it when it is ready, which locks it and opens it to participants. Only you and your teaching team can reopen it.",
+			"carryOver": "Students already labelled {{collecting}} studies as collecting data and {{finished}} as finished. They will be marked as submitted (and finished) under your name, and locked. Their participation setting is kept.",
+			"dismiss": "Hide this card (you can show it again in Settings)",
+			"settingsHint": "Students submit their study when it is ready, which locks it and opens it to participants. The Studies tab shows each study's stage.",
+			"showCard": "Show this card in the Studies tab",
+			"offKeepBoard": "{{count}} studies keep the milestone through board template {{boards}}. Nothing changes for them.",
+			"offKeep": "{{count}} studies keep the milestone through a project board or another class. Nothing changes for them.",
+			"offStaysLocked": "{{count}} submitted or finished studies stay locked, with nothing supervising them. Reopening one makes it self-managed.",
+			"offSelfManaged": "{{count}} studies become self-managed: students label them freely and nothing locks.",
+			"offReconnect": "You can turn it back on at any time. Locked studies pick up where they were, and studies labelled Collecting data or Finished are carried over again. Activity is kept."
 		}
 	},
 	"studiesTab": "Studies",
@@ -2635,5 +2664,13 @@
 		"title": "Featured studies",
 		"visible": "Visible",
 		"visibleCount": "{{visible}} of {{total}} visible"
+	},
+	"taskSharing": {
+		"title": "Sharing between students",
+		"description": "Students can share a copy of their tasks, surveys and blocks with classmates and with this class’s teachers and mentors. Each person gets their own copy, so nobody can change someone else’s work.",
+		"enabledLabel": "Students can share with the class",
+		"disabledLabel": "Students cannot share with the class",
+		"hint": "Teachers and mentors can always share with the class. Turning this off does not remove copies students already added.",
+		"updateError": "Failed to update the sharing setting"
 	}
 }

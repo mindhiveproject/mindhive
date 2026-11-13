@@ -10,7 +10,11 @@
 // else but admins.
 //
 // - Supervised study: at least one linked board belongs to a class and
-//   resolves a study milestone. Students submit (once every collaborator is
+//   resolves a study milestone, or one of the study's classes follows data
+//   collection itself (Class.settings.dataCollectionMilestone, turned on from
+//   the class's Studies tab: classes without a project board template). Both
+//   sources are interchangeable: the stage lives on the study, a source only
+//   decides whether it is supervised. Students submit (once every collaborator is
 //   acknowledged) and may finish; only the class's teacher or teaching team
 //   may reopen or resume it. Submitting locks the study.
 // - Self-managed study: no supervising board. `status` is a free label, never
@@ -73,6 +77,68 @@ function staffIdsOf(klass) {
     .filter(Boolean);
 }
 
+function parseSettings(value) {
+  if (!value) return {};
+  if (typeof value === "string") {
+    try {
+      return JSON.parse(value) || {};
+    } catch (err) {
+      return {};
+    }
+  }
+  return value;
+}
+
+/** The class supervises its studies' data collection itself (no board). */
+function classFollowsDataCollection(klass) {
+  return parseSettings(klass?.settings).dataCollectionMilestone === true;
+}
+
+/**
+ * The stage a self-managed study carries over to when its class starts
+ * following data collection: its students' label, if they had moved it past
+ * Designing; null otherwise (or when it is already locked).
+ */
+function carryOverStage(study) {
+  if (
+    study?.dataCollectionStatus === "SUBMITTED" ||
+    study?.dataCollectionStatus === "FINISHED"
+  ) {
+    return null;
+  }
+  const stage = stageFromStatus(study?.status);
+  return stage === "DESIGNING" ? null : stage;
+}
+
+/**
+ * What turning a class's own milestone off does to its studies:
+ * - keep: still supervised (a linked board with the milestone, or another
+ *   class that follows data collection);
+ * - staysLocked: submitted or finished with nothing else supervising it:
+ *   stays locked until a teacher reopens it (it is then self-managed);
+ * - selfManaged: back to a free label.
+ *
+ * @param studies `{ dataCollectionStatus, classes: [{ id, settings }],
+ *   boardSupervised }` where `boardSupervised` is true when a linked board
+ *   carries the milestone
+ */
+function turnOffImpact(studies, classId) {
+  const impact = { keep: 0, staysLocked: 0, selfManaged: 0 };
+  for (const study of studies || []) {
+    const otherClass = (study?.classes || []).some(
+      (klass) => klass?.id !== classId && classFollowsDataCollection(klass)
+    );
+    if (study?.boardSupervised || otherClass) impact.keep += 1;
+    else if (
+      study?.dataCollectionStatus === "SUBMITTED" ||
+      study?.dataCollectionStatus === "FINISHED"
+    ) {
+      impact.staysLocked += 1;
+    } else impact.selfManaged += 1;
+  }
+  return impact;
+}
+
 function teacherIdsOf(klass) {
   return [klass?.creator?.id, ...ids(klass?.teachingTeam)].filter(Boolean);
 }
@@ -93,7 +159,11 @@ function summarizeStudy({ study, boards, callerId, callerIsAdmin, callerCanEdit 
   const supervisingBoards = boards.filter(
     (board) => board?.usedInClass?.id && board?.milestone?.key
   );
-  const supervised = supervisingBoards.length > 0;
+  const supervisingClasses = (study?.classes || []).filter(
+    classFollowsDataCollection
+  );
+  const supervised =
+    supervisingBoards.length > 0 || supervisingClasses.length > 0;
   const locked =
     study?.dataCollectionStatus === "SUBMITTED" ||
     study?.dataCollectionStatus === "FINISHED";
@@ -163,6 +233,11 @@ function summarizeStudy({ study, boards, callerId, callerIsAdmin, callerCanEdit 
       classTitle: board?.usedInClass?.title || null,
       milestoneKey: board?.milestone?.key || null,
       supervising: supervisingBoards.includes(board),
+    })),
+    classes: (study?.classes || []).map((klass) => ({
+      id: klass.id,
+      title: klass.title || null,
+      supervising: supervisingClasses.includes(klass),
     })),
     people: [...people.values()],
     submittedBy: submittedBy?.username || null,
@@ -370,7 +445,7 @@ function historyEvents(boards = []) {
  * createdAt), what they confirmed and who the decision was shared with, so a
  * board's milestone can show it later.
  */
-function logContent({ action, plan, summary, caller, now, confirmed, acknowledgedProfileIds, boards }) {
+function logContent({ action, plan, summary, caller, now, confirmed, acknowledgedProfileIds, boards, carriedOver }) {
   const usernames = new Map(summary.people.map((p) => [p.id, p.username || p.id]));
   return {
     action,
@@ -384,6 +459,9 @@ function logContent({ action, plan, summary, caller, now, confirmed, acknowledge
       .map((p) => p.username || p.id),
     acknowledged: (acknowledgedProfileIds || []).map((id) => usernames.get(id) || id),
     boards: boards.map((b) => ({ id: b.id, title: b.title || null })),
+    // Set when a teacher turned on the class milestone and the study's
+    // own label was carried over.
+    ...(carriedOver ? { carriedOver: true } : {}),
   };
 }
 
@@ -420,6 +498,7 @@ function summarizeHistory(logs = [], limit = 20) {
       stage: content.stage || null,
       confirmed: !!content.confirmed,
       sharedWith: Array.isArray(content.sharedWith) ? content.sharedWith : [],
+      carriedOver: !!content.carriedOver,
     });
     if (entries.length >= limit) break;
   }
@@ -468,6 +547,9 @@ module.exports = {
   DATA_COLLECTION_STATUS_FOR_STAGE,
   STATUS_FOR_STAGE,
   isStudyMilestone,
+  classFollowsDataCollection,
+  carryOverStage,
+  turnOffImpact,
   summarizeStudy,
   planAction,
   buildWrites,

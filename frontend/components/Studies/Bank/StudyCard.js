@@ -8,6 +8,19 @@ import { STUDY_PROPOSALS_QUERY } from "../../Queries/Study";
 
 import { StyledStudyCard } from "../../styles/StyledCard";
 import StudyOptions from "./StudyOptions";
+import StudyStageChip from "../../Builder/shared/studyDataCollection/StudyStageChip";
+import { studyLifecycle } from "../../../lib/studyLifecycle";
+import { classFollowsDataCollection } from "../../../lib/classDataCollection";
+
+// Supervised: a class follows data collection itself, or through the project
+// board linked to the study (as in the class's Studies tab).
+function lifecycleOf(study) {
+  if (!study || !("dataCollectionStatus" in study)) return null;
+  const supervised =
+    (study.classes || []).some(classFollowsDataCollection) ||
+    (study.proposal || []).some((board) => board?.usedInClass?.id);
+  return studyLifecycle(study, { supervised });
+}
 
 export default function StudyCard({ user, study, url, id, name, studiesInfo }) {
   const { t } = useTranslation("builder");
@@ -22,6 +35,7 @@ export default function StudyCard({ user, study, url, id, name, studiesInfo }) {
     !!user?.id && typeof url === "string" && url.includes("/builder/studies");
 
   const resolvedStudyId = study?.id ?? study?.[id];
+  const stage = lifecycleOf(study);
 
   const linkHref = user
     ? { pathname: url, query: { [name]: study[id] } }
@@ -98,6 +112,11 @@ export default function StudyCard({ user, study, url, id, name, studiesInfo }) {
             {study?.author?.username && (
               <span>{t("createdBy", { username: study.author.username })}</span>
             )}
+            {stage?.supervised || stage?.locked ? (
+              <div className="studyStage">
+                <StudyStageChip state={stage} />
+              </div>
+            ) : null}
           </div>
         </div>
       </Link>

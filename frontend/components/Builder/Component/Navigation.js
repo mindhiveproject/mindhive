@@ -2,6 +2,7 @@ import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import Button from "../../DesignSystem/Button";
+import { ShareIcon } from "../../DesignSystem/Icons";
 import { getLocalizedField } from "../../../lib/i18nContent";
 
 const itemsInternalTask = [
@@ -59,6 +60,7 @@ export default function Navigation({
   isTemplateAuthor,
   close,
   isInStudyBuilder,
+  onShareCopy,
 }) {
   const { t } = useTranslation("builder");
   // decide whether include the template tab based on whether the user is the author or a collaborator on the template
@@ -100,6 +102,16 @@ export default function Navigation({
           </div>
         </div>
         <div className="rightPanel">
+          {onShareCopy && (
+            <Button
+              variant="outline"
+              type="button"
+              onClick={onShareCopy}
+              leadingIcon={<ShareIcon aria-hidden />}
+            >
+              {t("shareCopy.open", {}, { default: "Share a copy" })}
+            </Button>
+          )}
           <div className="submitButton">
             {isInStudyBuilder ? (
               <span className="autosaveStatus">{submitBtnName}</span>

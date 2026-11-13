@@ -543,6 +543,10 @@
 		"collaborator": "Collaborator",
 		"runtimeLabjs": "Lab.js",
 		"runtimeJspsych": "jsPsych",
-		"runtimeP5": "p5.js"
+		"runtimeP5": "p5.js",
+		"sharedBy": "Shared by {{name}}"
+	},
+	"share": {
+		"cardAction": "Share a copy"
 	}
 }

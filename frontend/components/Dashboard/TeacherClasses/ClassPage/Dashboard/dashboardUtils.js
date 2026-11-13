@@ -53,6 +53,9 @@ export function milestoneStatusLabel(status, t, isStudy) {
 
 // Study milestones are three-state: SUBMITTED (collecting, locked), FINISHED
 // (data collection finished, still locked) or NOT_STARTED (anything else).
+// They read the board's study first: the stage lives on the study, so a
+// milestone added to a board after the study was submitted (through the
+// class's own milestone) shows where the study already is.
 // Otherwise a stored status wins; a board still at NOT_STARTED reads as
 // IN_PROGRESS once any card included in the milestone has moved off
 // "Not started".
@@ -61,6 +64,12 @@ export function deriveMilestoneStatus(project, milestone, milestones = []) {
     readMilestoneStatus(project, milestone?.key, milestones)?.status ||
     "NOT_STARTED";
   if (milestone?.statusTarget === "study") {
+    if (project?.study && "dataCollectionStatus" in project.study) {
+      const fromStudy = project.study.dataCollectionStatus;
+      return fromStudy === "SUBMITTED" || fromStudy === "FINISHED"
+        ? fromStudy
+        : "NOT_STARTED";
+    }
     return stored === "SUBMITTED" || stored === "FINISHED"
       ? stored
       : "NOT_STARTED";

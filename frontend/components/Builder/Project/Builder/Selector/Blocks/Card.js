@@ -6,6 +6,8 @@ import { NodesTypesContainer } from "../../Diagram/nodes-types-container/NodesTy
 import { NodeTypeLabel } from "../../Diagram/node-type-label/NodeTypeLabel";
 
 import IconButton from "../../../../../DesignSystem/IconButton";
+import Tooltip from "../../../../../DesignSystem/Tooltip";
+import { TrashIcon } from "../../../../../DesignSystem/Icons";
 import { TASK_TYPE_COLORS } from "../../../../../../lib/taskTypeColors";
 import TaskModal from "../Task/Modal";
 import ManageFavorite from "../../../../../User/ManageFavorite";
@@ -43,6 +45,9 @@ export default function Card({
   search,
   componentType,
   isSurveyBuilder = false,
+  version,
+  onDelete,
+  isCanvasLocked = false,
 }) {
   const { t } = useTranslation("builder");
   const [showModal, setShowModal] = useState(false);
@@ -69,6 +74,23 @@ export default function Card({
       parameters: component?.parameters,
     });
   };
+
+  let usageLabel = null;
+  if (version?.usedIn?.length) {
+    usageLabel = t(
+      "selector.versions.usedIn",
+      { studies: version.usedIn.join(", ") },
+      { default: `Used in ${version.usedIn.join(", ")}` }
+    );
+  } else if (version?.hasData) {
+    usageLabel = t(
+      "selector.versions.hasData",
+      {},
+      { default: "Not in a study, but holds collected data" }
+    );
+  } else if (version) {
+    usageLabel = t("selector.versions.unused", {}, { default: "Unused" });
+  }
 
   const previewHref = component.link
     ? component.link
@@ -99,11 +121,41 @@ export default function Card({
                   parameters: component?.parameters,
                 }}
                 name={component?.title}
+                disabled={isCanvasLocked}
               />
             </NodesTypesContainer>
-            <BlockTags task={component} user={user} />
+            <BlockTags task={component} user={user} hideAuthorTag />
+            {version && (
+              <div className="blockCardVersion">
+                {version.originalTitle && (
+                  <p className="blockCardHint">
+                    {t(
+                      "selector.versions.versionOf",
+                      { title: version.originalTitle },
+                      { default: `Version of ${version.originalTitle}` }
+                    )}
+                  </p>
+                )}
+                <p className="blockCardHint">{usageLabel}</p>
+              </div>
+            )}
           </div>
           <div className="blockCardActions">
+            {version?.unused && onDelete && (
+              <IconButton
+                variant="filled"
+                style={SECONDARY_ICON_STYLE}
+                ariaLabel={t(
+                  "selector.versions.deleteAria",
+                  {},
+                  {
+                    default: "Delete this version",
+                  }
+                )}
+                icon={<TrashIcon />}
+                onClick={onDelete}
+              />
+            )}
             {!isSurveyBuilder && (
               <>
                 <ManageFavorite
@@ -117,12 +169,20 @@ export default function Card({
                       style={SECONDARY_ICON_STYLE}
                       ariaLabel={
                         isFavorite
-                          ? t("selector.removeFavoriteAria", {}, {
-                              default: "Remove from favorites",
-                            })
-                          : t("selector.addFavoriteAria", {}, {
-                              default: "Add to favorites",
-                            })
+                          ? t(
+                              "selector.removeFavoriteAria",
+                              {},
+                              {
+                                default: "Remove from favorites",
+                              }
+                            )
+                          : t(
+                              "selector.addFavoriteAria",
+                              {},
+                              {
+                                default: "Add to favorites",
+                              }
+                            )
                       }
                       icon={
                         <MediumIcon
@@ -140,9 +200,13 @@ export default function Card({
                 <IconButton
                   variant="filled"
                   style={SECONDARY_ICON_STYLE}
-                  ariaLabel={t("selector.infoAria", {}, {
-                    default: "Block information",
-                  })}
+                  ariaLabel={t(
+                    "selector.infoAria",
+                    {},
+                    {
+                      default: "Block information",
+                    }
+                  )}
                   icon={
                     <MediumIcon src="/assets/icons/builder/medium-info.svg" />
                   }
@@ -151,31 +215,56 @@ export default function Card({
                 <IconButton
                   variant="filled"
                   style={SECONDARY_ICON_STYLE}
-                  ariaLabel={t("selector.previewAria", {}, {
-                    default: "Preview block",
-                  })}
-                  icon={
-                    <MediumIcon src="/assets/icons/builder/review.svg" />
-                  }
+                  ariaLabel={t(
+                    "selector.previewAria",
+                    {},
+                    {
+                      default: "Preview block",
+                    }
+                  )}
+                  icon={<MediumIcon src="/assets/icons/builder/review.svg" />}
                   onClick={() => {
                     window.open(previewHref, "_blank", "noopener,noreferrer");
                   }}
                 />
               </>
             )}
-            <IconButton
-              variant="filled"
-              ariaLabel={t("selector.addBlockAria", {}, {
-                default: "Add block",
-              })}
-              style={{
-                background: accent,
-                backgroundColor: accent,
-                color: "#FFFFFF",
-              }}
-              icon={<MediumIcon src="/assets/icons/builder/medium-add.svg" />}
-              onClick={handleAdd}
-            />
+            <Tooltip
+              content={t(
+                "selector.lockedAddHint",
+                {},
+                {
+                  default:
+                    "This study is locked. Ask your teacher to reopen it to add blocks.",
+                }
+              )}
+              disabled={!isCanvasLocked}
+            >
+              <IconButton
+                variant="filled"
+                ariaLabel={t(
+                  "selector.addBlockAria",
+                  {},
+                  {
+                    default: "Add block",
+                  }
+                )}
+                // Locked: fall back to the disabled grey, and let the hover
+                // reach the tooltip's wrapper past the disabled button.
+                style={
+                  isCanvasLocked
+                    ? { pointerEvents: "none" }
+                    : {
+                        background: accent,
+                        backgroundColor: accent,
+                        color: "#FFFFFF",
+                      }
+                }
+                icon={<MediumIcon src="/assets/icons/builder/medium-add.svg" />}
+                onClick={handleAdd}
+                disabled={isCanvasLocked}
+              />
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -186,6 +275,7 @@ export default function Card({
           component={component}
           addFunctions={addFunctions}
           onModalClose={toggleModal}
+          isCanvasLocked={isCanvasLocked}
         />
       )}
     </>

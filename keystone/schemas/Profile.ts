@@ -313,6 +313,22 @@ export const Profile = list({
       ref: "Task.collaborators",
       many: true,
     }),
+    taskShareInvitesSent: relationship({
+      ref: "TaskShareInvite.sender",
+      many: true,
+    }),
+    taskShareInvitesReceived: relationship({
+      ref: "TaskShareInvite.recipients",
+      many: true,
+    }),
+    taskShareInvitesAccepted: relationship({
+      ref: "TaskShareInvite.acceptedBy",
+      many: true,
+    }),
+    taskShareInvitesDeclined: relationship({
+      ref: "TaskShareInvite.declinedBy",
+      many: true,
+    }),
     favoriteTasks: relationship({
       ref: "Task.favoriteBy",
       many: true,

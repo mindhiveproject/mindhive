@@ -3,6 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 import ComponentSelector from "./Selector/Main";
+import DesignBlockCard from "./Selector/DesignBlockCard";
 import StudySettings from "./Settings/Main";
 import StudyTasks from "../../../Dashboard/Review/Board/StudyOverview/StudyTasks";
 
@@ -34,6 +35,7 @@ export default function Menu({
   handleMultipleUpdate,
   tab,
   setTab,
+  isCanvasLocked = false,
 }) {
   const { t } = useTranslation("builder");
 
@@ -122,11 +124,18 @@ export default function Menu({
           engine={engine}
           user={user}
           addFunctions={addFunctions}
+          onOpenStudyFlow={() => setTab("flow")}
+          studyId={study?.id}
+          isCanvasLocked={isCanvasLocked}
         />
       )}
 
       {tab === "flow" && (
         <div className="studyFlow" id="studyFlow">
+          <DesignBlockCard
+            addFunctions={addFunctions}
+            isCanvasLocked={isCanvasLocked}
+          />
           <StudyTasks study={study} />
         </div>
       )}

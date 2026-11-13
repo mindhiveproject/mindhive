@@ -36,10 +36,17 @@ import ProjectsTemplatePanel from "./Projects/ProjectsTemplatePanel";
 import MessageCard from "../../../DesignSystem/MessageCard";
 import ClassMentors from "./Mentors";
 import SettingsSectionNav from "./SettingsSectionNav";
+import DataCollectionMilestoneCard from "./StudiesTab/DataCollectionMilestoneCard";
 
 function getNotifyTeachersOfStudentPasswordReset(settings) {
   if (!settings || typeof settings !== "object") return true;
   return settings.notifyTeachersOfStudentPasswordReset !== false;
+}
+
+// Students may share their tasks, surveys and blocks with people in the class
+// unless a teacher turns it off (keystone/lib/taskShare.js reads the same key).
+function getStudentTaskSharing(settings) {
+  return settings?.allowStudentTaskSharing !== false;
 }
 
 function getPhysiologicalDataEnabled(settings) {
@@ -82,6 +89,9 @@ export default function Settings({ myclass, user }) {
   );
   const [notifyTeachersOfStudentPasswordReset, setNotifyTeachersOfStudentPasswordReset] =
     useState(() => getNotifyTeachersOfStudentPasswordReset(myclass?.settings));
+  const [studentTaskSharing, setStudentTaskSharing] = useState(() =>
+    getStudentTaskSharing(myclass?.settings)
+  );
   const [physiologicalDataEnabled, setPhysiologicalDataEnabled] = useState(() =>
     getPhysiologicalDataEnabled(myclass?.settings)
   );
@@ -96,6 +106,10 @@ export default function Settings({ myclass, user }) {
       getNotifyTeachersOfStudentPasswordReset(myclass?.settings)
     );
   }, [myclass?.settings?.notifyTeachersOfStudentPasswordReset]);
+
+  useEffect(() => {
+    setStudentTaskSharing(getStudentTaskSharing(myclass?.settings));
+  }, [myclass?.settings?.allowStudentTaskSharing]);
 
   useEffect(() => {
     setPhysiologicalDataEnabled(
@@ -214,6 +228,31 @@ export default function Settings({ myclass, user }) {
         err?.message ||
           t("passwordResetEmailUpdateError", {}, {
             default: "Failed to update password reset email setting",
+          })
+      );
+    });
+  };
+
+  const updateStudentTaskSharing = (enabled) => {
+    const previousValue = studentTaskSharing;
+    setStudentTaskSharing(enabled);
+    const existingSettings =
+      myclass?.settings && typeof myclass.settings === "object"
+        ? myclass.settings
+        : {};
+    updateClassSettings({
+      variables: {
+        settings: {
+          ...existingSettings,
+          allowStudentTaskSharing: enabled,
+        },
+      },
+    }).catch((err) => {
+      setStudentTaskSharing(previousValue);
+      alert(
+        err?.message ||
+          t("taskSharing.updateError", {}, {
+            default: "Failed to update the sharing setting",
           })
       );
     });
@@ -517,8 +556,18 @@ export default function Settings({ myclass, user }) {
       label: t("taskVisibility.title", {}, { default: "Tasks & surveys" }),
     },
     {
+      id: "settings-task-sharing",
+      label: t("taskSharing.title", {}, { default: "Sharing between students" }),
+    },
+    {
       id: "settings-studies",
       label: t("studyVisibility.title", {}, { default: "Featured studies" }),
+    },
+    {
+      id: "settings-data-collection",
+      label: t("studies.milestoneCard.title", {}, {
+        default: "Data collection milestone",
+      }),
     },
     {
       id: "settings-password-reset",
@@ -889,9 +938,54 @@ export default function Settings({ myclass, user }) {
           <TaskVisibilitySettings myclass={myclass} />
         </div>
 
+        <section className="settingsSection" id="settings-task-sharing">
+          <div className="settingsSectionHeader">
+            <h3>
+              {t("taskSharing.title", {}, {
+                default: "Sharing between students",
+              })}
+            </h3>
+            <p>
+              {t("taskSharing.description", {}, {
+                default:
+                  "Students can share a copy of their tasks, surveys and blocks with classmates and with this class’s teachers and mentors. Each person gets their own copy, so nobody can change someone else’s work.",
+              })}
+            </p>
+          </div>
+          <div className="informationBlock">
+            <div className="block curriculumTypeBlock">
+              <ToggleSwitch
+                checked={studentTaskSharing}
+                loading={updatingSettings}
+                onChange={updateStudentTaskSharing}
+                label={
+                  studentTaskSharing
+                    ? t("taskSharing.enabledLabel", {}, {
+                        default: "Students can share with the class",
+                      })
+                    : t("taskSharing.disabledLabel", {}, {
+                        default: "Students cannot share with the class",
+                      })
+                }
+                aria-label={t("taskSharing.title", {}, {
+                  default: "Sharing between students",
+                })}
+              />
+              <p className="classDescriptionSettingsHint">
+                {t("taskSharing.hint", {}, {
+                  default:
+                    "Teachers and mentors can always share with the class. Turning this off does not remove copies students already added.",
+                })}
+              </p>
+            </div>
+          </div>
+        </section>
+
         <div id="settings-studies">
           <StudyVisibilitySettings myclass={myclass} />
         </div>
+
+        <DataCollectionMilestoneCard myclass={myclass} placement="settings" />
 
         <section className="settingsSection" id="settings-password-reset">
           <div className="settingsSectionHeader">

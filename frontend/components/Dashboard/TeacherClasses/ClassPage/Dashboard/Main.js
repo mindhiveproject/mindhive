@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import styled from "styled-components";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -19,6 +20,7 @@ import {
   getPrimaryTemplateBoardId,
 } from "../../../../../lib/classTemplateBoards";
 import { isOpenForComments } from "../../../../../lib/milestoneStatus";
+import { classFollowsDataCollection } from "../../../../../lib/classDataCollection";
 import BoardMilestonesSync from "../../../BoardMilestonesSync";
 
 import Button from "../../../../DesignSystem/Button";
@@ -696,6 +698,24 @@ export default function Dashboard({ myclass }) {
                   "Project boards help you guide your students through their projects in a step-by-step way, following milestones like \u201cexpert feedback\u201d and \u201cpeer feedback.\u201d You can also add resources and assignments to project cards.",
               })}
             </p>
+            {classFollowsDataCollection(myclass) ? (
+              <p className="dashboardEmpty">
+                {t("dashboard.studiesFollowDataCollection", {}, {
+                  default:
+                    "This class follows data collection without a board: see where each study stands in the Studies tab.",
+                })}{" "}
+                <Link
+                  href={{
+                    pathname: `/dashboard/myclasses/${myclass?.code}`,
+                    query: { page: "studies" },
+                  }}
+                >
+                  {t("dashboard.openStudiesTab", {}, {
+                    default: "Open the Studies tab",
+                  })}
+                </Link>
+              </p>
+            ) : null}
             <Button
               variant="filled"
               leadingIcon={<AddIcon />}

@@ -50,6 +50,8 @@ import classJoinPreview from "./classJoinPreview";
 import doeDataSummary from "./doeDataSummary";
 import studyCollectData from "./studyCollectData";
 import {
+  classDataCollection,
+  setClassDataCollection,
   setStudyDataCollection,
   studyDataCollection,
 } from "./studyDataCollection";
@@ -83,6 +85,15 @@ import seedReviewForms from "./seedReviewForms";
 import seedMissingForms from "./seedMissingForms";
 import duplicateFormDefinition from "./duplicateFormDefinition";
 import copyTaskForStudy from "./copyTaskForStudy";
+import {
+  forkTaskTemplate,
+  respondToTaskShare,
+  shareTask,
+  switchTaskTemplate,
+  taskShareTargets,
+  templateUsage,
+  withdrawTaskShare,
+} from "./taskShare";
 import publishFormDefinition from "./publishFormDefinition";
 import saveClassFormDefinition from "./saveClassFormDefinition";
 import saveBoardReviewFormDefinition from "./saveBoardReviewFormDefinition";
@@ -208,12 +219,20 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         canEdit: Boolean!
         canManage: Boolean!
         boards: [StudyDataCollectionBoard!]!
+        # The study's classes; supervising: the class follows data
+        # collection itself (no board needed).
+        classes: [StudyDataCollectionClass!]!
         people: [StudyDataCollectionPerson!]!
         submittedBy: String
         submittedAt: String
         # Newest first: who submitted, finished, reopened, resumed or
         # opened/closed participation, and when (from the study's logs).
         history: [StudyDataCollectionEvent!]!
+      }
+      type StudyDataCollectionClass {
+        id: ID!
+        title: String
+        supervising: Boolean!
       }
       type StudyDataCollectionEvent {
         action: String!
@@ -223,6 +242,32 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         stage: String
         confirmed: Boolean!
         sharedWith: [String!]!
+        # Logged when a teacher turned on the class milestone and the
+        # study's own label was carried over.
+        carriedOver: Boolean!
+      }
+      # Whether a class supervises its studies' data collection itself
+      # (Class.settings.dataCollectionMilestone), and its template boards
+      # that already carry a data-collection milestone.
+      type ClassDataCollectionBoard {
+        id: ID!
+        title: String
+      }
+      type ClassDataCollectionState {
+        classId: ID!
+        enabled: Boolean!
+        canManage: Boolean!
+        templateBoards: [ClassDataCollectionBoard!]!
+        # Studies labelled collecting / finished by their students, which
+        # turning it on submits (and finishes) under the teacher's name.
+        carryOverCollecting: Int!
+        carryOverFinished: Int!
+        # Turning it off: studies another source still supervises, submitted
+        # ones left locked with nothing supervising them, and the rest
+        # (back to self-managed).
+        turnOffKeep: Int!
+        turnOffStaysLocked: Int!
+        turnOffSelfManaged: Int!
       }
       type Mutation {
         # The only way to submit, finish, reopen or resume a study's data
@@ -240,6 +285,9 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
           # confirmation. Recorded in the log with their name and the time.
           confirmed: Boolean
         ): StudyDataCollectionState!
+        # Turns the class's own data-collection milestone on or off (class
+        # teachers). On: carries over the studies' labels.
+        setClassDataCollection(classId: ID!, enabled: Boolean!): ClassDataCollectionState!
         startRun(
           taskId: ID!
           studyId: ID!
@@ -439,6 +487,23 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         duplicateFormDefinition(id: ID!): FormDefinition
         # The signed-in user's own copy of a task for a study block.
         copyTaskForStudy(id: ID!): Task
+        # Offer people in a class their own copy of a task (TaskShareInvite).
+        # Staff may pass wholeClass; otherwise recipientIds.
+        shareTask(
+          taskId: ID!
+          classId: ID!
+          wholeClass: Boolean
+          recipientIds: [ID!]
+          message: String
+        ): TaskShareInvite
+        # Accept (make your own copy) or decline a task shared with you.
+        respondToTaskShare(inviteId: ID!, accept: Boolean!): TaskShareInvite
+        # The sender stops a share; copies already made stay.
+        withdrawTaskShare(inviteId: ID!): TaskShareInvite
+        # Give a task its own copy of its template (then copy the files and
+        # call switchTaskTemplate), so template edits stop reaching others.
+        forkTaskTemplate(taskId: ID!): TaskTemplateFork
+        switchTaskTemplate(taskId: ID!, templateId: ID!): Task
         # Teacher wizard: create/update a class-scoped opportunity form
         # with baked-in defaults. Optionally publish in the same call.
         saveClassFormDefinition(input: SaveClassFormDefinitionInput!): FormDefinition
@@ -717,6 +782,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # A study's data-collection state, who shares it and what the caller
         # may change.
         studyDataCollection(studyId: ID!): StudyDataCollectionState!
+        classDataCollection(classId: ID!): ClassDataCollectionState!
         runtimeRunContext(runToken: String!): RuntimeRunContext!
         # Lets a jsPsych or p5 task be previewed without starting a run.
         runtimeAssetPreviewToken(taskId: ID!): String!
@@ -750,6 +816,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         networkInviteContext(token: String!): NetworkInviteContext
         # Title and teacher of a class, by join code. Public; no roster.
         classJoinPreview(code: String!): ClassJoinPreview
+        # Classes the caller can share this task in, with who they can pick.
+        taskShareTargets(taskId: ID!): [TaskShareTargetClass!]!
+        # Other people's tasks that run this template (its authors only).
+        templateUsage(templateId: ID!): TemplateUsage
         # For the frontend's raw-data routes, run as the caller: which of
         # these dataset tokens they may read, and whether they may read a
         # Data Journal file of a datasource.
@@ -817,6 +887,30 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         publish: Boolean
         surface: String
       }
+      type TaskShareMember {
+        id: ID!
+        name: String!
+        role: String!
+      }
+      type TaskShareTargetClass {
+        id: ID!
+        title: String
+        code: String
+        role: String
+        canShare: Boolean!
+        canShareWithClass: Boolean!
+        studentCount: Int!
+        members: [TaskShareMember!]!
+      }
+      type TemplateUsage {
+        otherTasks: Int!
+        otherPeople: Int!
+      }
+      type TaskTemplateFork {
+        templateId: ID!
+        slug: String!
+        sourceSlug: String
+      }
       input SaveBoardReviewFormDefinitionInput {
         proposalBoardId: ID!
         definitionId: ID
@@ -831,6 +925,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       Opportunity: opportunityMultiselectResolvers,
       Query: {
         studyDataCollection,
+        classDataCollection,
         runtimeRunContext,
         runtimeAssetPreviewToken,
         runtimeVisualSource,
@@ -841,6 +936,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         resolveMilestonesForBoard,
         networkInviteContext,
         classJoinPreview,
+        taskShareTargets,
+        templateUsage,
         readableDatasetTokens,
         studyCollectData,
         studyResults,
@@ -859,6 +956,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
       },
       Mutation: {
         setStudyDataCollection,
+        setClassDataCollection,
         startRun,
         ingestRunMessage,
         updateRunDataPolicy,
@@ -917,6 +1015,11 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         seedMissingForms,
         duplicateFormDefinition,
         copyTaskForStudy,
+        shareTask,
+        respondToTaskShare,
+        withdrawTaskShare,
+        forkTaskTemplate,
+        switchTaskTemplate,
         saveClassFormDefinition,
         saveBoardReviewFormDefinition,
         forkReviewFormForBoard,

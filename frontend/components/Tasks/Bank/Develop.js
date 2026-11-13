@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 
 import { MY_TASKS } from "../../Queries/Task";
+import { PENDING_TASK_SHARES_COUNT } from "../../Queries/TaskShare";
 import TaskCard from "./TaskCard";
+import SharedWithMe from "./SharedWithMe";
+import ShareTaskModal from "../Share/ShareTaskModal";
+import { blockRelation } from "../../../lib/blockOwnership";
 import Chip from "../../DesignSystem/Chip";
 import MessageCard from "../../DesignSystem/MessageCard";
 import LoadingIcon from "../../DesignSystem/LoadingIcon";
@@ -39,7 +44,14 @@ const FILTERS = [
     labelKey: "developTasks.filterCreatedByMe",
     default: "Created by me",
   },
+  // copies people in your classes offered you (Tasks/Share)
+  {
+    key: "shared",
+    labelKey: "developTasks.filterSharedWithMe",
+    default: "Shared with me",
+  },
 ];
+const FILTER_KEYS = FILTERS.map((f) => f.key);
 
 function buildWhere({ filter, taskType, userId, hiddenTaskIds }) {
   const byFilter = {
@@ -56,20 +68,37 @@ function buildWhere({ filter, taskType, userId, hiddenTaskIds }) {
     },
   };
   return {
-    AND: [{ taskType: { equals: taskType } }, byFilter[filter]],
+    AND: [{ taskType: { equals: taskType } }, byFilter[filter] || {}],
   };
 }
 
 export default function DevelopTaskBank({ user, taskType }) {
   const { t } = useTranslation("builder");
-  const [filter, setFilter] = useState("favorited");
+  const router = useRouter();
+  // ?filter=shared opens a list directly (the "shared with you" notification)
+  const linkedFilter = FILTER_KEYS.includes(router.query?.filter)
+    ? router.query.filter
+    : null;
+  const [filter, setFilter] = useState(linkedFilter || "favorited");
+  useEffect(() => {
+    if (linkedFilter) setFilter(linkedFilter);
+  }, [linkedFilter]);
+  const [sharing, setSharing] = useState(null);
   const hiddenTaskIds = useHiddenTaskIds();
 
+  const isShared = filter === "shared";
   const { data, loading } = useQuery(MY_TASKS, {
     variables: {
       where: buildWhere({ filter, taskType, userId: user?.id, hiddenTaskIds }),
     },
+    skip: isShared,
   });
+  const { data: pendingData } = useQuery(PENDING_TASK_SHARES_COUNT, {
+    variables: { me: user?.id, taskType },
+    skip: !user?.id,
+    fetchPolicy: "cache-and-network",
+  });
+  const pendingCount = pendingData?.taskShareInvitesCount || 0;
   const tasks = data?.tasks || [];
   const emptyCopy =
     EMPTY_MESSAGE_BY_TYPE[taskType] || EMPTY_MESSAGE_BY_TYPE.TASK;
@@ -86,10 +115,15 @@ export default function DevelopTaskBank({ user, taskType }) {
       >
         {FILTERS.map((f) => {
           const isSelected = filter === f.key;
+          const label = t(f.labelKey, {}, { default: f.default });
           return (
             <Chip
               key={f.key}
-              label={t(f.labelKey, {}, { default: f.default })}
+              label={
+                f.key === "shared" && pendingCount > 0
+                  ? `${label} (${pendingCount})`
+                  : label
+              }
               selected={isSelected}
               onClick={() => setFilter(f.key)}
               // Filter-chip affordance: the active non-default chip carries a
@@ -104,7 +138,9 @@ export default function DevelopTaskBank({ user, taskType }) {
         })}
       </div>
 
-      {loading && !data ? (
+      {isShared ? (
+        <SharedWithMe user={user} taskType={taskType} />
+      ) : loading && !data ? (
         <MessageCard
           variant="neutral"
           message={
@@ -130,10 +166,22 @@ export default function DevelopTaskBank({ user, taskType }) {
               id="id"
               name="selector"
               domain="develop"
+              onShare={
+                blockRelation(task, user?.id) && !task?.copiedFrom?.id
+                  ? setSharing
+                  : undefined
+              }
             />
           ))}
         </div>
       )}
+
+      <ShareTaskModal
+        open={!!sharing}
+        onClose={() => setSharing(null)}
+        task={sharing}
+        user={user}
+      />
     </>
   );
 }

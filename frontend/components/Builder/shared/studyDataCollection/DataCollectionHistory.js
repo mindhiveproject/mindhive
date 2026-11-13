@@ -55,10 +55,22 @@ function describe(t, entry) {
     entry.by || t("dataCollection.history.someone", {}, { default: "Someone" });
   switch (entry.action) {
     case "SUBMIT":
+      if (entry.carriedOver) {
+        return t("dataCollection.history.carriedOver", { name }, {
+          default:
+            "{{name}} turned on the class milestone: the study's Collecting data label was carried over as submitted",
+        });
+      }
       return t("dataCollection.history.submitted", { name }, {
         default: "{{name}} submitted the study for data collection",
       });
     case "FINISH":
+      if (entry.carriedOver) {
+        return t("dataCollection.history.carriedOverFinished", { name }, {
+          default:
+            "{{name}} turned on the class milestone: the study's Finished label was carried over",
+        });
+      }
       return t("dataCollection.history.finished", { name }, {
         default: "{{name}} marked data collection as finished",
       });
