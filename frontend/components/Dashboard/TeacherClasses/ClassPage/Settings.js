@@ -44,9 +44,10 @@ function getNotifyTeachersOfStudentPasswordReset(settings) {
 }
 
 // Students may share their tasks, surveys and blocks with people in the class
-// unless a teacher turns it off (keystone/lib/taskShare.js reads the same key).
+// only once a teacher turns it on; unset means off (keystone/lib/taskShare.js
+// reads the same key).
 function getStudentTaskSharing(settings) {
-  return settings?.allowStudentTaskSharing !== false;
+  return settings?.allowStudentTaskSharing === true;
 }
 
 function getPhysiologicalDataEnabled(settings) {

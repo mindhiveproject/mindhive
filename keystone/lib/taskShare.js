@@ -5,7 +5,7 @@
 // - Class staff (creator, teaching team, mentors) share with the whole class
 //   (its students) or with chosen members.
 // - Students share with chosen classmates and staff, when the class allows
-//   it (Class.settings.allowStudentTaskSharing, on unless set to false).
+//   it (Class.settings.allowStudentTaskSharing, off unless set to true).
 // - Only a task you author or collaborate on can be shared; a copy you
 //   received is yours, so it counts.
 // - A recipient sees an invite while they are in the class; once accepted it
@@ -26,7 +26,7 @@ function decodeJson(value) {
 
 function studentSharingAllowed(klass) {
   const settings = decodeJson(klass?.settings) || {};
-  return settings.allowStudentTaskSharing !== false;
+  return settings.allowStudentTaskSharing === true;
 }
 
 function staffIds(klass) {
