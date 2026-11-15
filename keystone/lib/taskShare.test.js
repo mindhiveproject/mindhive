@@ -18,6 +18,8 @@ const klass = (settings) => ({
   students: [p("s1"), p("s2"), p("s3")],
   settings,
 });
+// A class whose teacher turned student sharing on (it is off by default).
+const openKlass = () => klass({ allowStudentTaskSharing: true });
 const task = (author, collaborators = []) => ({
   id: "t1",
   author: p(author),
@@ -35,7 +37,7 @@ test("creator, teaching team and mentors share with the whole class", () => {
 });
 
 test("students share with people only, and only when the class allows it", () => {
-  assert.deepEqual(sharingRights(klass(), "s1"), {
+  assert.deepEqual(sharingRights(openKlass(), "s1"), {
     role: "student",
     canShare: true,
     canShareWithClass: false,
@@ -44,16 +46,23 @@ test("students share with people only, and only when the class allows it", () =>
     sharingRights(klass({ allowStudentTaskSharing: false }), "s1").canShare,
     false
   );
+  // off by default: a class with no setting blocks student sharing
+  assert.equal(sharingRights(klass(), "s1").canShare, false);
+  assert.equal(sharingRights(klass({}), "s1").canShare, false);
   // SQLite hands json over as a string
   assert.equal(
     sharingRights(klass('{"allowStudentTaskSharing":false}'), "s1").canShare,
     false
   );
+  assert.equal(
+    sharingRights(klass('{"allowStudentTaskSharing":true}'), "s1").canShare,
+    true
+  );
   assert.equal(sharingRights(klass(), "stranger").canShare, false);
 });
 
 test("only an owned task can be shared", () => {
-  const base = { klass: klass(), wholeClass: false, recipientIds: ["s2"] };
+  const base = { klass: openKlass(), wholeClass: false, recipientIds: ["s2"] };
   assert.equal(
     checkShareRequest({ ...base, task: task("s1"), userId: "s1" }),
     null
@@ -69,7 +78,7 @@ test("only an owned task can be shared", () => {
 });
 
 test("a student can share with classmates and staff, not the whole class", () => {
-  const args = { task: task("s1"), klass: klass(), userId: "s1" };
+  const args = { task: task("s1"), klass: openKlass(), userId: "s1" };
   assert.equal(
     checkShareRequest({ ...args, recipientIds: ["s2", "teacher", "mentor"] }),
     null
@@ -91,6 +100,10 @@ test("a student can share with classmates and staff, not the whole class", () =>
     }),
     /turned off/
   );
+  assert.match(
+    checkShareRequest({ ...args, klass: klass(), recipientIds: ["s2"] }),
+    /turned off/
+  );
 });
 
 test("you cannot pick yourself", () => {
@@ -98,7 +111,7 @@ test("you cannot pick yourself", () => {
   assert.match(
     checkShareRequest({
       task: task("s1"),
-      klass: klass(),
+      klass: openKlass(),
       userId: "s1",
       recipientIds: ["s1"],
     }),
