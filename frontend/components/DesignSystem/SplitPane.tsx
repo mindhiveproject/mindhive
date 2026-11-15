@@ -40,6 +40,13 @@ export interface SplitPaneProps {
   ariaLabel?: string;
   /** Accessible name for the divider while `end` is shut, when it acts as a button rather than a separator. @default "Expand panel" */
   expandLabel?: string;
+  /**
+   * Lets each pane scroll its own overflow instead of clipping it. Use it when
+   * the split sits in a fixed-height box and the panes hold long content (an
+   * expanded card); leave it off for panes that size their content themselves
+   * (the builder preview iframe). @default false
+   */
+  scrollPanes?: boolean;
   /** Optional style override for the root. */
   style?: React.CSSProperties;
 }
@@ -59,6 +66,17 @@ const PANE_STYLE: React.CSSProperties = {
   minWidth: 0,
   minHeight: 0,
   overflow: "hidden",
+};
+
+// Uses the overflow longhands where PANE_STYLE uses the shorthand, so React
+// warns if `scrollPanes` flips on a mounted split. Callers set it once.
+const SCROLLING_PANE_STYLE: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  minWidth: 0,
+  minHeight: 0,
+  overflowX: "hidden",
+  overflowY: "auto",
 };
 
 // The gutter is wider than the visible grab handle so the divider is easy to
@@ -129,8 +147,10 @@ export default function SplitPane({
   onFractionChange,
   ariaLabel = "Resize panels",
   expandLabel = "Expand panel",
+  scrollPanes = false,
   style,
 }: SplitPaneProps) {
+  const paneStyle = scrollPanes ? SCROLLING_PANE_STYLE : PANE_STYLE;
   const rootRef = useRef<HTMLDivElement>(null);
   const [fraction, setFraction] = useState(defaultFraction);
   const [dragging, setDragging] = useState(false);
@@ -308,7 +328,7 @@ export default function SplitPane({
           push everything to its right off the page. */}
       <motion.div
         className="DesignSystem-SplitPane-Start"
-        style={PANE_STYLE}
+        style={paneStyle}
         animate={{ width: collapsed ? "100%" : `${fraction * 100}%` }}
         transition={transition}
       >
@@ -342,7 +362,7 @@ export default function SplitPane({
           needs no animation of its own — at full collapse that remainder is 0. */}
       <div
         className="DesignSystem-SplitPane-End"
-        style={{ ...PANE_STYLE, flex: "1 1 0%" }}
+        style={{ ...paneStyle, flex: "1 1 0%" }}
         aria-hidden={collapsed || undefined}
         // React 18 has no `inert` prop: its types reject it and it drops `true`.
         // An empty string reaches the DOM as `inert=""`.
