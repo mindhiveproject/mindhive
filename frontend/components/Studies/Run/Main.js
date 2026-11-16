@@ -2,6 +2,10 @@ import Manager from "./Manager";
 
 import { StyledStudyRun } from "../../styles/StyledStudyPage";
 import { useState, useEffect } from "react";
+import {
+  selectCondition as selectStudyCondition,
+  conditionFlow,
+} from "../../../lib/studyConditions";
 
 // have one landing page to run the study
 // the function should check what is the status of the user (new, ongoing)
@@ -39,45 +43,8 @@ export default function RunStudy({ user, study, task, version }) {
     }
   }, [user, study]);
 
-  const getRandomInt = (min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-  };
-
-  const selectCondition = ({ conditions }) => {
-    let probabilities = conditions
-      .map((condition, num) => {
-        const placesTaken = components[condition?.label] || 0;
-        let placesLeft =
-          parseInt(condition?.probability) - parseInt(placesTaken);
-        if (placesLeft < 0) placesLeft = 0;
-        return Array.from(`${num}`.repeat(placesLeft));
-      })
-      .flat();
-
-    let multiplier = 2;
-    while (probabilities?.length === 0) {
-      probabilities = conditions
-        .map((condition, num) => {
-          const placesTaken = components[condition?.label] || 0;
-          let placesLeft =
-            parseInt(condition?.probability * multiplier) -
-            parseInt(placesTaken);
-          if (placesLeft < 0) placesLeft = 0;
-          return Array.from(`${num}`.repeat(placesLeft));
-        })
-        .flat();
-      multiplier++;
-    }
-
-    const rand = getRandomInt(0, probabilities.length);
-    const conditionNumber = parseInt(probabilities[rand]);
-    return {
-      conditionName: conditions[conditionNumber]?.name,
-      conditionLabel: conditions[conditionNumber]?.label,
-    };
-  };
+  const selectCondition = ({ conditions }) =>
+    selectStudyCondition({ conditions, components });
 
   const getNextStep = ({ stages, currentFlow, currentPosition }) => {
     if (!currentFlow || currentFlow.length === 0) {
@@ -125,9 +92,10 @@ export default function RunStudy({ user, study, task, version }) {
         conditionName,
         conditionLabel,
       });
-      const [branchedFlow] = currentStage?.conditions
-        .filter((c) => c?.label === conditionLabel)
-        .map((c) => c.flow);
+      const branchedFlow = conditionFlow(currentStage?.conditions, {
+        conditionName,
+        conditionLabel,
+      });
       return getNextStep({
         stages,
         currentFlow: branchedFlow,
@@ -185,9 +153,10 @@ export default function RunStudy({ user, study, task, version }) {
             conditionLabel,
           },
         ];
-        const [branchedFlow] = nextBlock?.conditions
-          .filter((c) => c?.label === conditionLabel)
-          .map((c) => c.flow);
+        const branchedFlow = conditionFlow(nextBlock?.conditions, {
+          conditionName,
+          conditionLabel,
+        });
         const remainingSteps = [];
         getNextStep({
           stages: remainingSteps,

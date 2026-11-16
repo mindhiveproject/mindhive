@@ -12,6 +12,10 @@ import { RECORD_STUDY_CONDITIONS } from "../../Mutations/Study";
 import { CURRENT_USER_QUERY } from "../../Queries/User";
 import { GET_GUEST } from "../../Queries/Guest";
 import { STUDY_COMPONENTS } from "../../Queries/Study";
+import {
+  selectCondition as selectStudyCondition,
+  conditionFlow,
+} from "../../../lib/studyConditions";
 
 export default function Manager({
   user,
@@ -80,45 +84,8 @@ export default function Manager({
     setPage(undefined);
   };
 
-  const getRandomInt = (min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-  };
-
-  const selectCondition = ({ conditions }) => {
-    let probabilities = conditions
-      .map((condition, num) => {
-        const placesTaken = components[condition?.label] || 0;
-        let placesLeft =
-          parseInt(condition?.probability) - parseInt(placesTaken);
-        if (placesLeft < 0) placesLeft = 0;
-        return Array.from(`${num}`.repeat(placesLeft));
-      })
-      .flat();
-
-    let multiplier = 2;
-    while (probabilities?.length === 0) {
-      probabilities = conditions
-        .map((condition, num) => {
-          const placesTaken = components[condition?.label] || 0;
-          let placesLeft =
-            parseInt(condition?.probability * multiplier) -
-            parseInt(placesTaken);
-          if (placesLeft < 0) placesLeft = 0;
-          return Array.from(`${num}`.repeat(placesLeft));
-        })
-        .flat();
-      multiplier++;
-    }
-
-    const rand = getRandomInt(0, probabilities.length);
-    const conditionNumber = parseInt(probabilities[rand]);
-    return {
-      conditionName: conditions[conditionNumber]?.name,
-      conditionLabel: conditions[conditionNumber]?.label,
-    };
-  };
+  const selectCondition = ({ conditions }) =>
+    selectStudyCondition({ conditions, components });
 
   const getNextSteps = ({ currentFlow, currentPosition, path, nextSteps }) => {
     if (!currentFlow || currentFlow.length === 0) {
@@ -164,17 +131,15 @@ export default function Manager({
     // between-subjects conditions block
     if (currentStage?.type === "design") {
       // check whether the assignment to a condition is completed or not (is in the path or not)
-      let label;
+      let assigned;
       if (path.map((step) => step?.id).includes(currentStage?.id)) {
         // continue searching inside of the condition branch
-        label = path
-          .filter((step) => step?.id === currentStage?.id)
-          .map((step) => step?.conditionLabel)[0];
+        assigned = path.find((step) => step?.id === currentStage?.id);
       } else {
         const { conditionName, conditionLabel } = selectCondition({
           conditions: currentStage?.conditions,
         });
-        label = conditionLabel;
+        assigned = { conditionName, conditionLabel };
         nextSteps.push({
           ...currentStage,
           type: "branching",
@@ -183,9 +148,7 @@ export default function Manager({
           conditionLabel,
         });
       }
-      const [branchedFlow] = currentStage?.conditions
-        .filter((c) => c?.label === label)
-        .map((c) => c.flow);
+      const branchedFlow = conditionFlow(currentStage?.conditions, assigned);
       return getNextSteps({
         currentFlow: branchedFlow,
         currentPosition: 0,
@@ -246,9 +209,10 @@ export default function Manager({
         setNextStep(undefined);
         updatedPath = updatedPath.concat({ type: "end" });
         // update the study information with the condition name(s) that was used for this participant
+        // counted by condition name (label for paths recorded without one)
         const takenConditions = updatedPath
           .filter((stage) => stage?.type === "branching")
-          .map((stage) => stage?.conditionLabel);
+          .map((stage) => stage?.conditionName || stage?.conditionLabel);
         if (takenConditions?.length) {
           // the server increments the counters (refetched for the next run)
           await recordStudyConditions({

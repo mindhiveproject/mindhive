@@ -84,7 +84,8 @@ const byTitle = (a, b) =>
   });
 
 export default function ComponentSelector({
-  engine,
+  // the study canvas (see canvasAdapter.js)
+  canvas,
   user,
   addFunctions,
   onOpenStudyFlow,
@@ -176,9 +177,7 @@ export default function ComponentSelector({
   });
   const canvasTaskIds = new Set(
     versionsOnly
-      ? (engine?.getModel?.()?.getNodes?.() || [])
-          .map((node) => node?.options?.componentID)
-          .filter(Boolean)
+      ? canvas?.getTaskIds?.() || []
       : []
   );
   const thisStudyLabel = t(
@@ -329,11 +328,11 @@ export default function ComponentSelector({
             )}
             onFocus={() => {
               setSearchFocused(true);
-              engine.getModel().setLocked(true);
+              canvas?.setInteractionLocked?.(true);
             }}
             onBlur={() => {
               setSearchFocused(false);
-              engine.getModel().setLocked(false);
+              canvas?.setInteractionLocked?.(false);
             }}
           />
         </div>

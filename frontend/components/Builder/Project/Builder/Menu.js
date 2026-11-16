@@ -27,7 +27,7 @@ function MediumIcon({ src }) {
 }
 
 export default function Menu({
-  engine,
+  canvas,
   user,
   addFunctions,
   study,
@@ -121,7 +121,7 @@ export default function Menu({
 
       {tab === "addBlock" && (
         <ComponentSelector
-          engine={engine}
+          canvas={canvas}
           user={user}
           addFunctions={addFunctions}
           onOpenStudyFlow={() => setTab("flow")}
@@ -142,7 +142,6 @@ export default function Menu({
 
       {tab === "study" && (
         <StudySettings
-          engine={engine}
           user={user}
           addFunctions={addFunctions}
           study={study}

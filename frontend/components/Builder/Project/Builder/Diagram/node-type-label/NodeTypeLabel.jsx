@@ -21,7 +21,12 @@ export const NodeTypeLabel = ({
           event.preventDefault();
           return;
         }
-        event.dataTransfer.setData('storm-diagram-node', JSON.stringify(model));
+        // read by both study canvases (Flow/StudyFlowCanvas.jsx and
+        // Diagram/widgets/CreatorWidget.jsx)
+        event.dataTransfer.setData(
+          'application/x-mindhive-study-block',
+          JSON.stringify(model)
+        );
       }}
     >
       {name}

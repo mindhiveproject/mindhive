@@ -141,6 +141,11 @@ export default function Builder({ query, user, tab }) {
     descriptionInProposalCardId,
     tags,
     createVersion = false,
+    // false: save only the design (diagram and flow), not the settings that
+    // are sent along with it. With several people in the builder, a save made
+    // for someone else's canvas change must not write back this browser's
+    // copy of the tags or description card.
+    includeSettings = true,
   }) => {
     const shouldCreate =
       selector === "add" || area === "cloneofstudy" || (projectMode && !study?.id);
@@ -229,12 +234,16 @@ export default function Builder({ query, user, tab }) {
         input: {
           flow,
           diagram,
-          descriptionInProposalCard: descriptionInProposalCardId
-            ? { connect: { id: descriptionInProposalCardId } }
-            : null,
-          tags: tags?.length ? { set: tags } : { set: [] },
           // `status` is not saved here: setStudyDataCollection owns it (see
           // lib/studyLifecycle.js), and an autosave would resend a stale one.
+          ...(includeSettings
+            ? {
+                descriptionInProposalCard: descriptionInProposalCardId
+                  ? { connect: { id: descriptionInProposalCardId } }
+                  : null,
+                tags: tags?.length ? { set: tags } : { set: [] },
+              }
+            : {}),
           ...(shouldAdvanceCollectionVersion
             ? { currentVersion: newVersionId }
             : {}),

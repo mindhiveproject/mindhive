@@ -60,10 +60,68 @@ async function visual(prisma, itemId, profileId) {
   return mayWrite ? "write" : "read";
 }
 
+/**
+ * The Study Builder design (`study:<id>`). The people who may edit the study
+ * (studyUpdateWhere in ../access.ts: author, collaborators, the team of its
+ * project board, staff of its classes or of its authors' classes) and user
+ * admins may edit it together. Once the study is submitted it is locked: they
+ * may still open it and follow along, but not change it. Nobody else may
+ * open it.
+ *
+ * @type {DocumentRule}
+ */
+async function study(prisma, itemId, profileId) {
+  if (!profileId) return "none";
+  const item = await prisma.study.findUnique({
+    where: { id: itemId },
+    select: { id: true, dataCollectionStatus: true },
+  });
+  if (!item) return "none";
+
+  const me = { id: profileId };
+  const classStaff = {
+    some: {
+      OR: [
+        { creator: { is: me } },
+        { teachingTeam: { some: me } },
+        { mentors: { some: me } },
+      ],
+    },
+  };
+  const authorOrCollaborator = [
+    { author: { is: me } },
+    { collaborators: { some: me } },
+  ];
+  const editor = await prisma.study.findFirst({
+    where: {
+      id: itemId,
+      OR: [
+        ...authorOrCollaborator,
+        { proposal: { some: { OR: authorOrCollaborator } } },
+        { classes: classStaff },
+        { author: { is: { studentIn: classStaff } } },
+        { collaborators: { some: { studentIn: classStaff } } },
+      ],
+    },
+    select: { id: true },
+  });
+  const admin = editor
+    ? null
+    : await prisma.profile.findFirst({
+        where: { id: profileId, permissions: { some: { canManageUsers: true } } },
+        select: { id: true },
+      });
+  if (!editor && !admin) return "none";
+
+  // a submitted study is locked (lib/studyLock.js in the frontend)
+  return item.dataCollectionStatus === "SUBMITTED" ? "read" : "write";
+}
+
 // Keyed by Prisma model name, i.e. the part before ":" in the document name.
 /** @type {Record<string, DocumentRule>} */
 const rules = {
   visual,
+  study,
 };
 
 /**

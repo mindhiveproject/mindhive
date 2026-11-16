@@ -438,7 +438,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # Upvote (true) or un-upvote (false) a review as the session user.
         toggleReviewUpvote(reviewId: ID!, upvote: Boolean!): Review
         # Participant run writes (guests and signed-in participants).
-        # Increments Study.components condition counters.
+        # Increments Study.components condition counters. The values are
+        # condition names (labels from clients older than the name counting).
         recordStudyConditions(studyId: ID!, conditionLabels: [String!]!): Boolean
         # Saves a guest's studiesInfo, identified by the guest publicId.
         updateGuestStudiesInfo(publicId: String!, studiesInfo: JSON!): Guest

@@ -9,7 +9,8 @@ const MAX_LABEL_LENGTH = 200;
 /**
  * Add one to the between-subjects condition counters in Study.components for
  * each condition this participant was assigned to. The counts drive weighted
- * random assignment (Studies/Run/Manager.js selectCondition).
+ * random assignment (frontend/lib/studyConditions.js). The keys are condition
+ * names; `conditionLabels` keeps its name for clients that still send labels.
  */
 export async function recordStudyConditions(
   root: any,
