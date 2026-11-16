@@ -21,7 +21,9 @@ import {
   graphFromDiagram,
   graphFingerprint,
   serializeGraph,
+  layoutGraph,
 } from "../../../../lib/studyGraph";
+import Button from "../../../DesignSystem/Button";
 import { writeGraph, meta } from "../../../../lib/studyGraph/yjs";
 import { useCardCollabSession } from "../../../../lib/useCardCollabSession";
 import { isStudyLocked } from "../../../../lib/studyLock";
@@ -667,14 +669,58 @@ function FlowEditor({
     shorten,
   };
 
+  // The block open in the side panel (its subtitle is edited there, not on
+  // the canvas); shared with others as "editing" when collaborating
+  const [panelNodeId, setPanelNodeId] = useState(null);
+  const onPanelNodeChange = (nodeId) => {
+    setPanelNodeId(nodeId);
+    if (provider) setEditing(nodeId);
+  };
+
+  // A subtitle edited on the canvas: like the side panel, it changes every
+  // block showing the same task version
+  const updateSubtitle = (nodeId, subtitle) => {
+    const node = getNode(nodeId);
+    if (!node || isCanvasLockedRef.current) return;
+    store.updateNodesWhere(
+      (n) =>
+        n.type === NODE_TYPES.TASK &&
+        n.data?.componentID === node.data?.componentID &&
+        n.data?.testId === node.data?.testId,
+      { subtitle }
+    );
+  };
+
+  // "Tidy up": arrange the design as a tree from the starting point (one
+  // undo step), then show all of it
+  const blockCount = store.graph.nodes.filter(
+    (n) => n.type === NODE_TYPES.TASK || n.type === NODE_TYPES.DESIGN
+  ).length;
+  const tidyUp = () => {
+    if (isCanvasLockedRef.current) return;
+    const sizes = {};
+    (reactFlowRef.current?.getNodes() || []).forEach((n) => {
+      if (n.measured?.width && n.measured?.height) {
+        sizes[n.id] = { width: n.measured.width, height: n.measured.height };
+      }
+    });
+    const positions = layoutGraph(store.graphRef.current, { sizes });
+    store.moveNodes(positions, { undoable: true });
+    requestAnimationFrame(() =>
+      reactFlowRef.current?.fitView({ padding: 0.2, duration: 400 })
+    );
+  };
+
   const canvasActions = {
     studyId: study?.id,
     isLocked: isCanvasLocked,
+    panelNodeId,
     openComponentModal,
     openDesignSettings,
     openStudyPreview: () => panelOpenersRef.current.openStudyPreview?.(),
     duplicateNode,
     updateComment,
+    updateSubtitle,
   };
 
   const renderCanvas = (openers) => {
@@ -820,19 +866,35 @@ function FlowEditor({
         isCanvasLocked={isCanvasLocked}
         canUndo={store.canUndo}
         undoCanvas={store.undo}
-        onPanelNodeChange={provider ? setEditing : undefined}
+        onPanelNodeChange={onPanelNodeChange}
         topBarExtras={
-          provider ? (
-            <CollaboratorsBar others={others} connected={connected} />
-          ) : workingAlone ? (
-            <CollaboratorsBar
-              others={[]}
-              connected={false}
-              message={t("collaboration.unavailable", {}, {
-                default: "Live collaboration is unavailable right now",
-              })}
-            />
-          ) : null
+          <>
+            {provider ? (
+              <CollaboratorsBar others={others} connected={connected} />
+            ) : workingAlone ? (
+              <CollaboratorsBar
+                others={[]}
+                connected={false}
+                message={t("collaboration.unavailable", {}, {
+                  default: "Live collaboration is unavailable right now",
+                })}
+              />
+            ) : null}
+            {!isCanvasLocked && blockCount >= 2 && (
+              <Button
+                id="tidyUpButton"
+                type="button"
+                variant="subtle"
+                onClick={tidyUp}
+                title={t("canvas.tidyUpHint", {}, {
+                  default:
+                    "Arrange the blocks from the starting point down, branches side by side",
+                })}
+              >
+                {t("canvas.tidyUp", {}, { default: "Tidy up" })}
+              </Button>
+            )}
+          </>
         }
       />
       <CycleLinkPreventedModal

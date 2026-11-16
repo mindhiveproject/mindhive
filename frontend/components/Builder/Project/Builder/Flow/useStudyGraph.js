@@ -164,15 +164,21 @@ export default function useStudyGraph(
     [commit]
   );
 
-  /** positions: { [nodeId]: { x, y } } */
+  /**
+   * positions: { [nodeId]: { x, y } }. Moving blocks by hand is not an undo
+   * step; rearranging the whole design ("Tidy up") is (`undoable`).
+   */
   const moveNodes = useCallback(
-    (positions) =>
-      commit((g) => ({
-        ...g,
-        nodes: g.nodes.map((n) =>
-          positions[n.id] ? { ...n, position: positions[n.id] } : n
-        ),
-      })),
+    (positions, { undoable = false } = {}) =>
+      commit(
+        (g) => ({
+          ...g,
+          nodes: g.nodes.map((n) =>
+            positions[n.id] ? { ...n, position: positions[n.id] } : n
+          ),
+        }),
+        { undoable }
+      ),
     [commit]
   );
 

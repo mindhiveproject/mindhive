@@ -41,6 +41,97 @@ function OutHandle({ id, isLocked, isFull, style }) {
   );
 }
 
+const PencilIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden focusable="false">
+    <path
+      d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+/**
+ * A task block's subtitle, edited in place: double-click it or use the
+ * pencil; Enter or leaving the field saves, Escape cancels. Not editable on a
+ * locked study, nor while the block is open in the side panel (which edits
+ * the same field and would save over it).
+ */
+function Subtitle({ id, subtitle, canEdit }) {
+  const { t } = useTranslation("builder");
+  const actions = useCanvasActions();
+  const [isEditing, setIsEditing] = useState(false);
+  const cancelledRef = useRef(false);
+
+  useEffect(() => {
+    if (!canEdit) setIsEditing(false);
+  }, [canEdit]);
+
+  const editLabel = t("canvas.editSubtitle", {}, { default: "Edit subtitle" });
+
+  if (isEditing) {
+    return (
+      <input
+        className="node-subtitle-input nodrag nowheel"
+        aria-label={editLabel}
+        defaultValue={subtitle || ""}
+        maxLength={300}
+        autoFocus
+        onFocus={(event) => event.target.select()}
+        onKeyDown={(event) => {
+          event.stopPropagation();
+          if (event.key === "Enter") {
+            event.preventDefault();
+            event.currentTarget.blur();
+          } else if (event.key === "Escape") {
+            cancelledRef.current = true;
+            event.currentTarget.blur();
+          }
+        }}
+        onBlur={(event) => {
+          const value = event.target.value.trim();
+          if (!cancelledRef.current && value !== (subtitle || "")) {
+            actions.updateSubtitle?.(id, value);
+          }
+          cancelledRef.current = false;
+          setIsEditing(false);
+        }}
+      />
+    );
+  }
+
+  return (
+    <div
+      className="node-subtitle"
+      onDoubleClick={
+        canEdit
+          ? (event) => {
+              event.stopPropagation();
+              setIsEditing(true);
+            }
+          : undefined
+      }
+    >
+      <span className="node-subtitle-text" title={subtitle || undefined}>
+        {subtitle}
+      </span>
+      {canEdit && (
+        <button
+          type="button"
+          className="node-subtitle-edit nodrag"
+          title={editLabel}
+          aria-label={editLabel}
+          onClick={(event) => {
+            event.stopPropagation();
+            setIsEditing(true);
+          }}
+        >
+          <PencilIcon />
+        </button>
+      )}
+    </div>
+  );
+}
+
 export const AnchorNode = memo(function AnchorNode({ data }) {
   const { t } = useTranslation("builder");
   const actions = useCanvasActions();
@@ -143,7 +234,11 @@ export const TaskNode = memo(function TaskNode({ id, data }) {
       <InHandle isLocked={actions.isLocked} />
 
       <div className="node-content">
-        <div>{data.subtitle}</div>
+        <Subtitle
+          id={id}
+          subtitle={data.subtitle}
+          canEdit={!actions.isLocked && actions.panelNodeId !== id}
+        />
         {recordingSources.length > 0 && (
           <div className="node-recording">
             <RecordDotIcon width={16} height={16} className="node-recording-dot" />

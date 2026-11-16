@@ -82,6 +82,61 @@ export const StyledFlowCanvas = styled.div`
     pointer-events: none;
   }
 
+  /* label halfway along a link: the condition after a between-subjects
+     block, and the remove button */
+  .studyEdgeLabel {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 4px 2px 8px;
+    border: 1px solid #d0d5d4;
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    color: #3b3b3b;
+    font: var(--MH-Type-Label-Small);
+    white-space: nowrap;
+    pointer-events: all;
+  }
+
+  .studyEdgeLabel.removeOnly {
+    padding: 2px;
+  }
+
+  .studyEdgeLabel.selected {
+    border-color: #007c70;
+  }
+
+  .studyEdgeRemove {
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #f9dedc;
+    color: #8f1f14;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .studyEdgeRemove:hover,
+  .studyEdgeRemove:focus-visible {
+    background: #8f1f14;
+    color: #ffffff;
+  }
+
+  /* next to the zoom controls (bottom right is under the side panel) */
+  .react-flow__minimap.studyMinimap {
+    margin-left: 64px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  }
+
   .react-flow__controls {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
     border-radius: 8px;

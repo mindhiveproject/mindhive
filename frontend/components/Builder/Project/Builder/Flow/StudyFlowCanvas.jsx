@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ReactFlow,
   Controls,
+  MiniMap,
   MarkerType,
   applyNodeChanges,
   applyEdgeChanges,
@@ -14,12 +15,28 @@ import {
   OUT_HANDLE,
   checkConnection,
 } from "../../../../../lib/studyGraph";
+import { getTaskTypeColor } from "../../../../../lib/taskTypeColors";
 import { nodeTypes } from "./nodes";
+import { edgeTypes, EdgeUiProvider, conditionText } from "./StudyEdge";
 import { RemoteCursors } from "./Collaborators";
 import { StyledFlowCanvas } from "./styles";
 
 // Payload the side panel's draggable cards put on the drag (NodeTypeLabel)
 export const DRAG_DATA_TYPE = "application/x-mindhive-study-block";
+
+// The minimap appears once a study has this many task and design blocks
+const MINIMAP_MIN_BLOCKS = 5;
+
+// A link keeps its remove button this long after the pointer leaves it, so
+// the pointer can reach the button
+const EDGE_HOVER_GRACE_MS = 200;
+
+const minimapColor = (node) => {
+  if (node.type === NODE_TYPES.COMMENT) return "#fff59d";
+  if (node.type === NODE_TYPES.ANCHOR) return "#9a9a9a";
+  if (node.type === NODE_TYPES.DESIGN) return getTaskTypeColor("DESIGN");
+  return getTaskTypeColor(node.data?.taskType);
+};
 
 const EDGE_MARKER = {
   type: MarkerType.ArrowClosed,
@@ -76,8 +93,10 @@ const LIVE_DRAG_INTERVAL_MS = 80;
 
 function toFlowEdges(graph, previous, isLocked) {
   const previousById = new Map(previous.map((e) => [e.id, e]));
+  const nodeById = new Map(graph.nodes.map((n) => [n.id, n]));
   return graph.edges.map((edge) => ({
     id: edge.id,
+    type: "study",
     source: edge.source,
     sourceHandle: edge.sourceHandle || OUT_HANDLE,
     target: edge.target,
@@ -85,6 +104,12 @@ function toFlowEdges(graph, previous, isLocked) {
     markerEnd: EDGE_MARKER,
     selected: !!previousById.get(edge.id)?.selected,
     deletable: !isLocked,
+    data: {
+      condition: conditionText(
+        nodeById.get(edge.source),
+        edge.sourceHandle || OUT_HANDLE
+      ),
+    },
   }));
 }
 
@@ -118,6 +143,39 @@ export default function StudyFlowCanvas({
   useEffect(() => {
     setEdges((previous) => toFlowEdges(graph, previous, isLocked));
   }, [graph, isLocked]);
+
+  // The link under the pointer (it shows its remove button)
+  const [hoveredEdgeId, setHoveredEdgeId] = useState(null);
+  const unhoverTimerRef = useRef(null);
+  const hoverEdge = useCallback((id) => {
+    clearTimeout(unhoverTimerRef.current);
+    setHoveredEdgeId(id);
+  }, []);
+  const unhoverEdge = useCallback((id) => {
+    clearTimeout(unhoverTimerRef.current);
+    unhoverTimerRef.current = setTimeout(
+      () => setHoveredEdgeId((current) => (current === id ? null : current)),
+      EDGE_HOVER_GRACE_MS
+    );
+  }, []);
+  useEffect(() => () => clearTimeout(unhoverTimerRef.current), []);
+  const edgeUi = useMemo(
+    () => ({
+      isLocked,
+      hoveredEdgeId,
+      hoverEdge,
+      unhoverEdge,
+      removeEdge: (id) => {
+        setHoveredEdgeId(null);
+        store.removeElements({ edgeIds: [id] });
+      },
+    }),
+    [isLocked, hoveredEdgeId, hoverEdge, unhoverEdge, store]
+  );
+
+  const blockCount = graph.nodes.filter(
+    (n) => n.type === NODE_TYPES.TASK || n.type === NODE_TYPES.DESIGN
+  ).length;
 
   // In a shared design others see a block move while it is dragged
   const lastLiveDragRef = useRef(0);
@@ -245,10 +303,14 @@ export default function StudyFlowCanvas({
       onMouseMove={onMouseMove}
       onMouseLeave={() => onCursorMove?.(null)}
     >
+      <EdgeUiProvider value={edgeUi}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
+        onEdgeMouseEnter={(event, edge) => hoverEdge(edge.id)}
+        onEdgeMouseLeave={(event, edge) => unhoverEdge(edge.id)}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeDrag={onNodeDrag}
@@ -278,8 +340,23 @@ export default function StudyFlowCanvas({
         attributionPosition="bottom-center"
       >
         <Controls position="bottom-left" showInteractive={false} />
+        {blockCount >= MINIMAP_MIN_BLOCKS && (
+          <MiniMap
+            // bottom right is under the side panel; this sits next to the
+            // zoom controls
+            position="bottom-left"
+            className="studyMinimap"
+            nodeColor={minimapColor}
+            nodeStrokeWidth={0}
+            nodeBorderRadius={8}
+            pannable
+            zoomable
+            ariaLabel="Study overview"
+          />
+        )}
         {others.length > 0 && <RemoteCursors others={others} />}
       </ReactFlow>
+      </EdgeUiProvider>
     </StyledFlowCanvas>
   );
 }

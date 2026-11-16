@@ -1,6 +1,7 @@
 const constants = require("./constants");
 const rules = require("./rules");
 const { buildStudyFlow } = require("./flow");
+const { layoutGraph } = require("./layout");
 const storm = require("./storm");
 
 /** Saved study.diagram (any supported format) → graph, or an empty graph. */
@@ -65,6 +66,7 @@ module.exports = {
   ...rules,
   ...storm,
   buildStudyFlow,
+  layoutGraph,
   graphFromDiagram,
   serializeGraph,
 };
