@@ -24,7 +24,10 @@ import {
   getClassTemplateBoards,
   getClassTemplateBoardTitle,
 } from "../../../../../lib/classTemplateBoards";
-import { isClassTeacherOrMentor as classUserIsTeacherOrMentor } from "../../../../../lib/classTeacherUtils";
+import {
+  isClassTeacher,
+  isClassTeacherOrMentor as classUserIsTeacherOrMentor,
+} from "../../../../../lib/classTeacherUtils";
 import { useClassTablePrefs } from "../useClassTablePrefs";
 
 // Toggle/filter chrome — not a CTA. Keep as local styled button.
@@ -278,6 +281,15 @@ export default function ResourceTab({ resources, myclass, user }) {
 
   const handleOpenPublishConfirm = (resource) => {
     if (!resource?.id) return;
+    if (!isClassTeacher(myclass, user?.id)) {
+      alert(
+        t(
+          "resource.publishTeacherOnly",
+          "Only the class teacher and co-teachers can publish or unpublish resources for students. Ask the class teacher to make this change."
+        )
+      );
+      return;
+    }
     setResourceForPublishModal(resource);
   };
 
@@ -586,6 +598,8 @@ export default function ResourceTab({ resources, myclass, user }) {
       user?.id
     );
     const canManage = isOwner || isClassTeacherOrMentor;
+    // Only the class creator and co-teachers may publish to students.
+    const canPublish = isClassTeacher(myclass, user?.id);
     const isCopying = params?.context?.copyingResourceId === resource?.id;
 
     const items = [
@@ -606,6 +620,15 @@ export default function ResourceTab({ resources, myclass, user }) {
                 ? t("resource.unpublish", "Unpublish")
                 : t("resource.publishToStudents", "Publish to students"),
               onClick: () => {
+                if (!canPublish) {
+                  alert(
+                    t(
+                      "resource.publishTeacherOnly",
+                      "Only the class teacher and co-teachers can publish or unpublish resources for students. Ask the class teacher to make this change."
+                    )
+                  );
+                  return;
+                }
                 const confirmMessage = isPublished
                   ? t("resource.revokeConfirm", "Are you sure you want to unpublish? Students will no longer see this resource.")
                   : t("resource.submitConfirm", "Are you sure you want to publish? Students will see this resource.");
@@ -932,6 +955,7 @@ export default function ResourceTab({ resources, myclass, user }) {
         onClose={() => setBulkActionsModalOpen(false)}
         selectedResources={selectedResources}
         myclass={myclass}
+        canPublish={isClassTeacher(myclass, user?.id)}
         onSuccess={() => {
           gridRef.current?.api?.deselectAll();
         }}
