@@ -46,10 +46,16 @@ export default function usePresence({ provider, user }) {
 
   useEffect(() => {
     if (!awareness || !user?.id) return undefined;
-    awareness.setLocalStateField("user", {
-      id: user.id,
-      name: displayName(user),
-      color: userColor(user.id),
+    // setLocalState, not setLocalStateField: the cleanup below nulls the
+    // state, and setLocalStateField ignores a null state, so after a re-run
+    // (React StrictMode in dev) nobody would be published.
+    awareness.setLocalState({
+      ...(awareness.getLocalState() || {}),
+      user: {
+        id: user.id,
+        name: displayName(user),
+        color: userColor(user.id),
+      },
     });
     const sync = () => {
       const list = [];
