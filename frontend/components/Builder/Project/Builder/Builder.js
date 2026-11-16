@@ -360,14 +360,6 @@ export default function Builder({
             />
           )}
         </div>
-        {physiologicalDataEnabled && (
-          <DataSources
-            study={study}
-            user={user}
-            dataSourceSettingsId={dataSourceSettingsId}
-            onOpenSettings={openDataSourceSettings}
-          />
-        )}
         {!isPreviewOpen && (
           <div
             className={clsx(
@@ -416,6 +408,14 @@ export default function Builder({
               >
                 {t("builder.addComment", {}, { default: "Add a comment" })}
               </Button>
+              {physiologicalDataEnabled && (
+                <DataSources
+                  study={study}
+                  user={user}
+                  dataSourceSettingsId={dataSourceSettingsId}
+                  onOpenSettings={openDataSourceSettings}
+                />
+              )}
               {needsStartingPoint && (
                 <Button
                   type="button"

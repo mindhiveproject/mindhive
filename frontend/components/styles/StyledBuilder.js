@@ -416,7 +416,6 @@ export const StyledBuilderArea = styled.div`
 export const StyledCanvasBuilder = styled.div`
   #commentButton {
     background: var(--MH-Theme-Accent-Light) !important;
-    color: var(--MH-Theme-Accent-Dark) !important;
     transition: background-color 0.2s, color 0.2s;
   }
   #commentButton:hover:not(:disabled) {
@@ -1211,7 +1210,7 @@ export const StyledCanvasBuilder = styled.div`
     position: relative;
     overflow: hidden;
 
-    > *:not(.sidepanel):not(.boardTopBar):not(.dataSourcesPanel) {
+    > *:not(.sidepanel):not(.boardTopBar) {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -1327,13 +1326,6 @@ export const StyledCanvasBuilder = styled.div`
     justify-content: flex-end;
     gap: 8px;
     flex-shrink: 0;
-  }
-
-  .dataSourcesPanel {
-    position: absolute;
-    z-index: 10;
-    left: 10px;
-    bottom: 10px;
   }
 
   .background {

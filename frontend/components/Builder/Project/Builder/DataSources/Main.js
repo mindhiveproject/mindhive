@@ -9,14 +9,12 @@ import {
   DELETE_STUDY_DATA_SOURCE,
 } from "../../../../Mutations/DataSourceBlock";
 
-import DataSourcesPanel from "./Panel";
+import DataSourcesTopBarButton from "./TopBarButton";
 import LinkDataSourceModal from "./LinkModal";
 
 /**
- * Owns the study's linked data sources end to end: the persistent bottom-left
- * panel (always visible — linking real-time devices into a study is a big
- * commitment, not something to bury in a menu tab) and the link-a-source
- * modal it opens. Settings for one linked source live in the side panel
+ * Owns the study's linked data sources end to end: the "External datasource"
+ * button in the canvas top bar and the link-a-source modal it opens. Settings for one linked source live in the side panel
  * instead (Builder.js swaps DataSources/Settings in, like a block's panel),
  * so opening them here just hands the selection up and gets out of the way.
  */
@@ -67,11 +65,9 @@ export default function DataSources({
 
   return (
     <>
-      <DataSourcesPanel
+      <DataSourcesTopBarButton
         sources={sources}
-        selectedSourceId={dataSourceSettingsId}
         onOpenLink={() => setLinkModalOpen(true)}
-        onOpenSettings={openSettings}
       />
       <LinkDataSourceModal
         open={isLinkModalOpen}

@@ -1292,6 +1292,7 @@
 		"favoriteAddLabel": "Add to favorites",
 		"favoriteRemoveLabel": "Remove from favorites",
 		"linkLabel": "Link",
+		"linkedList": "Linked: {{names}}",
 		"linkModal": {
 			"catalogEmpty": "No data sources match your search.",
 			"catalogHeading": "All Data Sources",
@@ -1311,6 +1312,7 @@
 		"panelEmpty": "No data sources linked to this study yet.",
 		"panelSubtitle": "This study collects data from external devices",
 		"panelTitle": "External data sources",
+		"topBarButton": "External datasource",
 		"settings": {
 			"advancedOptions": "Advanced Options",
 			"close": "Close",
