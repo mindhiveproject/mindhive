@@ -2,6 +2,9 @@ import { createContext, memo, useContext } from "react";
 import { BaseEdge, EdgeLabelRenderer, getBezierPath } from "@xyflow/react";
 import useTranslation from "next-translate/useTranslation";
 
+import Chip from "../../../../DesignSystem/Chip";
+import { useCanvasActions } from "./CanvasActions";
+
 // What a link needs from the canvas: which link the pointer is on, and how to
 // remove one. Provided by StudyFlowCanvas.
 const EdgeUi = createContext({});
@@ -15,6 +18,7 @@ export const EdgeUiProvider = EdgeUi.Provider;
  */
 export const StudyEdge = memo(function StudyEdge({
   id,
+  source,
   sourceX,
   sourceY,
   targetX,
@@ -28,6 +32,7 @@ export const StudyEdge = memo(function StudyEdge({
 }) {
   const { t } = useTranslation("builder");
   const ui = useContext(EdgeUi);
+  const actions = useCanvasActions();
   const [path, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -43,31 +48,48 @@ export const StudyEdge = memo(function StudyEdge({
     return <BaseEdge path={path} markerEnd={markerEnd} style={style} interactionWidth={24} />;
   }
 
-  const removeLabel = t("canvas.removeLink", {}, { default: "Remove link" });
+  const removeLabel = t("canvas.deleteLink", {}, { default: "Delete link" });
+  const settingsLabel = t("canvas.openConditionSettings", {}, {
+    default: "Open the block's condition settings",
+  });
   return (
     <>
       <BaseEdge path={path} markerEnd={markerEnd} style={style} interactionWidth={24} />
       <EdgeLabelRenderer>
         <div
-          className={`studyEdgeLabel nodrag nopan${selected ? " selected" : ""}${condition ? "" : " removeOnly"}`}
-          style={{ transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)` }}
+          className="studyEdgeLabel nodrag nopan"
+          // the chip stays centred on the link; the delete button hangs below it
+          style={{
+            transform: `translate(-50%, ${condition ? "-16px" : "-50%"}) translate(${labelX}px, ${labelY}px)`,
+          }}
           // moving from the link onto its label keeps the button
           onMouseEnter={() => ui.hoverEdge?.(id)}
           onMouseLeave={() => ui.unhoverEdge?.(id)}
         >
-          {condition && <span className="studyEdgeCondition">{condition}</span>}
+          {condition && (
+            // opens the settings of the between-subjects block the link leaves
+            <button
+              type="button"
+              className="studyEdgeCondition"
+              title={settingsLabel}
+              onClick={(event) => {
+                event.stopPropagation();
+                actions.openDesignSettings?.({ nodeId: source });
+              }}
+            >
+              <Chip label={condition} variant="static" tone="neutral" truncate={false} />
+            </button>
+          )}
           {showRemove && (
             <button
               type="button"
               className="studyEdgeRemove"
-              title={removeLabel}
-              aria-label={removeLabel}
               onClick={(event) => {
                 event.stopPropagation();
                 ui.removeEdge?.(id);
               }}
             >
-              ×
+              {removeLabel}
             </button>
           )}
         </div>
