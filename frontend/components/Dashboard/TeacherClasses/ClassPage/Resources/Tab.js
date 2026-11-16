@@ -897,9 +897,10 @@ export default function ResourceTab({ resources, myclass, user }) {
         )}
       </div>
 
-      <div style={{ width: "100%", height: "600px" }}>
-        <div className="ag-theme-quartz" style={{ height: "100%", width: "100%" }}>
+      <div style={{ width: "100%" }}>
+        <div className="ag-theme-quartz" style={{ width: "100%" }}>
           <AgGridReact
+            domLayout="autoHeight"
             ref={gridRef}
             rowData={filteredResources}
             columnDefs={columnDefs}

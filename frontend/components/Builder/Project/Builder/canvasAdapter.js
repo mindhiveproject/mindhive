@@ -9,6 +9,7 @@ import { OutCustomPort } from "./Diagram/models/OutPortModel";
 //                                    keys and drags (Storm only)
 //   hasStartingPoint()
 //   sharesTask(node)                 another block uses the same task
+//   getTaskIds()                     task ids of the blocks on the canvas
 //   updateTaskNodes({ componentID, testId }, patch)
 //   removeNode(node)                 one undo step
 //   getDesignConditions(node) / setDesignConditions(node, conditions)
@@ -51,6 +52,10 @@ export function createStormCanvas({
       }
       engine?.repaintCanvas?.();
     },
+    getTaskIds: () =>
+      nodes()
+        .map((n) => n?.options?.componentID)
+        .filter(Boolean),
     getDesignConditions: (node) =>
       Object.values(node?.ports || {})
         .filter((port) => port?.options?.type === "outCustomPort")

@@ -57,7 +57,7 @@ export const builderTours = {
       },
       {
         element: '#sidepanel',
-        intro: "This is the menu of blocks you can use in your study.<ul><li>Basic Blocks: These are blocks offering a fully customizable experience for your participants.</li><li>Tasks: Use tasks to measure participant's behavior.</li><li>Survey: Employ these questionnaires to collect data from your participants.</li><li>Study design: Select a block from this category to control your study design, for example, when creating a between-subjects design.</li><li>Templates: Here you can find the same pre-made study that are in the Discover Area.</li></ul>",
+        intro: "This is the menu of blocks you can use in your study.Use the chips to show one type at a time, or All to see everything.<ul><li>Tasks: Use tasks to measure participant's behavior.</li><li>Surveys: Employ these questionnaires to collect data from your participants.</li><li>Blocks: These are blocks offering a fully customizable experience for your participants.</li><li>Templates: Here you can find the same pre-made study that are in the Discover Area.</li></ul>To create a between-subjects design, go to the Study Flow tab.",
         position: "auto",
         disableInteraction: false
       },

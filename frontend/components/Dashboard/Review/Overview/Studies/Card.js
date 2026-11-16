@@ -5,8 +5,14 @@ export default function Card({ study }) {
   const { t } = useTranslation("builder");
   const imageURL = getStudyImageUrl(study);
 
+  // Supervised studies collect once submitted; self-managed ones once
+  // labelled so (lib/studyLifecycle.js).
+  const collecting =
+    study?.dataCollectionStatus === "SUBMITTED" ||
+    collecting;
+
   let status;
-  switch (study?.status) {
+  switch (collecting ? "COLLECTING_DATA" : study?.status) {
     case "SUBMITTED_AS_PROPOSAL":
       status = t("review.proposalTag");
       break;
@@ -45,14 +51,14 @@ export default function Card({ study }) {
     <div className="card">
       <div className="headline">
         {study?.featured && <div className="p12">{t("review.featuredProject")}</div>}
-        {study?.status !== "COLLECTING_DATA" && (
+        {!collecting && (
           <div className="p12">
             {typeof reviewCount === "undefined" || reviewCount < 1
               ? t("review.reviewUnder")
               : t("review.reviewOverOne", { count: reviewCount })}
           </div>
         )}
-        {study?.status === "COLLECTING_DATA" && (
+        {collecting && (
           <div className="p12">
             {activeParticipantsCount === 0
               ? t("review.participantUnder")
@@ -74,17 +80,17 @@ export default function Card({ study }) {
       </div>
       <div className="lowPanel">
         <div>
-          {study?.status === "COLLECTING_DATA" &&
+          {collecting &&
             study?.dataCollectionOpenForParticipation && (
               <div className="tag peerreview">{status}</div>
             )}
-          {study?.status === "COLLECTING_DATA" &&
+          {collecting &&
             !study?.dataCollectionOpenForParticipation && (
               <div className="tag closed">{t("review.closedForParticipation")}</div>
             )}
         </div>
         <div className="options">
-          {study?.status === "COLLECTING_DATA" &&
+          {collecting &&
             study?.dataCollectionOpenForParticipation && (
               <div className="option">
                 <img src="/assets/icons/review/participate.svg" />

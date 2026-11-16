@@ -1583,7 +1583,9 @@
 		"rosterDescription": "{{count}} alunos matriculados nesta turma.",
 		"shareMessage": "Compartilhe o link abaixo com seus alunos para convidá-los a participar de sua aula",
 		"student": "Nome do aluno/nome de usuário",
-		"tab": "Estudantes"
+		"tab": "Estudantes",
+		"signInBy": "Precisa fazer login antes de {{date}}",
+		"identityRemovalNotice": "{{count}} alunos marcados abaixo não fazem login há dois anos ou quase isso. A partir de {{date}}, seus nomes, endereços de e-mail e outros dados pessoais serão removidos e eles sairão da turma, a menos que façam login no MindHive antes disso."
 	},
 	"studentsWillHaveAccessTo": "Seus alunos terão acesso a:",
 	"studentUsername": "Aluno/Nome de usuário",

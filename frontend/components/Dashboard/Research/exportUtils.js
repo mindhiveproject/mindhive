@@ -21,6 +21,10 @@ const EXPORT_QUERY = `
         peerFeedbackStatus
         projectReportStatus
         reviewsCount
+        updatedAt
+        author {
+          id
+        }
         collaborators {
           id
         }
@@ -77,6 +81,10 @@ const BOARD_EXPORT_QUERY = `
       peerFeedbackStatus
       projectReportStatus
       reviewsCount
+      updatedAt
+      author {
+        id
+      }
       collaborators {
         id
       }
@@ -414,16 +422,24 @@ const selectBoardsForClass = (
   const boardsByStudentId = new Map();
   const unownedBoards = [];
 
+  // Class students on each board (author and collaborators).
+  const classStudentCountByBoard = new Map();
   candidateBoards.forEach((board) => {
     const collaborators = Array.isArray(board.collaborators)
       ? board.collaborators
       : [];
-    const collaboratorIds = collaborators
-      .map((collab) => collab?.id)
-      .filter(Boolean);
+    // A board also belongs to its author, who is not always a collaborator.
+    const collaboratorIds = [
+      ...new Set(
+        [board.author?.id, ...collaborators.map((collab) => collab?.id)].filter(
+          Boolean
+        )
+      ),
+    ];
     const classCollaboratorIds = collaboratorIds.filter((id) =>
       studentMap.has(id)
     );
+    classStudentCountByBoard.set(board, classCollaboratorIds.length);
 
     if (classCollaboratorIds.length === 0) {
       unownedBoards.push(board);
@@ -443,8 +459,20 @@ const selectBoardsForClass = (
 
   const choosePreferredBoard = (boardsForStudent = []) => {
     if (!boardsForStudent || boardsForStudent.length === 0) return null;
-    const byIsMain = boardsForStudent.find((b) => b.isMain);
-    if (byIsMain) return byIsMain;
+    // A student can have two main projects (they joined a project that was
+    // already someone's main). Prefer the one with the fewest class students
+    // on it, then the most recently updated, so the pick does not depend on
+    // query order.
+    const mains = boardsForStudent.filter((b) => b.isMain);
+    if (mains.length) {
+      // Author and collaborators, as counted above.
+      const classStudentCount = (b) => classStudentCountByBoard.get(b) || 0;
+      return [...mains].sort(
+        (a, b) =>
+          classStudentCount(a) - classStudentCount(b) ||
+          String(b.updatedAt || "").localeCompare(String(a.updatedAt || ""))
+      )[0];
+    }
     const bySubmitted = boardsForStudent.find(
       (b) => b.submitProposalStatus === "SUBMITTED"
     );

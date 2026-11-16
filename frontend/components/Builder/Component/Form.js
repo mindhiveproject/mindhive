@@ -18,7 +18,9 @@ import Sharing from "./Sharing";
 import Template from "./Template/Main";
 import JsPsychArchive from "./Template/JsPsychArchive";
 import JsPsychVersion from "./Template/JsPsychVersion";
+import SharedTemplateNotice from "./Template/SharedTemplateNotice";
 import TaskPreview from "../../Tasks/Preview/Main";
+import ShareTaskModal from "../../Tasks/Share/ShareTaskModal";
 import { getLocalizedField } from "../../../lib/i18nContent";
 import { blockRelation } from "../../../lib/blockOwnership";
 
@@ -50,6 +52,10 @@ export default function ComponentForm({
     isTemplateAuthor ? "template" : isInStudyBuilder ? "parameters" : "basic",
   );
   const [isFullscreenPreviewOpen, setIsFullscreenPreviewOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  // Your own saved task (not a study's copy) can be shared as a copy.
+  const canShareCopy = isOwnOriginal && !isInStudyBuilder;
+  const openShare = canShareCopy ? () => setIsShareOpen(true) : undefined;
 
   const handlePreview = async () => {
     if (openPreview) {
@@ -97,6 +103,7 @@ export default function ComponentForm({
       {tab === "sharing" && (
         <Sharing
           task={inputs}
+          onShareCopy={openShare}
           handleChange={handleChange}
           handleMultipleUpdate={handleMultipleUpdate}
           loading={loading}
@@ -116,6 +123,19 @@ export default function ComponentForm({
           error={error}
         />
       )}
+
+      {tab === "template" &&
+        inputs?.runtimeType !== "JSPSYCH" &&
+        !isInStudyBuilder &&
+        isTemplateAuthor &&
+        inputs?.id &&
+        inputs?.template?.id && (
+          <SharedTemplateNotice
+            key={inputs.template.id}
+            task={inputs}
+            onForked={(template) => template && handleMultipleUpdate({ template })}
+          />
+        )}
 
       {tab === "template" && inputs?.runtimeType !== "JSPSYCH" && (
         <Template
@@ -201,7 +221,16 @@ export default function ComponentForm({
         openFullscreenPreview={inputs?.id ? handlePreview : undefined}
         isTemplateAuthor={isTemplateAuthor}
         close={close}
+        onShareCopy={openShare}
       />
+      {canShareCopy && (
+        <ShareTaskModal
+          open={isShareOpen}
+          onClose={() => setIsShareOpen(false)}
+          task={inputs}
+          user={user}
+        />
+      )}
       {isOwnOriginal && (
         <div className="originalTaskNotice" style={{ margin: "16px 24px 0" }}>
           <MessageCard

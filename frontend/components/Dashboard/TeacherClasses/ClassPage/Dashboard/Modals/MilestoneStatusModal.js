@@ -5,7 +5,8 @@ import useTranslation from "next-translate/useTranslation";
 
 import { DASHBOARD_PROJECT_CARDS_QUERY } from "../../../../../Queries/Classes";
 import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
-import { UPDATE_STUDY } from "../../../../../Mutations/Study";
+import { SET_STUDY_DATA_COLLECTION } from "../../../../../Queries/Study";
+import { DATA_COLLECTION_REFETCH } from "../../../../../Builder/shared/studyDataCollection/useStudyDataCollection";
 import {
   buildDualWriteUpdate,
   readMilestoneStatus,
@@ -57,9 +58,23 @@ export default function MilestoneStatusModal({
 
   const refetchQueries = classDashboardRefetchQueries(classId);
   const [updateBoard] = useMutation(UPDATE_PROJECT_BOARD, { refetchQueries });
-  const [updateStudy] = useMutation(UPDATE_STUDY, { refetchQueries });
+  // Study milestones move with the study on every linked board, so they go
+  // through setStudyDataCollection (keystone/lib/studyDataCollection.js).
+  const [setDataCollection] = useMutation(SET_STUDY_DATA_COLLECTION, {
+    refetchQueries: [...refetchQueries, ...DATA_COLLECTION_REFETCH],
+  });
 
   const save = async ({ status, open: openFlag }) => {
+    const studyId = project?.study?.id;
+    if (isStudy && studyId) {
+      await setDataCollection({
+        variables:
+          status === "IN_PROGRESS"
+            ? { studyId, action: "REOPEN" }
+            : { studyId, action: "SET_PARTICIPATION", open: !!openFlag },
+      });
+      return;
+    }
     if (milestone && data?.projectId) {
       await updateBoard({
         variables: {
@@ -71,16 +86,6 @@ export default function MilestoneStatusModal({
               : { status, openForComments: openFlag },
             project?.milestoneStatus || {}
           ),
-        },
-      });
-    } else if (isStudy && project?.study?.id) {
-      await updateStudy({
-        variables: {
-          id: project.study.id,
-          input: {
-            dataCollectionStatus: status,
-            dataCollectionOpenForParticipation: openFlag,
-          },
         },
       });
     }

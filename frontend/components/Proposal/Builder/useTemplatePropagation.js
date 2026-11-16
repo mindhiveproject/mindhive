@@ -91,7 +91,12 @@ export default function useTemplatePropagation({
         },
       });
 
-      return res?.data?.applyTemplateBoardChanges ?? null;
+      const result = res?.data?.applyTemplateBoardChanges ?? null;
+      // Per-clone failures come back in `errors`, not as a thrown error.
+      if (result?.errors?.length) {
+        console.error("Some student boards were not updated:", result.errors);
+      }
+      return result;
     },
     [proposalId, applyTemplateChanges]
   );

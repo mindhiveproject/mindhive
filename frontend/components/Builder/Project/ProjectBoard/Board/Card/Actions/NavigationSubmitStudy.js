@@ -19,6 +19,8 @@ export default function Navigation({
   canSubmit = true,
   switchFeedbackLock,
   isParticipationLocked,
+  // Participation can be toggled while the study collects data.
+  showParticipationToggle = isStudySubmitted,
 }) {
   const { t } = useTranslation("builder");
   const { data, error, loading } = useQuery(PROPOSAL_QUERY, {
@@ -56,22 +58,15 @@ export default function Navigation({
             disabled={!canSubmit}
             onClick={async () => {
               if (!canSubmit) return;
-              if (
-                confirm(
-                  t(
-                    "navigation.submitConfirm",
-                    "Are you sure you want to submit? You will not be able to undo it later."
-                  )
-                )
-              ) {
-                await saveBtnFunction();
-              }
+              // saveBtnFunction opens the shared submit dialog
+              // (Builder/shared/studyDataCollection/SubmitStudyDialog).
+              await saveBtnFunction();
             }}
           >
             {saveBtnName}
           </Button>
         )}
-        {cardId && isStudySubmitted && (
+        {cardId && showParticipationToggle && (
           <div className="iconBtn">
             {!isParticipationLocked && (
               <div className="lockText">{t("navigation.enoughParticipants", "Enough participants?")}</div>

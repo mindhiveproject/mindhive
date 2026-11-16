@@ -36,7 +36,7 @@ export default function Collect({ query, user, tab, studyId }) {
   } = useQuery(GET_STUDY_RESULTS, {
     variables: { id: studyId },
   });
-  const study = studyData?.study || { participants: [], guests: [] };
+  const study = studyData?.studyResults || { participants: [], guests: [] };
 
   // find all tests in the study with recursive search
   var components = [];

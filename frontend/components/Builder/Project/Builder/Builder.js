@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import clsx from "clsx";
 
 import Menu from "./Menu";
+import { OPEN_STUDY_STATUS_EVENT } from "../../shared/studyDataCollection/StudyStageChip";
 import Component from "./Component/Main";
 import DataSources from "./DataSources/Main";
 import DataSourceSettings from "./DataSources/Settings";
@@ -19,6 +21,7 @@ import { GET_CLASSES } from "../../../Queries/Classes";
 import StudyConnector from "../../../Projects/StudyConnector/Main";
 import Button from "../../../DesignSystem/Button";
 import IconButton from "../../../DesignSystem/IconButton";
+import MessageCard from "../../../DesignSystem/MessageCard";
 import { FeedbackIcon } from "../../../DesignSystem/Icons";
 
 export default function Builder({
@@ -69,6 +72,33 @@ export default function Builder({
   // Held here rather than in Menu so the data source settings panel can send
   // the user to the Study Flow tab.
   const [menuTab, setMenuTab] = useState("addBlock");
+
+  // The header's stage chip (StudyStageChip) opens Settings → Study status,
+  // directly or through `?panel=status` from another tab.
+  const router = useRouter();
+  useEffect(() => {
+    const showStatus = () => {
+      setSidepanelMode("default");
+      setMenuTab("study");
+      // After the Settings tab renders and its cards load (they shift the
+      // section down).
+      setTimeout(() => {
+        document
+          .getElementById("studyStatus")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
+    };
+    window.addEventListener(OPEN_STUDY_STATUS_EVENT, showStatus);
+    if (router.query?.panel === "status") {
+      showStatus();
+      const { panel, ...rest } = router.query;
+      router.replace({ pathname: router.pathname, query: rest }, undefined, {
+        shallow: true,
+      });
+    }
+    return () => window.removeEventListener(OPEN_STUDY_STATUS_EVENT, showStatus);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query?.panel]);
 
   // The Storm canvas reacts to keys and drags anywhere on the page; it is
   // paused while a side panel is in use (React Flow needs none of this)
@@ -232,18 +262,26 @@ export default function Builder({
   return (
     <StyledCanvasBuilder>
       {isCanvasLocked && (
+        // Pinned to the canvas, clear of the side panel (whose Settings tab
+        // holds the study status controls).
         <div className="lockedMessageOverlay">
-          <h3>{t("builder.studyBuilderLocked", {}, { default: "Study Builder Locked" })}</h3>
-          <p>
-            {t(
-              "builder.lockedMessage",
-              {},
-              {
-                default:
-                  "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study.",
-              }
-            )}
-          </p>
+          <MessageCard
+            variant="warning"
+            message={
+              <>
+                <strong>
+                  {t("builder.studyBuilderLocked", {}, {
+                    default: "Study Builder Locked",
+                  })}
+                </strong>
+                {". "}
+                {t("builder.lockedMessage", {}, {
+                  default:
+                    "This study has been submitted and cannot be edited. To make changes, please ask your teacher to un-submit the study.",
+                })}
+              </>
+            }
+          />
         </div>
       )}
       <div
@@ -374,7 +412,7 @@ export default function Builder({
                 variant="subtle"
                 onClick={lockedAddFunctions.addComment}
                 disabled={isCanvasLocked}
-                leadingIcon={(<FeedbackIcon />)}
+                leadingIcon={(<FeedbackIcon style={{ width: "20px", height: "20px" }} />)}
               >
                 {t("builder.addComment", {}, { default: "Add a comment" })}
               </Button>

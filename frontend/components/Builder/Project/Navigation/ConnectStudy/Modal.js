@@ -2,6 +2,7 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import Collaborators from "../../../../Global/Collaborators";
+import LinkedBoardPeople from "../../../shared/LinkedBoardPeople";
 import Button from "../../../../DesignSystem/Button";
 import IconButton from "../../../../DesignSystem/IconButton";
 import Modal from "../../../../DesignSystem/Modal";
@@ -9,10 +10,6 @@ import {
   CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE,
   ConnectFacepileChevron,
 } from "../ConnectFacepile";
-
-function isAdminUser(user) {
-  return (user?.permissions || []).some((p) => p?.name === "ADMIN");
-}
 
 export default function ConnectModal({
   study,
@@ -70,22 +67,7 @@ export default function ConnectModal({
           </>
         }
       >
-        {isAdminUser(user) && (
-          <p>
-            {t("connectStudyModal.studyAuthor", {
-              username:
-                study?.author?.username ||
-                t("connectStudyModal.noAuthor", {}, { default: "No Author" }),
-            })}{" "}
-            (
-            <em>
-              {t("connectStudyModal.adminInfo", {}, {
-                default: "This information is visible only for ADMIN",
-              })}
-            </em>
-            )
-          </p>
-        )}
+        <LinkedBoardPeople studyId={study?.id} placement="author" />
         <h2 className="MH-Type-Title-Small">
           {t("connectStudyModal.studyCollaborators", {}, {
             default: "Study collaborators",
@@ -95,6 +77,10 @@ export default function ConnectModal({
           userClasses={userClasses}
           collaborators={collaborators}
           handleChange={handleChange}
+        />
+        <LinkedBoardPeople
+          studyId={study?.id}
+          collaboratorIds={collaborators}
         />
       </Modal>
     </>

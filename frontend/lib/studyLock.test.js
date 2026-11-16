@@ -2,12 +2,13 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { isStudyLocked } = require('./studyLock');
 
-test('a submitted study is locked', () => {
+test('a submitted or finished study is locked', () => {
   assert.equal(isStudyLocked({ dataCollectionStatus: 'SUBMITTED' }), true);
+  assert.equal(isStudyLocked({ dataCollectionStatus: 'FINISHED' }), true);
 });
 
 test('a study in any other status is editable', () => {
-  for (const status of ['NOT_STARTED', 'IN_PROGRESS', 'FINISHED']) {
+  for (const status of ['NOT_STARTED', 'IN_PROGRESS']) {
     assert.equal(isStudyLocked({ dataCollectionStatus: status }), false, status);
   }
   assert.equal(isStudyLocked({}), false);

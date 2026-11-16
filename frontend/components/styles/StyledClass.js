@@ -1209,6 +1209,29 @@ const StyledClass = styled.div`
       }
     }
 
+    /* Studies tab: header, New study and search on the left; the data
+       collection milestone card on the right, wrapping below them on
+       narrower screens. */
+    .studiesTabTop {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 16px;
+    }
+
+    .studiesTabIntro {
+      flex: 1 1 520px;
+      min-width: 0;
+      display: grid;
+      align-content: start;
+      gap: 16px;
+    }
+
+    .studiesMilestoneCard {
+      flex: 1 1 360px;
+      min-width: 0;
+    }
+
     .classTabActionBar {
       display: flex;
       flex-wrap: wrap;
@@ -1295,10 +1318,10 @@ const StyledClass = styled.div`
       color: #625b71;
     }
 
+    /* Grids grow with their rows (domLayout="autoHeight"; they're
+       paginated) so the page scrolls instead of the grid. */
     .classTabTable {
       width: 100%;
-      min-height: 400px;
-      height: 600px;
     }
 
     .classTabEmpty {

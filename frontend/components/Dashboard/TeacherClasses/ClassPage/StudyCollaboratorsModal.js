@@ -10,20 +10,26 @@ import { UPDATE_STUDY } from "../../../Mutations/Study";
 // Opened from the collaborator(s) cell of the class Studies table. Class staff
 // can change a study's collaborators (people of this class); others only see
 // the list. The author is always part of the study and is not editable here.
+// Mentors (`mentorSet`) have their own column and modal: they are left out of
+// the list and kept on save.
+const NO_MENTORS = new Set();
+
 export default function StudyCollaboratorsModal({
   study,
   classId,
   readOnly,
+  mentorSet = NO_MENTORS,
   onClose,
 }) {
   const { t } = useTranslation("classes");
   const [draft, setDraft] = useState([]);
 
+  const isEditable = (c) => c?.id !== study?.author?.id && !mentorSet.has(c?.id);
+
   useEffect(() => {
-    setDraft(
-      (study?.collaborators || []).filter((c) => c?.id !== study?.author?.id)
-    );
-  }, [study]);
+    setDraft((study?.collaborators || []).filter(isEditable));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [study, mentorSet]);
 
   const [updateStudy, { loading }] = useMutation(UPDATE_STUDY, {
     refetchQueries: ["GET_CLASS", "STUDENT_CLASS_QUERY"],
@@ -33,7 +39,7 @@ export default function StudyCollaboratorsModal({
   if (!study) return null;
 
   const original = (study.collaborators || [])
-    .filter((c) => c?.id !== study.author?.id)
+    .filter(isEditable)
     .map((c) => c.id)
     .sort();
   const next = draft.map((c) => c.id).sort();
@@ -41,13 +47,16 @@ export default function StudyCollaboratorsModal({
     original.length !== next.length || original.some((id, i) => id !== next[i]);
 
   const save = async () => {
+    const mentors = (study.collaborators || []).filter(
+      (c) => c?.id !== study.author?.id && mentorSet.has(c.id)
+    );
     try {
       await updateStudy({
         variables: {
           id: study.id,
           input: {
             collaborators: {
-              set: draft.map((c) => ({ id: c.id })),
+              set: [...draft, ...mentors].map((c) => ({ id: c.id })),
             },
           },
         },

@@ -102,6 +102,17 @@ export const MY_STUDIES = gql`
         id
         title
         code
+        settings
+      }
+      # Data-collection stage on the study cards (StudyStageChip).
+      status
+      dataCollectionStatus
+      dataCollectionOpenForParticipation
+      proposal {
+        id
+        usedInClass {
+          id
+        }
       }
     }
   }
@@ -144,6 +155,17 @@ export const TEACHER_STUDIES = gql`
         id
         title
         code
+        settings
+      }
+      # Data-collection stage on the study cards (StudyStageChip).
+      status
+      dataCollectionStatus
+      dataCollectionOpenForParticipation
+      proposal {
+        id
+        usedInClass {
+          id
+        }
       }
     }
   }
@@ -380,64 +402,14 @@ export const STUDY_COMPONENTS = gql`
 `;
 
 // get study datasets, summary results and consents
+// A study's runs, summary results and data source records for its Collect
+// page and downloads, read server-side in a few flat queries (see keystone
+// lib/studyResults.js). Same shape as the old study { ... } selection:
+// id slug flow datasets summaryResults dataSourceRecords consent versions
+// versionHistory.
 export const GET_STUDY_RESULTS = gql`
   query GET_STUDY_RESULTS($id: ID!) {
-    study(where: { id: $id }) {
-      id
-      slug
-      flow
-      datasets {
-        date
-        token
-        task {
-          id
-          slug
-        }
-        isCompleted
-        isIncluded
-        testVersion
-        dataPolicy
-      }
-      summaryResults {
-        data
-        user {
-          publicId
-        }
-        guest {
-          publicId
-        }
-        study {
-          title
-        }
-        task {
-          id
-          slug
-          title
-        }
-        testVersion
-        metadataId
-        createdAt
-      }
-      dataSourceRecords {
-        profile {
-          publicId
-        }
-        guest {
-          publicId
-        }
-        steps
-      }
-      consent {
-        id
-        title
-      }
-      versions {
-        id
-        name
-        legacyId
-      }
-      versionHistory
-    }
+    studyResults(studyId: $id)
   }
 `;
 
@@ -447,7 +419,14 @@ export const STUDIES_COLLECTING_DATA = gql`
     studies(
       where: {
         AND: [
-          { dataCollectionStatus: { in: ["SUBMITTED"] } }
+          # Collecting data: submitted through a class milestone, or a
+          # self-managed study labelled as collecting (lib/studyLifecycle.js).
+          {
+            OR: [
+              { dataCollectionStatus: { in: ["SUBMITTED"] } }
+              { status: { equals: "COLLECTING_DATA" } }
+            ]
+          }
           {
             OR: [
               { featured: { equals: true } }
@@ -462,6 +441,7 @@ export const STUDIES_COLLECTING_DATA = gql`
       title
       featured
       status
+      dataCollectionStatus
       classes {
         id
       }
@@ -685,6 +665,119 @@ export const GET_BLOCK_AGGVAR = gql`
       id
       settings
       i18nContent
+    }
+  }
+`;
+
+// The study's author and the people on the project boards linked to it, who
+// can edit the study through their board (Connect modals).
+export const STUDY_LINKED_BOARD_PEOPLE = gql`
+  query STUDY_LINKED_BOARD_PEOPLE($id: ID!) {
+    study(where: { id: $id }) {
+      id
+      author {
+        id
+        username
+      }
+      proposal {
+        id
+        title
+        author {
+          ...LinkedBoardPerson
+        }
+        collaborators {
+          ...LinkedBoardPerson
+        }
+      }
+    }
+  }
+
+  # Avatar fields read by the Connect facepile (ConnectFacepile photoUrl).
+  fragment LinkedBoardPerson on Profile {
+    id
+    username
+    image {
+      id
+      keystoneImage {
+        id
+        url
+      }
+      image {
+        publicUrlTransformed
+      }
+    }
+  }
+`;
+
+// A study's data-collection lifecycle: whether a class milestone supervises
+// it, its stage, who shares it and what the viewer may change
+// (keystone/lib/studyDataCollection.js).
+const STUDY_DATA_COLLECTION_FIELDS = `
+  studyId
+  supervised
+  locked
+  stage
+  open
+  canEdit
+  canManage
+  boards {
+    id
+    title
+    classId
+    classTitle
+    milestoneKey
+    supervising
+  }
+  classes {
+    id
+    title
+    supervising
+  }
+  people {
+    id
+    username
+    boards
+  }
+  submittedBy
+  submittedAt
+  history {
+    action
+    by
+    at
+    open
+    stage
+    confirmed
+    sharedWith
+    carriedOver
+  }
+`;
+
+export const STUDY_DATA_COLLECTION = gql`
+  query STUDY_DATA_COLLECTION($studyId: ID!) {
+    studyDataCollection(studyId: $studyId) {
+      ${STUDY_DATA_COLLECTION_FIELDS}
+    }
+  }
+`;
+
+export const SET_STUDY_DATA_COLLECTION = gql`
+  mutation SET_STUDY_DATA_COLLECTION(
+    $studyId: ID!
+    $action: String!
+    $open: Boolean
+    $stage: String
+    $acknowledgedProfileIds: [ID!]
+    $confirmed: Boolean
+  ) {
+    setStudyDataCollection(
+      studyId: $studyId
+      action: $action
+      open: $open
+      stage: $stage
+      acknowledgedProfileIds: $acknowledgedProfileIds
+      confirmed: $confirmed
+    ) {
+      ${STUDY_DATA_COLLECTION_FIELDS}
     }
   }
 `;

@@ -2,7 +2,8 @@
 // (keystone/mutations/runDeidentification.ts):
 //   - "Run automatically" lets the scheduled runs act on their own; off by
 //     default, the schedule then only previews and logs;
-//   - Preview lists who would be warned or de-identified now;
+//   - Preview lists who would be warned or de-identified now, and how many
+//     teachers would be emailed about each warned student;
 //   - Approve and run acts on the ticked accounts only, after typing APPROVE.
 import { useMemo, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
@@ -17,7 +18,11 @@ import {
 } from "../../../Queries/DoeData";
 
 const APPROVE_PHRASE = "APPROVE";
-const ACTIONS = { warn: "Warning email", deidentify: "De-identify" };
+const ACTIONS = {
+  warn: "Warning email",
+  notifyTeachers: "Teachers' email only (warned earlier)",
+  deidentify: "De-identify",
+};
 const day = (value) => (value ? new Date(value).toISOString().slice(0, 10) : "");
 
 export default function Deidentification() {
@@ -90,7 +95,9 @@ export default function Deidentification() {
         first sends warnings, the second de-identifies the accounts warned. In each run, DOE
         accounts with no sign-in for 23 months get a warning email, and accounts with no
         sign-in for two years that were warned at least 30 days ago are de-identified.
-        Nothing happens unless an admin approves it here, or turns on automatic runs.
+        The teachers and co-teachers of the classes of a warned student get one email each, with
+        the number of students due per class (no names); the Students page of each class shows
+        which students. Approving a warning approves that email. Nothing happens unless an admin approves it here, or turns on automatic runs.
       </p>
 
       <ToggleSwitch
@@ -125,6 +132,9 @@ export default function Deidentification() {
             {accounts.length
               ? `${accounts.length} accounts are due. Untick any you do not approve.`
               : "Nobody is due right now."}
+            {preview.teachersNotified
+              ? ` ${preview.teachersNotified} teachers would be emailed about ${preview.teacherNoticeStudents} of them.`
+              : ""}
             {preview.guestsStripped
               ? ` ${preview.guestsStripped} old guest records in DOE studies would lose their age and zip code.`
               : ""}
@@ -141,6 +151,7 @@ export default function Deidentification() {
                   <th>Action</th>
                   <th>Last sign-in</th>
                   <th>Warned</th>
+                  <th>Teachers emailed</th>
                 </tr>
               </thead>
               <tbody>
@@ -158,6 +169,7 @@ export default function Deidentification() {
                     <td>{ACTIONS[a.action] || a.action}</td>
                     <td>{day(a.lastSignInAt)}</td>
                     <td>{day(a.warnedAt)}</td>
+                    <td>{a.action === "deidentify" ? "" : a.teachers || 0}</td>
                   </tr>
                 ))}
               </tbody>
@@ -184,7 +196,11 @@ export default function Deidentification() {
       {result && (
         <p className="ok">
           Done: {result.warned} warned, {result.warnedWithoutEmail} without an email address,{" "}
-          {result.warningFailed} warnings failed (retried next time), {result.deidentified}{" "}
+          {result.warningFailed} warnings failed (retried next time),{" "}
+          {result.teachersNotified || 0} teachers emailed about{" "}
+          {result.teacherNoticeStudents || 0} students ({result.teacherNoticeFailed || 0} failed,
+          retried next time; {result.studentsWithoutTeacher || 0} students have no teacher to
+          email), {result.deidentified}{" "}
           de-identified, {result.guestsStripped} guest records cleaned.
         </p>
       )}

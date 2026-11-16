@@ -170,6 +170,10 @@ export const Class = list({
       ref: "Study.hiddenInClasses",
       many: true,
     }),
+    taskShareInvites: relationship({
+      ref: "TaskShareInvite.class",
+      many: true,
+    }),
     logs: relationship({
       ref: "Log.class",
       many: true,

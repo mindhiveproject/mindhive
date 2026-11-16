@@ -68,8 +68,7 @@ export default function Render({
         !code?.trim() ||
         !content?.selectors ||
         !sectionId ||
-        !sliceReady ||
-        !slice
+        !sliceReady
       ) {
         setResult(null);
         setIsRunning(false);
@@ -170,7 +169,7 @@ json.dumps(to_native(result))
         `.trim();
 
         const returned = await enqueueJsWorkspaceTask(async () => {
-          await registerJsWorkspaceFromSlice(pyodide, slice);
+          if (slice) await registerJsWorkspaceFromSlice(pyodide, slice);
           return pyodide.runPythonAsync(pythonCode);
         });
 

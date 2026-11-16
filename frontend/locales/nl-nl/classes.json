@@ -1583,7 +1583,9 @@
 		"rosterDescription": "{{count}} studenten hebben zich voor deze cursus ingeschreven.",
 		"shareMessage": "Deel de onderstaande link met je leerlingen om ze uit te nodigen voor je klas",
 		"student": "Student/Gebruikersnaam",
-		"tab": "Studenten"
+		"tab": "Studenten",
+		"signInBy": "Moet inloggen vóór {{date}}",
+		"identityRemovalNotice": "{{count}} hieronder gemarkeerde studenten hebben al twee jaar of bijna twee jaar niet ingelogd. Vanaf {{date}} worden hun namen, e-mailadressen en andere persoonsgegevens verwijderd en verlaten ze de klas, tenzij ze vóór die datum inloggen op MindHive."
 	},
 	"studentsWillHaveAccessTo": "Uw studenten krijgen toegang tot:",
 	"studentUsername": "Student/Gebruikersnaam",

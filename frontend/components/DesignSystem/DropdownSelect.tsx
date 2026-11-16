@@ -176,6 +176,14 @@ const StyledPanel = styled.div`
     background-color: var(--MH-Theme-Primary-Light, #def8fb);
     font-weight: 600;
   }
+  .DesignSystem-DropdownSelect-option--custom {
+    color: var(--MH-Theme-Primary-Dark, #336f8a);
+    font-weight: 600;
+  }
+  .DesignSystem-DropdownSelect-option--custom + .DesignSystem-DropdownSelect-option,
+  .DesignSystem-DropdownSelect-option--custom + .DesignSystem-DropdownSelect-group {
+    border-top: 1px solid #e6e6e6;
+  }
   .DesignSystem-DropdownSelect-option:disabled {
     color: #a1a1a1;
     cursor: not-allowed;
@@ -331,6 +339,16 @@ interface DropdownSelectBaseProps {
    * @default false
    */
   portal?: boolean;
+  /**
+   * Single-select with `searchableSingle` only: lets the user pick what they
+   * typed when no option matches it exactly, via a "Use “…”" row at the top of
+   * the list (or Enter in the search field). The trigger then shows the typed
+   * value even though it is not in `options`.
+   * @default false
+   * @example
+   * <DropdownSelect searchableSingle allowCustomValue value={v} onChange={setV} options={suggestions} />
+   */
+  allowCustomValue?: boolean;
 }
 
 /** Props for a single-select {@link DropdownSelect} (the default). */
@@ -418,6 +436,7 @@ export default function DropdownSelect(props: DropdownSelectProps) {
     placement = "auto",
     disabled = false,
     portal = false,
+    allowCustomValue = false,
   } = props;
   const onChange = props.onChange as ((next: string | string[]) => void) | undefined;
 
@@ -463,10 +482,27 @@ export default function DropdownSelect(props: DropdownSelectProps) {
       const fromLabelText = getOptionLabelString(selected);
       return fromLabelText || placeholder;
     }
+    if (allowCustomValue && typeof value === "string" && value.trim()) {
+      return value;
+    }
     return placeholder;
-  }, [multiple, selectedIds, options, value, placeholder, placeholderOnly]);
+  }, [multiple, selectedIds, options, value, placeholder, placeholderOnly, allowCustomValue]);
 
   const searchEnabled = multiple ? searchableMultiple : searchableSingle;
+
+  // The typed query, offered as its own pick when no option already matches it.
+  const customValue = useMemo(() => {
+    if (!allowCustomValue || multiple || !searchEnabled) return null;
+    const q = searchQuery.trim();
+    if (!q) return null;
+    const lower = q.toLowerCase();
+    const exists = options.some(
+      (opt) =>
+        getOptionLabelString(opt).trim().toLowerCase() === lower ||
+        String(opt.value).trim().toLowerCase() === lower
+    );
+    return exists ? null : q;
+  }, [allowCustomValue, multiple, searchEnabled, searchQuery, options]);
 
   const filteredOptions = useMemo(() => {
     if (!searchEnabled || !searchQuery.trim()) {
@@ -755,6 +791,12 @@ export default function DropdownSelect(props: DropdownSelectProps) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
+              if (e.key === "Enter" && customValue) {
+                e.preventDefault();
+                onChange?.(customValue);
+                setOpen(false);
+                return;
+              }
               if (e.key !== "Escape") {
                 e.stopPropagation();
               }
@@ -785,8 +827,26 @@ export default function DropdownSelect(props: DropdownSelectProps) {
             }
           }}
         >
+          {customValue ? (
+            <button
+              type="button"
+              className="DesignSystem-DropdownSelect-option DesignSystem-DropdownSelect-option--custom MH-Type-Label-Base"
+              role="option"
+              aria-selected={false}
+              onClick={() => {
+                onChange?.(customValue);
+                setOpen(false);
+              }}
+            >
+              {t(
+                "dropdownSelect.useCustomValue",
+                { value: customValue },
+                { default: "Use “{{value}}”" }
+              )}
+            </button>
+          ) : null}
           {filteredOptions.length === 0 ? (
-            <div className="DesignSystem-DropdownSelect-empty MH-Type-Body-Base">
+            customValue ? null : <div className="DesignSystem-DropdownSelect-empty MH-Type-Body-Base">
               {t("dropdownSelect.noMatchingOptions", {}, { default: "No matching options" })}
             </div>
           ) : (

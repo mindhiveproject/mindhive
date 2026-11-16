@@ -507,6 +507,14 @@ export const MoreVertIcon = filledIcon(
   "M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z",
 );
 
+/** Something needs attention: an exclamation mark in a circle. */
+export const ErrorOutlineIcon = filledIcon(
+  "ErrorOutlineIcon",
+  0,
+  0,
+  "M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z",
+);
+
 export const InfoIcon = filledIcon(
   "InfoIcon",
   0,
@@ -729,6 +737,14 @@ export const PlayIcon = filledIcon(
   0,
   0,
   "M8 19V5L19 12L8 19ZM9.5 16.275L16.225 12L9.5 7.725V16.275Z",
+);
+
+/** Pause — Material Symbols "pause" (outlined), the counterpart of PlayIcon. */
+export const PauseIcon = filledIcon(
+  "PauseIcon",
+  0,
+  0,
+  "M13 19V5H19V19H13ZM5 19V5H11V19H5ZM15 17H17V7H15V17ZM7 17H9V7H7V17Z",
 );
 
 /**

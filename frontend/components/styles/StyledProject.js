@@ -79,6 +79,12 @@ const StyledProject = styled.div`
         }
       }
     }
+    /* Class-supervised study's stage (StudyStageChip), next to the title. */
+    .navStudyStage {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+    }
     .navTitle {
       flex: 0 1 auto;
       min-width: 0;

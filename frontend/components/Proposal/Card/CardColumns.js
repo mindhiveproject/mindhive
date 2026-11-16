@@ -32,6 +32,7 @@ export default function CardColumns({ children }) {
           minStart={360}
           minEnd={280}
           onFractionChange={saveSplitFraction}
+          scrollPanes
           ariaLabel={t(
             "reviewDetail.resizeColumns",
             {},

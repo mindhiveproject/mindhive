@@ -46,6 +46,12 @@ export const StyledStudyCard = styled.div`
     height: 100%;
   }
 
+  /* Data-collection stage of a class-supervised study (StudyStageChip). */
+  .studyStage {
+    display: flex;
+    margin-top: 8px;
+  }
+
   .studyImage {
     height: 166px;
     position: relative;

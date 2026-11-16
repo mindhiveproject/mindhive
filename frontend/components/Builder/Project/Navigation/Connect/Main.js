@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMutation } from "@apollo/client";
 
 import useForm from "../../../../../lib/useForm";
@@ -8,6 +9,7 @@ import { PROPOSAL_QUERY } from "../../../../Queries/Proposal";
 import { UPDATE_PROJECT_BOARD } from "../../../../Mutations/Proposal";
 
 import ConnectFacepile from "../ConnectFacepile";
+import { boardRuleMessage } from "../../../../../lib/mainProject";
 
 export default function Connect({ project, user }) {
   // save and edit the study information
@@ -39,6 +41,20 @@ export default function Connect({ project, user }) {
     }
   );
 
+  // The server may refuse a class change (keystone/lib/mainProject.js); the
+  // modal stays open and shows why.
+  const [saveError, setSaveError] = useState(null);
+  const save = async () => {
+    try {
+      setSaveError(null);
+      await updateProject();
+      return true;
+    } catch (err) {
+      setSaveError(boardRuleMessage(err));
+      return false;
+    }
+  };
+
   const collaborators = inputs?.collaborators || [];
 
   return (
@@ -48,7 +64,9 @@ export default function Connect({ project, user }) {
           project={inputs}
           user={user}
           handleChange={handleChange}
-          updateProject={updateProject}
+          updateProject={save}
+          saveError={saveError}
+          savedProject={project}
         />
       </ConnectFacepile>
     </div>

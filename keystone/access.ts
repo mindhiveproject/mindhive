@@ -178,7 +178,7 @@ export async function studyEditorFilter({ session, context }: ListAccessArgs) {
  * study is linked to or whose students author it (class dashboards assign
  * students to studies and change submission status).
  */
-function studyUpdateWhere(me: string) {
+export function studyUpdateWhere(me: string) {
   const staffClass = { some: classStaffSome(me) };
   return {
     OR: [

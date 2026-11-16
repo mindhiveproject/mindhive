@@ -11,7 +11,18 @@ import {
 } from "@keystone-6/core/fields";
 import slugify from "slugify";
 
-import { signedInWrites } from "../access";
+import { signedInWrites, isAdmin } from "../access";
+
+const {
+  changedStudyMilestoneStatuses,
+  isTrustedSession,
+} = require("../lib/studyDataCollection");
+const {
+  resolveClassChange,
+  checkClassChange,
+  checkSetMain,
+  swapOtherMains,
+} = require("../lib/mainProject");
 import {
   keepHiddenLinksOnSet,
   keepHiddenLinkOnDisconnect,
@@ -23,9 +34,96 @@ export const ProposalBoard = list({
     operation: signedInWrites,
   },
   hooks: {
-    async afterOperation({ operation, item, context }) {
+    // Main project and class link rules (lib/mainProject.js). These three
+    // hooks only do work when an update touches isMain or usedInClass.
+    async resolveInput({ operation, resolvedData, item, context }) {
+      if (operation !== "update" || !resolvedData.usedInClass || !item?.isMain) {
+        return resolvedData;
+      }
+      // A board that changes class does not stay a main project: main is per
+      // class. (Students cannot move a main board at all; see validateInput.)
+      const change = await resolveClassChange(
+        context.prisma,
+        resolvedData.usedInClass,
+        item
+      );
+      if (change === undefined || resolvedData.isMain === true) {
+        return resolvedData;
+      }
+      return { ...resolvedData, isMain: false };
+    },
+    async validateInput({
+      operation,
+      resolvedData,
+      item,
+      context,
+      addValidationError,
+    }) {
+      if (operation !== "update" || !item?.id) return;
+
+      // A study milestone's status (data collection) moves with the study,
+      // on every linked board at once: only setStudyDataCollection writes it
+      // (lib/studyDataCollection.js). Other milestones' entries are free.
+      if (
+        resolvedData.milestoneStatus !== undefined &&
+        context.session?.itemId &&
+        !isTrustedSession(context.session) &&
+        !isAdmin({ session: context.session }) &&
+        changedStudyMilestoneStatuses(
+          item.milestoneStatus,
+          resolvedData.milestoneStatus
+        ).length
+      ) {
+        addValidationError(
+          "A study's data collection is submitted, finished or reopened from its data-collection card or by a teacher."
+        );
+        return;
+      }
+
+      const setsMain = resolvedData.isMain === true;
+      if (!resolvedData.usedInClass && !setsMain) return;
+
+      const change = await resolveClassChange(
+        context.prisma,
+        resolvedData.usedInClass,
+        item
+      );
+      // Only a signed-in caller is checked: internal writes have no session.
+      if (change !== undefined && context.session?.itemId) {
+        const error = await checkClassChange({
+          prisma: context.prisma,
+          boardId: String(item.id),
+          nextClassId: change,
+          callerId: context.session.itemId,
+          callerIsAdmin: isAdmin({ session: context.session }),
+        });
+        if (error) {
+          addValidationError(error);
+          return;
+        }
+      }
+      if (setsMain && (!item.isMain || change !== undefined)) {
+        const { error } = await checkSetMain({
+          prisma: context.prisma,
+          boardId: String(item.id),
+          classId: change !== undefined ? change : (item.usedInClassId as string | null),
+        });
+        if (error) addValidationError(error);
+      }
+    },
+    async afterOperation({ operation, item, originalItem, context }) {
       if ((operation !== "create" && operation !== "update") || !item?.id) {
         return;
+      }
+
+      // The board just became a main project: the students' other main
+      // projects in the class stop being main.
+      if (operation === "update" && item.isMain && !originalItem?.isMain) {
+        await swapOtherMains({
+          prisma: context.prisma,
+          boardId: String(item.id),
+          classId: item.usedInClassId as string | null,
+        });
       }
 
       // Bookkeeping after an edit that already passed access control: make

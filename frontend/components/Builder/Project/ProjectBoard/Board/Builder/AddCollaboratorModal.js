@@ -7,6 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 import { GET_USERNAMES_WHERE } from "../../../../../Queries/User";
 import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../../../../Queries/Proposal";
+import SecondMainWarning from "./SecondMainWarning";
 
 export default function AddCollaboratorModal({
   proposal,
@@ -398,6 +399,16 @@ export default function AddCollaboratorModal({
                 </div>
               </div>
             )}
+
+            <div style={{ marginTop: "16px" }}>
+              <SecondMainWarning
+                boardId={proposal?.id}
+                classId={classId}
+                newIds={selected.filter(
+                  (id) => !currentCollaborators.some((c) => c.id === id)
+                )}
+              />
+            </div>
 
             {error && (
               <div

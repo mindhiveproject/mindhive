@@ -230,6 +230,12 @@ export const StyledBuilderArea = styled.div`
       background: var(--MH-Theme-Neutrals-White, #ffffff);
       border-bottom: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
 
+      /* Class-supervised study's stage (StudyStageChip), next to the title. */
+      .navStudyStage {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+      }
       .navTitle {
         flex: 0 1 auto;
         min-width: 0;
@@ -408,6 +414,14 @@ export const StyledBuilderArea = styled.div`
 `;
 
 export const StyledCanvasBuilder = styled.div`
+  #commentButton {
+    background: var(--MH-Theme-Accent-Light) !important;
+    color: var(--MH-Theme-Accent-Dark) !important;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  #commentButton:hover:not(:disabled) {
+    background: var(--MH-Theme-Accent-Medium) !important;
+  }
   display: grid;
   grid-template-columns: 1fr;
   padding: 0px;
@@ -416,30 +430,14 @@ export const StyledCanvasBuilder = styled.div`
   box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.07);
   position: relative;
 
+  /* Warning MessageCard pinned under the study title, on the canvas side:
+     the side panel takes up to 46% of the width (see .sidepanel). */
   .lockedMessageOverlay {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 230, 230, 0.95);
-    border: 1px solid #cc0000;
-    color: #cc0000;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    max-width: 400px;
-    z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    h3 {
-      margin: 0 0 10px;
-      font: var(--MH-Type-Title-Large);
-      letter-spacing: 0;
-    }
-    p {
-      margin: 0;
-      font: var(--MH-Type-Body-Base);
-      letter-spacing: 0;
-    }
+    position: absolute;
+    top: 88px;
+    left: 16px;
+    width: min(440px, calc(54% - 40px));
+    z-index: 3;
   }
 
   .sidepanel {
@@ -880,6 +878,20 @@ export const StyledCanvasBuilder = styled.div`
         grid-template-columns: 1fr;
       }
 
+      .studyFlowDesign {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .studyFlowDesignDescription {
+        margin: 0;
+        font: var(--MH-Type-Body-Base);
+        letter-spacing: 0;
+        color: #5d5763;
+      }
+
       .studyFlowEmpty {
         display: flex;
         flex-direction: column;
@@ -927,6 +939,11 @@ export const StyledCanvasBuilder = styled.div`
         box-sizing: border-box;
         width: 100%;
         min-width: 0;
+      }
+
+      /* Opened from the header's stage chip: clear of the panel's tabs. */
+      #studyStatus {
+        scroll-margin-top: 140px;
       }
 
       .settingsSection {
@@ -1269,7 +1286,7 @@ export const StyledCanvasBuilder = styled.div`
       flex-shrink: 0;
       width: 20px;
       height: 20px;
-      opacity: 0;
+      opacity: 1;
       transition: opacity 0.15s;
     }
 
@@ -1546,8 +1563,8 @@ export const StyledCanvasBuilder = styled.div`
       display: flex;
       align-items: center;
       gap: 8px;
-      flex: 2;
-      min-width: 0;
+      flex: 1 1 0;
+      min-width: 96px;
       height: 40px;
       padding: 4px 16px 4px 8px;
       border: 1px solid #a1a1a1;
@@ -1576,10 +1593,30 @@ export const StyledCanvasBuilder = styled.div`
 
     .addBlockFavorite {
       display: flex;
-      flex: 1;
+      flex: 0 0 auto;
       align-items: center;
       justify-content: flex-start;
+      gap: 12px;
+      white-space: nowrap;
+    }
+
+    /* At rest search shrinks so both toggles stay on its row (no half-empty
+       wrapped row); while searching it takes the row, toggles go below. */
+    .addBlockFilters.isSearchExpanded {
+      flex-wrap: wrap;
+      row-gap: 8px;
+
+      .addBlockSearch {
+        flex: 1 0 100%;
+      }
+    }
+
+    .blockCardVersion {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
       min-width: 0;
+      overflow-wrap: anywhere;
     }
 
     .addBlockChips {
@@ -1600,30 +1637,6 @@ export const StyledCanvasBuilder = styled.div`
       max-width: 100%;
       padding: 8px 0;
       box-sizing: border-box;
-
-      .blocksMenuTabs {
-        width: 100%;
-        min-width: 0;
-        overflow-x: auto;
-
-        .DesignSystem-ButtonGroup
-          button.DesignSystem-ButtonGroup__segment.DesignSystem-ButtonGroup__segment--selected,
-        .DesignSystem-ButtonGroup
-          button.DesignSystem-ButtonGroup__segment.DesignSystem-ButtonGroup__segment--selected:hover:not(
-            :disabled
-          ) {
-          background: #fdf2d0;
-          color: #5d5763;
-        }
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-
-        &::-webkit-scrollbar {
-          display: none;
-          width: 0;
-          height: 0;
-        }
-      }
 
       .blocksMenuContent {
         display: flex;
@@ -1730,6 +1743,13 @@ export const StyledCanvasBuilder = styled.div`
       .subtitle {
         display: none;
       }
+    }
+
+    .blockCardHint {
+      margin: 0;
+      font: var(--MH-Type-Body-Small, var(--MH-Type-Body-Base));
+      letter-spacing: 0;
+      color: #6a6a6a;
     }
 
     .blockCardActions {
@@ -2036,6 +2056,43 @@ export const StyledParticipantPage = styled.div`
     color: #1a1a1a;
     margin-bottom: 8px;
   }
+  /* An auto-saved study's title reads as text; Rename opens a draft */
+  .titleDisplay {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    h1.title {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+      padding: 4px 0;
+      font: var(--MH-Type-Heading-Large);
+      color: #1a1a1a;
+      overflow-wrap: anywhere;
+    }
+    .titleRenameButton {
+      flex-shrink: 0;
+    }
+  }
+  .titleRename {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+    /* The field's outline lines up with the message card below it, instead of
+       bleeding into the gutter like the in-place fields do */
+    .editable.title {
+      margin: 0;
+      box-sizing: border-box;
+    }
+  }
+  .titleRenameActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
   .editable.description {
     font: var(--MH-Type-Body-Large);
     color: #4a4a4a;

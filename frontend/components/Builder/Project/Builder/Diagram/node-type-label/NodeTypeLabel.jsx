@@ -1,25 +1,36 @@
 import React from 'react';
 import { StyledNodeTypeLabel } from './node-type-label.js';
 
-// Nodes Labels (left panel)
-export const NodeTypeLabel = props => (
+// Nodes Labels (left panel). `disabled` stops the drag onto a locked canvas.
+export const NodeTypeLabel = ({
+  color,
+  model,
+  name,
+  createdBy,
+  subtitle,
+  disabled = false,
+}) => (
   <StyledNodeTypeLabel>
     <div
       className="node-type-label"
-      color={props.color}
-      draggable
+      color={color}
+      draggable={!disabled}
+      style={disabled ? { cursor: 'default' } : undefined}
       onDragStart={event => {
-        // read by the study canvas (Flow/StudyFlowCanvas.jsx)
+        if (disabled) {
+          event.preventDefault();
+          return;
+        }
+        // read by both study canvases (Flow/StudyFlowCanvas.jsx and
+        // Diagram/widgets/CreatorWidget.jsx)
         event.dataTransfer.setData(
           'application/x-mindhive-study-block',
-          JSON.stringify(props.model)
+          JSON.stringify(model)
         );
       }}
     >
-      {props?.name}
-      <div className="subtitle">
-        {props?.createdBy === 'me' && props?.subtitle}
-      </div>
+      {name}
+      <div className="subtitle">{createdBy === 'me' && subtitle}</div>
     </div>
   </StyledNodeTypeLabel>
 );

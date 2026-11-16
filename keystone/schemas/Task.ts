@@ -1,4 +1,6 @@
-import { list } from "@keystone-6/core";
+import { list, graphql } from "@keystone-6/core";
+const { uniqueSlug } = require("../lib/uniqueSlug");
+const { decodeJson } = require("../lib/taskShare");
 import {
   text,
   relationship,
@@ -8,8 +10,8 @@ import {
   integer,
   checkbox,
   json,
+  virtual,
 } from "@keystone-6/core/fields";
-import slugify from "slugify";
 
 import { signedInWrites, authorOrCollaboratorFilter, authorFilter } from "../access";
 
@@ -53,23 +55,7 @@ export const Task = list({
           if (operation === "create") {
             const { title } = inputData;
             if (title) {
-              let slug = slugify(title, {
-                remove: /[*+~.()'"!:@]/g, // remove characters that match regex
-                lower: true, // convert to lower case
-                strict: true, // strip special characters except replacement
-              });
-              const items = await context.query.Task.findMany({
-                where: { slug: { startsWith: slug } },
-                query: "id slug",
-              });
-              if (items.length) {
-                const re = new RegExp(`${slug}-*\\d*$`);
-                const slugs = items.filter((item) => item.slug.match(re));
-                if (slugs.length) {
-                  slug = `${slug}-${slugs.length}`;
-                }
-              }
-              return slug;
+              return uniqueSlug(context, "Task", title);
             }
           } else {
             return inputData.slug;
@@ -145,6 +131,32 @@ export const Task = list({
     }),
     // Set from the class side only (Class.hiddenTasks, class staff), so a
     // task's authors can't change which classes hide it.
+    // Offers to share this task as a copy (TaskShareInvite)
+    shareInvites: relationship({
+      ref: "TaskShareInvite.task",
+      many: true,
+      ui: { createView: { fieldMode: "hidden" } },
+    }),
+    // Who shared this copy, from settings.sharedFrom (lib/taskShare.js), for
+    // the "Shared by" tag. Nothing is stored here.
+    sharedByName: virtual({
+      field: graphql.field({
+        type: graphql.String,
+        async resolve(item: any, _args: any, context: any) {
+          const sharedById = decodeJson(item.settings)?.sharedFrom?.sharedById;
+          if (!sharedById) return null;
+          const sender = await context.sudo().db.Profile.findOne({
+            where: { id: String(sharedById) },
+          });
+          if (!sender) return null;
+          const name = [sender.firstName, sender.lastName]
+            .filter(Boolean)
+            .join(" ")
+            .trim();
+          return name || sender.username || null;
+        },
+      }),
+    }),
     hiddenInClasses: relationship({
       ref: "Class.hiddenTasks",
       many: true,

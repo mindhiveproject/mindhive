@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import styled from "styled-components";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -9,7 +10,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import { StudentPageLink } from "./Renderers/StudentPageLink";
 import { ManageProjectCell } from "./Renderers/ManageProjectCell";
-import { ManageStudyCell } from "./Renderers/ManageStudyCell";
+import { MainStudyCell } from "./Renderers/MainStudyCell";
 import { MainProjectCell } from "./Renderers/MainProjectCell";
 import { MilestoneStatusCell } from "./Renderers/MilestoneStatusCell";
 import { MilestoneColumnHeader } from "./Renderers/MilestoneColumnHeader";
@@ -19,6 +20,7 @@ import {
   getPrimaryTemplateBoardId,
 } from "../../../../../lib/classTemplateBoards";
 import { isOpenForComments } from "../../../../../lib/milestoneStatus";
+import { classFollowsDataCollection } from "../../../../../lib/classDataCollection";
 import BoardMilestonesSync from "../../../BoardMilestonesSync";
 
 import Button from "../../../../DesignSystem/Button";
@@ -38,7 +40,6 @@ import {
 } from "./dashboardUtils";
 import { SelectedStudentsModal } from "./Modals/SelectedStudents";
 import ProjectManager from "./Modals/ProjectManager";
-import StudyManager from "./Modals/StudyManager";
 import SubmissionStatusManager from "./Modals/SubmissionStatusManager";
 import StudySubmissionStatusManager from "./Modals/StudySubmissionStatusManager";
 import useClassDashboardData from "./useClassDashboardData";
@@ -334,7 +335,6 @@ export default function Dashboard({ myclass }) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [bulkMilestoneKey, setBulkMilestoneKey] = useState(null);
   const [projectRow, setProjectRow] = useState(null);
-  const [studyRow, setStudyRow] = useState(null);
   const [statusTarget, setStatusTarget] = useState(null);
   const [search, setSearch] = useState("");
 
@@ -343,7 +343,27 @@ export default function Dashboard({ myclass }) {
     []
   );
 
+  // The study chip opens the Studies tab, searched to the main project's study.
+  const openStudyInStudiesTab = useCallback(
+    (row) => {
+      if (!myclass?.code || !row?.studyTitle) return;
+      router.push({
+        pathname: `/dashboard/myclasses/${myclass.code}`,
+        query: { page: "studies", study: row.studyTitle },
+      });
+    },
+    [myclass?.code, router]
+  );
+
   const students = data?.profiles || [];
+  const studentIds = useMemo(
+    () => new Set(students.map((student) => student?.id)),
+    [students]
+  );
+  const templateBoardIds = useMemo(
+    () => new Set(templateBoards.map((board) => board.id)),
+    [templateBoards]
+  );
 
   const studentsProcessed = useMemo(
     () =>
@@ -358,7 +378,18 @@ export default function Dashboard({ myclass }) {
               (project) => project?.clonedFrom?.id === selectedBoardId
             )
           : classProjects;
-        if (selectedBoardId && !boardProjects.length) return [];
+        // Projects in this class that were not made from any of its project
+        // boards (moved in from another class, or older than the boards).
+        // They are counted under none of the boards, so they are flagged
+        // instead of being left out.
+        const offBoardProjects = templateBoards.length
+          ? (classProjects || []).filter(
+              (project) => !templateBoardIds.has(project?.clonedFrom?.id)
+            )
+          : [];
+        if (selectedBoardId && !boardProjects.length && !offBoardProjects.length) {
+          return [];
+        }
 
         let project;
         let projects;
@@ -366,10 +397,29 @@ export default function Dashboard({ myclass }) {
         let projectTitle;
         let studyId;
         let studyTitle;
+        let otherMainTitles = [];
+        let mainSharedWith = [];
 
         if (boardProjects && boardProjects.length) {
           const mainProjects = boardProjects.filter((p) => p?.isMain);
           project = (mainProjects.length && mainProjects[0]) || boardProjects[0];
+          // More than one main project: the first is shown, the rest are named.
+          otherMainTitles = mainProjects.slice(1).map((p) => p?.title || "");
+          // The other students of the class whose main project this is too.
+          if (project?.isMain) {
+            mainSharedWith = [
+              ...new Map(
+                [project.author, ...(project.collaborators || [])]
+                  .filter(
+                    (person) =>
+                      person?.id &&
+                      person.id !== student?.id &&
+                      studentIds.has(person.id)
+                  )
+                  .map((person) => [person.id, person.username])
+              ).values(),
+            ];
+          }
           projects = classProjects;
           projectId = project?.id;
           projectTitle = project?.title;
@@ -403,10 +453,22 @@ export default function Dashboard({ myclass }) {
           studies,
           studyId,
           studyTitle,
+          otherMainTitles,
+          mainSharedWith,
+          offBoardTitles: offBoardProjects.map((p) => p?.title || ""),
           milestones: milestoneEntries,
         }];
       }),
-    [students, myclass?.id, selectedBoardId, selectedMilestones, milestones]
+    [
+      students,
+      studentIds,
+      myclass?.id,
+      selectedBoardId,
+      selectedMilestones,
+      milestones,
+      templateBoards,
+      templateBoardIds,
+    ]
   );
 
   const completionByKey = useMemo(() => {
@@ -478,6 +540,10 @@ export default function Dashboard({ myclass }) {
         default: "Main Project",
       }),
       cellRenderer: MainProjectCell,
+      // The cell's alert opens the same panel as Manage Projects.
+      cellRendererParams: {
+        onManageProject: setProjectRow,
+      },
       minWidth: 200,
       width: 260,
     });
@@ -520,16 +586,15 @@ export default function Dashboard({ myclass }) {
         width: 220,
       },
       {
-        colId: "manageStudy",
+        colId: "mainStudy",
         field: "studyTitle",
-        headerName: t("dashboard.manageStudy", {}, {
-          default: "Manage study",
+        headerName: t("dashboard.mainStudyChip.header", {}, {
+          default: "Main project study",
         }),
-        cellRenderer: ManageStudyCell,
+        cellRenderer: MainStudyCell,
         cellRendererParams: {
-          onManageStudy: setStudyRow,
+          onOpenStudy: openStudyInStudiesTab,
         },
-        sortable: false,
         filter: false,
         minWidth: 200,
         width: 220,
@@ -543,6 +608,7 @@ export default function Dashboard({ myclass }) {
     completionByKey,
     studentsProcessed.length,
     openStatusManager,
+    openStudyInStudiesTab,
   ]);
 
   const defaultColDef = useMemo(
@@ -632,6 +698,24 @@ export default function Dashboard({ myclass }) {
                   "Project boards help you guide your students through their projects in a step-by-step way, following milestones like \u201cexpert feedback\u201d and \u201cpeer feedback.\u201d You can also add resources and assignments to project cards.",
               })}
             </p>
+            {classFollowsDataCollection(myclass) ? (
+              <p className="dashboardEmpty">
+                {t("dashboard.studiesFollowDataCollection", {}, {
+                  default:
+                    "This class follows data collection without a board: see where each study stands in the Studies tab.",
+                })}{" "}
+                <Link
+                  href={{
+                    pathname: `/dashboard/myclasses/${myclass?.code}`,
+                    query: { page: "studies" },
+                  }}
+                >
+                  {t("dashboard.openStudiesTab", {}, {
+                    default: "Open the Studies tab",
+                  })}
+                </Link>
+              </p>
+            ) : null}
             <Button
               variant="filled"
               leadingIcon={<AddIcon />}
@@ -793,17 +877,6 @@ export default function Dashboard({ myclass }) {
           data={projectRow}
           classId={myclass?.id}
           classProposalBoardId={selectedBoardId || primaryBoardId}
-        />
-      ) : null}
-
-      {studyRow ? (
-        <StudyManager
-          key={studyRow.id}
-          open
-          onClose={() => setStudyRow(null)}
-          data={studyRow}
-          classId={myclass?.id}
-          classCode={myclass?.code}
         />
       ) : null}
 

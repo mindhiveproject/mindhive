@@ -12,6 +12,10 @@ import ConnectStudyOnly from "../../Study/Navigation/Connect/Main";
 import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
 import { MY_STUDY } from "../../../Queries/Study";
 import StudyOptions from "../../../Studies/Bank/StudyOptions";
+import { useStudyDataCollection } from "../../shared/studyDataCollection/useStudyDataCollection";
+import StudyStageChip, {
+  openStudyStatus,
+} from "../../shared/studyDataCollection/StudyStageChip";
 import Tooltip from "../../../DesignSystem/Tooltip";
 import Button from "../../../DesignSystem/Button";
 import IconButton from "../../../DesignSystem/IconButton";
@@ -71,6 +75,12 @@ export default function Navigation({
       ? project?.title || t("header.myProjectBoard", "My Project Board")
       : study?.title || t("myStudies", "My Studies");
 
+  // In study mode, only show the study title when the study is linked to a
+  // project board.
+  const hideTitle =
+    mode !== "project" &&
+    !((study?.proposal?.length ?? 0) > 0 || !!study?.proposalMain?.id);
+
   const tryToLeave = (e) => {
     if (hasStudyChanged) {
       if (!confirm(t("unsavedChangesWarning"))) {
@@ -80,6 +90,19 @@ export default function Navigation({
   };
 
   const studyForNav = mode === "project" ? project?.study : study;
+
+  // Where a class-supervised study stands, next to the title; opens Settings
+  // → Study status in the builder (from another tab, through the builder).
+  const { state: dataCollection } = useStudyDataCollection(studyForNav?.id);
+  const openStatus = () => {
+    if (tab === "builder") {
+      openStudyStatus();
+      return;
+    }
+    router.push(
+      builderHref({ area, selector, tab: "builder", query: { panel: "status" } })
+    );
+  };
 
   // Collapse from the navbar's own width, not the viewport — same pattern as
   // the study-builder side panel (Builder/Project/Builder/Menu.js). Thresholds
@@ -129,11 +152,18 @@ export default function Navigation({
           router.push({ pathname: dashboardBackPath(area) });
         }}
       />
-      <div className="navTitle">
-        <Tooltip content={title} side="bottom" delayMs={650} maxWidth={400}>
-          <span className="studyTitle">{title}</span>
-        </Tooltip>
-      </div>
+      {!hideTitle && (
+        <div className="navTitle">
+          <Tooltip content={title} side="bottom" delayMs={650} maxWidth={400}>
+            <span className="studyTitle">{title}</span>
+          </Tooltip>
+        </div>
+      )}
+      {dataCollection ? (
+        <div className="navStudyStage">
+          <StudyStageChip state={dataCollection} onClick={openStatus} />
+        </div>
+      ) : null}
       <div className="builderNavbar" ref={navRef}>
         <Navbar variant="underline" dense hoverUnderline id="menue">
           {navItems.map((item) => {

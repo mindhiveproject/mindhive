@@ -8,6 +8,7 @@ import { GET_USER_STUDIES, GET_USER_CLASSES } from "../../Queries/User";
 import StudyCard from "./StudyCard";
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
 import MessageCard from "../../DesignSystem/MessageCard";
+import LoadingIcon from "../../DesignSystem/LoadingIcon";
 
 function containsAny(arr1, arr2) {
   if (!arr1?.length || !arr2?.length) return false;
@@ -19,7 +20,7 @@ export default function DevelopStudyBank({ user }) {
   const isTeacher = user?.permissions?.map((p) => p?.name).includes("TEACHER");
 
   const studiesQuery = isTeacher ? TEACHER_STUDIES : MY_STUDIES;
-  const { data } = useQuery(studiesQuery, {
+  const { data, loading } = useQuery(studiesQuery, {
     variables: { id: user?.id },
     skip: !user?.id,
   });
@@ -168,7 +169,18 @@ export default function DevelopStudyBank({ user }) {
           )}
         </div>
       </div>
-      {sortedStudies.length === 0 ? (
+      {loading && !data ? (
+        <MessageCard
+          variant="neutral"
+          message={
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <LoadingIcon size={20} />
+              {t("developStudies.loading", {}, { default: "Loading your studies…" })}
+            </span>
+          }
+          style={{ marginTop: "24px" }}
+        />
+      ) : sortedStudies.length === 0 ? (
         <MessageCard
           variant="neutral"
           message={t(

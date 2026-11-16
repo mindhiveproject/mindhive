@@ -1583,7 +1583,9 @@
 		"rosterDescription": "{{count}} étudiants inscrits à ce cours.",
 		"shareMessage": "Partagez le lien ci-dessous avec vos élèves pour les inviter à rejoindre votre classe.",
 		"student": "Étudiant/nom d'utilisateur",
-		"tab": "Étudiants"
+		"tab": "Étudiants",
+		"signInBy": "Doit se connecter avant le {{date}}",
+		"identityRemovalNotice": "{{count}} étudiants signalés ci-dessous ne se sont pas connectés depuis deux ans ou presque. À partir du {{date}}, leurs noms, adresses e-mail et autres informations personnelles seront supprimés et ils quitteront la classe, à moins qu’ils ne se connectent à MindHive d’ici là."
 	},
 	"studentsWillHaveAccessTo": "Vos étudiants auront accès à :",
 	"studentUsername": "Étudiant/Nom d'utilisateur",

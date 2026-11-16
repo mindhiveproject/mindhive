@@ -8,6 +8,7 @@ import { GET_USER_CLASSES, GET_USER_STUDIES } from "../../Queries/User";
 import ProjectCard from "./ProjectCard";
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
 import MessageCard from "../../DesignSystem/MessageCard";
+import LoadingIcon from "../../DesignSystem/LoadingIcon";
 
 function containsAny(arr1, arr2) {
   if (!arr1?.length || !arr2?.length) return false;
@@ -30,7 +31,7 @@ export default function DevelopProjectBank({ user }) {
   const isTeacher = user?.permissions?.map((p) => p?.name).includes("TEACHER");
 
   const projectsQuery = isTeacher ? TEACHER_PROJECT_BOARDS : GET_MY_PROJECT_BOARDS;
-  const { data } = useQuery(projectsQuery, {
+  const { data, loading } = useQuery(projectsQuery, {
     variables: { userId: user?.id },
     skip: !user?.id,
   });
@@ -174,7 +175,18 @@ export default function DevelopProjectBank({ user }) {
           )}
         </div>
       </div>
-      {sortedProjects.length === 0 ? (
+      {loading && !data ? (
+        <MessageCard
+          variant="neutral"
+          message={
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <LoadingIcon size={20} />
+              {t("developProjects.loading", {}, { default: "Loading your projects…" })}
+            </span>
+          }
+          style={{ marginTop: "24px" }}
+        />
+      ) : sortedProjects.length === 0 ? (
         <MessageCard
           variant="neutral"
           message={t(

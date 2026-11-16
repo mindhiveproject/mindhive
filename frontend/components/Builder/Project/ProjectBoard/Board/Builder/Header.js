@@ -297,7 +297,7 @@ export default function ProposalHeader({
                     />
                     <span>
                       {isLinked
-                        ? t("header.studyLinked", {}, { default: "Study Link" })
+                        ? t("header.studyLinked", {}, { default: "Linked" })
                         : t("header.unlinked", "Unlinked")}
                     </span>
                   </div>

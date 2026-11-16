@@ -1,4 +1,5 @@
 import { list } from "@keystone-6/core";
+const { uniqueSlug } = require("../lib/uniqueSlug");
 import {
   text,
   relationship,
@@ -9,10 +10,28 @@ import {
   checkbox,
   json,
 } from "@keystone-6/core/fields";
-import slugify from "slugify";
 
-import { signedInWrites, studyUpdateFilter, authorFilter } from "../access";
+import {
+  signedInWrites,
+  studyUpdateFilter,
+  authorFilter,
+  isAdmin,
+} from "../access";
 import { keepHiddenLinksOnSet } from "../lib/keepHiddenLinks";
+
+const { isTrustedSession } = require("../lib/studyDataCollection");
+
+const LOCKED_DATA_COLLECTION = ["SUBMITTED", "FINISHED"];
+
+// Signed-in callers other than admins and the setStudyDataCollection mutation
+// (lib/studyDataCollection.js) may not change these values. Internal writes
+// without a session (seeds, scripts) pass.
+function isGuardedCaller(context: any) {
+  const session = context.session;
+  if (!session?.itemId) return false;
+  if (isTrustedSession(session)) return false;
+  return !isAdmin({ session } as any);
+}
 
 export const Study = list({
   access: {
@@ -35,23 +54,7 @@ export const Study = list({
           if (operation === "create") {
             const { title } = inputData;
             if (title) {
-              let slug = slugify(title, {
-                remove: /[*+~.()'"!:@]/g, // remove characters that match regex
-                lower: true, // convert to lower case
-                strict: true, // strip special characters except replacement
-              });
-              const items = await context.query.Study.findMany({
-                where: { slug: { startsWith: slug } },
-                query: "id slug",
-              });
-              if (items.length) {
-                const re = new RegExp(`${slug}-*\\d*$`);
-                const slugs = items.filter((item) => item.slug.match(re));
-                if (slugs.length) {
-                  slug = `${slug}-${slugs.length}`;
-                }
-              }
-              return slug;
+              return uniqueSlug(context, "Study", title);
             }
           } else {
             return inputData.slug;
@@ -244,6 +247,21 @@ export const Study = list({
         },
       ],
       defaultValue: "WORKING",
+      // The self-managed label of a study, and the stamp every dataset
+      // records (real vs test participants). Once a study is submitted, it
+      // follows the milestone: only setStudyDataCollection changes it.
+      hooks: {
+        validateInput({ operation, resolvedData, item, context, addValidationError }) {
+          if (operation !== "update" || resolvedData.status === undefined) return;
+          if (resolvedData.status === item?.status) return;
+          if (!LOCKED_DATA_COLLECTION.includes(item?.dataCollectionStatus as string)) return;
+          if (isGuardedCaller(context)) {
+            addValidationError(
+              "This study has been submitted: its status follows its class milestone."
+            );
+          }
+        },
+      },
     }),
     // id of the StudyVersion used for data collection: it is stamped on every
     // Dataset and keys the participant data-policy consent, so it deliberately
@@ -265,6 +283,21 @@ export const Study = list({
         { label: "Data collection is finished", value: "FINISHED" },
       ],
       defaultValue: "NOT_STARTED",
+      // Locks the study once submitted (frontend/lib/studyLock.js). Written
+      // only by setStudyDataCollection, which also updates every linked
+      // board's milestone.
+      hooks: {
+        validateInput({ operation, resolvedData, item, context, addValidationError }) {
+          if (resolvedData.dataCollectionStatus === undefined) return;
+          if (operation === "update" && resolvedData.dataCollectionStatus === item?.dataCollectionStatus) return;
+          if (operation === "create" && resolvedData.dataCollectionStatus === "NOT_STARTED") return;
+          if (isGuardedCaller(context)) {
+            addValidationError(
+              "A study's data collection is submitted, finished or reopened from its data-collection card or by a teacher."
+            );
+          }
+        },
+      },
     }),
     dataCollectionData: select({
       options: [

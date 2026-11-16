@@ -5,14 +5,9 @@ import Collaborators from "../../../../Global/Collaborators";
 import Button from "../../../../DesignSystem/Button";
 import IconButton from "../../../../DesignSystem/IconButton";
 import Modal from "../../../../DesignSystem/Modal";
-import {
-  CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE,
-  ConnectFacepileChevron,
-} from "../../../Project/Navigation/ConnectFacepile";
-
-function isAdminUser(user) {
-  return (user?.permissions || []).some((p) => p?.name === "ADMIN");
-}
+import { GroupIcon } from "../../../../DesignSystem/Icons";
+import { CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE } from "../../../Project/Navigation/ConnectFacepile";
+import LinkedBoardPeople from "../../../shared/LinkedBoardPeople";
 
 export default function ConnectModal({
   study,
@@ -53,7 +48,7 @@ export default function ConnectModal({
         elevated={false}
         ariaLabel={t("connectModal.open", {}, { default: "Connect" })}
         title={t("connectModal.open", {}, { default: "Connect" })}
-        icon={<ConnectFacepileChevron />}
+        icon={<GroupIcon style={{ width: "20px", height: "20px" }} />}
         style={CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE}
         onClick={() => setOpen(true)}
       />
@@ -79,22 +74,7 @@ export default function ConnectModal({
           </>
         }
       >
-        {isAdminUser(user) && (
-          <p>
-            {t("connectModal.studyAuthor", {
-              username:
-                study?.author?.username ||
-                t("connectModal.noAuthor", {}, { default: "No Author" }),
-            })}{" "}
-            (
-            <em>
-              {t("connectModal.adminInfo", {}, {
-                default: "This information is visible only for ADMIN",
-              })}
-            </em>
-            )
-          </p>
-        )}
+        <LinkedBoardPeople studyId={study?.id} placement="author" />
         <h2 className="MH-Type-Title-Small">
           {t("connectModal.addCollaborators", {}, {
             default: "Add collaborators",
@@ -104,6 +84,10 @@ export default function ConnectModal({
           userClasses={userClasses}
           collaborators={collaborators}
           handleChange={handleChange}
+        />
+        <LinkedBoardPeople
+          studyId={study?.id}
+          collaboratorIds={collaborators}
         />
       </Modal>
     </>

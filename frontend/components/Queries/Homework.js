@@ -151,27 +151,18 @@ export const GET_ALL_HOMEWORK_FOR_PROPOSAL_CARD = gql`
 // student, or the students of the board a teacher is visiting. Homework only
 // links its assignment, so without the author filter a chip would reflect
 // anyone who ever answered the assignment, in any class.
+// Homework of these authors on these assignments, for a card's assignment
+// status chips: [{ id settings assignment { id } author { id } }], read
+// server-side without per-row lookups (keystone lib/cardAssignmentHomeworks.js).
 export const GET_HOMEWORK_FOR_CARD_ASSIGNMENTS_BY_AUTHORS = gql`
   query GET_HOMEWORK_FOR_CARD_ASSIGNMENTS_BY_AUTHORS(
     $assignmentIds: [ID!]!
     $authorIds: [ID!]!
   ) {
-    homeworks(
-      where: {
-        assignment: { id: { in: $assignmentIds } }
-        author: { id: { in: $authorIds } }
-      }
-    ) {
-      id
-      settings
-      assignment {
-        id
-      }
-      author {
-        id
-        username
-      }
-    }
+    cardAssignmentHomeworks(
+      assignmentIds: $assignmentIds
+      authorIds: $authorIds
+    )
   }
 `;
 

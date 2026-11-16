@@ -10,6 +10,8 @@ import {
 import ResourcesTooltipResourceButtons from "../../../_shared/ResourcesHelpLinks";
 import SectionHeader from "../../../_shared/SectionHeader";
 import AggregateVarSelector from "../Fields/AggregateVarSelector";
+import Input from "../../../../../../../../DesignSystem/Input";
+import CopyButton from "../../../../../../../../DesignSystem/CopyButton";
 
 const HV_COMMON = "dataJournal.hypVis.axes.common";
 const corr = "dataJournal.hypVis.axes.corr";
@@ -34,12 +36,13 @@ export default function Axes({
         },
       },
     },
+    skip: !studyId,
   });
 
   const flow = data?.studies?.[0]?.flow || [];
 
   const aggregateVarOptions = flow
-    .filter((block) => block.componentID)
+    .filter((block) => typeof block.componentID === "string" && block.componentID)
     .map((block) => ({
       label: block.name || block.type,
       ID: block.componentID,
@@ -59,6 +62,7 @@ export default function Axes({
         },
       },
     },
+    skip: taskIds.length === 0,
   });
 
   const optionsAggVar =
@@ -144,39 +148,30 @@ export default function Axes({
     [topResourcesItems, openLinkLabel, noLinkHint],
   );
 
-  const copyToClipboard = () => {
-    const {
-      ivDirectionality,
-      independentVariable,
-      dvDirectionality,
-      dependentVariable,
-    } = selectors;
-    const textContent = t(
-      `${clip}.corrHypothesis`,
-      {
-        ivDir: ivDirectionality || "",
-        iv: independentVariable || "",
-        dvDir: dvDirectionality || "",
-        dv: dependentVariable || "",
-      },
-      { default: "I predict that {{ivDir}} {{iv}} will be related to {{dvDir}} {{dv}}." },
-    );
-
-    navigator.clipboard
-      .writeText(textContent)
-      .then(() => {
-        alert(
-          t(
-            `${corr}.clipboardHypothesisCopied`,
-            { text: textContent },
-            { default: "Text copied to clipboard: {{text}}" },
-          ),
-        );
-      })
-      .catch((err) => {
-        console.error("Error copying text: ", err);
-      });
-  };
+  const {
+    ivDirectionality,
+    independentVariable,
+    dvDirectionality,
+    dependentVariable,
+  } = selectors;
+  const isHypothesisComplete = [
+    ivDirectionality,
+    independentVariable,
+    dvDirectionality,
+    dependentVariable,
+  ].every((v) => typeof v === "string" && v.trim());
+  const hypothesisText = isHypothesisComplete
+    ? t(
+        `${clip}.corrHypothesis`,
+        {
+          ivDir: ivDirectionality,
+          iv: independentVariable,
+          dvDir: dvDirectionality,
+          dv: dependentVariable,
+        },
+        { default: "I predict that {{ivDir}} {{iv}} will be related to {{dvDir}} {{dv}}." },
+      )
+    : "";
 
   const handleAggregateVarChange = (name, value) => {
     onChange({
@@ -216,28 +211,11 @@ export default function Axes({
 
   const helpAria = t("dataJournal.hypVis.helpAriaLabel", {}, { default: "More information" });
 
-  if (loading) return <p>{t(`${corr}.loading`, {}, { default: "Loading..." })}</p>;
-  if (error)
-    return (
-      <p>
-        {t(`${corr}.errorLoading`, { message: error.message }, { default: "Error: {{message}}" })}
-      </p>
-    );
-  if (aggVarLoading)
-    return <p>{t(`${corr}.loadingBlocks`, {}, { default: "Loading block data..." })}</p>;
-  if (aggVarError)
-    return (
-      <p>
-        {t(
-          `${corr}.errorLoadingBlocks`,
-          { message: aggVarError.message },
-          { default: "Error loading block data: {{message}}" },
-        )}
-      </p>
-    );
+  const suggestionsLoading = loading || aggVarLoading;
+  const suggestionsError = error || aggVarError;
 
   return (
-    <div className="graph-dashboard">
+    <div className="graph-dashboard hypvis-corr-form">
       <SectionHeader
         title={t(`${corr}.headerTitle`, {}, { default: "Correlational Hypothesis" })}
         iconSrc="/assets/icons/visualize/hypVis_corrAnalysis.svg"
@@ -246,26 +224,24 @@ export default function Axes({
         helpAction={topHelpAction}
         helpAriaLabel={t(`${HV_COMMON}.help.ariaLabel`, {}, { default: "Resources and help" })}
       />
-      <div className="text-input">
-        <label htmlFor="graphTitle" className="header-text">
-          {t(`${corr}.titleLabel`, {}, { default: "Title" })}
-        </label>
-        <input
-          className="input-box"
+
+      <div className="hypvis-corr-field">
+        <Input
           id={`title-${sectionId}`}
-          type="text"
           name="graphTitle"
+          label={t(`${corr}.titleLabel`, {}, { default: "Title" })}
           value={selectors.graphTitle || ""}
-          onChange={({ target }) =>
+          onChange={(next) =>
             onChange({
               componentId: sectionId,
               newContent: {
-                selectors: { ...selectors, graphTitle: target.value },
+                selectors: { ...selectors, graphTitle: next },
               },
             })
           }
         />
       </div>
+
       <div className="parameter-panel">
         <SectionHeader
           title={t(`${corr}.sectionTitle`, {}, { default: "Your correlational hypothesis" })}
@@ -273,72 +249,88 @@ export default function Axes({
           helpAriaLabel={helpAria}
         />
         <div className="fill-in-the-blanks">
-          <div className="text">
+          <span className="text">
             {t(`${corr}.iPredictThat`, {}, { default: "I predict that" })}
-          </div>
-
+          </span>
           <AggregateVarSelector
             placeholder={t(`${corr}.directionalityPlaceholder`, {}, { default: "directionality" })}
             isDirectionality={true}
             allowAdditions={false}
-            optionsAggVar={formattedItems}
-            studyId={studyId}
-            value={selectors.ivDirectionality || ""}
+            value={ivDirectionality || ""}
             onChange={(e, { value }) =>
               handleAggregateVarChange("ivDirectionality", value)
             }
           />
           <AggregateVarSelector
-            placeholder={
-              selectors.independentVariable ||
-              t(`${corr}.independentPlaceholder`, {}, { default: "independent variable" })
-            }
+            placeholder={t(`${corr}.independentPlaceholder`, {}, {
+              default: "independent variable",
+            })}
             isDirectionality={false}
             allowAdditions={true}
             optionsAggVar={formattedItems}
-            studyId={studyId}
-            value={selectors[`independentVariable`] || ""}
+            value={independentVariable || ""}
             onChange={(e, { value }) =>
               handleAggregateVarChange("independentVariable", value)
             }
           />
-          <div className="text">
+          <span className="text">
             {t(`${corr}.willBeRelatedTo`, {}, { default: "will be related to" })}
-          </div>
+          </span>
           <AggregateVarSelector
             placeholder={t(`${corr}.directionalityPlaceholder`, {}, { default: "directionality" })}
             isDirectionality={true}
             allowAdditions={false}
-            optionsAggVar={formattedItems}
-            studyId={studyId}
-            value={selectors.dvDirectionality || ""}
+            value={dvDirectionality || ""}
             onChange={(e, { value }) =>
               handleAggregateVarChange("dvDirectionality", value)
             }
           />
           <AggregateVarSelector
-            placeholder={
-              selectors[`dependentVariable`] ||
-              t(`${corr}.dependentPlaceholder`, {}, { default: "dependent variable" })
-            }
+            placeholder={t(`${corr}.dependentPlaceholder`, {}, {
+              default: "dependent variable",
+            })}
             isDirectionality={false}
             allowAdditions={true}
             optionsAggVar={formattedItems}
-            studyId={studyId}
-            value={selectors[`dependentVariable`] || ""}
+            value={dependentVariable || ""}
             onChange={(e, { value }) =>
               handleAggregateVarChange("dependentVariable", value)
             }
           />
         </div>
+
+        {suggestionsLoading ? (
+          <p className="hypvis-corr-note MH-Type-Body-Small">
+            {t(`${corr}.loadingBlocks`, {}, { default: "Loading block data..." })}
+          </p>
+        ) : null}
+        {!suggestionsLoading && suggestionsError ? (
+          <p className="hypvis-corr-note hypvis-corr-note--warning MH-Type-Body-Small">
+            {t(
+              `${corr}.errorLoadingBlocks`,
+              { message: suggestionsError.message },
+              { default: "Error loading block data: {{message}}" },
+            )}
+          </p>
+        ) : null}
+
+        {hypothesisText ? (
+          <blockquote className="hypvis-corr-preview MH-Type-Body-Base">
+            {hypothesisText}
+          </blockquote>
+        ) : null}
       </div>
+
       <div className="button-panel">
-        <div className="clipboard-copy-button" onClick={copyToClipboard}>
-          <div>
-            {t(`${corr}.copyHypothesis`, {}, { default: "Copy hypothesis text to clipboard" })}
-          </div>
-          <img src="/assets/icons/visualize/clipboard-copy.svg" alt="" />
-        </div>
+        <CopyButton
+          value={hypothesisText}
+          disabled={!hypothesisText}
+          ariaLabel={t(`${corr}.copyHypothesis`, {}, {
+            default: "Copy hypothesis text to clipboard",
+          })}
+        >
+          {t(`${corr}.copyHypothesis`, {}, { default: "Copy hypothesis text to clipboard" })}
+        </CopyButton>
       </div>
     </div>
   );

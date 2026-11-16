@@ -2,8 +2,10 @@
 // Items picker and with the linked-item chips on the card.
 //
 // - Owned (author, resource collaborator, or admin): link, preview, edit.
+// - An assignment of a class the user staffs (creator, co-teacher, mentor):
+//   link, preview, edit/publish, as assignmentUpdateFilter allows server-side.
 // - Someone else's resource: link, preview, copy & link. Never edit.
-// - Someone else's assignment: preview, copy & link. Not linkable as-is,
+// - Someone else's assignment, of no class the user staffs: preview, copy & link. Not linkable as-is,
 //   since student submissions would land on another teacher's assignment.
 // - Tasks and studies: link, preview (opens the discover page).
 //
@@ -14,14 +16,21 @@
 // linkable without ownership; add that source here once networks share
 // resources and assignments.
 
+import { isOnTeachingTeamOf } from "./classTeacherUtils";
+
 export function isAdminUser(user) {
   return Boolean(user?.permissions?.some((p) => p?.name === "ADMIN"));
 }
 
-export function canEditLinkedItem(item, user) {
+// `type` is "assignment" or "resource"; only assignments are editable by the
+// staff of their classes (needs the item's `classes { id }`).
+export function canEditLinkedItem(item, user, type) {
   if (!item || !user?.id) return false;
   if (isAdminUser(user)) return true;
   if (item.author?.id === user.id) return true;
+  if (type === "assignment" && item.classes?.some((c) => isOnTeachingTeamOf(user, c?.id))) {
+    return true;
+  }
   return Boolean(item.collaborators?.some((c) => c?.id === user.id));
 }
 
@@ -36,7 +45,7 @@ export function getLinkedItemActions(item, type, user) {
     return { link: true, preview: true, edit: false, copy: false, open: "preview" };
   }
 
-  const canEdit = canEditLinkedItem(item, user);
+  const canEdit = canEditLinkedItem(item, user, type);
   return {
     link: type === "resource" || canEdit,
     preview: true,

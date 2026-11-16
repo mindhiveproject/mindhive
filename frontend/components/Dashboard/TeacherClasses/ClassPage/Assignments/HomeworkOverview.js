@@ -81,7 +81,6 @@ const ButtonContainer = styled.div`
 
 const GridContainer = styled.div`
   width: 100%;
-  height: 600px;
   margin-top: 24px;
   
   .ag-theme-alpine {
@@ -388,8 +387,9 @@ export default function HomeworkOverview({ code, myclass, user, query }) {
       </ColumnToggleContainer>
 
       <GridContainer>
-        <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
+        <div className="ag-theme-alpine" style={{ width: '100%' }}>
           <AgGridReact
+            domLayout="autoHeight"
             rowData={rowData}
             columnDefs={columnDefs}
             pagination={pagination}

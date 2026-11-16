@@ -164,6 +164,18 @@ export const GET_CLASS = gql`
             title
           }
         }
+        authorOfProposal {
+          id
+          title
+          isMain
+          usedInClass {
+            id
+          }
+          clonedFrom {
+            id
+            title
+          }
+        }
       }
       mentors {
         id
@@ -185,6 +197,9 @@ export const GET_CLASS = gql`
         }
         participantsCount
         createdAt
+        status
+        dataCollectionStatus
+        dataCollectionOpenForParticipation
       }
       networks {
         id
@@ -322,6 +337,31 @@ export const CLASS_DASHBOARD_MENTORS_QUERY = gql`
   }
 `;
 
+// The class's teaching team (teacher, co-teachers, mentors) who hold a mentor
+// or teacher permission: the people a teacher can add as a study's mentors.
+export const CLASS_TEACHING_STAFF_QUERY = gql`
+  query CLASS_TEACHING_STAFF_QUERY($ids: [ID!]) {
+    profiles(
+      where: {
+        AND: [
+          { id: { in: $ids } }
+          {
+            permissions: {
+              some: { name: { in: ["MENTOR", "TEACHER"] } }
+            }
+          }
+        ]
+      }
+      orderBy: { username: asc }
+    ) {
+      id
+      username
+      firstName
+      lastName
+    }
+  }
+`;
+
 // The class's studies with their classes and collaborators, loaded by the
 // backend with one class access check for all studies
 // (keystone/lib/classDashboard.js) instead of one per study. Plain JSON, like
@@ -388,6 +428,47 @@ export const GET_MENTOR_CLASSES = gql`
       title
       code
       createdAt
+    }
+  }
+`;
+// Students of a class warned that their identity will be removed after two
+// years without a sign-in (DOE data agreement), as [{ id, date }]. The class's
+// teacher and co-teachers only (keystone/mutations/classDeidentificationNotices).
+export const CLASS_DEIDENTIFICATION_NOTICES = gql`
+  query CLASS_DEIDENTIFICATION_NOTICES($classId: ID!) {
+    classDeidentificationNotices(classId: $classId)
+  }
+`;
+
+// Whether the class supervises its studies' data collection itself, without
+// a project board template (keystone/mutations/studyDataCollection.ts).
+const CLASS_DATA_COLLECTION_FIELDS = `
+  classId
+  enabled
+  canManage
+  templateBoards {
+    id
+    title
+  }
+  carryOverCollecting
+  carryOverFinished
+  turnOffKeep
+  turnOffStaysLocked
+  turnOffSelfManaged
+`;
+
+export const CLASS_DATA_COLLECTION = gql`
+  query CLASS_DATA_COLLECTION($classId: ID!) {
+    classDataCollection(classId: $classId) {
+      ${CLASS_DATA_COLLECTION_FIELDS}
+    }
+  }
+`;
+
+export const SET_CLASS_DATA_COLLECTION = gql`
+  mutation SET_CLASS_DATA_COLLECTION($classId: ID!, $enabled: Boolean!) {
+    setClassDataCollection(classId: $classId, enabled: $enabled) {
+      ${CLASS_DATA_COLLECTION_FIELDS}
     }
   }
 `;

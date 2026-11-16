@@ -31,7 +31,7 @@ export default function ProposalPage({
         </div>
         {proposal?.isSubmitted ? (
           <div>
-            <h3>The proposal has been submitted and locked 🔒</h3>
+            <h3>The proposal has been submitted and locked</h3>
           </div>
         ) : (
           <>

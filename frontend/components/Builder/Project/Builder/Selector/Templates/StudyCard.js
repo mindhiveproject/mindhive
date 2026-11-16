@@ -4,6 +4,7 @@ import { NodesTypesContainer } from "../../Diagram/nodes-types-container/NodesTy
 import { NodeTypeLabel } from "../../Diagram/node-type-label/NodeTypeLabel";
 import Button from "../../../../../DesignSystem/Button";
 import IconButton from "../../../../../DesignSystem/IconButton";
+import Tooltip from "../../../../../DesignSystem/Tooltip";
 
 const ICON_MASK = (src) => ({
   display: "block",
@@ -24,7 +25,11 @@ function MediumIcon({ src }) {
   return <span aria-hidden style={ICON_MASK(src)} />;
 }
 
-export default function StudyCard({ study, addFunctions }) {
+export default function StudyCard({
+  study,
+  addFunctions,
+  isCanvasLocked = false,
+}) {
   const { t } = useTranslation("builder");
   const description = study?.description || study?.shortDescription || "";
   return (
@@ -37,6 +42,7 @@ export default function StudyCard({ study, addFunctions }) {
               diagram: study?.diagram,
             }}
             name={study?.title}
+            disabled={isCanvasLocked}
             />
           </NodesTypesContainer>
           {description ? (
@@ -67,16 +73,32 @@ export default function StudyCard({ study, addFunctions }) {
             }}
           />
         )}
-        <Button
-          variant="filled"
-          onClick={() => {
-            addFunctions.addStudyTemplateToCanvas({ study });
-          }}
+        <Tooltip
+          content={t(
+            "selector.lockedAddHint",
+            {},
+            {
+              default:
+                "This study is locked. Ask your teacher to reopen it to add blocks.",
+            }
+          )}
+          disabled={!isCanvasLocked}
         >
-          {t("selector.templates.tryThisFlow", {}, {
-            default: "Try this flow",
-          })}
-        </Button>
+          <Button
+            variant="filled"
+            disabled={isCanvasLocked}
+            // Lets the hover reach the tooltip's wrapper past the disabled
+            // button.
+            style={isCanvasLocked ? { pointerEvents: "none" } : undefined}
+            onClick={() => {
+              addFunctions.addStudyTemplateToCanvas({ study });
+            }}
+          >
+            {t("selector.templates.tryThisFlow", {}, {
+              default: "Try this flow",
+            })}
+          </Button>
+        </Tooltip>
       </div>
     </div>
   );

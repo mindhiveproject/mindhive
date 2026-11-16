@@ -9,6 +9,7 @@ import { PROPOSAL_QUERY } from "../../../../Queries/Proposal";
 import { UPDATE_STUDY } from "../../../../Mutations/Study";
 
 import ConnectFacepile from "../ConnectFacepile";
+import { useLinkedBoardPeople } from "../../../shared/LinkedBoardPeople";
 
 export default function Connect({ study, user, projectId }) {
   // save and edit the study information
@@ -40,10 +41,16 @@ export default function Connect({ study, user, projectId }) {
   };
 
   const collaborators = study?.collaborators || [];
+  // The facepile also shows the people on linked project boards, who can
+  // edit the study through their board (read-only in the modal).
+  const { people: boardPeople } = useLinkedBoardPeople(
+    studyId,
+    collaborators.map((c) => c?.id)
+  );
 
   return (
     <div className="connectArea">
-      <ConnectFacepile collaborators={collaborators}>
+      <ConnectFacepile collaborators={[...collaborators, ...boardPeople]}>
         <ConnectModal
           study={inputs}
           user={user}

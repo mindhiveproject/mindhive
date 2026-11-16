@@ -5,6 +5,8 @@ import useTranslation from "next-translate/useTranslation";
 
 import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 import { buildDualWriteUpdate } from "../../../../../../lib/milestoneStatus";
+import { SET_STUDY_DATA_COLLECTION } from "../../../../../Queries/Study";
+import { DATA_COLLECTION_REFETCH } from "../../../../../Builder/shared/studyDataCollection/useStudyDataCollection";
 import Button from "../../../../../DesignSystem/Button";
 import Chip from "../../../../../DesignSystem/Chip";
 import MessageCard from "../../../../../DesignSystem/MessageCard";
@@ -43,9 +45,20 @@ export const SelectedStudentsModal = ({
     (student) => !eligibleKeys.has(student)
   );
 
-  const [updateProject, { loading }] = useMutation(UPDATE_PROJECT_BOARD, {
+  const [updateProject, { loading: updatingBoards }] = useMutation(UPDATE_PROJECT_BOARD, {
     refetchQueries: classDashboardRefetchQueries(classId),
   });
+
+  const [setDataCollection, { loading: reopeningStudies }] = useMutation(
+    SET_STUDY_DATA_COLLECTION,
+    {
+      refetchQueries: [
+        ...classDashboardRefetchQueries(classId),
+        ...DATA_COLLECTION_REFETCH,
+      ],
+    }
+  );
+  const loading = updatingBoards || reopeningStudies;
 
   const close = () => {
     setFailed(false);
@@ -55,6 +68,22 @@ export const SelectedStudentsModal = ({
   const reopenAll = async () => {
     setFailed(false);
     try {
+      if (isStudy) {
+        // One reopen per study: students sharing a study reopen together,
+        // on every board linked to it.
+        const studyIds = [
+          ...new Set(
+            eligible
+              .map((student) => student.project?.study?.id || student.studyId)
+              .filter(Boolean)
+          ),
+        ];
+        for (const studyId of studyIds) {
+          await setDataCollection({ variables: { studyId, action: "REOPEN" } });
+        }
+        close();
+        return;
+      }
       await Promise.all(
         eligible.map((student) =>
           updateProject({

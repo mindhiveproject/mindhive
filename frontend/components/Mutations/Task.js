@@ -127,3 +127,12 @@ export const COPY_TASK_FOR_STUDY = gql`
     }
   }
 `;
+
+// Removes one of the user's unused task copies ("My versions" in the builder).
+export const DELETE_TASK = gql`
+  mutation DELETE_TASK($id: ID!) {
+    deleteTask(where: { id: $id }) {
+      id
+    }
+  }
+`;

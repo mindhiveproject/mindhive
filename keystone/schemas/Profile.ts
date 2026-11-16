@@ -191,6 +191,11 @@ export const Profile = list({
     deidentificationWarnedAt: timestamp({
       access: { ...ownerOnlyRead, create: () => false, update: () => false },
     }),
+    // When the teachers of this account's classes were emailed about that
+    // warning (runDeidentification); cleared by the next sign-in, like it.
+    deidentificationTeachersNotifiedAt: timestamp({
+      access: { ...ownerOnlyRead, create: () => false, update: () => false },
+    }),
     language: select({
       options: [
         { label: "English (American)", value: "EN-US" },
@@ -306,6 +311,22 @@ export const Profile = list({
     }),
     collaboratorInTask: relationship({
       ref: "Task.collaborators",
+      many: true,
+    }),
+    taskShareInvitesSent: relationship({
+      ref: "TaskShareInvite.sender",
+      many: true,
+    }),
+    taskShareInvitesReceived: relationship({
+      ref: "TaskShareInvite.recipients",
+      many: true,
+    }),
+    taskShareInvitesAccepted: relationship({
+      ref: "TaskShareInvite.acceptedBy",
+      many: true,
+    }),
+    taskShareInvitesDeclined: relationship({
+      ref: "TaskShareInvite.declinedBy",
       many: true,
     }),
     favoriteTasks: relationship({

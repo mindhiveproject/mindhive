@@ -14,6 +14,7 @@ import { OpenInNewIcon, TrashIcon } from "../../../../../DesignSystem/Icons";
 import DashboardAssetIcon from "../DashboardAssetIcon";
 import { peopleOption } from "./peopleOption";
 import { classDashboardRefetchQueries } from "../useClassDashboardData";
+import { boardRuleMessage } from "../../../../../../lib/mainProject";
 
 import { CLASS_ROSTER_QUERY } from "../../../../../Queries/Classes";
 import { CLASS_PROJECTS_QUERY } from "../../../../../Queries/Proposal";
@@ -80,6 +81,39 @@ export default function ProjectManager(props) {
     skip: !props?.classId,
   });
   const roster = rosterData?.profiles || [];
+  const rosterIds = new Set(roster.map((profile) => profile.id));
+  const usernameOf = (id) =>
+    id === studentId
+      ? props?.data?.username
+      : roster.find((profile) => profile.id === id)?.username;
+
+  // The students on a board: its author and collaborators who are in the
+  // class roster. Teachers and mentors are not counted
+  // (keystone/lib/mainProject.js).
+  const studentIdsOf = (project) => [
+    ...new Set(
+      [project?.author?.id, ...(project?.collaborators || []).map((c) => c.id)]
+        .filter((id) => id && (rosterIds.has(id) || id === studentId))
+    ),
+  ];
+
+  // Shown after adding someone to a main project when that leaves them with
+  // two main projects in this class. Allowed, but the teacher should know.
+  const [doubleMain, setDoubleMain] = useState(null);
+  const warnIfSecondMain = (profileId, target, otherBoards) => {
+    if (!target?.isMain) return;
+    const other = otherBoards.find(
+      (board) =>
+        board.id !== target.id &&
+        board.isMain &&
+        studentIdsOf(board).includes(profileId)
+    );
+    if (!other) return;
+    setDoubleMain({
+      username: usernameOf(profileId),
+      titles: [other.title, target.title],
+    });
+  };
 
   const { data: proposalData } = useQuery(DEFAULT_PROJECT_BOARDS);
   const defaultProposalBoardId =
@@ -100,7 +134,7 @@ export default function ProjectManager(props) {
     ],
   });
 
-  const [updateProject, { loading: updateLoading, error: updateError }] =
+  const [updateProject, { loading: updateLoading }] =
     useMutation(UPDATE_PROJECT_BOARD, {
       refetchQueries: classDashboardRefetchQueries(props?.classId),
     });
@@ -123,11 +157,11 @@ export default function ProjectManager(props) {
     });
     const added = availableProjects.find((p) => p.id === projectId);
     if (added) {
+      warnIfSecondMain(studentId, added, localProjects);
       setLocalProjects((prev) => [
         ...prev,
         {
           ...added,
-          isMain: false,
           collaborators: [
             ...(added.collaborators || []),
             { id: studentId, username: props?.data?.username },
@@ -153,6 +187,11 @@ export default function ProjectManager(props) {
       variables: { projectId, input: { connect: { id: profileId } } },
     });
     const profile = roster.find((p) => p.id === profileId);
+    warnIfSecondMain(
+      profileId,
+      localProjects.find((proj) => proj.id === projectId),
+      availableProjects
+    );
     patchProject(projectId, (proj) => ({
       collaborators: [
         ...(proj.collaborators || []),
@@ -188,47 +227,46 @@ export default function ProjectManager(props) {
     closeModal();
   };
 
-  const toggleProjectAsMain = async ({ projectId, isMain }) => {
+  // One update: the server checks the one-main-per-class rule and un-mains
+  // the boards this one replaces (keystone/lib/mainProject.js). When it
+  // refuses, the reason is shown above the table.
+  const [mainError, setMainError] = useState(null);
+  const saveMain = async (projectId, isMain, replacedIds = []) => {
+    setMainError(null);
     try {
-      // Optimistically update local state
-      setLocalProjects((prevProjects) =>
-        prevProjects.map((proj) =>
-          proj.id === projectId ? { ...proj, isMain } : proj
-        )
-      );
-
       await updateProject({
-        variables: {
-          id: projectId,
-          input: {
-            isMain,
-          },
-        },
-        optimisticResponse: {
-          updateProposalBoard: {
-            __typename: "ProposalBoard",
-            id: projectId,
-            isMain,
-          },
-        },
+        variables: { id: projectId, input: { isMain } },
       });
+      setLocalProjects((prev) =>
+        prev.map((proj) => {
+          if (proj.id === projectId) return { ...proj, isMain };
+          if (replacedIds.includes(proj.id)) return { ...proj, isMain: false };
+          return proj;
+        })
+      );
     } catch (err) {
-      console.error("Error toggling main project:", err);
-      // Revert local state on error
-      setLocalProjects(props?.data?.projects || []);
-      alert(t("dashboard.failedToUpdateMainProject"));
+      setMainError(boardRuleMessage(err));
     }
   };
 
-  // Radio semantics: exactly one main project, so unset any other
-  const setMainProject = async (projectId) => {
-    for (const proj of localProjects) {
-      const isMain = proj.id === projectId;
-      if (!!proj.isMain !== isMain) {
-        await toggleProjectAsMain({ projectId: proj.id, isMain });
-      }
-    }
+  const setMainProject = (projectId) => {
+    const target = localProjects.find((proj) => proj.id === projectId);
+    const targetStudents = studentIdsOf(target);
+    // Replaced: main projects whose students are all on the new main project.
+    const replacedIds = localProjects
+      .filter(
+        (proj) =>
+          proj.id !== projectId &&
+          proj.isMain &&
+          studentIdsOf(proj).every((id) => targetStudents.includes(id))
+      )
+      .map((proj) => proj.id);
+    return saveMain(projectId, true, replacedIds);
   };
+
+  const unsetMainProject = (projectId) => saveMain(projectId, false);
+
+  const mainCount = localProjects.filter((proj) => proj.isMain).length;
 
   const openBoard = (projectId) =>
     window.open(`/builder/projects?selector=${projectId}`, "_blank");
@@ -267,10 +305,43 @@ export default function ProjectManager(props) {
             })}
           </p>
 
-          {updateError && (
+          {mainError && (
             <MessageCard
               variant="warning"
-              message={t("dashboard.failedToUpdateProjectStatus")}
+              message={mainError}
+              onClose={() => setMainError(null)}
+              closeAriaLabel={t("dashboard.dismiss", {}, { default: "Dismiss" })}
+            />
+          )}
+          {mainCount > 1 && (
+            <MessageCard
+              variant="information"
+              message={t(
+                "dashboard.severalMainProjects",
+                { username: props?.data?.username },
+                {
+                  default: `${props?.data?.username} has more than one main project in this class. A main project is shared by every student on it, so this happens when a student joins a project that is already someone's main project. The dashboard shows the first one; select the one to keep, or remove the others as main project.`,
+                }
+              )}
+            />
+          )}
+          {doubleMain && (
+            <MessageCard
+              variant="information"
+              message={t(
+                "dashboard.collaboratorHasTwoMains",
+                {
+                  username: doubleMain.username,
+                  titles: doubleMain.titles.map((title) => `"${title}"`).join(", "),
+                },
+                {
+                  default: `${doubleMain.username} now has two main projects in this class: ${doubleMain.titles
+                    .map((title) => `"${title}"`)
+                    .join(", ")}. Open their projects to choose which one to keep.`,
+                }
+              )}
+              onClose={() => setDoubleMain(null)}
+              closeAriaLabel={t("dashboard.dismiss", {}, { default: "Dismiss" })}
             />
           )}
 
@@ -338,6 +409,11 @@ export default function ProjectManager(props) {
                       (c) => c.id !== studentId
                     );
                     const mentors = getMentors(project);
+                    // The other students whose main project this is too.
+                    const sharedWith = studentIdsOf(project)
+                      .filter((id) => id !== studentId)
+                      .map(usernameOf)
+                      .filter(Boolean);
                     const addOptions = roster
                       .filter(
                         (s) =>
@@ -359,6 +435,32 @@ export default function ProjectManager(props) {
                         </td>
                         <td>
                           <Chip variant="static" tone="neutral" label={project.title} />
+                          {project.isMain && (
+                            <div className="mainNote">
+                              {sharedWith.length > 0 && (
+                                <span>
+                                  {t(
+                                    "dashboard.mainSharedWith",
+                                    { names: sharedWith.join(", ") },
+                                    {
+                                      default: `Also the main project of ${sharedWith.join(
+                                        ", "
+                                      )}`,
+                                    }
+                                  )}
+                                </span>
+                              )}
+                              <DesignSystemButton
+                                variant="text"
+                                onClick={() => unsetMainProject(project.id)}
+                                disabled={updateLoading}
+                              >
+                                {t("dashboard.removeAsMain", {}, {
+                                  default: "Remove as main project",
+                                })}
+                              </DesignSystemButton>
+                            </div>
+                          )}
                         </td>
                         <td>
                           <DesignSystemButton
@@ -449,6 +551,15 @@ const StyledProjectManager = styled.div`
   p {
     font: var(--MH-Type-Body-Base);
     margin: 0;
+  }
+
+  .mainNote {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    font: var(--MH-Type-Body-Small, var(--MH-Type-Body-Base));
   }
 
   .actions {

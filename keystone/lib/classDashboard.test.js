@@ -40,8 +40,15 @@ function fakeContext({
   boards = [BOARD],
   studies = [],
   readableClasses = [],
+  runs = [],
 } = {}) {
-  const calls = { classCount: [], classFind: [], boards: [], studies: [] };
+  const calls = {
+    classCount: [],
+    classFind: [],
+    boards: [],
+    studies: [],
+    runs: [],
+  };
   const context = {
     session,
     db: {
@@ -69,6 +76,12 @@ function fakeContext({
         findMany: async (args) => {
           calls.studies.push(args);
           return studies;
+        },
+      },
+      dataset: {
+        groupBy: async (args) => {
+          calls.runs.push(args);
+          return runs;
         },
       },
     },
@@ -125,6 +138,7 @@ const STUDIES = [
   {
     id: "st1",
     title: "Sleep",
+    authorId: "author1",
     classes: [
       { id: "class1", title: "Mine" },
       { id: "other", title: "Someone else's" },
@@ -134,10 +148,19 @@ const STUDIES = [
   {
     id: "st2",
     title: "Memory",
+    authorId: "author2",
     classes: [{ id: "class1", title: "Mine" }],
     collaborators: [],
   },
 ];
+
+const NO_PARTICIPATION = {
+  real: 0,
+  realGuests: 0,
+  test: 0,
+  testGuests: 0,
+  included: 0,
+};
 
 test("studies: lists only the classes the caller may read, checked once", async () => {
   const { context, calls } = fakeContext({
@@ -155,9 +178,59 @@ test("studies: lists only the classes the caller may read, checked once", async 
       title: "Sleep",
       classes: [{ id: "class1", title: "Mine" }],
       collaborators: [{ id: "p1", username: "ana" }],
+      participation: NO_PARTICIPATION,
     },
-    { id: "st2", title: "Memory", classes: [{ id: "class1", title: "Mine" }], collaborators: [] },
+    {
+      id: "st2",
+      title: "Memory",
+      classes: [{ id: "class1", title: "Mine" }],
+      collaborators: [],
+      participation: NO_PARTICIPATION,
+    },
   ]);
+});
+
+test("studies: participants split into real and test from recorded runs", async () => {
+  const run = (over) => ({
+    studyId: "st1",
+    profileId: null,
+    guestId: null,
+    studyStatus: "COLLECTING_DATA",
+    isCompleted: true,
+    isIncluded: false,
+    ...over,
+  });
+  const { context, calls } = fakeContext({
+    studies: STUDIES,
+    readableClasses: ["class1"],
+    runs: [
+      // Real: an outside account during collection, included, run twice.
+      run({ profileId: "s1", isIncluded: true }),
+      run({ profileId: "s1", studyStatus: "WORKING" }),
+      // Real guest.
+      run({ guestId: "g1" }),
+      // Test: the collaborator and the author, even during collection.
+      run({ profileId: "p1" }),
+      run({ profileId: "author1" }),
+      // Test: an outside guest before collection started.
+      run({ guestId: "g2", studyStatus: "WORKING" }),
+      // Another study's run doesn't leak into st1.
+      run({ studyId: "st2", profileId: "s1", studyStatus: "REVIEWED" }),
+    ],
+  });
+  const studies = await loadClassDashboardStudies(context, "class1");
+  assert.deepEqual(calls.runs[0].where, { studyId: { in: ["st1", "st2"] } });
+  assert.deepEqual(studies[0].participation, {
+    real: 2,
+    realGuests: 1,
+    test: 3,
+    testGuests: 1,
+    included: 1,
+  });
+  assert.deepEqual(studies[1].participation, {
+    ...NO_PARTICIPATION,
+    test: 1,
+  });
 });
 
 test("studies: denied callers get no study data", async () => {
@@ -171,4 +244,5 @@ test("studies: no class lookup when the class has no studies", async () => {
   const { context, calls } = fakeContext({ studies: [] });
   assert.deepEqual(await loadClassDashboardStudies(context, "class1"), []);
   assert.equal(calls.classFind.length, 0);
+  assert.equal(calls.runs.length, 0);
 });
