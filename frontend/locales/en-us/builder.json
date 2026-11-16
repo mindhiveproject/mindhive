@@ -207,6 +207,9 @@
 	},
 	"cloneAndModify": "Clone & modify a {{taskType}}",
 	"closeButton": "Close",
+	"collaboration": {
+		"hereNow": "{{name}} · here now"
+	},
 	"codeExecution": {
 		"codeRunningMessage": "The code is running.",
 		"justOneSecondTitle": "Just one second",

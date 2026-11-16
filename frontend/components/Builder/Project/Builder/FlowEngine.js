@@ -13,7 +13,7 @@ import StudyFlowCanvas, { newId } from "./Flow/StudyFlowCanvas";
 import { CanvasActionsProvider } from "./Flow/CanvasActions";
 import useStudyGraph, { SEED_ORIGIN } from "./Flow/useStudyGraph";
 import usePresence, { presenceByNode } from "./Flow/presence";
-import { CollaboratorsBar } from "./Flow/Collaborators";
+import { CollaborationStatus } from "./Flow/Collaborators";
 import { BuilderLoading } from "./Loading";
 import {
   NODE_TYPES,
@@ -235,6 +235,18 @@ function FlowEditor({
     () => presenceByNode(others),
     [selectionKey] // eslint-disable-line react-hooks/exhaustive-deps
   );
+  // who is here, for the facepile in the top navigation; null when this
+  // canvas is not live, so the facepile does not mark anyone as away
+  const onlineKey = JSON.stringify(others.map((o) => [o.user.id, o.user.color]));
+  const facepilePresence = useMemo(() => {
+    if (!provider) return null;
+    // this person is here too, but gets no ring
+    const online = user?.id ? { [user.id]: { self: true } } : {};
+    others.forEach(({ user: person }) => {
+      online[person.id] = { color: person.color, name: person.name };
+    });
+    return online;
+  }, [onlineKey, provider, user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Settings (tags, status, ...) are saved with the design only after this
   // person changed them, so a save made for a collaborator's canvas change
@@ -851,6 +863,7 @@ function FlowEditor({
             : undefined
         }
         isCanvasLocked={isCanvasLocked}
+        presence={facepilePresence}
       />
       <Builder
         query={query}
@@ -870,10 +883,9 @@ function FlowEditor({
         topBarExtras={
           <>
             {provider ? (
-              <CollaboratorsBar others={others} connected={connected} />
+              <CollaborationStatus connected={connected} />
             ) : workingAlone ? (
-              <CollaboratorsBar
-                others={[]}
+              <CollaborationStatus
                 connected={false}
                 message={t("collaboration.unavailable", {}, {
                   default: "Live collaboration is unavailable right now",

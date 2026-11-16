@@ -1,3 +1,6 @@
+import { useEffect, useRef, useState } from "react";
+import useTranslation from "next-translate/useTranslation";
+
 import Tooltip from "../../../DesignSystem/Tooltip";
 
 export const CONNECT_FACEPILE_SIZE_PX = 41;
@@ -21,7 +24,8 @@ const AVATAR_BASE_STYLE = {
   width: CONNECT_FACEPILE_SIZE_PX,
   height: CONNECT_FACEPILE_SIZE_PX,
   borderRadius: "50%",
-  overflow: "hidden",
+  // not hidden: the join pulse is drawn outside the circle
+  overflow: "visible",
   flexShrink: 0,
   boxSizing: "border-box",
   background: "var(--MH-Theme-Neutrals-Light, #e6e6e6)",
@@ -37,12 +41,57 @@ const PHOTO_STYLE = {
   height: CONNECT_FACEPILE_SIZE_PX,
   objectFit: "cover",
   display: "block",
+  borderRadius: "50%",
 };
 
-const CHEVRON_ICON_STYLE = `
+// How long the ring pulses when someone opens the study
+const JOIN_PULSE_MS = 2400;
+
+const FACEPILE_CSS = `
 .connectFacepile .DesignSystem-IconButton-Icon svg {
   width: 11px;
   height: 8px;
+}
+.connectFacepile .connectFacepileAvatar {
+  position: relative;
+  transition: box-shadow 0.25s ease, filter 0.25s ease, opacity 0.25s ease;
+}
+.connectFacepile .connectFacepileAvatar--here {
+  box-shadow:
+    0 0 0 2px var(--MH-Theme-Neutrals-White, #ffffff),
+    0 0 0 4px var(--presence-color);
+}
+.connectFacepile .connectFacepileAvatar--away {
+  filter: grayscale(1);
+}
+/* an opaque wash rather than transparency, so the avatar underneath in the
+   pile does not show through */
+.connectFacepile .connectFacepileAvatar--away::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--MH-Theme-Neutrals-White, #ffffff);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.connectFacepile .connectFacepileAvatar--joined::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 3px solid var(--presence-color);
+  pointer-events: none;
+  animation: connectFacepileJoin ${JOIN_PULSE_MS / 2}ms ease-out 2;
+}
+@keyframes connectFacepileJoin {
+  from { transform: scale(1); opacity: 0.9; }
+  to { transform: scale(1.55); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .connectFacepile .connectFacepileAvatar--joined::after {
+    animation: none;
+  }
 }
 `;
 
@@ -74,12 +123,97 @@ export function ConnectFacepileChevron() {
   );
 }
 
-export default function ConnectFacepile({ collaborators = [], children }) {
+/**
+ * The ids in `presence` that were not there on the previous change, for
+ * JOIN_PULSE_MS. The people already here when presence first arrives do not
+ * pulse.
+ */
+function useJustJoined(presence) {
+  const previousRef = useRef(null);
+  const timersRef = useRef(new Map());
+  const [joined, setJoined] = useState(() => new Set());
+  const key = presence ? Object.keys(presence).sort().join(",") : null;
+
+  useEffect(() => {
+    if (!presence) {
+      previousRef.current = null;
+      return;
+    }
+    const ids = Object.keys(presence).filter((id) => !presence[id].self);
+    const previous = previousRef.current;
+    previousRef.current = new Set(ids);
+    if (!previous) return;
+    const fresh = ids.filter((id) => !previous.has(id));
+    if (!fresh.length) return;
+    setJoined((current) => new Set([...current, ...fresh]));
+    fresh.forEach((id) => {
+      clearTimeout(timersRef.current.get(id));
+      timersRef.current.set(
+        id,
+        setTimeout(() => {
+          timersRef.current.delete(id);
+          setJoined((current) => {
+            const next = new Set(current);
+            next.delete(id);
+            return next;
+          });
+        }, JOIN_PULSE_MS)
+      );
+    });
+  }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const timers = timersRef.current;
+    return () => timers.forEach((timer) => clearTimeout(timer));
+  }, []);
+
+  return joined;
+}
+
+/**
+ * The people on a study or board. With `presence` (live study canvas only:
+ * { [userId]: { color, name } | { self: true } }), the people who have it
+ * open now come first with a ring in their colour, pulse as they arrive, and
+ * the others are dimmed. Without it, everyone shows the same.
+ */
+export default function ConnectFacepile({
+  collaborators = [],
+  presence = null,
+  children,
+}) {
+  const { t } = useTranslation("builder");
+  const joined = useJustJoined(presence);
+
+  const isHere = (collaborator) => !!presence?.[collaborator?.id];
+  const ordered = presence
+    ? [
+        ...collaborators.filter(isHere),
+        ...collaborators.filter((c) => !isHere(c)),
+      ]
+    : collaborators;
+
   return (
     <div className="connectFacepile" style={WRAPPER_STYLE}>
-      <style dangerouslySetInnerHTML={{ __html: CHEVRON_ICON_STYLE }} />
-      {collaborators.map((collaborator, index) => {
+      <style dangerouslySetInnerHTML={{ __html: FACEPILE_CSS }} />
+      {ordered.map((collaborator, index) => {
         const src = photoUrl(collaborator);
+        const here = presence?.[collaborator?.id];
+        const ringed = here && !here.self;
+        const className = [
+          "connectFacepileAvatar",
+          ringed && "connectFacepileAvatar--here",
+          presence && !here && "connectFacepileAvatar--away",
+          ringed && joined.has(collaborator.id) && "connectFacepileAvatar--joined",
+        ]
+          .filter(Boolean)
+          .join(" ");
+        const label = ringed
+          ? t(
+              "collaboration.hereNow",
+              { name: collaborator?.username },
+              { default: `${collaborator?.username} · here now` }
+            )
+          : collaborator?.username;
         return (
           <span
             key={collaborator?.id || index}
@@ -87,15 +221,20 @@ export default function ConnectFacepile({ collaborators = [], children }) {
               display: "inline-flex",
               flexShrink: 0,
               marginRight: -CONNECT_FACEPILE_OVERLAP_PX,
-              zIndex: index + 1,
+              // with presence the people here sit on top, so their rings show
+              zIndex: presence ? ordered.length - index : index + 1,
               position: "relative",
             }}
           >
-            <Tooltip
-              content={collaborator?.username}
-              side="bottom"
-            >
-              <span style={AVATAR_BASE_STYLE}>
+            <Tooltip content={label} side="bottom">
+              <span
+                className={className}
+                style={
+                  ringed
+                    ? { ...AVATAR_BASE_STYLE, "--presence-color": here.color }
+                    : AVATAR_BASE_STYLE
+                }
+              >
                 {src ? (
                   <img
                     src={src}
@@ -112,7 +251,7 @@ export default function ConnectFacepile({ collaborators = [], children }) {
           </span>
         );
       })}
-      <span style={{ position: "relative", zIndex: collaborators.length + 1 }}>
+      <span style={{ position: "relative", zIndex: ordered.length + 1 }}>
         {children}
       </span>
     </div>

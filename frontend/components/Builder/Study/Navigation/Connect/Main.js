@@ -15,6 +15,7 @@ export default function Connect({
   user,
   modalOpen,
   onModalOpenChange,
+  presence,
 }) {
   // save and edit the study information
   const { inputs, handleChange, handleMultipleUpdate, captureFile, clearForm } =
@@ -50,7 +51,10 @@ export default function Connect({
 
   return (
     <div className="connectArea">
-      <ConnectFacepile collaborators={[...collaborators, ...boardPeople]}>
+      <ConnectFacepile
+        collaborators={[...collaborators, ...boardPeople]}
+        presence={presence}
+      >
         <ConnectModal
           study={inputs}
           user={user}
