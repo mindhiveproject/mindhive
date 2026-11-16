@@ -230,11 +230,11 @@ export default function Proposal({
                 )}
                 {hasStudy && (allCardsCompleted ? (
                   <div className="subtitle MH-Type-Body-Base">
-                    {t("submitStudy.readyToSubmit", "The study is ready to be submitted for feedback!")}
+                    {t("submitStudy.readyToSubmit", "The study is ready to be submitted for data collection!")}
                   </div>
                 ) : (
                   <div className="subtitle warning MH-Type-Body-Base">
-                    {t("submitStudy.completeAllRequired", "Please complete all required cards before submitting your proposal for feedback.")}
+                    {t("submitStudy.completeAllRequired", "Please complete all required cards before submitting your study for data collection.")}
                   </div>
                 ))}
               </>

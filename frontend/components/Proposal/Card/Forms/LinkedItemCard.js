@@ -43,6 +43,12 @@ const ACTIONS_STYLE = {
 // Text buttons share a row and wrap below each other when the card is narrow.
 const TEXT_BUTTON_STYLE = { flex: "1 1 140px", whiteSpace: "nowrap" };
 
+const LINKED_BUTTON_STYLE = {
+  background: "var(--MH-Theme-Accent-Light, #fdf2d0)",
+  border: "1px solid var(--MH-Theme-Accent-Medium, #f9d978)",
+  color: "var(--MH-Theme-Neutrals-Black, #171717)",
+};
+
 const NOTE_STYLE = {
   ...TYPO.label,
   color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
@@ -147,10 +153,11 @@ export default function LinkedItemCard({
       <div style={ACTIONS_STYLE}>
         {actions.link && (
           <Button
-            variant={isSelected ? "outline" : "filled"}
+            variant="filled"
             leadingIcon={isSelected ? <LinkOffIcon /> : <LinkIcon />}
             onClick={() => (isSelected ? disconnect(item) : connect(item))}
-            style={TEXT_BUTTON_STYLE}
+            // Yellow = linked to this card, blue (default filled) = not linked.
+            style={isSelected ? { ...TEXT_BUTTON_STYLE, ...LINKED_BUTTON_STYLE } : TEXT_BUTTON_STYLE}
           >
             {isSelected
               ? t("board.expendedCard.disconnect")
