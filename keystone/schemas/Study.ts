@@ -79,6 +79,24 @@ export const Study = list({
     components: json(),
     flow: json(),
     diagram: text(),
+    /**
+     * The design being edited together in the Study Builder: a base64 Yjs
+     * document managed by the collaboration server (collab-server.js,
+     * document `study:<id>`). The browser saves the design from it to
+     * `diagram` and `flow`, which stay what everything else reads. Not in the
+     * GraphQL API (the study is publicly readable) nor the Admin UI.
+     *
+     * Empty means "no shared document yet": the next person to open the
+     * builder starts one from `diagram`.
+     */
+    yjsState: text({
+      graphql: { omit: true },
+      ui: {
+        createView: { fieldMode: "hidden" },
+        itemView: { fieldMode: "hidden" },
+        listView: { fieldMode: "hidden" },
+      },
+    }),
     author: relationship({
       ref: "Profile.researcherIn",
       hooks: {

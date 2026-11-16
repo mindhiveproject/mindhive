@@ -9,8 +9,9 @@ export const NodeTypeLabel = props => (
       color={props.color}
       draggable
       onDragStart={event => {
+        // read by the study canvas (Flow/StudyFlowCanvas.jsx)
         event.dataTransfer.setData(
-          'storm-diagram-node',
+          'application/x-mindhive-study-block',
           JSON.stringify(props.model)
         );
       }}

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { OutCustomPort } from "../Diagram/models/OutPortModel";
 import useTranslation from "next-translate/useTranslation";
 
 import uniqid from "uniqid";
 import Button from "../../../../DesignSystem/Button";
 import IconButton from "../../../../DesignSystem/IconButton";
+import { conditionCount } from "../../../../../lib/studyConditions";
 
 const ADD_ICON = {
   display: "block",
@@ -28,7 +28,7 @@ const DANGER_TONAL = {
 
 export default function Modal({
   node,
-  engine,
+  canvas,
   close,
   markStudyChanged,
   study,
@@ -36,17 +36,16 @@ export default function Modal({
   const { t } = useTranslation("builder");
   const components = study?.components || {};
 
-  const [ports, setPorts] = useState(
-    Object.values(node?.ports)
-      .filter((port) => port?.options?.type === "outCustomPort")
-      .map((port) => port?.options)
-      .map((option) => ({
-        name: option?.name,
-        label: option?.label,
-        assignmentType: option?.assignmentType,
-        probability: option?.probability,
-        rule: option?.rule,
-      }))
+  // one entry per condition (an output of the block); `name` is the
+  // condition's id, `label` what participants' data shows
+  const [ports, setPorts] = useState(() =>
+    (canvas?.getDesignConditions(node) || []).map((condition) => ({
+      name: condition?.name,
+      label: condition?.label,
+      assignmentType: condition?.assignmentType,
+      probability: condition?.probability,
+      rule: condition?.rule,
+    }))
   );
 
   const handleChange = ({ portNumber, value, name }) => {
@@ -82,37 +81,7 @@ export default function Modal({
   };
 
   const update = () => {
-    const outPorts = Object.values(node?.ports).filter(
-      (port) => port?.options?.type === "outCustomPort"
-    );
-    if (ports.length !== outPorts.length) {
-      outPorts.forEach((port) => {
-        node.removePort(node?.ports[port?.options?.name]);
-      });
-      ports.forEach((port) => {
-        node.addPort(
-          new OutCustomPort({
-            in: false,
-            alignment: "down",
-            name: port?.name,
-            label: port?.label,
-            assignmentType: port?.assignmentType,
-            probability: port?.probability,
-            rule: port?.rule,
-          })
-        );
-      });
-    }
-    ports.forEach((port) => {
-      node.ports[port?.name].options = {
-        ...node.ports[port?.name].options,
-        label: port?.label,
-        assignmentType: port?.assignmentType,
-        probability: port?.probability,
-        rule: port?.rule,
-      };
-    });
-    engine.repaintCanvas();
+    canvas?.setDesignConditions(node, ports);
     markStudyChanged();
     close();
   };
@@ -184,7 +153,7 @@ export default function Modal({
                 <span aria-hidden>%</span>
               </div>
               <div className="portParticipants">
-                {components[port?.label]}
+                {conditionCount(components, port) || null}
               </div>
               <div className="portActions">
                 <Button

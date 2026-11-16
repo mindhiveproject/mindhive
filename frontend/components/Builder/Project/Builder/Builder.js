@@ -1,9 +1,8 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import clsx from "clsx";
 
-import Widget from "./Widget";
 import Menu from "./Menu";
 import Component from "./Component/Main";
 import DataSources from "./DataSources/Main";
@@ -29,15 +28,19 @@ export default function Builder({
   project,
   handleChange,
   handleMultipleUpdate,
-  engine,
+  // what the panels need from the canvas (Storm or React Flow, see
+  // canvasAdapter.js); renderCanvas(panelOpeners) draws it
+  canvas,
+  renderCanvas,
   addFunctions,
   markStudyChanged,
   isCanvasLocked,
   canUndo,
   undoCanvas,
-  onBeforeCanvasMutation,
-  onAfterCanvasMutation,
-  onModelReplaced,
+  // optional: shown in the top bar (e.g. who else is editing)
+  topBarExtras = null,
+  // optional: told which block is open in the side panel (id or null)
+  onPanelNodeChange,
 }) {
   const { t } = useTranslation("builder");
   const [node, setNode] = useState(null);
@@ -67,15 +70,25 @@ export default function Builder({
   // the user to the Study Flow tab.
   const [menuTab, setMenuTab] = useState("addBlock");
 
-  if (isCanvasLocked && engine?.getModel()) {
-    engine.getModel().setLocked(true);
+  // The Storm canvas reacts to keys and drags anywhere on the page; it is
+  // paused while a side panel is in use (React Flow needs none of this)
+  if (isCanvasLocked) {
+    canvas?.setInteractionLocked?.(true);
   }
 
   const unlockCanvasIfEditable = () => {
-    if (!isCanvasLocked && engine?.getModel()) {
-      engine.getModel().setLocked(false);
+    if (!isCanvasLocked) {
+      canvas?.setInteractionLocked?.(false);
     }
   };
+
+  const panelNodeId =
+    sidepanelMode === "block" || sidepanelMode === "design"
+      ? node?.getID?.() ?? node?.options?.id ?? null
+      : null;
+  useEffect(() => {
+    onPanelNodeChange?.(panelNodeId);
+  }, [panelNodeId]); // eslint-disable-line react-hooks/exhaustive-deps -- report changes only
 
   const openComponentModal = ({
     node,
@@ -144,13 +157,7 @@ export default function Builder({
   // its links leave the canvas (one undo step); its task is kept.
   const deleteNodeFromCanvas = () => {
     if (isCanvasLocked || !node) return;
-    onBeforeCanvasMutation?.();
-    try {
-      node.remove();
-    } finally {
-      onAfterCanvasMutation?.();
-    }
-    engine?.repaintCanvas?.();
+    canvas?.removeNode(node);
     closeComponentModal();
   };
 
@@ -160,33 +167,24 @@ export default function Builder({
 
   const updateCanvas = ({ task, operation }) => {
     if (isCanvasLocked) return; // Prevent updates when locked
-    const model = engine?.model;
-    const nodes = model.getNodes() || [];
-    const componentID = node?.options?.componentID;
-    const testId = node?.options?.testId;
-    // use componentID to update multiple nodes with the same task
-    nodes.forEach((n) => {
-      if (
-        (operation === "create" &&
-          n?.options?.componentID === componentID &&
-          n?.options?.testId === testId) ||
-        (operation === "update" &&
-          n?.options?.componentID === componentID &&
-          n?.options?.testId === testId)
-      ) {
-        n.updateOptions({
-          componentID: task?.id,
-          name: task?.title,
-          details: addFunctions.shorten(task?.description),
-          subtitle: addFunctions.shorten(task?.subtitle),
-          askDataUsageQuestion: task?.askDataUsageQuestion,
-          // the node now holds its own copy, so editing it again updates
-          // that copy instead of copying the original once more
-          ...(operation === "create" ? { createCopy: false } : {}),
-        });
+    // the blocks showing this block's task (same task and version) all
+    // follow the edit
+    canvas?.updateTaskNodes(
+      {
+        componentID: node?.options?.componentID,
+        testId: node?.options?.testId,
+      },
+      {
+        componentID: task?.id,
+        name: task?.title,
+        details: addFunctions.shorten(task?.description),
+        subtitle: addFunctions.shorten(task?.subtitle),
+        askDataUsageQuestion: task?.askDataUsageQuestion,
+        // the node now holds its own copy, so editing it again updates
+        // that copy instead of copying the original once more
+        ...(operation === "create" ? { createCopy: false } : {}),
       }
-    });
-    engine.repaintCanvas();
+    );
     markStudyChanged();
   };
 
@@ -229,11 +227,7 @@ export default function Builder({
     );
   }
 
-  const needsStartingPoint =
-    engine?.model &&
-    !engine.model
-      .getNodes()
-      .filter((n) => n?.options?.type === "my-anchor").length;
+  const needsStartingPoint = !!canvas?.isReady && !canvas.hasStartingPoint();
 
   return (
     <StyledCanvasBuilder>
@@ -257,20 +251,11 @@ export default function Builder({
         id="board"
         // onContextMenu={(e) => e.preventDefault()}
       >
-        <Widget
-          engine={engine}
-          studyId={study?.id}
-          openComponentModal={openComponentModal}
-          openDesignSettings={openDesignSettings}
-          openStudyPreview={openStudyPreview}
-          isCanvasLocked={isCanvasLocked}
-          onBeforeCanvasMutation={onBeforeCanvasMutation}
-          onAfterCanvasMutation={onAfterCanvasMutation}
-          onModelReplaced={onModelReplaced}
-          onTaskNodeAdded={addFunctions?.onTaskNodeAdded}
-          onDuplicateNode={addFunctions?.duplicateNode}
-          onDesignNodeAdded={addFunctions?.openNodeSettings}
-        />
+        {renderCanvas?.({
+          openComponentModal,
+          openDesignSettings,
+          openStudyPreview,
+        })}
         <div
           className={clsx(
             "sidepanel",
@@ -285,7 +270,7 @@ export default function Builder({
           >
             <Menu
               user={user}
-              engine={engine}
+              canvas={canvas}
               addFunctions={lockedAddFunctions}
               study={study}
               handleChange={handleChange}
@@ -309,14 +294,7 @@ export default function Builder({
               updateCanvas={updateCanvas}
               addFunctions={lockedAddFunctions}
               node={node}
-              sharesTask={
-                !!node?.options?.componentID &&
-                (engine?.model?.getNodes() || []).some(
-                  (n) =>
-                    n !== node &&
-                    n?.options?.componentID === node?.options?.componentID
-                )
-              }
+              sharesTask={!!canvas?.sharesTask(node)}
               onOpenPreview={openBlockPreview}
               onDeleteFromCanvas={
                 isCanvasLocked ? undefined : deleteNodeFromCanvas
@@ -328,7 +306,7 @@ export default function Builder({
               key={node?.getID?.() || node?.options?.id || "design"}
               user={user}
               node={node}
-              engine={engine}
+              canvas={canvas}
               close={() => closeDesignSettings()}
               markStudyChanged={markStudyChanged}
               study={study}
@@ -369,6 +347,7 @@ export default function Builder({
               }
             />
             <div className="boardTopActions">
+              {topBarExtras}
               {typeof undoCanvas === "function" &&
                 canUndo &&
                 !isCanvasLocked && (

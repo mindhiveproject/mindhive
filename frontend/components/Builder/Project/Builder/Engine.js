@@ -25,6 +25,8 @@ import { DesignModel } from "./Diagram/models/DesignModel";
 
 import Navigation from "../Navigation/Main";
 import Builder from "./Builder";
+import Widget from "./Widget";
+import { createStormCanvas } from "./canvasAdapter";
 import { setCycleWarningHandler } from "../../shared/diagramCycle";
 import CycleLinkPreventedModal from "../../shared/CycleLinkPreventedModal";
 import {
@@ -970,6 +972,32 @@ export default function Engine({
     handleMultipleUpdate(props);
   };
 
+  const canvas = createStormCanvas({
+    engine,
+    onBeforeCanvasMutation,
+    onAfterCanvasMutation,
+  });
+
+  const renderCanvas = ({
+    openComponentModal,
+    openDesignSettings,
+    openStudyPreview,
+  }) => (
+    <Widget
+      engine={engine}
+      studyId={study?.id}
+      openComponentModal={openComponentModal}
+      openDesignSettings={openDesignSettings}
+      openStudyPreview={openStudyPreview}
+      onBeforeCanvasMutation={onBeforeCanvasMutation}
+      onAfterCanvasMutation={onAfterCanvasMutation}
+      onModelReplaced={onModelReplaced}
+      onTaskNodeAdded={addFunctions.onTaskNodeAdded}
+      onDuplicateNode={addFunctions.duplicateNode}
+      onDesignNodeAdded={addFunctions.openNodeSettings}
+    />
+  );
+
   return (
     <>
       <Navigation
@@ -1007,15 +1035,13 @@ export default function Engine({
         study={study}
         handleChange={handleStudyChange}
         handleMultipleUpdate={handleStudyMultipleUpdate}
-        engine={engine}
+        canvas={canvas}
+        renderCanvas={renderCanvas}
         addFunctions={addFunctions}
         markStudyChanged={markStudyChanged}
         isCanvasLocked={isCanvasLocked}
         canUndo={canUndo}
         undoCanvas={undoCanvas}
-        onBeforeCanvasMutation={onBeforeCanvasMutation}
-        onAfterCanvasMutation={onAfterCanvasMutation}
-        onModelReplaced={onModelReplaced}
       />
       <CycleLinkPreventedModal
         open={cycleWarningOpen}

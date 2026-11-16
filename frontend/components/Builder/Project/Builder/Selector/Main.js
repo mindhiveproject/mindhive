@@ -32,7 +32,7 @@ function MediumIcon({ src }) {
   return <span aria-hidden style={ICON_MASK(src)} />;
 }
 
-export default function ComponentSelector({ engine, user, addFunctions }) {
+export default function ComponentSelector({ canvas, user, addFunctions }) {
   const { t } = useTranslation("builder");
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [keyword, setKeyword] = useState("");
@@ -121,15 +121,15 @@ export default function ComponentSelector({ engine, user, addFunctions }) {
             name="keyword"
             value={keyword}
             onChange={saveToState}
+            onFocus={() => {
+              canvas?.setInteractionLocked?.(true);
+            }}
+            onBlur={() => {
+              canvas?.setInteractionLocked?.(false);
+            }}
             placeholder={t("selector.searchPlaceholder", {}, {
               default: "Search for blocks",
             })}
-            onFocus={() => {
-              engine.getModel().setLocked(true);
-            }}
-            onBlur={() => {
-              engine.getModel().setLocked(false);
-            }}
           />
         </div>
         <div className="addBlockFavorite">{favoritesToggle}</div>

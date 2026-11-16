@@ -41,7 +41,7 @@ export const CreatorWidget = props => {
   };
 
   const onNodeDrop = event => {
-    const dataString = event.dataTransfer.getData('storm-diagram-node');
+    const dataString = event.dataTransfer.getData('application/x-mindhive-study-block');
     if (!dataString) return;
     let data;
     try {

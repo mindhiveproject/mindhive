@@ -91,6 +91,9 @@ function displayName(profile) {
   return full || profile.username || "Editor";
 }
 
+// Documents whose item has no isEditedBy / lastTimeEdited fields
+const EDITOR_UNTRACKED_MODELS = new Set(["study"]);
+
 // ── Hocuspocus instance ──────────────────────────────────────────────────────
 
 const hocuspocus = new Hocuspocus({
@@ -184,7 +187,9 @@ const hocuspocus = new Hocuspocus({
     const yjsState = Buffer.from(state).toString("base64");
 
     const data = { yjsState };
-    if (context.user && context.user.id) {
+    // record who edited last (Study has no such fields: its builder saves the
+    // design through the API)
+    if (context.user && context.user.id && !EDITOR_UNTRACKED_MODELS.has(item.name)) {
       data.isEditedById = context.user.id;
       data.lastTimeEdited = new Date();
     }
