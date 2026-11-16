@@ -55,7 +55,7 @@ const PREVIEW_CONTAINER_STYLE = {
 // Clears the Modal's frosted footer so the list scrolls underneath it.
 const FROSTED_BODY_STYLE = {
   paddingTop: "24px",
-  paddingBottom: "var(--ds-modal-frosted-pad-bottom, 96px)",
+  paddingBottom: "24px",
 };
 
 const FOOTER_BUTTONS_STYLE = {
@@ -126,7 +126,6 @@ export default function LinkedItems({
 
   const handleCloseModal = () => {
     setNotice(null);
-    setSummaryDismissed(false);
     onLinkedItemsClose?.();
     setOpen(false);
   };
@@ -135,8 +134,6 @@ export default function LinkedItems({
   const [assignmentModal, setAssignmentModal] = useState(null);
   // Success line shown at the top of the picker.
   const [notice, setNotice] = useState(null);
-  // Linked-count summary at the top; dismissed until the picker reopens.
-  const [summaryDismissed, setSummaryDismissed] = useState(false);
 
   const createInitialResourceModalState = () => ({
     open: false,
@@ -350,9 +347,12 @@ export default function LinkedItems({
     studies: publicStudies.map((item) => ({ item, type: "study" })),
   };
   const showSources = kind === "resources" || kind === "assignments";
-  const visibleEntries = entriesByKind[kind].filter(
-    ({ item }) => matchesSearch(item) && (!showSources || matchesSource(item))
-  );
+  // Linked items first (stable within each group) so they're quick to find.
+  const visibleEntries = entriesByKind[kind]
+    .filter(({ item }) => matchesSearch(item) && (!showSources || matchesSource(item)))
+    .map((entry, index) => ({ entry, index, linked: isLinked(entry.item, entry.type) }))
+    .sort((a, b) => (a.linked === b.linked ? a.index - b.index : a.linked ? -1 : 1))
+    .map(({ entry }) => entry);
   const kindLoading = {
     resources: resourcesLoading,
     assignments: assignmentsLoading,
@@ -418,16 +418,20 @@ export default function LinkedItems({
         size="large"
         maxWidth={1040}
         height="90vh"
-        frostedChrome
         actions={
           <div style={FOOTER_STYLE}>
-            <span style={{ ...TYPO.body, color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)" }}>
-              {t(
-                "board.expendedCard.linkedCount",
-                { count: totalLinked },
-                { default: "{{count}} linked" }
+            <MessageCard
+              variant="information"
+              message={t(
+                "board.expendedCard.linkedSummary",
+                linkedCount,
+                {
+                  default:
+                    "Linked to this card: {{resources}} resources, {{assignments}} assignments, {{tasks}} tasks & surveys, {{studies}} studies",
+                }
               )}
-            </span>
+              style={{ width: "auto", flex: "1 1 auto", marginRight: "16px" }}
+            />
             <div style={FOOTER_BUTTONS_STYLE}>
               <Button variant="outline" onClick={handleCloseModal}>
                 {t("board.expendedCard.close", "Close")}
@@ -440,23 +444,6 @@ export default function LinkedItems({
         }
       >
         <div style={FROSTED_BODY_STYLE}>
-          {!summaryDismissed && (
-            <div style={{ marginBottom: "16px" }}>
-              <MessageCard
-                variant="information"
-                message={t(
-                  "board.expendedCard.linkedSummary",
-                  linkedCount,
-                  {
-                    default:
-                      "Linked to this card: {{resources}} resources, {{assignments}} assignments, {{tasks}} tasks & surveys, {{studies}} studies",
-                  }
-                )}
-                onClose={() => setSummaryDismissed(true)}
-                closeAriaLabel={t("board.expendedCard.close", "Close")}
-              />
-            </div>
-          )}
           <div style={TOOLBAR_STYLE}>
             <Navbar
               variant="underline"

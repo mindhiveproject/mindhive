@@ -87,39 +87,42 @@ export const StyledFlowCanvas = styled.div`
   .studyEdgeLabel {
     position: absolute;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 6px;
-    padding: 2px 4px 2px 8px;
-    border: 1px solid #d0d5d4;
-    border-radius: 999px;
-    background: #ffffff;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-    color: #3b3b3b;
-    font: var(--MH-Type-Label-Small);
+    gap: 4px;
     white-space: nowrap;
     pointer-events: all;
   }
 
-  .studyEdgeLabel.removeOnly {
-    padding: 2px;
+  .studyEdgeCondition {
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: none;
+    cursor: pointer;
   }
 
-  .studyEdgeLabel.selected {
-    border-color: #007c70;
+  .studyEdgeCondition .DesignSystem-Chip {
+    cursor: pointer !important;
+    transition: box-shadow 0.15s;
+  }
+
+  .studyEdgeCondition:hover .DesignSystem-Chip {
+    box-shadow: inset 0 0 0 999px rgba(23, 23, 23, 0.06);
+  }
+
+  .studyEdgeCondition:focus-visible {
+    outline: 2px solid var(--MH-Theme-Primary-Dark, #336f8a);
+    outline-offset: 2px;
   }
 
   .studyEdgeRemove {
-    display: grid;
-    place-items: center;
-    width: 20px;
-    height: 20px;
-    padding: 0;
-    border: none;
-    border-radius: 50%;
+    padding: 2px 8px;
+    border: 1px solid #f2b8b5;
+    border-radius: 6px;
     background: #f9dedc;
     color: #8f1f14;
-    font-size: 16px;
-    line-height: 1;
+    font: var(--MH-Type-Label-Small);
     cursor: pointer;
   }
 

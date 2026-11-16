@@ -207,6 +207,9 @@
 	},
 	"cloneAndModify": "Clone & modify a {{taskType}}",
 	"closeButton": "Close",
+	"collaboration": {
+		"hereNow": "{{name}} · here now"
+	},
 	"codeExecution": {
 		"codeRunningMessage": "The code is running.",
 		"justOneSecondTitle": "Just one second",
@@ -1289,6 +1292,7 @@
 		"favoriteAddLabel": "Add to favorites",
 		"favoriteRemoveLabel": "Remove from favorites",
 		"linkLabel": "Link",
+		"linkedList": "Linked: {{names}}",
 		"linkModal": {
 			"catalogEmpty": "No data sources match your search.",
 			"catalogHeading": "All Data Sources",
@@ -1308,6 +1312,7 @@
 		"panelEmpty": "No data sources linked to this study yet.",
 		"panelSubtitle": "This study collects data from external devices",
 		"panelTitle": "External data sources",
+		"topBarButton": "External datasource",
 		"settings": {
 			"advancedOptions": "Advanced Options",
 			"close": "Close",
@@ -2624,11 +2629,11 @@
 		"goToStudyBuilder": "Go to Study builder",
 		"createStudyFirst": "Create your study before submitting it for data collection.",
 		"noStudyYet": "Your project doesn't have a study yet.",
-		"appearInFeedbackCenter": "Your study will appear in the Feedback Center.",
-		"completeAllRequired": "Please complete all required cards before submitting your proposal for feedback.",
+		"appearInFeedbackCenter": "Your study will appear in the Feedback Center for data collection.",
+		"completeAllRequired": "Please complete all required cards before submitting your study for data collection.",
 		"dataCollection": "Data Collection",
 		"lockedForParticipation": "The study was locked for participation",
-		"readyToSubmit": "The study is ready to be submitted for feedback!",
+		"readyToSubmit": "The study is ready to be submitted for data collection!",
 		"studyUrl": "Study url",
 		"studyWasSubmitted": "The study was submitted",
 		"submitFor": "Submit for {{title}}",

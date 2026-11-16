@@ -39,6 +39,7 @@ const CardPickerContainer = styled.div`
 `;
 
 export default function BulkActionsModal({
+  canPublish = true,
   open,
   onClose,
   selectedResources,
@@ -247,14 +248,14 @@ export default function BulkActionsModal({
             <Button variant="outline"
               type="button"
               onClick={handlePublishAll}
-              disabled={!canPublishAll || applying}
+              disabled={!canPublish || !canPublishAll || applying}
             >
               {t("resource.bulkActionsModal.publishAll", "Publish all selected")}
             </Button>
             <Button variant="outline"
               type="button"
               onClick={handleUnpublishAll}
-              disabled={!canUnpublishAll || applying}
+              disabled={!canPublish || !canUnpublishAll || applying}
             >
               {t(
                 "resource.bulkActionsModal.unpublishAll",
@@ -262,6 +263,14 @@ export default function BulkActionsModal({
               )}
             </Button>
           </div>
+          {!canPublish && (
+            <p style={{ marginTop: 8, color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)" }}>
+              {t(
+                "resource.publishTeacherOnly",
+                "Only the class teacher and co-teachers can publish or unpublish resources for students. Ask the class teacher to make this change."
+              )}
+            </p>
+          )}
         </Section>
 
         <Section>

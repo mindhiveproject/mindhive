@@ -2,75 +2,26 @@ import { ViewportPortal, useStore } from "@xyflow/react";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 
-const StyledCollaborators = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  .avatars {
-    display: flex;
-  }
-
-  .avatar {
-    display: grid;
-    place-items: center;
-    width: 32px;
-    height: 32px;
-    margin-left: -6px;
-    border: 2px solid #ffffff;
-    border-radius: 50%;
-    color: #ffffff;
-    font: var(--MH-Type-Label-Base);
-    cursor: default;
-  }
-
-  .avatar:first-child {
-    margin-left: 0;
-  }
-
-  .status {
-    color: #8f1f14;
-    font: var(--MH-Type-Label-Small);
-    white-space: nowrap;
-  }
+const StyledStatus = styled.span`
+  color: #8f1f14;
+  font: var(--MH-Type-Label-Small);
+  white-space: nowrap;
 `;
 
-const initials = (name = "") =>
-  name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0].toUpperCase())
-    .join("");
-
-/** The people working on the study right now, for the top bar. */
-export function CollaboratorsBar({ others, connected, message }) {
+/**
+ * Why live collaboration is off, for the top bar. Who is here shows in the
+ * facepile in the top navigation (ConnectFacepile).
+ */
+export function CollaborationStatus({ connected, message }) {
   const { t } = useTranslation("builder");
-  if (!others.length && connected && !message) return null;
+  if (connected && !message) return null;
   return (
-    <StyledCollaborators>
-      {(message || !connected) && (
-        <span className="status">
-          {message ||
-            t("collaboration.offline", {}, {
-              default: "Offline: your changes will be shared when you reconnect",
-            })}
-        </span>
-      )}
-      <div className="avatars">
-        {others.map(({ user }) => (
-          <div
-            key={user.id}
-            className="avatar"
-            style={{ background: user.color }}
-            title={user.name}
-            aria-label={user.name}
-          >
-            {initials(user.name)}
-          </div>
-        ))}
-      </div>
-    </StyledCollaborators>
+    <StyledStatus>
+      {message ||
+        t("collaboration.offline", {}, {
+          default: "Offline: your changes will be shared when you reconnect",
+        })}
+    </StyledStatus>
   );
 }
 

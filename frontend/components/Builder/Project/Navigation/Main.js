@@ -42,6 +42,7 @@ export default function Navigation({
   isCanvasLocked,
   connectModalOpen,
   onConnectModalOpenChange,
+  presence,
 }) {
   const router = useRouter();
   const { t } = useTranslation("builder");
@@ -217,6 +218,7 @@ export default function Navigation({
               study={project?.study}
               user={user}
               projectId={project?.id}
+              presence={presence}
             />
           ))}
 
@@ -226,6 +228,7 @@ export default function Navigation({
             user={user}
             modalOpen={connectModalOpen}
             onModalOpenChange={onConnectModalOpenChange}
+            presence={presence}
           />
         )}
 

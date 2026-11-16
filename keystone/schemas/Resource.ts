@@ -46,6 +46,62 @@ async function canEditResourceContent({
   );
 }
 
+// Class creator and co-teachers (teaching team) may publish/unpublish any
+// resource to their own classes, even one they don't own. Only
+// publishedToClassIds may change, and only for classes they staff.
+async function canTogglePublishForStaffedClasses({
+  session,
+  item,
+  inputData,
+  context,
+}: {
+  session?: Session;
+  item: any;
+  inputData: any;
+  context: any;
+}) {
+  if (!session?.itemId) return false;
+  const next = inputData?.settings;
+  if (!next || typeof next !== "object") return false;
+  // SQLite stores json fields as strings on the raw item.
+  let prev: any = item?.settings ?? {};
+  if (typeof prev === "string") {
+    try {
+      prev = JSON.parse(prev);
+    } catch {
+      prev = {};
+    }
+  }
+  if (!prev || typeof prev !== "object") prev = {};
+  const { publishedToClassIds: prevIds = [], ...prevRest } = prev;
+  const { publishedToClassIds: nextIds = [], ...nextRest } = next;
+  const sameRest = (a: any, b: any) => {
+    const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+    return [...keys].every(
+      (k) => JSON.stringify(a[k] ?? null) === JSON.stringify(b[k] ?? null)
+    );
+  };
+  if (!sameRest(prevRest, nextRest)) return false;
+  const prevSet = new Set((prevIds || []).map(String));
+  const nextSet = new Set((nextIds || []).map(String));
+  const changed = [
+    ...[...nextSet].filter((id) => !prevSet.has(id)),
+    ...[...prevSet].filter((id) => !nextSet.has(id)),
+  ];
+  if (!changed.length) return true;
+  const me = String(session.itemId);
+  const staffed = await context.sudo().query.Class.count({
+    where: {
+      id: { in: changed },
+      OR: [
+        { creator: { id: { equals: me } } },
+        { teachingTeam: { some: { id: { equals: me } } } },
+      ],
+    },
+  });
+  return staffed === changed.length;
+}
+
 const ownerOnlyUpdate = ({
   session,
   item,
@@ -99,7 +155,11 @@ export const Resource = list({
       defaultValue: {
         publishedToClassIds: [],
       },
-      access: { update: canEditResourceContent },
+      access: {
+        update: async (args: any) =>
+          (await canEditResourceContent(args)) ||
+          (await canTogglePublishForStaffedClasses(args)),
+      },
     }),
     author: relationship({
       ref: "Profile.authorOfResource",

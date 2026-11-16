@@ -11,7 +11,7 @@ import { UPDATE_STUDY } from "../../../../Mutations/Study";
 import ConnectFacepile from "../ConnectFacepile";
 import { useLinkedBoardPeople } from "../../../shared/LinkedBoardPeople";
 
-export default function Connect({ study, user, projectId }) {
+export default function Connect({ study, user, projectId, presence }) {
   // save and edit the study information
   const { inputs, handleChange, handleMultipleUpdate, captureFile, clearForm } =
     useForm({
@@ -50,7 +50,10 @@ export default function Connect({ study, user, projectId }) {
 
   return (
     <div className="connectArea">
-      <ConnectFacepile collaborators={[...collaborators, ...boardPeople]}>
+      <ConnectFacepile
+        collaborators={[...collaborators, ...boardPeople]}
+        presence={presence}
+      >
         <ConnectModal
           study={inputs}
           user={user}

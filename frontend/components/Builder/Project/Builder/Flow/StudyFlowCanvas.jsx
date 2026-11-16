@@ -305,6 +305,8 @@ export default function StudyFlowCanvas({
     >
       <EdgeUiProvider value={edgeUi}>
       <ReactFlow
+        // React Flow is MIT licensed; the attribution badge is optional
+        proOptions={{ hideAttribution: true }}
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}

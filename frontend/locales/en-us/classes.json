@@ -2392,6 +2392,7 @@
 		"publicResourcesTitle": "Add a public resource",
 		"published": "Published",
 		"publishToStudents": "Publish to students",
+		"publishTeacherOnly": "Only the class teacher and co-teachers can publish or unpublish resources for students. Ask the class teacher to make this change.",
 		"publishUnpublish": "Publish/Unpublish",
 		"removeCardColumnFilter": "Remove card/column filter",
 		"revokeConfirm": "Are you sure you want to unpublish? Students will no longer see this resource.",
