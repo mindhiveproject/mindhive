@@ -61,8 +61,30 @@ function getResourcePeople(resource) {
   return people;
 }
 
+/** A class's own copy, e.g. made when a template board was copied into it. */
+function isClassCopy(resource) {
+  return Boolean(resource?.isCustom && resource?.classes?.length);
+}
+
 function renderResourceCardChips(resource, t) {
   const chips = [];
+
+  if (isClassCopy(resource)) {
+    for (const cls of resource.classes) {
+      chips.push(
+        <Chip
+          key={`class-${cls.id}`}
+          variant="static"
+          tone="info"
+          label={t(
+            "boardManagement.resourceClassChip",
+            { title: cls.title || "" },
+            { default: "Class · {{title}}" }
+          )}
+        />
+      );
+    }
+  }
 
   if (resource.createdAt) {
     chips.push(
@@ -123,6 +145,7 @@ export default function MyResourcesList({
   user,
   searchTerm,
   filter,
+  classIds = [],
   onPreview,
   onShare,
 }) {
@@ -150,6 +173,14 @@ export default function MyResourcesList({
   });
   if (filter === "public") {
     resources = resources.filter((r) => r.isPublic === true);
+  } else if (filter === "class") {
+    resources = resources.filter(isClassCopy);
+    // No class picked means every class.
+    if (classIds.length > 0) {
+      resources = resources.filter((r) =>
+        r.classes.some((c) => classIds.includes(String(c?.id)))
+      );
+    }
   }
 
   const refetchQueries = [
@@ -179,7 +210,7 @@ export default function MyResourcesList({
       <MessageCard
         variant="information"
         message={
-          searchTerm || filter !== "all"
+          searchTerm || filter !== "all" || classIds.length > 0
             ? t("boardManagement.emptySearchResults", {}, {
                 default: "No resources match your search or filter.",
               })
@@ -242,6 +273,14 @@ export default function MyResourcesList({
                 <DeleteResource
                   resourceId={resource.id}
                   refetchQueries={refetchQueries}
+                  confirmMessage={
+                    resource.classes?.length || resource.proposalCards?.length
+                      ? t("boardManagement.deleteLinkedResource", {}, {
+                          default:
+                            "This resource is used in a class or on project cards. Deleting it removes it from every class, template board and student board that links it. Delete anyway?",
+                        })
+                      : undefined
+                  }
                 >
                   <Button 
                     variant="tonal"

@@ -71,6 +71,35 @@ export const StyledResource = styled.div`
     }
   }
 
+  /* Header, search and class filter rows, styled like the side menu. */
+  .resourceToolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 24px 20px;
+    background: var(--MH-Theme-Neutrals-White, #ffffff);
+    border: 1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6);
+    border-radius: 12px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .resourceToolbar .classFilter {
+    margin-top: 0;
+  }
+
+  .classFilter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .classFilterLabel {
+    font: var(--MH-Type-Label-Large, 500 14px/20px Inter, sans-serif);
+    color: var(--MH-Theme-Neutrals-Dark, #3b3b3b);
+  }
+
   .searchBar {
     display: flex;
     justify-content: space-between;

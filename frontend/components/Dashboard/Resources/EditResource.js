@@ -51,7 +51,10 @@ export default function EditResource({
         description: inputs?.description,
         content: inputs?.content,
         settings: inputs?.settings,
-        isPublic: inputs?.isPublic,
+        // Owner-only field: class staff editing a class copy leave it out.
+        ...(isAdmin || resource?.author?.id === user?.id
+          ? { isPublic: inputs?.isPublic }
+          : {}),
         updatedAt: new Date().toISOString(),
       },
     });

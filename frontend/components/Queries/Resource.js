@@ -72,6 +72,7 @@ export const GET_MY_RESOURCES = gql`
       settings
       classes {
         id
+        title
       }
       isPublic
       isCustom
