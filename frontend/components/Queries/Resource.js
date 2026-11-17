@@ -208,6 +208,7 @@ export const GET_CLASS_RESOURCES = gql`
       slug
       settings
       isPublic
+      isCustom
       createdAt
       updatedAt
       classes {

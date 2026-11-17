@@ -9,6 +9,7 @@ import useForm from "../../../../../lib/useForm";
 import { stripHtml } from "../../../../Proposal/Card/Forms/utils";
 import Button from "../../../../DesignSystem/Button";
 import { EditorPage, EditorHeader } from "../ContentEditorLayout";
+import { isAdminUser } from "../../../../../lib/linkedItemActions";
 
 export default function EditResource({ resourceId, myclass, user }) {
   const { t } = useTranslation("classes");
@@ -59,6 +60,9 @@ function EditResourceForm({ resource, myclass, user }) {
     ],
   });
 
+  const canSetPublic =
+    isAdminUser(user) || resource?.author?.id === user?.id;
+
   async function handleSave(e) {
     e.preventDefault();
     try {
@@ -69,7 +73,8 @@ function EditResourceForm({ resource, myclass, user }) {
           description: inputs?.description,
           content: inputs?.content,
           settings: inputs?.settings,
-          isPublic: inputs?.isPublic,
+          // Owner-only field: class staff editing a class copy leave it out.
+          ...(canSetPublic ? { isPublic: inputs?.isPublic } : {}),
           updatedAt: new Date().toISOString(),
         },
       });

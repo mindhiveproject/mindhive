@@ -6,6 +6,7 @@ import TipTapEditor from "../../../TipTap/Main";
 import { ReadOnlyTipTap } from "../../../TipTap/ReadOnlyTipTap";
 import Chip from "../../../DesignSystem/Chip";
 import { GET_RESOURCE } from "../../../Queries/Resource";
+import { canEditLinkedItem } from "../../../../lib/linkedItemActions";
 import {
   CREATE_RESOURCE,
   UPDATE_RESOURCE,
@@ -124,11 +125,7 @@ export default function ResourceEditModal({
     ?.map((permission) => permission?.name)
     .includes("ADMIN");
   const canEditLoadedOriginal =
-    userIsAdmin ||
-    loadedResource?.author?.id === user?.id ||
-    loadedResource?.collaborators?.some(
-      (collaborator) => collaborator?.id === user?.id
-    );
+    userIsAdmin || canEditLinkedItem(loadedResource, user, "resource");
   // Defense in depth: fetched ownership data wins even if a caller supplied
   // an incorrect sourceType.
   const shouldCreateCopy =
@@ -222,7 +219,10 @@ export default function ResourceEditModal({
             description: formState.description,
             content: { main: formState.content },
             settings: mergeResourceSettings(formState.settings),
-            isPublic: formState.isPublic,
+            // Owner-only field: class staff editing a class copy leave it out.
+            ...(userIsAdmin || loadedResource?.author?.id === user?.id
+              ? { isPublic: formState.isPublic }
+              : {}),
             updatedAt: new Date().toISOString(),
           },
         });

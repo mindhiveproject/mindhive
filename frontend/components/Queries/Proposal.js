@@ -460,6 +460,10 @@ export const GET_CARD_CONTENT = gql`
         content
         settings
         isPublic
+        isCustom
+        classes {
+          id
+        }
         parent {
           id
         }
