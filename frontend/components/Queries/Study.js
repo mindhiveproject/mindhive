@@ -781,3 +781,47 @@ export const SET_STUDY_DATA_COLLECTION = gql`
     }
   }
 `;
+
+// Studies offered in the project board's "Connect to a Study" picker, with the
+// classes and people each one carries, plus the board's own members so the
+// picker can flag studies shared with the board's collaborators.
+export const STUDY_CONNECTOR_OPTIONS = gql`
+  query STUDY_CONNECTOR_OPTIONS($userId: ID!, $projectId: ID!) {
+    studies(
+      where: {
+        isHidden: { equals: false }
+        OR: [
+          { author: { id: { equals: $userId } } }
+          { collaborators: { some: { id: { equals: $userId } } } }
+        ]
+      }
+      orderBy: [{ createdAt: desc }]
+    ) {
+      id
+      title
+      author {
+        id
+        username
+      }
+      collaborators {
+        id
+        username
+      }
+      classes {
+        id
+        title
+      }
+    }
+    proposalBoard(where: { id: $projectId }) {
+      id
+      author {
+        id
+        username
+      }
+      collaborators {
+        id
+        username
+      }
+    }
+  }
+`;

@@ -1834,6 +1834,7 @@
 		"saveAndClose": "Save & Close"
 	},
 	"pleaseLogin": "Please first log in!",
+	"pleaseLoginLink": "Log in to continue",
 	"preview": {
 		"timePlaceholder": "e.g. 15 minutes",
 		"description": "Description",
@@ -1858,6 +1859,7 @@
 		"connectStudy": "Connect Study",
 		"connectToStudy": "Connect to a Study",
 		"connectToStudyDescription": "Link this project to an existing study or create a new one",
+		"searchStudyOptions": "Search by study, class or username",
 		"createAndConnect": "Create & Connect",
 		"createNewStudy": "Create New Study",
 		"delete": "Delete Project",
@@ -1969,6 +1971,17 @@
 		"titlePlaceholder": "Enter project board title"
 	},
 	"proposalPage": {
+		"untitledBoard": "Project board",
+		"downloadPdf": "Download PDF",
+		"closePdf": "Close",
+		"pdfIndex": "Index",
+		"pdfTasksAndSurveys": "Selected tasks & surveys",
+		"pdfTypeTask": "Task",
+		"pdfTypeSurvey": "Survey",
+		"pdfTypeBlock": "Block",
+		"pdfStudyUrl": "Study URL",
+		"pdfGeneratedOn": "Generated on {{date}}",
+		"pdfEmpty": "No cards match the selected filters, or no card is marked to be included in the report.",
 		"confirmLeaveListView": "Do you want to leave the list view and go back to the board? Your unsaved changes will be lost.",
 		"download": "Download",
 		"downloadTooltip": "Download content is based on the status and review step filters selected below.",

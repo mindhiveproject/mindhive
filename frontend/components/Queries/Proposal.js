@@ -225,6 +225,7 @@ const proposalBoardSelection = (cardTextFields) => `
         code
       }
       author {
+        id
         username
       }
       collaborators {

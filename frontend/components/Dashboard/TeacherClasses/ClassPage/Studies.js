@@ -10,6 +10,8 @@ import { AgGridReact } from "ag-grid-react";
 
 import Button from "../../../DesignSystem/Button";
 import Input from "../../../DesignSystem/Input";
+import Chip from "../../../DesignSystem/Chip";
+import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import { AddIcon } from "../../../DesignSystem/Icons";
 import { getClassTemplateBoards } from "../../../../lib/classTemplateBoards";
 import { UPDATE_PROJECT_BOARD } from "../../../Mutations/Proposal";
@@ -66,6 +68,8 @@ const CENTER_CELL = {
 
 const NO_STUDIES = [];
 const NO_MENTORS = new Set();
+const NO_IDS = [];
+const NO_STUDENTS = [];
 
 const CLICKABLE_CELL = {
   ...WRAP_CELL,
@@ -86,27 +90,67 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
   const [linkStudyId, setLinkStudyId] = useState(null);
   const [creatingStudy, setCreatingStudy] = useState(false);
 
-  // `?study=` (from the dashboard's study chip) fills the search.
-  const studyFromQuery =
-    typeof query?.study === "string" ? query.study : "";
-  const [search, setSearch] = useState(studyFromQuery);
-  useEffect(() => {
-    if (studyFromQuery) setSearch(studyFromQuery);
-  }, [studyFromQuery]);
+  const [search, setSearch] = useState("");
 
-  const changeSearch = (next) => {
-    setSearch(next);
-    // Drop the param once the teacher edits the search, so a reload doesn't
-    // bring the old search back.
-    if (studyFromQuery && myclass?.code) {
-      const { study, ...rest } = router.query;
+  // `?students=id,id` (from the dashboard's study chip, or the student picker
+  // below) keeps only studies those students author or collaborate on.
+  // Read from the router, not the `query` prop: that comes from
+  // getInitialProps, which a shallow URL update does not re-run.
+  const rawStudents = router.query?.students;
+  const studentsParam = Array.isArray(rawStudents)
+    ? rawStudents.join(",")
+    : typeof rawStudents === "string"
+    ? rawStudents
+    : "";
+  const studentFilter = useMemo(
+    () => (studentsParam ? studentsParam.split(",").filter(Boolean) : NO_IDS),
+    [studentsParam]
+  );
+  const setStudentFilter = useCallback(
+    (next) => {
+      const { students, ...rest } = router.query;
+      const ids = [...new Set(next)];
       router.replace(
-        { pathname: router.pathname, query: rest },
+        {
+          pathname: router.pathname,
+          query: ids.length ? { ...rest, students: ids.join(",") } : rest,
+        },
         undefined,
         { shallow: true }
       );
-    }
-  };
+    },
+    [router]
+  );
+
+  const classStudents = myclass?.students || NO_STUDENTS;
+  const studentName = useCallback(
+    (person) =>
+      person?.username ||
+      [person?.firstName, person?.lastName].filter(Boolean).join(" ") ||
+      person?.id,
+    []
+  );
+  const studentOptions = useMemo(
+    () =>
+      [...classStudents]
+        .sort((a, b) => studentName(a).localeCompare(studentName(b)))
+        .map((person) => ({
+          value: person.id,
+          label: studentName(person),
+          searchText: [
+            person.username,
+            person.firstName,
+            person.lastName,
+          ]
+            .filter(Boolean)
+            .join(" "),
+        })),
+    [classStudents, studentName]
+  );
+  const studentById = useMemo(
+    () => new Map(classStudents.map((person) => [person.id, person])),
+    [classStudents]
+  );
 
   const { projects, projectsByStudyId, participationByStudyId, mentorIds } =
     useClassStudyProjects(myclass, { skip: readOnly });
@@ -221,13 +265,17 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
     });
     return counts;
   }, [rows]);
-  const visibleRows = useMemo(
-    () =>
-      stageFilter
-        ? rows.filter((row) => row.studyStatus?.stage === stageFilter)
-        : rows,
-    [rows, stageFilter]
-  );
+  const visibleRows = useMemo(() => {
+    const filteredIds = new Set(studentFilter);
+    return rows.filter(
+      (row) =>
+        (!stageFilter || row.studyStatus?.stage === stageFilter) &&
+        (!filteredIds.size ||
+          [row.author, ...(row.collaborators || [])].some((person) =>
+            filteredIds.has(person?.id)
+          ))
+    );
+  }, [rows, stageFilter, studentFilter]);
 
   // The author and collaborators, without the mentors (their own column).
   const getCollaborators = useCallback(
@@ -536,7 +584,7 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
                   <div style={{ flex: "1 1 280px", maxWidth: 480, minWidth: 0 }}>
                     <Input
                       value={search}
-                      onChange={changeSearch}
+                      onChange={setSearch}
                       placeholder={t("studies.searchStudies", {}, {
                         default: "Search studies, projects or people",
                       })}
@@ -545,6 +593,50 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
                       })}
                     />
                   </div>
+                ) : null}
+                {studies.length > 0 && !readOnly && studentOptions.length ? (
+                  <DropdownSelect
+                    multiple
+                    fitContent
+                    placeholderOnly
+                    options={studentOptions}
+                    value={studentFilter}
+                    onChange={setStudentFilter}
+                    placeholder={t("studies.studentFilter.placeholder", {}, {
+                      default: "Filter by student",
+                    })}
+                    ariaLabel={t("studies.studentFilter.placeholder", {}, {
+                      default: "Filter by student",
+                    })}
+                    searchPlaceholder={t("studies.studentFilter.search", {}, {
+                      default: "Search students",
+                    })}
+                  />
+                ) : null}
+              </div>
+            ) : null}
+            {studentFilter.length ? (
+              <div className="studiesStudentFilters">
+                {studentFilter.map((id) => {
+                  const name = studentName(studentById.get(id) || { id });
+                  return (
+                    <Chip
+                      key={id}
+                      label={name}
+                      selected
+                      ariaLabel={t("studies.studentFilter.remove", { name }, {
+                        default: "Remove filter: {{name}}",
+                      })}
+                      onClose={() =>
+                        setStudentFilter(studentFilter.filter((x) => x !== id))
+                      }
+                    />
+                  );
+                })}
+                {studentFilter.length > 1 ? (
+                  <Button variant="text" onClick={() => setStudentFilter([])}>
+                    {t("studies.studentFilter.clear", {}, { default: "Clear" })}
+                  </Button>
                 ) : null}
               </div>
             ) : null}

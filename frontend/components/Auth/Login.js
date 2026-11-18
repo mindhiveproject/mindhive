@@ -26,6 +26,7 @@ import {
   ClassNetworkInviteErrorBanner,
 } from "./ClassNetworkInviteBanner";
 import { backendOrigin } from "../../config";
+import { safeNextPath } from "../../lib/safeNextPath";
 import Button from "../DesignSystem/Button";
 
 const backendBase = backendOrigin;
@@ -33,6 +34,7 @@ const backendBase = backendOrigin;
 export default function Login({
   redirectType,
   redirectTo,
+  next,
   classNetwork: classNetworkId,
   networkInvite: networkInviteToken,
 }) {
@@ -41,6 +43,7 @@ export default function Login({
   const apolloClient = useApolloClient();
   const autoJoinStartedRef = useRef(false);
   const tokenAcceptStartedRef = useRef(false);
+  const nextRedirectStartedRef = useRef(false);
 
   const [error, setError] = useState(null);
   const [inviteError, setInviteError] = useState(null);
@@ -172,6 +175,29 @@ export default function Login({
     router,
     t,
     user,
+    userLoading,
+  ]);
+
+  // Already signed in and sent here with a return path (e.g. from the builder
+  // login gate in another tab): skip the form and go straight back. Invite
+  // flows own their own redirects, so they are left alone. This also fires
+  // right after a fresh sign-in refetches the user; handleSubmit pushes the
+  // same path, so the two agree.
+  useEffect(() => {
+    if (userLoading || !user?.id) return;
+    if (networkInviteToken || classNetworkId) return;
+    if (redirectType === "JoinStudyFlow") return;
+    const target = safeNextPath(next);
+    if (!target || nextRedirectStartedRef.current) return;
+    nextRedirectStartedRef.current = true;
+    router.replace(target);
+  }, [
+    classNetworkId,
+    networkInviteToken,
+    next,
+    redirectType,
+    router,
+    user?.id,
     userLoading,
   ]);
 
@@ -316,7 +342,7 @@ export default function Login({
         return;
       }
 
-      router.push({ pathname: "/dashboard" });
+      router.push(safeNextPath(next) || { pathname: "/dashboard" });
     } catch (submitError) {
       setError({ message: "Authentication failed." });
     }
@@ -438,6 +464,7 @@ export default function Login({
             networkInvite={isTokenInviteValid ? networkInviteToken : null}
             redirectType={redirectType}
             redirectTo={redirectTo}
+            next={next}
             onInviteError={(message, kind = "joinFailed") => {
               setInviteErrorKind(kind);
               setInviteError(message);
