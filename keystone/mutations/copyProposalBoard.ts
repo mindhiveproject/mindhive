@@ -8,6 +8,11 @@ import { isAdmin } from "../access";
 
 const { isFirstBoardInClass } = require("../lib/mainProject");
 const { shouldReuseAssignments } = require("../lib/classAssignmentCopies");
+const {
+  shouldCopyResources,
+  collectResourceLinks,
+  classCopySettings,
+} = require("../lib/classResourceCopies");
 
 // Copies run with limited parallelism. Creating every section, card and
 // assignment at once (each insert also access-checks what it connects)
@@ -253,6 +258,11 @@ async function copyProposalBoard(
   // source template's milestone ids (resolved via clonedFrom).
   const isIndependentCopy = !!classIdTemplate || !classIdUsed;
 
+  // A copy into a class template gets its own resource rows (created after
+  // the cards, below) instead of linking the source's; see
+  // shouldCopyResources (lib/classResourceCopies).
+  const copyResources = shouldCopyResources({ classIdTemplate });
+
   // create a new board
   const board = await context.db.ProposalBoard.createOne(
     {
@@ -304,7 +314,7 @@ async function copyProposalBoard(
             }
           : null,
         resources:
-          template?.resources?.length > 0
+          !copyResources && template?.resources?.length > 0
             ? {
                 connect: template.resources.map((resource: any) => ({
                   id: resource.id,
@@ -417,8 +427,11 @@ async function copyProposalBoard(
                       },
                     }
                   : {}),
+                // Class template copies link their own resource copies
+                // later; linking the source rows here would also publish
+                // them to the class (ProposalCard beforeOperation hook).
                 resources:
-                  templateCard.resources?.length > 0
+                  !copyResources && templateCard.resources?.length > 0
                     ? {
                         connect: templateCard.resources.map((resource: any) => ({
                           id: resource.id,
@@ -451,6 +464,8 @@ async function copyProposalBoard(
             },
             "id"
           );
+          // Remembered for the resource copies made after all cards exist.
+          templateCard.newId = String(newCard.id);
 
           // Assignments: a student/working copy of a class template links the
           // template's own rows (the students answer the class's
@@ -529,34 +544,58 @@ async function copyProposalBoard(
     }
   );
 
-  // If this copy is being used as a class template (classIdTemplate),
-  // ensure that any resources linked on the template's cards are also
-  // associated with that class via Resource.classes, so they are
-  // immediately visible in the class context (similar to what
-  // applyTemplateBoardChanges and the ProposalBoard hooks do).
-  if (classIdTemplate && template.sections?.length) {
-    const resourceIdsSet = new Set<string>();
-    for (const section of template.sections || []) {
-      for (const card of section.cards || []) {
-        for (const resource of card.resources || []) {
-          if (resource?.id) {
-            resourceIdsSet.add(resource.id);
-          }
-        }
-      }
-    }
+  // A copy into a class template gets one copy per source resource (linked on
+  // the board itself and/or its cards), owned by the class like its
+  // assignments: author = the caller, linked to the class and published to
+  // its students (as linking a resource on a class template card does), so
+  // the class's staff control its content and publication without touching
+  // the source. `isCustom` + `parent` follow the app's "customize resource"
+  // convention; Resource access lets the class's staff edit such copies.
+  // Written as sudo from the Resource side (no ProposalCard hook); every id
+  // came from `template`, read as the caller. sudo keeps the session, so the
+  // author/collaborators hooks still credit the caller.
+  if (copyResources) {
+    const links = collectResourceLinks(template.sections, template.resources);
+    const sources = links.length
+      ? await context.query.Resource.findMany({
+          where: { id: { in: links.map((l: any) => l.sourceId) } },
+          query:
+            "id title description content settings tags { id } mediaAssetsUsed { id }",
+        })
+      : [];
+    const sourceById = new Map(sources.map((r: any) => [String(r.id), r]));
 
-    if (resourceIdsSet.size > 0) {
-      const resourceIds = Array.from(resourceIdsSet);
-      await forEachLimited(resourceIds, CARD_CONCURRENCY, async (resourceId) => {
-        await context.db.Resource.updateOne({
-          where: { id: resourceId },
+    await forEachLimited(links, 1, async ({ sourceId, cardIds, onBoard }: any) => {
+      const r: any = sourceById.get(sourceId);
+      if (!r) return;
+      await context.sudo().db.Resource.createOne(
+        {
           data: {
+            title: r.title,
+            description: r.description,
+            content: r.content,
+            settings: classCopySettings(r.settings, classIdTemplate),
+            isPublic: false,
+            isCustom: true,
+            parent: { connect: { id: sourceId } },
             classes: { connect: [{ id: classIdTemplate }] },
+            tags:
+              r.tags?.length > 0
+                ? { connect: r.tags.map((t: any) => ({ id: t.id })) }
+                : undefined,
+            mediaAssetsUsed:
+              r.mediaAssetsUsed?.length > 0
+                ? { connect: r.mediaAssetsUsed.map((m: any) => ({ id: m.id })) }
+                : undefined,
+            proposalBoard: onBoard ? { connect: [{ id: board.id }] } : undefined,
+            proposalCards: cardIds.length
+              ? { connect: cardIds.map((id: string) => ({ id })) }
+              : undefined,
           },
-        });
-      });
-    }
+        },
+        "id"
+      );
+    });
   }
 
   return board;

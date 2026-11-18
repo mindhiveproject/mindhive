@@ -31,7 +31,12 @@ export default function DuplicateResource({ query, user, goBack }) {
         title: stripHtml(inputs?.title),
         description: inputs?.description,
         content: inputs?.content,
-        settings: mergeResourceSettings(inputs?.settings),
+        // A duplicate starts unpublished: the source's class publications
+        // (e.g. a class copy's) belong to the source.
+        settings: {
+          ...mergeResourceSettings(inputs?.settings),
+          publishedToClassIds: [],
+        },
         isPublic: inputs?.isPublic,
       },
     },

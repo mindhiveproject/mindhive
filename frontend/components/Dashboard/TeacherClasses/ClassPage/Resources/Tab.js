@@ -13,6 +13,7 @@ import { AgGridReact } from "ag-grid-react";
 
 import { UPDATE_RESOURCE, DELETE_RESOURCE, CREATE_RESOURCE, SET_RESOURCE_TEMPLATE_CARDS, mergeResourceSettings, isPublishedToClassId } from "../../../../Mutations/Resource";
 import { GET_CLASS_RESOURCES, GET_RESOURCE } from "../../../../Queries/Resource";
+import { canEditLinkedItem } from "../../../../../lib/linkedItemActions";
 import ConnectResourceToCardModal from "./ConnectResourceToCardModal";
 import BulkActionsModal from "./BulkActionsModal";
 import RowActionsMenu from "../RowActionsMenu";
@@ -591,8 +592,8 @@ export default function ResourceTab({ resources, myclass, user }) {
     const resource = params?.data;
     const isPublished = getIsPublishedForThisClass(resource);
     const isOwner = resource?.author?.id === user?.id;
-    const isCollaborator = (resource?.collaborators || []).some((c) => c?.id === user?.id);
-    const canEditResource = isOwner || isCollaborator;
+    // Author, collaborators, and the class's staff for its own copies.
+    const canEditResource = canEditLinkedItem(resource, user, "resource");
     const isClassTeacherOrMentor = classUserIsTeacherOrMentor(
       myclass,
       user?.id

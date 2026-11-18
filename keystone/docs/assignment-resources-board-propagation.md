@@ -49,7 +49,8 @@ Propagation happens in three situations:
 
 | Trigger | Mutation / flow | What gets propagated |
 |--------|----------------------------------|------------------------|
-| Teacher sets class template and students get boards | `copyProposalBoard` | Full clone: sections, cards, **same** resource/assignment IDs on clone cards. |
+| Teacher copies a board into a class template | `copyProposalBoard` (`classIdTemplate`) | Sections, cards, and **new** class-owned copies of the source's resources and assignments. |
+| Students get boards from the class template | `copyProposalBoard` (`classIdUsed`) | Full clone: sections, cards, **same** resource/assignment IDs as the class template. |
 | Teacher edits template (sections/cards/content) | `applyTemplateBoardChanges` | Section/card structure and template-owned fields to all clones; **Resource.classes** updated for classes using this board. |
 | Teacher links/unlinks resources or assignments to template cards | `setResourceTemplateCards`, `setAssignmentTemplateCards`, `linkAssignmentToTemplateCard`, `unlinkAssignmentFromTemplateCards` | Which cards the resource/assignment is linked to on the template and on **all** student boards. |
 
@@ -130,7 +131,12 @@ sequenceDiagram
   API->>DB: Create new board (clonedFrom=template only for student boards)
   loop For each section/card
     API->>DB: Create section/card with same publicId, position, content
-    Note over API,DB: Resources/studies/tasks: connect same IDs
+    Note over API,DB: Studies/tasks: connect same IDs
+    alt Copy into a class template (classIdTemplate)
+      API->>API: Record which new cards link each source resource
+    else Any other copy
+      API->>DB: Resources: connect same IDs
+    end
     alt Student copy of a class template (no classIdTemplate)
       API->>DB: Assignments: connect same IDs (no new Assignment rows)
     else Any other copy
@@ -138,9 +144,16 @@ sequenceDiagram
     end
   end
   API->>DB: Create ONE new Assignment per source assignment, linked to all its new cards
+  opt Copy into a class template
+    API->>DB: Create ONE new Resource per source resource, linked to its new cards / the board
+  end
 ```
 
-- **Resources / studies / tasks:** Clone cards are connected to the **same** resource/study/task IDs as the template (shared across class).
+- **Studies / tasks:** Clone cards are connected to the **same** study/task IDs as the source.
+- **Resources** (rule in `lib/classResourceCopies.js`, `shouldCopyResources`):
+  - A **copy into a class template** (`classIdTemplate`) creates one new Resource per source resource linked on the source board or its cards, linked to every new card (and the board) that had it. New rows: author = the caller, `isCustom: true`, `parent` → source row, `isPublic: false`, `classes` = `classIdTemplate`, `settings` copied with `publishedToClassIds` = `[classIdTemplate]` (published, as linking a resource on a class template card is; staff can unpublish), tags and media assets carried. The source row (often a public template resource) is not linked to the class or changed.
+  - **Student/working copies** and personal copies link the **same** resource IDs (students see their class template's copies).
+  - **Editing:** staff (creator, co-teachers, mentors) of a class a custom copy (`isCustom`) is linked to can edit its content and settings (`staffCanEditClassResource`, used by `Resource` field access; `canEditLinkedItem` on the frontend). `isPublic`, author and collaborators stay owner-only; deleting stays author-only. Publishing to students stays class creator + co-teachers (`canTogglePublishForStaffedClasses`).
 - **Assignments** (rule in `lib/classAssignmentCopies.js`, `shouldReuseAssignments`):
   - A **student/working copy** of a class template reuses the template's assignment IDs: students answer their class's assignments.
   - A **copy into a class template** (`classIdTemplate`) always creates new rows, whatever the source (platform template or another class's template). Each class owns its assignments, so publishing, editing or deleting in one class never affects another. New rows: `classes` = `classIdTemplate`, `public: false`, `isTemplate: false`, `templateSource` → source row, tags carried, author = the caller.

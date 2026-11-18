@@ -50,7 +50,7 @@ Scenario checks: `node mutations/utils/boardPropagationMatch.scenarios.js` (from
 When a `ProposalBoard` is used as a **class template** (`Class.templateProposal` / `ProposalBoard.templateForClasses`) and cloned into **student boards** (`Class.studentProposals` with `clonedFrom` set), the same propagation rules above apply, with additional mutations that wire up resources and assignments:
 
 - `copyProposalBoard.ts` – creates initial clone boards (student boards) from a template, copying sections/cards and:
-  - connecting **resources/studies/tasks** by reusing the same IDs as the template;
+  - connecting **studies/tasks** by reusing the same IDs as the template, and **resources** too for student boards (a copy made into a class template gets its own class-owned resource copies; see `assignment-resources-board-propagation.md` §5);
   - for **assignments**: if the source board is a class template, reuse the same assignment IDs; otherwise create new assignments linked to the new cards.
 - `setResourceTemplateCards.ts` – sets which **template cards** a `Resource` is linked to for a given class, then propagates that link to matching cards on all student boards for that class (match by card `publicId`, or section `publicId` + `position`, or section/card index via `templateCloneMatch.ts`).
 - `setAssignmentTemplateCards.ts` – same as above but for `Assignment`.

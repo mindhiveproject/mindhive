@@ -6,6 +6,7 @@ export default function DeleteResource({
   children,
   resourceId,
   refetchQueries,
+  confirmMessage,
 }) {
   const [deleteResource, { loading }] = useMutation(DELETE_RESOURCE, {
     variables: {
@@ -19,7 +20,7 @@ export default function DeleteResource({
     <div
       style={{ cursor: "pointer", display: "inline-flex" }}
       onClick={() => {
-        if (confirm(t("boardManagement.deleteResource"))) {
+        if (confirm(confirmMessage || t("boardManagement.deleteResource"))) {
           deleteResource().catch((err) => {
             alert(err.message);
           });

@@ -9,7 +9,7 @@ import { ALL_PUBLIC_TASKS } from "../../../Queries/Task";
 
 import ResourcePreviewModal from "../../../Dashboard/Resources/ResourcePreviewModal";
 import Button from "../../../DesignSystem/Button";
-import Chip from "../../../DesignSystem/Chip";
+import ToggleSwitch from "../../../DesignSystem/ToggleSwitch";
 import Input from "../../../DesignSystem/Input";
 import MessageCard from "../../../DesignSystem/MessageCard";
 import Modal from "../../../DesignSystem/Modal";
@@ -163,13 +163,23 @@ export default function LinkedItems({
       ? resource.id
       : resource?.parent?.id || resource.id;
 
-    const existingCustom = isCopy
-      ? myResources.find(
-          (myResource) =>
-            myResource?.parent?.id === templateId &&
-            myResource?.author?.id === user?.id
-        )
-      : null;
+    // The copy to offer instead of making a new one. On a class board: this
+    // class's own copy (whoever on its team made it), never another class's.
+    // Elsewhere: the user's own copy.
+    const existingCustom = !isCopy
+      ? null
+      : classIds.length > 0
+        ? linkableResources.find(
+            (r) =>
+              r?.parent?.id === templateId &&
+              r?.isCustom &&
+              (r.classes || []).some((c) => classIds.includes(c?.id))
+          )
+        : myResources.find(
+            (myResource) =>
+              myResource?.parent?.id === templateId &&
+              myResource?.author?.id === user?.id
+          );
 
     setResourceModalState({
       open: true,
@@ -293,8 +303,13 @@ export default function LinkedItems({
 
   // --- Picker state: one kind at a time, filtered by source and search ---
   const [kind, setKind] = useState("resources");
-  const [sourceFilter, setSourceFilter] = useState([]);
+  // "class": the board's class items plus the user's own ("Mine" on boards
+  // with no class); "public": the public library.
+  const [scope, setScope] = useState("class");
   const [searchQuery, setSearchQuery] = useState("");
+  // Linking someone else's resource on a class board asks first whether to
+  // link it as is or make a class copy: { item, type } or null.
+  const [linkChoice, setLinkChoice] = useState(null);
 
   const selectedByField = {
     resources: selectedResources,
@@ -310,35 +325,42 @@ export default function LinkedItems({
   };
   const isLinked = (item, type) =>
     (selectedByField[fieldForType[type]] || []).some((s) => s.id === item.id);
-  const linkItem = (item, type) => {
+  const linkItemAsIs = (item, type) => {
     const field = fieldForType[type];
     connectItem(item, field, selectedByField[field] || []);
+  };
+  const linkItem = (item, type) => {
+    if (
+      type === "resource" &&
+      classIds.length > 0 &&
+      !canEditLinkedItem(item, user, "resource")
+    ) {
+      setLinkChoice({ item, type });
+      return;
+    }
+    linkItemAsIs(item, type);
   };
   const unlinkItem = (item, type) => {
     const field = fieldForType[type];
     disconnectItem(item, field, selectedByField[field] || []);
   };
 
-  const sourceOptions = [
-    ...(classIds.length > 0
-      ? [{ value: "class", label: t("board.expendedCard.thisClass", "This class") }]
-      : []),
-    { value: "mine", label: t("board.expendedCard.sourceMine", "Mine") },
-    { value: "public", label: t("board.expendedCard.sourcePublic", "Public") },
-  ];
-  const toggleSource = (value) =>
-    setSourceFilter((prev) =>
-      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
-    );
+  // The switch's label says what is shown, and changes with it.
+  const scopeLabel =
+    scope === "public"
+      ? t("board.expendedCard.showingPublic", "Showing public items")
+      : classIds.length > 0
+        ? t("board.expendedCard.showingClass", "Showing this class's items")
+        : t("board.expendedCard.showingMine", "Showing my items");
 
   const matchesSearch = (item) => {
     const query = searchQuery.trim().toLowerCase();
     return !query || stripHtml(item?.title || "").toLowerCase().includes(query);
   };
-  // No source selected means every source.
   const matchesSource = (item) =>
-    sourceFilter.length === 0 ||
-    item.sources?.some((source) => sourceFilter.includes(source));
+    scope === "public"
+      ? item.sources?.includes("public")
+      : item.sources?.some((source) => source === "class" || source === "mine");
 
   const entriesByKind = {
     resources: linkableResources.map((item) => ({ item, type: "resource" })),
@@ -385,7 +407,7 @@ export default function LinkedItems({
     },
   ];
 
-  const emptyLabel = searchQuery || (showSources && sourceFilter.length > 0)
+  const emptyLabel = searchQuery
     ? t("board.expendedCard.noSearchResults", "No items found matching your search.")
     : t("board.expendedCard.noItems", "No items available.");
 
@@ -398,6 +420,7 @@ export default function LinkedItems({
     selectedStudies.length;
 
   const subModalOpen =
+    Boolean(linkChoice) ||
     Boolean(assignmentModal) ||
     resourceModalState.open ||
     Boolean(previewResource);
@@ -468,15 +491,16 @@ export default function LinkedItems({
                 aria-label={t("board.expendedCard.searchPlaceholder", "Search by title...")}
                 wrapperStyle={{ flex: "1 1 240px", width: "auto" }}
               />
-              {showSources &&
-                sourceOptions.map((option) => (
-                  <Chip
-                    key={option.value}
-                    label={option.label}
-                    selected={sourceFilter.includes(option.value)}
-                    onClick={() => toggleSource(option.value)}
+              {showSources && (
+                <div style={{ flex: "0 0 auto", whiteSpace: "nowrap" }}>
+                  <ToggleSwitch
+                    checked={scope === "public"}
+                    onChange={(checked) => setScope(checked ? "public" : "class")}
+                    label={scopeLabel}
+                    aria-label={t("board.expendedCard.sourceToggle", "Show public items")}
                   />
-                ))}
+                </div>
+              )}
             </div>
           </div>
           {notice && (
@@ -505,6 +529,42 @@ export default function LinkedItems({
             t={t}
           />
         </div>
+      </Modal>
+
+      <Modal
+        open={Boolean(linkChoice)}
+        onClose={() => setLinkChoice(null)}
+        maxWidth={480}
+        title={t("board.expendedCard.linkChoiceTitle", "Link this resource")}
+        actions={
+          <div style={FOOTER_BUTTONS_STYLE}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                linkItemAsIs(linkChoice.item, linkChoice.type);
+                setLinkChoice(null);
+              }}
+            >
+              {t("board.expendedCard.connectAsPublic", "Add to card as public resource")}
+            </Button>
+            <Button
+              variant="filled"
+              onClick={() => {
+                copyItem(linkChoice.item, linkChoice.type);
+                setLinkChoice(null);
+              }}
+            >
+              {t("board.expendedCard.makeClassCopy", "Make a class copy")}
+            </Button>
+          </div>
+        }
+      >
+        <p style={{ ...TYPO.body, margin: 0 }}>
+          {t(
+            "board.expendedCard.linkChoiceBody",
+            "This resource belongs to someone else. Add it as a public resource to show their version (only its owner can edit it), or make a copy your class owns and can edit and publish."
+          )}
+        </p>
       </Modal>
 
       <AssignmentModal

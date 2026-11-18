@@ -4,6 +4,8 @@
 // - Owned (author, resource collaborator, or admin): link, preview, edit.
 // - An assignment of a class the user staffs (creator, co-teacher, mentor):
 //   link, preview, edit/publish, as assignmentUpdateFilter allows server-side.
+// - A class's own resource copy (isCustom, of a class the user staffs): link,
+//   preview, edit, as Resource access allows server-side.
 // - Someone else's resource: link, preview, copy & link. Never edit.
 // - Someone else's assignment, of no class the user staffs: preview, copy & link. Not linkable as-is,
 //   since student submissions would land on another teacher's assignment.
@@ -22,13 +24,17 @@ export function isAdminUser(user) {
   return Boolean(user?.permissions?.some((p) => p?.name === "ADMIN"));
 }
 
-// `type` is "assignment" or "resource"; only assignments are editable by the
-// staff of their classes (needs the item's `classes { id }`).
+// `type` is "assignment" or "resource". Assignments, and resources that are a
+// class's own copy (isCustom), are editable by the staff of their classes
+// (needs the item's `classes { id }`).
 export function canEditLinkedItem(item, user, type) {
   if (!item || !user?.id) return false;
   if (isAdminUser(user)) return true;
   if (item.author?.id === user.id) return true;
-  if (type === "assignment" && item.classes?.some((c) => isOnTeachingTeamOf(user, c?.id))) {
+  if (
+    (type === "assignment" || item.isCustom) &&
+    item.classes?.some((c) => isOnTeachingTeamOf(user, c?.id))
+  ) {
     return true;
   }
   return Boolean(item.collaborators?.some((c) => c?.id === user.id));

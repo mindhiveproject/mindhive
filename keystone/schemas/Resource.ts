@@ -13,7 +13,8 @@ import slugify from "slugify";
 import uniqid from "uniqid";
 import { Session } from "../types";
 
-import { signedInWrites } from "../access";
+import { signedInWrites, staffClassIds } from "../access";
+const { staffCanEditClassResource } = require("../lib/classResourceCopies");
 import { keepHiddenLinksOnSet } from "../lib/keepHiddenLinks";
 function isResourceOwner(session: Session | undefined, item: any) {
   if (!session?.itemId || item?.authorId == null) return false;
@@ -38,12 +39,20 @@ async function canEditResourceContent({
 
   const resource = await context.sudo().query.Resource.findOne({
     where: { id: String(item.id) },
-    query: "collaborators { id }",
+    query: "isCustom collaborators { id } classes { id }",
   });
-  return !!resource?.collaborators?.some(
-    (collaborator: { id: string }) =>
-      String(collaborator.id) === String(session.itemId)
-  );
+  if (
+    resource?.collaborators?.some(
+      (collaborator: { id: string }) =>
+        String(collaborator.id) === String(session.itemId)
+    )
+  ) {
+    return true;
+  }
+  // A class's own copy (e.g. made when a template board was copied into the
+  // class) is edited by the class's staff, like its assignments.
+  if (!resource?.isCustom) return false;
+  return staffCanEditClassResource(resource, await staffClassIds(context));
 }
 
 // Class creator and co-teachers (teaching team) may publish/unpublish any
