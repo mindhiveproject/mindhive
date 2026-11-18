@@ -1970,6 +1970,17 @@
 		"titlePlaceholder": "Enter project board title"
 	},
 	"proposalPage": {
+		"untitledBoard": "Project board",
+		"downloadPdf": "Download PDF",
+		"closePdf": "Close",
+		"pdfIndex": "Index",
+		"pdfTasksAndSurveys": "Selected tasks & surveys",
+		"pdfTypeTask": "Task",
+		"pdfTypeSurvey": "Survey",
+		"pdfTypeBlock": "Block",
+		"pdfStudyUrl": "Study URL",
+		"pdfGeneratedOn": "Generated on {{date}}",
+		"pdfEmpty": "No cards match the selected filters, or no card is marked to be included in the report.",
 		"confirmLeaveListView": "Do you want to leave the list view and go back to the board? Your unsaved changes will be lost.",
 		"download": "Download",
 		"downloadTooltip": "Download content is based on the status and review step filters selected below.",

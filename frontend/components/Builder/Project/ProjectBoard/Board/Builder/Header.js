@@ -123,7 +123,8 @@ export default function ProposalHeader({
         t,
         selectedStatuses,
         selectedReviewSteps,
-        selectedAssignedUsers
+        selectedAssignedUsers,
+        router.locale
       );
     }
   };
