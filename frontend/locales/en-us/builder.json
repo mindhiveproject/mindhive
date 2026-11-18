@@ -1858,6 +1858,7 @@
 		"connectStudy": "Connect Study",
 		"connectToStudy": "Connect to a Study",
 		"connectToStudyDescription": "Link this project to an existing study or create a new one",
+		"searchStudyOptions": "Search by study, class or username",
 		"createAndConnect": "Create & Connect",
 		"createNewStudy": "Create New Study",
 		"delete": "Delete Project",

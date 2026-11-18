@@ -1,15 +1,16 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import styled from "styled-components";
 import useTranslation from "next-translate/useTranslation";
 import { Message, MessageHeader } from "semantic-ui-react";
 
 import Button from "../../DesignSystem/Button";
+import Chip from "../../DesignSystem/Chip";
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
 
 import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal";
 import { GET_PROJECT_STUDY } from "../../Queries/Proposal";
-import { MY_STUDIES } from "../../Queries/Study";
+import { STUDY_CONNECTOR_OPTIONS } from "../../Queries/Study";
 
 export default function StudyConnector({ user, project }) {
   const { t } = useTranslation("builder");
@@ -28,16 +29,80 @@ export default function StudyConnector({ user, project }) {
     ],
   });
 
-  const { data } = useQuery(MY_STUDIES, {
-    variables: { id: user?.id },
+  const { data } = useQuery(STUDY_CONNECTOR_OPTIONS, {
+    variables: { userId: user?.id, projectId: project?.id },
+    skip: !user?.id || !project?.id,
   });
 
-  const studies = data?.studies || [];
-  const studyOptions =
-    studies?.map((study) => ({
-      value: study?.id,
-      label: study?.title,
-    })) || [];
+  // Each study row carries chips for its classes and for the people it shares
+  // with this board (board author/collaborators, minus the viewer), so a member
+  // can spot the study that belongs with this project. Studies shared with the
+  // board's members are listed first.
+  const studyOptions = useMemo(() => {
+    const board = data?.proposalBoard;
+    const boardMemberIds = new Set(
+      [board?.author, ...(board?.collaborators || [])]
+        .map((member) => member?.id)
+        .filter((id) => id && id !== user?.id)
+    );
+
+    const rows = (data?.studies || []).map((study, index) => {
+      const people = [study?.author, ...(study?.collaborators || [])].filter(
+        (person, i, all) =>
+          person?.id && all.findIndex((p) => p?.id === person.id) === i
+      );
+      const sharedPeople = people.filter((person) =>
+        boardMemberIds.has(person.id)
+      );
+      const classes = (study?.classes || []).filter((c) => c?.id);
+      const title = study?.title || "";
+
+      return {
+        index,
+        shared: sharedPeople.length,
+        option: {
+          value: study?.id,
+          labelText: title,
+          searchText: [
+            ...classes.map((c) => c?.title),
+            ...people.map((person) => person?.username),
+          ]
+            .filter(Boolean)
+            .join(" "),
+          label: (
+            <OptionContent>
+              <OptionTitle>{title}</OptionTitle>
+              {(classes.length > 0 || sharedPeople.length > 0) && (
+                <OptionChips>
+                  {classes.map((c) => (
+                    <Chip
+                      key={`class-${c.id}`}
+                      variant="static"
+                      tone="neutral"
+                      label={c?.title}
+                      style={CHIP_STYLE}
+                    />
+                  ))}
+                  {sharedPeople.map((person) => (
+                    <Chip
+                      key={`person-${person.id}`}
+                      variant="static"
+                      tone="default"
+                      label={person?.username}
+                      style={CHIP_STYLE}
+                    />
+                  ))}
+                </OptionChips>
+              )}
+            </OptionContent>
+          ),
+        },
+      };
+    });
+
+    rows.sort((a, b) => (b.shared > 0) - (a.shared > 0) || a.index - b.index);
+    return rows.map((row) => row.option);
+  }, [data, user?.id]);
 
   const assignToStudy = async () => {
     if (!studyId) {
@@ -136,6 +201,9 @@ export default function StudyConnector({ user, project }) {
             onChange={setStudyId}
             options={studyOptions}
             searchableSingle
+            searchPlaceholder={t("project.searchStudyOptions", {}, {
+              default: "Search by study, class or username",
+            })}
             placeholder={t("project.chooseStudy", {}, {
               default: "Choose a study...",
             })}
@@ -184,6 +252,25 @@ export default function StudyConnector({ user, project }) {
     </StyledStudyConnector>
   );
 }
+
+const CHIP_STYLE = { height: 24, padding: "2px 8px", maxWidth: 200 };
+
+const OptionContent = styled.span`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+const OptionTitle = styled.span`
+  display: block;
+`;
+
+const OptionChips = styled.span`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-weight: 400;
+`;
 
 const StyledStudyConnector = styled.div`
   padding: 24px;
