@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 
@@ -17,7 +17,9 @@ import StudyStageChip, {
   openStudyStatus,
 } from "../../shared/studyDataCollection/StudyStageChip";
 import Tooltip from "../../../DesignSystem/Tooltip";
+import Popover from "../../../DesignSystem/Popover";
 import Button from "../../../DesignSystem/Button";
+import Chip from "../../../DesignSystem/Chip";
 import IconButton from "../../../DesignSystem/IconButton";
 import Navbar, { NavbarItem } from "../../../DesignSystem/Navbar";
 import { NavigateBackIcon } from "../../../DesignSystem/Icons";
@@ -81,6 +83,23 @@ export default function Navigation({
   const hideTitle =
     mode !== "project" &&
     !((study?.proposal?.length ?? 0) > 0 || !!study?.proposalMain?.id);
+
+  // In project mode the title tooltip also lists the students on the board, so
+  // a teacher can tell at a glance whose project this is.
+  const projectMembers =
+    mode === "project"
+      ? [project?.author, ...(project?.collaborators || [])].filter(
+          (person, i, all) =>
+            person?.username &&
+            all.findIndex(
+              (p) => (p?.id || p?.username) === (person.id || person.username)
+            ) === i
+        )
+      : [];
+  // Hovering the title opens a light popover with the title and student chips.
+  const titleRef = useRef(null);
+  const [membersOpen, setMembersOpen] = useState(false);
+  const closeMembers = useCallback(() => setMembersOpen(false), []);
 
   const tryToLeave = (e) => {
     if (hasStudyChanged) {
@@ -155,9 +174,57 @@ export default function Navigation({
       />
       {!hideTitle && (
         <div className="navTitle">
-          <Tooltip content={title} side="bottom" delayMs={650} maxWidth={400}>
-            <span className="studyTitle">{title}</span>
-          </Tooltip>
+          {projectMembers.length > 0 ? (
+            <>
+              <span
+                ref={titleRef}
+                className="studyTitle"
+                onMouseEnter={() => setMembersOpen(true)}
+                onMouseLeave={closeMembers}
+                onFocus={() => setMembersOpen(true)}
+                onBlur={closeMembers}
+                tabIndex={0}
+              >
+                {title}
+              </span>
+              <Popover
+                open={membersOpen}
+                anchorRef={titleRef}
+                onClose={closeMembers}
+                side="bottom"
+                width={320}
+                ariaLabel={title}
+              >
+                <div
+                  className="MH-Type-Body-Small"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                    padding: 12,
+                    pointerEvents: "none",
+                  }}
+                >
+                  <span>{title}</span>
+                  <span style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                    {projectMembers.map((person) => (
+                      <Chip
+                        key={person.id || person.username}
+                        variant="static"
+                        tone="default"
+                        label={person.username}
+                        style={{ height: 24, padding: "2px 8px", maxWidth: 200 }}
+                      />
+                    ))}
+                  </span>
+                </div>
+              </Popover>
+            </>
+          ) : (
+            <Tooltip content={title} side="bottom" delayMs={650} maxWidth={400}>
+              <span className="studyTitle">{title}</span>
+            </Tooltip>
+          )}
         </div>
       )}
       {dataCollection ? (
