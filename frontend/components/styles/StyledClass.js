@@ -1239,6 +1239,14 @@ const StyledClass = styled.div`
       gap: 12px;
     }
 
+    .studiesStudentFilters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
     .classTabInformationBlock {
       display: grid;
       gap: 16px;

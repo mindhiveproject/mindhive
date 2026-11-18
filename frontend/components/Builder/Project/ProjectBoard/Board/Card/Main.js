@@ -1517,7 +1517,7 @@ export default function ProposalCard({
                             {label}
                             {entry.submittedAt && (
                               <span className="originalEntryBlockDate">
-                                {moment(entry.submittedAt).format("YYYY-MM-DD")}
+                                {moment(entry.submittedAt).format("MMMM DD, YYYY")}
                               </span>
                             )}
                           </span>

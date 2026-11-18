@@ -822,7 +822,7 @@
 			"noStudy": "No study",
 			"noStudyHint": "The main project has no study linked yet.",
 			"untitled": "Untitled study",
-			"openInStudies": "Show “{{title}}” in the Studies tab"
+			"openStudentStudies": "Show this student's studies in the Studies tab"
 		},
 		"studiesFollowDataCollection": "This class follows data collection without a board: see where each study stands in the Studies tab.",
 		"openStudiesTab": "Open the Studies tab"
@@ -2494,6 +2494,12 @@
 		"yourStudies": "Your studies",
 		"yourStudiesDescription": "{{count}} studies in this class that you authored or collaborate on.",
 		"searchStudies": "Search studies, projects or people",
+		"studentFilter": {
+			"placeholder": "Filter by student",
+			"search": "Search students",
+			"remove": "Remove filter: {{name}}",
+			"clear": "Clear"
+		},
 		"projectColumn": "Project",
 		"copyParticipantLink": "Copy link",
 		"copyParticipantLinkAria": "Copy the participant page link of {{title}}",

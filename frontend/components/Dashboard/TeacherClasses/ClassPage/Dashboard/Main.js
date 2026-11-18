@@ -346,10 +346,11 @@ export default function Dashboard({ myclass }) {
   // The study chip opens the Studies tab, searched to the main project's study.
   const openStudyInStudiesTab = useCallback(
     (row) => {
-      if (!myclass?.code || !row?.studyTitle) return;
+      if (!myclass?.code || !row?.id) return;
+      // Opens the Studies tab filtered to this row's student.
       router.push({
         pathname: `/dashboard/myclasses/${myclass.code}`,
-        query: { page: "studies", study: row.studyTitle },
+        query: { page: "studies", students: row.id },
       });
     },
     [myclass?.code, router]
