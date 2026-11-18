@@ -1834,6 +1834,7 @@
 		"saveAndClose": "Save & Close"
 	},
 	"pleaseLogin": "Please first log in!",
+	"pleaseLoginLink": "Log in to continue",
 	"preview": {
 		"timePlaceholder": "e.g. 15 minutes",
 		"description": "Description",

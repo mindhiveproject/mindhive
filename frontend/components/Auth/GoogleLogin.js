@@ -11,6 +11,7 @@ import { GOOGLE_LOGIN } from "../Mutations/Auth";
 import { SIGNIN_MUTATION } from "../Mutations/User";
 import { CURRENT_USER_QUERY } from "../Queries/User";
 import { googleAccountEmail } from "../../lib/googleAccountEmail";
+import { safeNextPath } from "../../lib/safeNextPath";
 import {
   acceptNetworkInviteAfterAuth,
   completeClassNetworkInviteAfterAuth,
@@ -21,6 +22,7 @@ export default function LoginWithGoogle({
   networkInvite,
   redirectType,
   redirectTo,
+  next,
   onInviteError,
   disabled = false,
 }) {
@@ -120,7 +122,7 @@ export default function LoginWithGoogle({
       return;
     }
 
-    router.push({ pathname: "/dashboard" });
+    router.push(safeNextPath(next) || { pathname: "/dashboard" });
   };
 
   const handleFailure = () => {
