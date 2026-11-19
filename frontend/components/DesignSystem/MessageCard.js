@@ -103,6 +103,7 @@ const MESSAGE_CARD_FOCUS_STYLE = `
  * @param {() => void} [onClick] - Makes the card keyboard-activatable and clickable.
  * @param {() => void} [onClose] - Optional dismiss control. When set, trailing icon is X only (no info icon).
  * @param {React.ReactNode} [action] - Trailing control (e.g. a text Button) shown in place of the info icon, for a message that carries its own action. Ignored when `onClose` is set.
+ * @param {boolean} [showIcon=true] - Show the trailing info icon when there is no `onClose` or `action`.
  * @param {string} [closeAriaLabel] - Accessible name for the dismiss control (pass via t()).
  * @param {string} [className] - Optional class for the root.
  * @param {string} [ariaLabel] - Accessible name when clickable or when message is not plain text.
@@ -114,6 +115,7 @@ export default function MessageCard({
   onClick,
   onClose,
   action,
+  showIcon = true,
   closeAriaLabel,
   className,
   ariaLabel,
@@ -197,7 +199,7 @@ export default function MessageCard({
               {CLOSE_ICON}
             </button>
           ) : (
-            action ?? INFO_ICON
+            action ?? (showIcon ? INFO_ICON : null)
           )}
         </span>
       </div>

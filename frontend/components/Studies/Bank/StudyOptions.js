@@ -6,6 +6,7 @@ import Authorship from "./Options/Authorship";
 import Archive from "./Options/Archive";
 import Delete from "./Options/Delete";
 import { LinkedClass, LinkedStudy } from "./Options/Links";
+import LinkedBoard from "./Options/LinkedBoard";
 import Button from "../../DesignSystem/Button";
 import IconButton from "../../DesignSystem/IconButton";
 import PanelHeader from "../../DesignSystem/PanelHeader";
@@ -28,6 +29,10 @@ export default function StudyOptions({
   // "study": the board's linked study (project board tab);
   // "class": the study's linked class (study tabs); null: neither.
   linkSection = null,
+  // Builder only: the URL area ("projects" | "studies") and unsaved edits,
+  // for the project board section's switch (it reloads the builder).
+  area,
+  hasStudyChanged = false,
   variant = "dropdown",
 }) {
   const { t } = useTranslation("common");
@@ -85,6 +90,13 @@ export default function StudyOptions({
                 {linkSection === "class" && (
                   <>
                     <LinkedClass study={study} />
+                    <LinkedBoard
+                      user={user}
+                      study={study}
+                      project={project}
+                      area={area}
+                      hasStudyChanged={hasStudyChanged}
+                    />
                     <hr style={{ border: 0, borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)", margin: "4px 0", width: "100%" }} />
                   </>
                 )}
