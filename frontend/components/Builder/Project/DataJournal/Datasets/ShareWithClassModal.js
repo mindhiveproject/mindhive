@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import Modal from "../../../../DesignSystem/Modal";
 import Button from "../../../../DesignSystem/Button";
 import Checkbox from "../../../../DesignSystem/Checkbox";
 import { SET_DATASOURCE_CLASS_SHARING } from "../../../../Mutations/Datasource";
+import { GET_DATASOURCE_LINKED_CLASSES } from "../../../../Queries/Datasource";
 import { collectDatasourceLinkedClassIds } from "../../../../../lib/dataJournalDatasources";
 
 /**
@@ -54,9 +55,15 @@ export default function ShareWithClassModal({
   }, [open, initiallyShared]);
 
   // Classes linked to the dataset's study or project come first: they are
-  // usually the ones a teacher means.
+  // usually the ones a teacher means. Not part of the dataset list (one query
+  // per row each), so loaded when the modal opens.
+  const { data: linkedData } = useQuery(GET_DATASOURCE_LINKED_CLASSES, {
+    variables: { id: datasource?.id },
+    skip: !open || !datasource?.id,
+  });
+  const linkedSource = linkedData?.datasource;
   const orderedClasses = useMemo(() => {
-    const linked = new Set(collectDatasourceLinkedClassIds(datasource));
+    const linked = new Set(collectDatasourceLinkedClassIds(linkedSource));
     const list = (staffClasses || []).map((cl) => ({
       ...cl,
       linked: linked.has(cl.id),
@@ -65,7 +72,7 @@ export default function ShareWithClassModal({
       ...list.filter((cl) => cl.linked),
       ...list.filter((cl) => !cl.linked),
     ];
-  }, [datasource, staffClasses]);
+  }, [linkedSource, staffClasses]);
 
   const toggle = (classId, next) => {
     setSelected((prev) => {

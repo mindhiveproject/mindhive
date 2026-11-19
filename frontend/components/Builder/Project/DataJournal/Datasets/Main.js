@@ -7,11 +7,18 @@ import {
   buildDatasourcesWhereForScope,
   TESTER_ONLY_DATASET_SCOPES,
   isTesterUser,
-  sortDatasourcesByMostRecent,
 } from "../../../../../lib/dataJournalDatasources";
 import { useDataJournal } from "../Context/DataJournalContext";
 import { useUserDatasetClassContext } from "../Hooks/useUserDatasetClassContext";
-import { GET_DATASOURCES } from "../../../../Queries/Datasource";
+import {
+  usePagedDatasources,
+  datasourcesPageVariables,
+} from "../Hooks/usePagedDatasources";
+import {
+  GET_DATASOURCES,
+  GET_DATASOURCE_DETAIL,
+} from "../../../../Queries/Datasource";
+import Button from "../../../../DesignSystem/Button";
 
 import AddDataset from "./AddDataset";
 import DatasetCard from "./DatasetCard";
@@ -111,15 +118,19 @@ export default function Datasets() {
     ],
   );
 
-  const { data, loading, error, refetch } = useQuery(GET_DATASOURCES, {
-    variables: { where: datasourcesWhere },
+  const {
+    datasources,
+    totalCount,
+    hasMore,
+    loading,
+    loadingMore,
+    error,
+    refetch,
+    loadMore,
+  } = usePagedDatasources({
+    where: datasourcesWhere,
     skip: classesLoading && CLASS_DEPENDENT_SCOPES.includes(datasetScope),
   });
-
-  const datasources = useMemo(
-    () => sortDatasourcesByMostRecent(data?.datasources),
-    [data?.datasources],
-  );
   const [showAddDataset, setShowAddDataset] = useState(false);
   const [editingDataset, setEditingDataset] = useState(null);
   const [viewingDatasetId, setViewingDatasetId] = useState(null);
@@ -154,13 +165,20 @@ export default function Datasets() {
     setViewingDatasetId(null);
   }, [datasetScope]);
 
-  const viewingDataset = useMemo(
-    () =>
-      viewingDatasetId
-        ? datasources.find((d) => d.id === viewingDatasetId) || null
-        : null,
-    [datasources, viewingDatasetId],
-  );
+  // The list leaves out `content`; the opened dataset loads it. Always from
+  // the network: saves don't return content, so a cached copy may be stale.
+  const {
+    data: viewingData,
+    loading: viewingLoading,
+    error: viewingError,
+  } = useQuery(GET_DATASOURCE_DETAIL, {
+    variables: { id: viewingDatasetId },
+    skip: !viewingDatasetId,
+    fetchPolicy: "network-only",
+  });
+  const viewingDataset = viewingDatasetId
+    ? viewingData?.datasource || null
+    : null;
 
   const scopeIntro = t(
     SCOPE_INTRO_KEYS[datasetScope] || SCOPE_INTRO_KEYS.uploaded,
@@ -207,7 +225,7 @@ export default function Datasets() {
       if (meWhere) {
         await client.query({
           query: GET_DATASOURCES,
-          variables: { where: meWhere },
+          variables: datasourcesPageVariables(meWhere),
           fetchPolicy: "network-only",
         });
       }
@@ -270,19 +288,45 @@ export default function Datasets() {
           {datasources.length === 0 ? (
             <p className="datasets-list-empty">{scopeEmptyMessage}</p>
           ) : (
-            <StyledDatasetGrid>
-              {datasources.map((datasource) => (
-                <DatasetCard
-                  key={datasource.id}
-                  datasource={datasource}
-                  user={user}
-                  projectId={projectId}
-                  studyId={studyId}
-                  onEdit={handleEdit}
-                  onView={handleView}
-                />
-              ))}
-            </StyledDatasetGrid>
+            <>
+              <StyledDatasetGrid>
+                {datasources.map((datasource) => (
+                  <DatasetCard
+                    key={datasource.id}
+                    datasource={datasource}
+                    user={user}
+                    projectId={projectId}
+                    studyId={studyId}
+                    onEdit={handleEdit}
+                    onView={handleView}
+                  />
+                ))}
+              </StyledDatasetGrid>
+              {hasMore ? (
+                <div className="datasets-list-more">
+                  <span>
+                    {t(
+                      "dataJournal.datasets.showingCount",
+                      { shown: datasources.length, total: totalCount },
+                      { default: "Showing {{shown}} of {{total}} datasets" },
+                    )}
+                  </span>
+                  <Button
+                    variant="outline"
+                    onClick={loadMore}
+                    disabled={loadingMore}
+                  >
+                    {loadingMore
+                      ? t("dataJournal.datasets.loadingMore", {}, {
+                          default: "Loading…",
+                        })
+                      : t("dataJournal.datasets.showMore", {}, {
+                          default: "Show more",
+                        })}
+                  </Button>
+                </div>
+              ) : null}
+            </>
           )}
         </div>
       ) : showAddDataset ? (
@@ -299,6 +343,18 @@ export default function Datasets() {
           onCancel={handleCancel}
           refetchDatasources={refetch}
         />
+      ) : viewingError ? (
+        <div>
+          {t(
+            "dataJournal.datasets.errorLoading",
+            { message: viewingError.message },
+            { default: "Error: {{message}}" },
+          )}
+        </div>
+      ) : viewingLoading && !viewingDataset ? (
+        <div>
+          {t("dataJournal.datasets.loading", {}, { default: "Loading datasets…" })}
+        </div>
       ) : viewingDataset ? (
         <DatasetView
           dataset={viewingDataset}

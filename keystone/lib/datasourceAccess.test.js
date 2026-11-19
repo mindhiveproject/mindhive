@@ -32,6 +32,12 @@ function matchesValue(value, cond) {
 // Study st1 is researched by S1 (via board b1) and by T (class staff).
 const datasets = {
   publicOne: { id: "pub", isPublic: true, dataOrigin: "UPLOADED" },
+  templateOne: {
+    id: "tpl",
+    author: { id: "A" },
+    journal: [{ isTemplate: true }],
+    dataOrigin: "UPLOADED",
+  },
   s1Upload: { id: "s1u", author: { id: "S1" }, dataOrigin: "UPLOADED" },
   s1Study: {
     id: "s1s",
@@ -59,6 +65,11 @@ const datasets = {
   legacyNoOrigin: { id: "legacy", author: { id: "S1" } },
 };
 
+// order-insensitive comparison of visible dataset ids
+function same(actual, expected) {
+  assert.deepEqual([...actual].sort(), [...expected].sort());
+}
+
 function visibleTo(viewer) {
   const where = datasourceReadWhere(viewer);
   return Object.values(datasets)
@@ -68,13 +79,13 @@ function visibleTo(viewer) {
 }
 
 test("public datasets are visible to any signed-in user", () => {
-  assert.deepEqual(visibleTo({ me: "stranger" }), ["pub"]);
+  same(visibleTo({ me: "stranger" }), ["pub", "tpl"]);
 });
 
 test("the author sees their uploads, study and board datasets, but not simulated ones", () => {
-  assert.deepEqual(visibleTo({ me: "S1", studyIds: ["st1"] }), [
+  same(visibleTo({ me: "S1", studyIds: ["st1"] }), [
     "legacy",
-    "pub",
+    "pub", "tpl",
     "s1b",
     "s1s",
     "s1u",
@@ -83,45 +94,45 @@ test("the author sees their uploads, study and board datasets, but not simulated
 });
 
 test("a classmate sees only what the teacher shared with their class", () => {
-  assert.deepEqual(visibleTo({ me: "S2", memberClassIds: ["c1"] }), [
-    "pub",
+  same(visibleTo({ me: "S2", memberClassIds: ["c1"] }), [
+    "pub", "tpl",
     "shared",
   ]);
 });
 
 test("a student of another class does not see class-shared datasets", () => {
-  assert.deepEqual(visibleTo({ me: "S3", memberClassIds: ["c2"] }), ["pub"]);
+  same(visibleTo({ me: "S3", memberClassIds: ["c2"] }), ["pub", "tpl"]);
 });
 
 test("a study researcher who is not the author sees the study dataset", () => {
   // e.g. a study collaborator no longer on the board, or a board member of
   // another board linked to the study: both resolve to st1 in studyIds
-  assert.deepEqual(visibleTo({ me: "R", studyIds: ["st1"] }), ["pub", "s1s"]);
+  same(visibleTo({ me: "R", studyIds: ["st1"] }), ["pub", "tpl", "s1s"]);
 });
 
 test("a board collaborator sees the board's dataset", () => {
-  assert.deepEqual(visibleTo({ me: "S4" }), ["pub", "s1b"]);
+  same(visibleTo({ me: "S4" }), ["pub", "tpl", "s1b"]);
 });
 
 test("the teacher sees their students' study and board datasets", () => {
-  assert.deepEqual(
+  same(
     visibleTo({
       me: "T",
       studyIds: ["st1"],
       staffClassIds: ["c1"],
       memberClassIds: ["c1"],
     }),
-    ["pub", "s1b", "s1s", "shared"]
+    ["pub", "tpl", "s1b", "s1s", "shared"]
   );
 });
 
 test("testers also see simulated datasets they can otherwise reach", () => {
-  assert.deepEqual(
+  same(
     visibleTo({ me: "S1", studyIds: ["st1"], canSeeSimulated: true }),
-    ["legacy", "pub", "s1b", "s1s", "s1u", "shared", "sim"]
+    ["legacy", "pub", "tpl", "s1b", "s1s", "s1u", "shared", "sim"]
   );
-  assert.deepEqual(visibleTo({ me: "stranger", canSeeSimulated: true }), [
-    "pub",
+  same(visibleTo({ me: "stranger", canSeeSimulated: true }), [
+    "pub", "tpl",
   ]);
 });
 

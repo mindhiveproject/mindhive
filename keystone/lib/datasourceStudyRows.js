@@ -51,6 +51,27 @@ function shapeDataSourceRecord(record) {
 }
 
 /**
+ * Class codes of each participant, looked up once for all of them. Asking for
+ * `user { studentIn { code } }` on every SummaryResult would run one class
+ * query per row (Keystone does not batch to-many relations), thousands for a
+ * large study.
+ * @returns {Promise<Map<string, Array<{ code: string }>>>}
+ */
+async function classCodesByProfile(context, profileIds) {
+  const byProfile = new Map();
+  const ids = [...new Set(profileIds.filter(Boolean))];
+  if (!ids.length) return byProfile;
+  const profiles = await context.prisma.profile.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, studentIn: { select: { code: true } } },
+  });
+  for (const profile of profiles) {
+    byProfile.set(profile.id, profile.studentIn || []);
+  }
+  return byProfile;
+}
+
+/**
  * The rows of a study dataset, or null when the caller cannot read the
  * dataset or it does not read a study.
  *   { flow, includedCount, summaryResults, dataSourceRecords }
@@ -94,17 +115,30 @@ async function loadDatasourceStudyRows(context, datasourceId) {
           testVersion
           type
           data
-          user { publicId publicReadableId studentIn { code } }
+          user { id publicId publicReadableId }
           guest { publicId publicReadableId }
           task { title }
         `,
       })
     : [];
 
+  const classCodes = await classCodesByProfile(
+    context,
+    summaryResults.map((row) => row?.user?.id)
+  );
+  const withClasses = summaryResults.map((row) =>
+    row?.user
+      ? {
+          ...row,
+          user: { ...row.user, studentIn: classCodes.get(row.user.id) || [] },
+        }
+      : row
+  );
+
   return {
     flow: study.flow ?? null,
     includedCount: tokens.length,
-    summaryResults: summaryResults.map(shapeSummaryRow),
+    summaryResults: withClasses.map(shapeSummaryRow),
     dataSourceRecords: (study.dataSourceRecords || []).map(
       shapeDataSourceRecord
     ),

@@ -7,11 +7,25 @@ const {
 
 // `readable` is what the caller's own Datasource read returns (null when the
 // dataset read rule hides it); sudo reads return the study and its results.
-function fakeContext({ readable, study, summaries = [], signedIn = true }) {
-  const calls = { summaryWhere: null };
+function fakeContext({
+  readable,
+  study,
+  summaries = [],
+  profiles = [],
+  signedIn = true,
+}) {
+  const calls = { summaryWhere: null, summaryQuery: null, profileWhere: null };
   return {
     calls,
     session: signedIn ? { itemId: "viewer" } : undefined,
+    prisma: {
+      profile: {
+        findMany: async ({ where }) => {
+          calls.profileWhere = where;
+          return profiles.filter((p) => where.id.in.includes(p.id));
+        },
+      },
+    },
     query: {
       Datasource: { findOne: async () => readable },
     },
@@ -19,8 +33,9 @@ function fakeContext({ readable, study, summaries = [], signedIn = true }) {
       query: {
         Study: { findOne: async () => study },
         SummaryResult: {
-          findMany: async ({ where }) => {
+          findMany: async ({ where, query }) => {
             calls.summaryWhere = where;
+            calls.summaryQuery = query;
             return summaries;
           },
         },
@@ -126,4 +141,32 @@ test("rows carry public ids only, no internal ids or participant info", () => {
   assert.ok(!text.includes("internal-profile-id"));
   assert.ok(!text.includes("consent"));
   assert.ok(!text.includes("class-internal"));
+});
+
+test("class codes are looked up once for all participants, not per row", async () => {
+  const { studentIn, ...userWithoutClasses } = summary.user;
+  const other = {
+    ...summary,
+    metadataId: "run-1",
+    user: { ...userWithoutClasses, id: "other-profile", publicId: "p-2" },
+  };
+  const context = fakeContext({
+    readable: { id: "ds1", dataOrigin: "STUDY", study: { id: "st1" } },
+    study,
+    summaries: [{ ...summary, user: userWithoutClasses }, other, { ...other }],
+    profiles: [
+      { id: "internal-profile-id", studentIn: [{ code: "CLASS1" }] },
+      { id: "other-profile", studentIn: [] },
+    ],
+  });
+  const rows = await loadDatasourceStudyRows(context, "ds1");
+  assert.ok(!/studentIn/.test(context.calls.summaryQuery));
+  assert.deepEqual(context.calls.profileWhere, {
+    id: { in: ["internal-profile-id", "other-profile"] },
+  });
+  assert.deepEqual(
+    rows.summaryResults.map((r) => r.user.studentIn),
+    [[{ code: "CLASS1" }], [], []]
+  );
+  assert.ok(!JSON.stringify(rows).includes("internal-profile-id"));
 });

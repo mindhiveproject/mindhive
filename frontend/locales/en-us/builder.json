@@ -560,6 +560,9 @@
 			},
 			"listIntro": "This list includes datasets stored on this workspace, datasets linked through journal parts, and your own datasets so you can reuse them.",
 			"loading": "Loading datasets…",
+			"loadingMore": "Loading…",
+			"showMore": "Show more",
+			"showingCount": "Showing {{shown}} of {{total}} datasets",
 			"meta": {
 				"byAuthor": "by {{author}}",
 				"byYou": "by you",

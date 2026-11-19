@@ -2,7 +2,9 @@
 // on the server; the dataset library's tabs only group what it lets through.
 //
 // A signed-in user sees a dataset when it is:
-//   - public: `isPublic`, which only admins may set;
+//   - public: `isPublic`, which only admins may set, or attached to a journal
+//     an admin marked as a template (VizPart.isTemplate, also admin-only), so
+//     copying a template journal copies its datasets;
 //   - shared with a class they belong to: `sharedWithClasses`, which only that
 //     class's staff may set (mutations/datasourceClassSharing.ts). Classmates
 //     never see each other's datasets through class links alone;
@@ -39,6 +41,7 @@ function datasourceReadWhere({
   const visible = {
     OR: [
       { isPublic: { equals: true } },
+      { journal: { some: { isTemplate: { equals: true } } } },
       { author: { id: { equals: me } } },
       { study: { id: { in: studyIds } } },
       {

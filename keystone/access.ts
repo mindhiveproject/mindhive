@@ -8,6 +8,11 @@ const {
   canSeeSimulatedDatasets,
   datasourceReadWhere,
 } = require("./lib/datasourceAccess");
+const {
+  journalTeamWhere,
+  journalListFilters,
+  JOURNAL_PARENT,
+} = require("./lib/journalAccess");
 
 export function isSignedIn({ session }: ListAccessArgs) {
   return !!session; // if undefinened, return false
@@ -255,6 +260,7 @@ const ACCESS_INPUT_MODELS = new Set([
   "Assignment",
   "Homework",
   "Study",
+  "VizJournal",
 ]);
 const WRITE_ACTIONS = new Set([
   "create",
@@ -357,6 +363,155 @@ export async function datasourceQueryFilter({
     memberClassIds: memberIds,
     canSeeSimulated: canSeeSimulatedDatasets(session),
   });
+}
+
+/**
+ * Ids of the journal collections (VizJournal) whose team the session user is
+ * on: the study's researchers or the board's team. See lib/journalAccess.js.
+ */
+function teamJournalIds(context: any): Promise<string[]> {
+  const me = context?.session?.itemId;
+  if (!me) return Promise.resolve([]);
+  return cachedIds(context, "teamJournals", async () => {
+    const [studyIds, staffIds] = await Promise.all([
+      researcherStudyIds(context),
+      staffClassIds(context),
+    ]);
+    return findIds(
+      context,
+      "VizJournal",
+      journalTeamWhere({
+        me: String(me),
+        studyIds,
+        staffClassIds: staffIds,
+      })
+    );
+  });
+}
+
+type JournalList = "VizJournal" | "VizPart" | "VizChapter" | "VizSection";
+
+/**
+ * Read ("read") or change ("write") filter for one Data Journal list. Admins
+ * see everything; users with the RESEARCHER permission read everything (the
+ * Research dashboard counts journals), like they read all classes.
+ */
+function journalFilter(list: JournalList, mode: "read" | "write") {
+  return async ({ session, context }: ListAccessArgs) => {
+    if (!session?.itemId) return false;
+    if (isAdmin({ session })) return true;
+    if (mode === "read" && isResearcher({ session })) return true;
+    const ids = await teamJournalIds(context);
+    return journalListFilters(ids)[list][mode];
+  };
+}
+
+/**
+ * Access for a Data Journal list: signed-in users only, reading their team's
+ * journals plus admin-marked templates, changing their team's journals only.
+ */
+export function journalListAccess(list: JournalList) {
+  return {
+    operation: {
+      query: isSignedIn,
+      create: isSignedIn,
+      update: isSignedIn,
+      delete: isSignedIn,
+    },
+    filter: {
+      query: journalFilter(list, "read"),
+      update: journalFilter(list, "write"),
+      delete: journalFilter(list, "write"),
+    },
+  };
+}
+
+/** Field access for flags that publish a journal to everyone: admins only. */
+export const adminOnlyFieldAccess = {
+  create: ({ session }: ListAccessArgs) => isAdmin({ session }),
+  update: ({ session }: ListAccessArgs) => isAdmin({ session }),
+};
+
+/**
+ * validateInput for the Data Journal lists: what a new or moved item hangs
+ * from must be something the caller may change. A journal collection must
+ * link to a study the caller researches or a board they work on; a journal,
+ * workspace or component must connect to a parent their team owns. Nested
+ * creates carry no connect and are covered by the parent's own check.
+ */
+export function journalParentGuard(list: JournalList) {
+  return async ({
+    operation,
+    inputData,
+    context,
+    addValidationError,
+  }: any) => {
+    if (operation !== "create" && operation !== "update") return;
+    const session = context.session;
+    if (!session?.itemId || isAdmin({ session })) return;
+    const me = String(session.itemId);
+    const sudo = context.sudo();
+
+    if (list === "VizJournal") {
+      const studyId = inputData?.study?.connect?.id;
+      const projectId = inputData?.project?.connect?.id;
+      if (operation === "create" && !studyId && !projectId) {
+        addValidationError(
+          "A journal collection must belong to a study or project you work on."
+        );
+        return;
+      }
+      if (studyId) {
+        const ok = await sudo.query.Study.count({
+          where: {
+            AND: [{ id: { equals: String(studyId) } }, studyUpdateWhere(me)],
+          },
+        });
+        if (!ok) {
+          addValidationError(
+            "Only people working on this study can add a journal to it."
+          );
+        }
+      }
+      if (projectId) {
+        const staffIds = await staffClassIds(context);
+        const ok = await sudo.query.ProposalBoard.count({
+          where: {
+            AND: [
+              { id: { equals: String(projectId) } },
+              {
+                OR: [
+                  ...authorOrCollaboratorWhere(me).OR,
+                  { usedInClass: { id: { in: staffIds } } },
+                  { templateForClasses: { some: { id: { in: staffIds } } } },
+                ],
+              },
+            ],
+          },
+        });
+        if (!ok) {
+          addValidationError(
+            "Only people working on this project can add a journal to it."
+          );
+        }
+      }
+      return;
+    }
+
+    const parent = JOURNAL_PARENT[list];
+    const parentId = inputData?.[parent.field]?.connect?.id;
+    if (!parentId) return;
+    const ids = await teamJournalIds(context);
+    const writable = journalListFilters(ids)[parent.list as JournalList].write;
+    const ok = await sudo.query[parent.list].count({
+      where: { AND: [{ id: { equals: String(parentId) } }, writable] },
+    });
+    if (!ok) {
+      addValidationError(
+        "You can only add to journals of a study or project you work on."
+      );
+    }
+  };
 }
 
 /**

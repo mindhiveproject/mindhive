@@ -865,6 +865,16 @@ export const StyledDatasetsRoot = styled.div`
     color: #5d5763;
   }
 
+  .datasets-list-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 24px 0 8px;
+    font: var(--MH-Type-Body-Base);
+    color: #5d5763;
+  }
+
   .add-dataset-row {
     display: flex;
     justify-content: flex-start;
