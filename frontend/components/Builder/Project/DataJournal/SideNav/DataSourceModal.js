@@ -1,15 +1,15 @@
 import { useState, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
-import { useQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import {
   buildDatasourcesWhere,
   canAttachDatasourceToJournal,
-  sortDatasourcesByMostRecent,
 } from "../../../../../lib/dataJournalDatasources";
 import { getLastUpdatedDate } from "../../../../../lib/dataJournalTimestamps";
-import { GET_DATASOURCES } from "../../../../Queries/Datasource";
+import { usePagedDatasources } from "../Hooks/usePagedDatasources";
+import Button from "../../../../DesignSystem/Button";
 import { UPDATE_VIZPART } from "../../../../Mutations/VizPart";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 import { GET_DATA_JOURNAL } from "../../../../Queries/DataJournal";
@@ -71,16 +71,19 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
     [projectId, studyId],
   );
 
-  const { data, loading, error, refetch } = useQuery(GET_DATASOURCES, {
-    variables: { where: datasourcesWhere },
-  });
+  // Only while open: the modal is mounted on every journal page.
+  const {
+    datasources,
+    totalCount,
+    hasMore,
+    loading,
+    loadingMore,
+    error,
+    refetch,
+    loadMore,
+  } = usePagedDatasources({ where: datasourcesWhere, skip: !isOpen });
 
   const [updateVizPart, { loading: updateLoading }] = useMutation(UPDATE_VIZPART);
-
-  const datasources = useMemo(
-    () => sortDatasourcesByMostRecent(data?.datasources),
-    [data?.datasources],
-  );
 
   const attachDisabledHint = t(
     "dataJournal.sideNav.dataSourceModal.attachDisabledNotOwner",
@@ -301,6 +304,34 @@ export default function DataSourceModal({ isOpen, onClose, journal }) {
               })}
             </StyledDataSourceList>
           )}
+          {!loading && !error && hasMore ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 16,
+                marginTop: 16,
+              }}
+            >
+              <span>
+                {t(
+                  "dataJournal.datasets.showingCount",
+                  { shown: datasources.length, total: totalCount },
+                  { default: "Showing {{shown}} of {{total}} datasets" },
+                )}
+              </span>
+              <Button variant="outline" onClick={loadMore} disabled={loadingMore}>
+                {loadingMore
+                  ? t("dataJournal.datasets.loadingMore", {}, {
+                      default: "Loading…",
+                    })
+                  : t("dataJournal.datasets.showMore", {}, {
+                      default: "Show more",
+                    })}
+              </Button>
+            </div>
+          ) : null}
         </StyledModalBody>
         <StyledModalFooter>
           <StyledModalButton className="cancel" onClick={onClose}>

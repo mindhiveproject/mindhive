@@ -107,6 +107,9 @@ export default function EditJournal({
   const { inputs, handleChange } = useForm({
     ...part,
   });
+  const isAdminUser = (user?.permissions || []).some(
+    (p) => p?.name === "ADMIN",
+  );
 
   const [updatePart, { loading }] = useMutation(UPDATE_VIZPART, {
     variables: {
@@ -114,7 +117,8 @@ export default function EditJournal({
       input: {
         title: inputs?.title,
         description: inputs?.description,
-        isTemplate: inputs?.isTemplate,
+        // the template flag is admin-only on the server; others never send it
+        ...(isAdminUser ? { isTemplate: !!inputs?.isTemplate } : {}),
         settings: {
           studyId: studyId,
         },

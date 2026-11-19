@@ -11,19 +11,22 @@ import {
   json,
 } from "@keystone-6/core/fields";
 
-import { signedInWrites } from "../access";
+import {
+  adminOnlyFieldAccess,
+  journalListAccess,
+  journalParentGuard,
+} from "../access";
 
 export const VizJournal = list({
-  access: {
-    // Anyone may read; changes need a signed-in user.
-    operation: signedInWrites,
-  },
+  // Signed-in users only: the team of the journal's study or project, plus
+  // admin-marked templates for reading. See lib/journalAccess.js.
+  access: journalListAccess("VizJournal"),
   fields: {
     title: text(),
     description: text(),
-    isPublic: checkbox({ isFilterable: true }),
-    isTemplate: checkbox({ isFilterable: true }),
-    isFeatured: checkbox({ isFilterable: true }),
+    isPublic: checkbox({ isFilterable: true, access: adminOnlyFieldAccess }),
+    isTemplate: checkbox({ isFilterable: true, access: adminOnlyFieldAccess }),
+    isFeatured: checkbox({ isFilterable: true, access: adminOnlyFieldAccess }),
     settings: json(),
     content: json(),
     study: relationship({
@@ -40,5 +43,8 @@ export const VizJournal = list({
       defaultValue: { kind: "now" },
     }),
     updatedAt: timestamp(),
+  },
+  hooks: {
+    validateInput: journalParentGuard("VizJournal"),
   },
 });

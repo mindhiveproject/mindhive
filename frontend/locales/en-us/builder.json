@@ -415,13 +415,10 @@
 				"currentStudy": "Study: {{title}}",
 				"currentStudyMissing": "No study linked to this project",
 				"optionDisabled": "No study is linked to this project. Link a study to enable this option.",
-				"optionTitle": "Use data from the current study"
+				"optionTitle": "Use data from the current study",
+				"loading": "Loading the study…"
 			},
 			"subtitle": "Name your dataset and choose where the data should come from.",
-			"template": {
-				"optionDescription": "Choose a template dataset (coming soon).",
-				"optionTitle": "Copy from an existing dataset"
-			},
 			"title": "New dataset",
 			"upload": {
 				"fileHelp": "First row should contain column names.",
@@ -561,10 +558,15 @@
 				"workspaceLabel": "This workspace",
 				"workspaceTooltip": "This dataset is stored on the current project or study.",
 				"yourLibraryLabel": "Your dataset",
-				"yourLibraryTooltip": "You created this dataset, but it is not currently attached to this project or study. It appears here so you can find and reuse it."
+				"yourLibraryTooltip": "You created this dataset, but it is not currently attached to this project or study. It appears here so you can find and reuse it.",
+				"classSharedLabel": "Shared with your class",
+				"classSharedTooltip": "A teacher shared this dataset with a class you belong to."
 			},
 			"listIntro": "This list includes datasets stored on this workspace, datasets linked through journal parts, and your own datasets so you can reuse them.",
 			"loading": "Loading datasets…",
+			"loadingMore": "Loading…",
+			"showMore": "Show more",
+			"showingCount": "Showing {{shown}} of {{total}} datasets",
 			"meta": {
 				"byAuthor": "by {{author}}",
 				"byYou": "by you",
@@ -583,19 +585,19 @@
 				"empty": {
 					"classNetwork": "No datasets from your class network for this project or study.",
 					"me": "No datasets available to you yet.",
-					"myClass": "No datasets from your classes yet.",
+					"myClass": "Your teacher hasn't shared any datasets with your class yet.",
 					"public": "No public datasets found.",
-					"sharedWithMe": "No datasets have been shared with you.",
+					"sharedWithMe": "No datasets from studies or projects you collaborate on yet.",
 					"simulated": "No simulated datasets yet.",
 					"uploaded": "No uploaded datasets yet."
 				},
 				"filterBy": "Filter by:",
 				"intro": {
-					"classNetwork": "Datasets on this project or study from classes in your class networks.",
-					"me": "All datasets you can see — study, uploaded, shared with you, from your class, class network, or public.",
-					"myClass": "Datasets linked to studies or projects in your classes.",
-					"public": "Datasets from public journal templates.",
-					"sharedWithMe": "Datasets others shared with you as a collaborator.",
+					"classNetwork": "Under construction (visible to testers only). Datasets on this project or study from classes in your class networks.",
+					"me": "All datasets you can see: your own, those from studies and projects you work on, those your teacher shared with your class, and public ones.",
+					"myClass": "Datasets your teacher shared with your class.",
+					"public": "Datasets anyone signed in can use.",
+					"sharedWithMe": "Datasets from studies and projects you collaborate on.",
 					"simulated": "Sham datasets generated from a study design. Only testers can see them.",
 					"uploaded": "Datasets you uploaded."
 				},
@@ -616,7 +618,7 @@
 					"studyCollaborator": "Study collaborator"
 				},
 				"rolesSeparator": ", ",
-				"summary": "This dataset will be shared with {{count}} people tied to this journal’s study or project.",
+				"summary": "Everyone working on this study or project can see this dataset. {{count}} of them will be added as collaborators.",
 				"summaryJournalOnly": "This dataset will be linked to your current journal; collaborators may be added automatically.",
 				"tooltipRow": "{{name}} — {{roles}}",
 				"whoTooltipAria": "Who will receive access"
@@ -630,6 +632,26 @@
 				},
 				"error": "Error: {{message}}",
 				"loading": "Loading dataset…"
+			},
+			"share": {
+				"button": "Share with class",
+				"title": "Share with your classes",
+				"intro": "Students and staff of the classes you tick can see “{{title}}” in their dataset library.",
+				"untitledClass": "Untitled class",
+				"cancel": "Cancel",
+				"save": "Save",
+				"saving": "Saving…",
+				"error": "Sharing could not be saved. Try again.",
+				"sharedCount_one": "Shared with 1 class",
+				"sharedCount_other": "Shared with {{count}} classes",
+				"sharedCount": "Shared with {{count}} classes",
+				"linkedClass": "linked to this study or project",
+				"studyWarningTitle": "You are sharing participant data",
+				"studyWarningAnswers": "Everyone in the classes you tick will see every included participant's answers to every task in this study.",
+				"studyWarningIds": "Participants appear under public ids, not names or emails, along with their class codes. Classmates may still recognise each other from their answers.",
+				"studyWarningCopies": "Students can download the data or save their own copy. Unsharing later does not remove those.",
+				"studyWarningConsent": "Only share if your participants' consent allows their data to be shown to these classes.",
+				"studyConfirm": "I understand these classes will see this participant data."
 			}
 		},
 		"export": {

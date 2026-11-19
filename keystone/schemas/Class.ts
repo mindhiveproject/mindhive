@@ -170,6 +170,16 @@ export const Class = list({
       ref: "Study.hiddenInClasses",
       many: true,
     }),
+    // Data Journal datasets the class staff shared with the class.
+    // Changed only through setDatasourceClassSharing, from either side.
+    sharedDatasources: relationship({
+      ref: "Datasource.sharedWithClasses",
+      many: true,
+      access: {
+        create: () => false,
+        update: () => false,
+      },
+    }),
     taskShareInvites: relationship({
       ref: "TaskShareInvite.class",
       many: true,

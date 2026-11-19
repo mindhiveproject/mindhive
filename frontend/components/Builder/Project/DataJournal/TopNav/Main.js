@@ -16,10 +16,7 @@ import { GET_WORKSPACE } from "../../../../Queries/DataWorkspace";
 import { GET_DATA_JOURNAL } from "../../../../Queries/DataJournal";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 
-import {
-  DATASET_SCOPES,
-  isTesterUser,
-} from "../../../../../lib/dataJournalDatasources";
+import { visibleDatasetScopes } from "../../../../../lib/dataJournalDatasources";
 import { useDataJournal } from "../Context/DataJournalContext"; // Adjust path
 
 import AddWorkspace from "../SideNav/AddWorkspace";
@@ -97,9 +94,7 @@ export default function TopNavigation() {
     user,
   } = useDataJournal();
 
-  const visibleScopes = isTesterUser(user)
-    ? [...DATASET_SCOPES, "simulated"]
-    : DATASET_SCOPES;
+  const visibleScopes = visibleDatasetScopes(user);
   const scopeItems = visibleScopes
     .filter((scope) => DATASET_SCOPE_META[scope])
     .map((scope) => {
@@ -267,20 +262,25 @@ export default function TopNavigation() {
         />
       </div>
 
+      {area === "datasets" && (
+        <div className="datasetAddSlot">
+          <Button
+            type="button"
+            variant="subtle"
+            className="addDatasetNavBtn"
+            leadingIcon={<AddIcon />}
+            onClick={requestOpenAddDataset}
+          >
+            {tBuilder("dataJournal.datasets.addDataset", {}, {
+              default: "Add dataset",
+            })}
+          </Button>
+        </div>
+      )}
+
       <div className="centerColumn">
         {area === "datasets" && (
           <div className="datasetScopeNavWithAdd">
-            <Button
-              type="button"
-              variant="subtle"
-              className="addDatasetNavBtn"
-              leadingIcon={<AddIcon />}
-              onClick={requestOpenAddDataset}
-            >
-              {tBuilder("dataJournal.datasets.addDataset", {}, {
-                default: "Add dataset",
-              })}
-            </Button>
             <div className="datasetScopeNav">
               <span className="MH-Type-Label-Base" style={{ color: "#5D5763" }}>
                 {tBuilder("dataJournal.datasets.scopes.filterBy", {}, {

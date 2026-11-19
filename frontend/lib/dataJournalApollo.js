@@ -1,6 +1,7 @@
 import { GET_DATA_JOURNALS } from "../components/Queries/DataArea";
 import { GET_DATA_JOURNAL } from "../components/Queries/DataJournal";
 import { GET_DATASOURCES } from "../components/Queries/Datasource";
+import { datasourcesPageVariables } from "../components/Builder/Project/DataJournal/Hooks/usePagedDatasources";
 import { buildDatasourcesWhere } from "./dataJournalDatasources";
 
 /**
@@ -58,7 +59,7 @@ export function getDatasourcesRefetchQuery({ projectId, studyId, userId }) {
   if (!where) return null;
   return {
     query: GET_DATASOURCES,
-    variables: { where },
+    variables: datasourcesPageVariables(where),
   };
 }
 

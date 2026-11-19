@@ -38,3 +38,19 @@ export const DELETE_DATASOURCE = gql`
     }
   }
 `;
+
+// Share datasets with a class the caller teaches, or stop sharing them.
+// Returns how many datasets changed (keystone/mutations/datasourceClassSharing.ts).
+export const SET_DATASOURCE_CLASS_SHARING = gql`
+  mutation SET_DATASOURCE_CLASS_SHARING(
+    $datasourceIds: [ID!]!
+    $classId: ID!
+    $shared: Boolean!
+  ) {
+    setDatasourceClassSharing(
+      datasourceIds: $datasourceIds
+      classId: $classId
+      shared: $shared
+    )
+  }
+`;

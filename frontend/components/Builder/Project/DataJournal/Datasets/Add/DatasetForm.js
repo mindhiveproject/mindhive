@@ -5,6 +5,9 @@ import { useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import Button from "../../../../../DesignSystem/Button";
+import Checkbox from "../../../../../DesignSystem/Checkbox";
+import Input from "../../../../../DesignSystem/Input";
+import Radio from "../../../../../DesignSystem/Radio";
 import InfoPopover from "../../../../../DesignSystem/InfoPopover";
 import {
   collectSharingProfileIdsFromStudyAndProject,
@@ -29,6 +32,80 @@ import SimulatedSourceConfig from "./SimulatedSourceConfig";
 import useSimulationSource from "./useSimulationSource";
 
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
+
+const TEXT_STRONG = "var(--MH-Theme-Neutrals-Black, #171717)";
+const TEXT_MUTED = "var(--MH-Theme-Neutrals-Dark, #6A6A6A)";
+const TEXT_ERROR = "var(--MH-Theme-Error-Dark, #b3261e)";
+
+/**
+ * One data source choice: a bordered row with a radio, a title and a
+ * description, highlighted when selected. Extra content (file picker,
+ * simulation settings) renders inside the row once it is selected.
+ */
+function SourceOption({
+  value,
+  selected,
+  disabled = false,
+  onSelect,
+  title,
+  description,
+  descriptionTone = "muted",
+  badge = null,
+  children = null,
+}) {
+  const titleId = `datasetSource-${value}`;
+  return (
+    <div
+      role="presentation"
+      onClick={() => !disabled && !selected && onSelect(value)}
+      style={{
+        display: "flex",
+        alignItems: "flex-start",
+        gap: 4,
+        padding: "2px 12px 8px 2px",
+        borderRadius: 8,
+        border: `1px solid ${
+          selected ? "var(--MH-Theme-Primary-Dark, #336F8A)" : "#E6E6E6"
+        }`,
+        background: selected ? "var(--MH-Theme-Primary-Lighter, #F4F8F7)" : "#FFFFFF",
+        cursor: disabled ? "not-allowed" : "pointer",
+        opacity: disabled ? 0.55 : 1,
+        transition: "border-color 0.15s, background 0.15s",
+      }}
+    >
+      <Radio
+        checked={selected}
+        disabled={disabled}
+        onChange={() => onSelect(value)}
+        ariaLabelledBy={titleId}
+      />
+      <div style={{ flex: "1 1 auto", minWidth: 0, paddingTop: 13 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <span id={titleId} className="MH-Type-Label-Large" style={{ color: TEXT_STRONG }}>
+            {title}
+          </span>
+          {badge}
+        </div>
+        {description ? (
+          <div
+            className="MH-Type-Body-Base"
+            style={{
+              color: descriptionTone === "error" ? TEXT_ERROR : TEXT_MUTED,
+              marginTop: 2,
+            }}
+          >
+            {description}
+          </div>
+        ) : null}
+        {children ? (
+          <div style={{ marginTop: 4 }} onClick={(e) => e.stopPropagation()}>
+            {children}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
 
 export default function DatasetForm({
   datasetName,
@@ -286,7 +363,6 @@ export default function DatasetForm({
 
         createResult = await createDatasource({ variables: mutationVariables });
       }
-      // TEMPLATE: reserved for future extension
 
       if (createResult?.data?.createDatasource && onCreated) {
         await onCreated(createResult.data.createDatasource, dataOrigin);
@@ -365,9 +441,10 @@ export default function DatasetForm({
     <div
       style={{
         width: "100%",
-        maxWidth: isSimulated ? "1100px" : "520px",
-        margin: "0 auto",
-        padding: "20px 24px",
+        maxWidth: isSimulated ? "1100px" : "720px",
+        margin: "12px auto 0",
+        padding: "16px 24px",
+        boxSizing: "border-box",
         background: "#ffffff",
         borderRadius: "10px",
         boxShadow:
@@ -378,7 +455,7 @@ export default function DatasetForm({
         className="MH-Type-Title-Large"
         style={{
           margin: 0,
-          color: "#1a202c",
+          color: TEXT_STRONG,
         }}
       >
         {t("dataJournal.datasetForm.title", {}, { default: "New dataset" })}
@@ -386,9 +463,9 @@ export default function DatasetForm({
       <p
         className="MH-Type-Body-Base"
         style={{
-          marginTop: "6px",
-          marginBottom: "18px",
-          color: "#4a5568",
+          marginTop: "2px",
+          marginBottom: "12px",
+          color: TEXT_MUTED,
         }}
       >
         {t("dataJournal.datasetForm.subtitle", {}, {
@@ -397,45 +474,15 @@ export default function DatasetForm({
       </p>
 
       {/* Dataset name */}
-      <div style={{ marginBottom: "20px" }}>
-        <label
-          className="MH-Type-Label-Base"
-          style={{
-            display: "block",
-            marginBottom: "6px",
-            color: "#2d3748",
-          }}
-        >
-          {t("dataJournal.datasetForm.nameLabel", {}, { default: "Dataset name" })}
-        </label>
-        <input
-          className="MH-Type-Body-Base"
-          type="text"
+      <div style={{ marginBottom: "12px" }}>
+        <Input
+          label={t("dataJournal.datasetForm.nameLabel", {}, { default: "Dataset name" })}
           value={datasetName}
-          onChange={(e) => setDatasetName(e.target.value)}
+          onChange={setDatasetName}
           placeholder={t("dataJournal.datasetForm.namePlaceholder", {}, {
             default: "e.g. Pre-test responses, Spring 2026",
           })}
-          style={{
-            width: "100%",
-            padding: "9px 11px",
-            borderRadius: "6px",
-            border: "1px solid #cbd5e0",
-            outline: "none",
-          }}
         />
-        <p
-          className="MH-Type-Body-Base"
-          style={{
-            marginTop: "6px",
-            marginBottom: 0,
-            color: "#a0aec0",
-          }}
-        >
-          {t("dataJournal.datasetForm.nameHelp", {}, {
-            default: "You can rename this later from the dataset settings.",
-          })}
-        </p>
       </div>
 
       {/* Status / errors */}
@@ -496,329 +543,188 @@ export default function DatasetForm({
       )}
 
       {/* Data origin */}
-      <fieldset
-        style={{
-          margin: 0,
-          padding: "12px 12px 10px",
-          borderRadius: "8px",
-          border: "1px solid #e2e8f0",
-        }}
-      >
+      <fieldset style={{ margin: 0, padding: 0, border: "none", minWidth: 0 }}>
         <legend
           className="MH-Type-Label-Base"
-          style={{
-            padding: "0 6px",
-            color: "#2d3748",
-          }}
+          style={{ padding: 0, marginBottom: 8, color: TEXT_STRONG }}
         >
           {t("dataJournal.datasetForm.dataSourceLabel", {}, {
             default: "Data source",
           })}
         </legend>
-
-        {/* Study option */}
-        <label
+        <div
           style={{
-            display: "flex",
-            alignItems: "flex-start",
-            padding: "8px 6px",
-            borderRadius: "6px",
-            cursor: hasStudy ? "pointer" : "not-allowed",
-            opacity: hasStudy ? 1 : 0.6,
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: 8,
           }}
         >
-          <input
-            type="radio"
-            name="dataOrigin"
+          <SourceOption
             value="STUDY"
-            checked={dataOrigin === "STUDY"}
-            onChange={(e) => hasStudy && setDataOrigin(e.target.value)}
-            style={{ marginRight: "8px", marginTop: "3px" }}
+            selected={dataOrigin === "STUDY"}
             disabled={!hasStudy}
-          />
-          <div>
-            <div
-              className="MH-Type-Label-Large"
-              style={{ color: "#2d3748" }}
-            >
-              {t("dataJournal.datasetForm.study.optionTitle", {}, {
-                default: "Use data from the current study",
-              })}
-            </div>
-            <div
-              className="MH-Type-Body-Base"
-              style={{
-                color: hasStudy ? "#4a5568" : "#c53030",
-                marginTop: "2px",
-              }}
-            >
-              {hasStudy
+            onSelect={setDataOrigin}
+            title={t("dataJournal.datasetForm.study.optionTitle", {}, {
+              default: "Use data from the current study",
+            })}
+            description={
+              hasStudy
                 ? t(
                     "dataJournal.datasetForm.study.currentStudy",
                     { title: currentStudyTitle },
-                    { default: "Study: {{title}}" }
+                    { default: "Study: {{title}}" },
                   )
-                : t("dataJournal.datasetForm.study.optionDisabled", {}, {
-                    default:
-                      "No study is linked to this project. Link a study to enable this option.",
-                  })}
-            </div>
-          </div>
-        </label>
-
-        {/* Upload option */}
-        <label
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            padding: "8px 6px",
-            borderRadius: "6px",
-            cursor: "pointer",
-          }}
-        >
-          <input
-            type="radio"
-            name="dataOrigin"
-            value="UPLOADED"
-            checked={dataOrigin === "UPLOADED"}
-            onChange={(e) => setDataOrigin(e.target.value)}
-            style={{ marginRight: "8px", marginTop: "3px" }}
+                : studyLoading
+                  ? t("dataJournal.datasetForm.study.loading", {}, {
+                      default: "Loading the study…",
+                    })
+                  : t("dataJournal.datasetForm.study.optionDisabled", {}, {
+                      default:
+                        "No study is linked to this project. Link a study to enable this option.",
+                    })
+            }
+            descriptionTone={hasStudy || studyLoading ? "muted" : "error"}
           />
-          <div>
-            <div
-              className="MH-Type-Label-Large"
-              style={{ color: "#2d3748" }}
-            >
-              {t("dataJournal.datasetForm.upload.optionTitle", {}, {
-                default: "Upload a CSV or JSON file",
-              })}
-            </div>
-            <div
-              className="MH-Type-Body-Base"
-              style={{
-                color: "#4a5568",
-                marginTop: "2px",
-              }}
-            >
-              {t("dataJournal.datasetForm.upload.optionDescription", {}, {
-                default: "Create a dataset from a file on your computer.",
-              })}
-            </div>
 
-            {dataOrigin === "UPLOADED" && (
-              <div style={{ marginTop: "8px" }}>
+          <SourceOption
+            value="UPLOADED"
+            selected={dataOrigin === "UPLOADED"}
+            onSelect={setDataOrigin}
+            title={t("dataJournal.datasetForm.upload.optionTitle", {}, {
+              default: "Upload a CSV or JSON file",
+            })}
+            description={
+              dataOrigin === "UPLOADED"
+                ? null
+                : t("dataJournal.datasetForm.upload.optionDescription", {}, {
+                    default: "Create a dataset from a file on your computer.",
+                  })
+            }
+          >
+            {dataOrigin === "UPLOADED" ? (
+              <>
                 <input
-                  className="MH-Type-Body-Base"
+                  className="MH-Type-Body-Small"
                   type="file"
                   accept=".csv,.json"
                   onChange={handleFileChange}
+                  style={{ maxWidth: "100%" }}
                 />
                 <div
-                  className="MH-Type-Body-Base"
-                  style={{
-                    marginTop: "4px",
-                    color: "#a0aec0",
-                  }}
+                  className="MH-Type-Body-Small"
+                  style={{ marginTop: 2, color: TEXT_MUTED }}
                 >
                   {t("dataJournal.datasetForm.upload.fileHelp", {}, {
                     default: "First row should contain column names.",
                   })}
                 </div>
-              </div>
-            )}
-          </div>
-        </label>
+              </>
+            ) : null}
+          </SourceOption>
 
-        {canSimulate && (
-          <label
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              padding: "8px 6px",
-              borderRadius: "6px",
-              cursor: hasStudy ? "pointer" : "not-allowed",
-              opacity: hasStudy ? 1 : 0.6,
-            }}
-          >
-            <input
-              type="radio"
-              name="dataOrigin"
+          {canSimulate && (
+            <SourceOption
               value="SIMULATED"
-              checked={dataOrigin === "SIMULATED"}
-              onChange={(e) => hasStudy && setDataOrigin(e.target.value)}
-              style={{ marginRight: "8px", marginTop: "3px" }}
+              selected={dataOrigin === "SIMULATED"}
               disabled={!hasStudy}
-            />
-            <div>
-              <div
-                className="MH-Type-Label-Large"
-                style={{ color: "#2d3748" }}
-              >
-                {t("dataJournal.datasetForm.simulated.optionTitle", {}, {
-                  default: "Simulated",
-                })}
-              </div>
-              <div
-                className="MH-Type-Body-Base"
-                style={{
-                  color: hasStudy ? "#4a5568" : "#c53030",
-                  marginTop: "2px",
-                }}
-              >
-                {hasStudy
+              onSelect={setDataOrigin}
+              title={t("dataJournal.datasetForm.simulated.optionTitle", {}, {
+                default: "Simulated",
+              })}
+              description={
+                hasStudy
                   ? t("dataJournal.datasetForm.simulated.optionDescription", {}, {
                       default:
                         "Generate a sham dataset showing what the current study could produce. Only testers can see it.",
                     })
+                  : studyLoading
+                  ? t("dataJournal.datasetForm.study.loading", {}, {
+                      default: "Loading the study…",
+                    })
                   : t("dataJournal.datasetForm.study.optionDisabled", {}, {
                       default:
                         "No study is linked to this project. Link a study to enable this option.",
-                    })}
-              </div>
-            </div>
-          </label>
-        )}
-        {isSimulated && (
-          <div style={{ padding: "0 6px 8px 28px" }}>
+                    })
+              }
+              descriptionTone={hasStudy || studyLoading ? "muted" : "error"}
+            />
+          )}
+
+        </div>
+        {isSimulated ? (
+          <div style={{ marginTop: 12 }}>
             <SimulatedSourceConfig
               source={simulationSource}
               config={simulationConfig}
               onConfigChange={setSimulationConfig}
             />
           </div>
-        )}
-
-        {/* Template option (placeholder for later) */}
-        <label
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            padding: "8px 6px",
-            borderRadius: "6px",
-            cursor: "pointer",
-          }}
-        >
-          <input
-            type="radio"
-            name="dataOrigin"
-            value="TEMPLATE"
-            checked={dataOrigin === "TEMPLATE"}
-            onChange={(e) => setDataOrigin(e.target.value)}
-            style={{ marginRight: "8px", marginTop: "3px" }}
-          />
-          <div>
-            <div
-              className="MH-Type-Label-Large"
-              style={{ color: "#2d3748" }}
-            >
-              {t("dataJournal.datasetForm.template.optionTitle", {}, {
-                default: "Copy from an existing dataset",
-              })}
-            </div>
-            <div
-              className="MH-Type-Body-Base"
-              style={{
-                color: "#4a5568",
-                marginTop: "2px",
-              }}
-            >
-              {t("dataJournal.datasetForm.template.optionDescription", {}, {
-                default: "Choose a template dataset (coming soon).",
-              })}
-            </div>
-          </div>
-        </label>
+        ) : null}
       </fieldset>
 
       {(sharingIds.length > 0 || selectedVizPartId) && (
         <div
           className="MH-Type-Body-Base"
           style={{
-            marginTop: 14,
-            padding: "10px 12px",
-            borderRadius: 8,
-            border: "1px solid #e2e8f0",
-            color: "#4a5568",
+            marginTop: 8,
+            marginLeft: -12,
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            color: TEXT_STRONG,
           }}
         >
-          <p
-            style={{
-              margin: "0 0 8px",
-              display: "flex",
-              alignItems: "flex-start",
-              gap: 8,
-            }}
+          <Checkbox
+            checked={collaboratorsCanEdit}
+            onChange={setCollaboratorsCanEdit}
+            ariaLabelledBy="datasetFormAllowEditing"
+          />
+          <span
+            id="datasetFormAllowEditing"
+            style={{ cursor: "pointer", marginRight: 6 }}
+            onClick={() => setCollaboratorsCanEdit((v) => !v)}
           >
-            <span style={{ flex: "1 1 auto" }}>
-              {sharingIds.length > 0
-                ? t(
-                    "dataJournal.datasets.sharing.summary",
-                    { count: sharingIds.length },
-                    {
+            {t("dataJournal.datasets.sharing.allowEditingLabel", {}, {
+              default: "Allow journal collaborators to edit this dataset",
+            })}
+          </span>
+          <InfoPopover
+            content={
+              <span style={{ display: "block", maxWidth: 320 }}>
+                {sharingIds.length > 0
+                  ? t(
+                      "dataJournal.datasets.sharing.summary",
+                      { count: sharingIds.length },
+                      {
+                        default:
+                          "Everyone working on this study or project can see this dataset. {{count}} of them will be added as collaborators.",
+                      },
+                    )
+                  : t("dataJournal.datasets.sharing.summaryJournalOnly", {}, {
                       default:
-                        "This dataset will be shared with {{count}} people tied to this journal’s study or project.",
-                    },
-                  )
-                : t("dataJournal.datasets.sharing.summaryJournalOnly", {}, {
-                    default:
-                      "This dataset will be linked to your current journal; collaborators may be added automatically.",
-                  })}
-            </span>
-            {sharingIds.length > 0 && sharingRecipientsTooltip ? (
-              <InfoPopover
-                content={sharingRecipientsTooltip}
-                ariaLabel={t(
-                  "dataJournal.datasets.sharing.whoTooltipAria",
-                  {},
-                  { default: "Who will receive access" },
-                )}
-                side="top"
-              />
-            ) : sharingIds.length === 0 && selectedVizPartId ? (
-              <InfoPopover
-                content={t(
-                  "dataJournal.datasets.sharing.journalOnlyTooltip",
-                  {},
-                  {
-                    default:
-                      "Collaborators from this journal’s study or project will be connected when you create the dataset.",
-                  },
-                )}
-                ariaLabel={t(
-                  "dataJournal.datasets.sharing.whoTooltipAria",
-                  {},
-                  { default: "Who will receive access" },
-                )}
-                side="top"
-              />
-            ) : null}
-          </p>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: 8,
-              cursor: "pointer",
-            }}
-          >
-            <input
-              type="checkbox"
-              checked={collaboratorsCanEdit}
-              onChange={(e) => setCollaboratorsCanEdit(e.target.checked)}
-            />
-            <span>
-              {t("dataJournal.datasets.sharing.allowEditingLabel", {}, {
-                default: "Allow journal collaborators to edit this dataset",
-              })}
-            </span>
-          </label>
+                        "This dataset will be linked to your current journal; collaborators may be added automatically.",
+                    })}
+                {sharingRecipientsTooltip ? (
+                  <span style={{ display: "block", marginTop: 6 }}>
+                    {sharingRecipientsTooltip}
+                  </span>
+                ) : null}
+              </span>
+            }
+            ariaLabel={t(
+              "dataJournal.datasets.sharing.whoTooltipAria",
+              {},
+              { default: "Who will receive access" },
+            )}
+            side="top"
+          />
         </div>
       )}
 
       {/* Actions */}
       <div
         style={{
-          marginTop: "18px",
+          marginTop: "12px",
           display: "flex",
           justifyContent: "flex-end",
           alignItems: "center",

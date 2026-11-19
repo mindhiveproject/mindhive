@@ -55,3 +55,12 @@ export const STUDY_SUMMARY_RESULTS = gql`
     }
   }
 `;
+
+// The included participant rows of a study dataset, served through the
+// dataset so anyone who may read it gets them (keystone/lib/datasourceStudyRows.js).
+// Returns JSON: { flow, includedCount, summaryResults, dataSourceRecords }.
+export const DATASOURCE_STUDY_ROWS = gql`
+  query DATASOURCE_STUDY_ROWS($datasourceId: ID!) {
+    datasourceStudyRows(datasourceId: $datasourceId)
+  }
+`;

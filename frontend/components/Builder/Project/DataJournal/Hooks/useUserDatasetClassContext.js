@@ -27,14 +27,19 @@ function deriveClassIdsFromMembership(classLists) {
   };
 }
 
-/** Direct class ids and peer network class ids for dataset scope filters. */
+/** Direct class ids and peer network class ids for dataset scope filters, plus the classes the user staffs. */
 export function useUserDatasetClassContext() {
   const { data, loading } = useQuery(GET_USER_CLASSES);
 
   return useMemo(() => {
     const user = data?.authenticatedItem;
     if (!user) {
-      return { directClassIds: [], networkClassIds: [], loading };
+      return {
+        directClassIds: [],
+        networkClassIds: [],
+        staffClasses: [],
+        loading,
+      };
     }
 
     const classLists = [
@@ -47,6 +52,22 @@ export function useUserDatasetClassContext() {
     const { directClassIds, networkClassIds } =
       deriveClassIdsFromMembership(classLists);
 
-    return { directClassIds, networkClassIds, loading };
+    // Classes the user teaches, co-teaches or mentors: where they may share
+    // datasets (setDatasourceClassSharing).
+    const staffById = new Map();
+    [
+      ...(user.teacherIn || []),
+      ...(user.teachingTeamIn || []),
+      ...(user.mentorIn || []),
+    ].forEach((cl) => {
+      if (cl?.id && !staffById.has(cl.id)) {
+        staffById.set(cl.id, { id: cl.id, title: cl.title, code: cl.code });
+      }
+    });
+    const staffClasses = [...staffById.values()].sort((a, b) =>
+      String(a.title || "").localeCompare(String(b.title || "")),
+    );
+
+    return { directClassIds, networkClassIds, staffClasses, loading };
   }, [data, loading]);
 }

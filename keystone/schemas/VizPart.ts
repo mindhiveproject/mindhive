@@ -12,13 +12,16 @@ import {
   float,
 } from "@keystone-6/core/fields";
 
-import { signedInWrites } from "../access";
+import {
+  adminOnlyFieldAccess,
+  journalListAccess,
+  journalParentGuard,
+} from "../access";
 
 export const VizPart = list({
-  access: {
-    // Anyone may read; changes need a signed-in user.
-    operation: signedInWrites,
-  },
+  // Signed-in users only: the team of the journal's study or project, plus
+  // admin-marked templates for reading. See lib/journalAccess.js.
+  access: journalListAccess("VizPart"),
   fields: {
     title: text(),
     description: text(),
@@ -30,9 +33,9 @@ export const VizPart = list({
         { label: "template", value: "TEMPLATE" },
       ],
     }),
-    isPublic: checkbox({ isFilterable: true }),
-    isTemplate: checkbox({ isFilterable: true }),
-    isFeatured: checkbox({ isFilterable: true }),
+    isPublic: checkbox({ isFilterable: true, access: adminOnlyFieldAccess }),
+    isTemplate: checkbox({ isFilterable: true, access: adminOnlyFieldAccess }),
+    isFeatured: checkbox({ isFilterable: true, access: adminOnlyFieldAccess }),
     settings: json(),
     content: json(), // save uploaded data here
     vizJournal: relationship({
@@ -53,6 +56,7 @@ export const VizPart = list({
     }),
   },
   hooks: {
+    validateInput: journalParentGuard("VizPart"),
     async resolveInput({ operation, resolvedData }) {
       if (operation === "create" || operation === "update") {
         resolvedData.updatedAt = new Date().toISOString();
