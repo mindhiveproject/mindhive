@@ -24,7 +24,11 @@
 		"linkedClassInfo": "Linking this study to a class shares it with that class: the class's teachers can follow and review it, and the class's settings (such as available data sources) apply to it. Removing the class takes the study out of that class.",
 		"unlink": "Unlink",
 		"unlinkStudy": "Unlink study from this board",
-		"unlinkStudyConfirm": "Unlink \"{{study}}\" from this board? The study and the board are kept; only the link between them is removed."
+		"unlinkStudyConfirm": "Unlink \"{{study}}\" from this board? The study and the board are kept; only the link between them is removed.",
+		"class": "Class",
+		"none": "None",
+		"change": "Change",
+		"classShort": "The class's teachers can follow and review this study."
 	},
 	"actionCard": {
 		"clickToSubmit": "Click to submit for {{title}}",
@@ -3177,5 +3181,27 @@
 		"confirm": "Make a new template just for this task? It starts as a copy of the template as last saved, so save any changes first. Everyone else keeps the current template.",
 		"done": "This task now has its own template. Changes you make here only reach this task (and blocks in your studies that use it).",
 		"error": "The template could not be copied. Please try again."
+	},
+	"linkedBoard": {
+		"title": "Project board",
+		"untitledBoard": "Untitled project board",
+		"untitledStudy": "Untitled study",
+		"connect": "Connect",
+		"replace": "Replace",
+		"noBoards": "You are not on any project board yet.",
+		"searchBoards": "Search boards",
+		"chooseBoard": "Choose a project board",
+		"hasStudy": "Has a study: {{study}}",
+		"replaceWarning": "This board already has a study: {{study}}. Connecting replaces it on the board (the study itself is kept).",
+		"switchInfo": "Pick the study this board should hold. The builder reopens on it; the current study is kept.",
+		"noOtherStudies": "You have no other study.",
+		"searchStudies": "Search studies",
+		"chooseStudy": "Choose a study",
+		"onBoard": "On {{board}}",
+		"onOtherBoardWarning": "This study is already on another board ({{board}}). It will be on both.",
+		"unsaved": "Save your changes first: unsaved edits are lost when the builder reopens.",
+		"switchConfirm": "Switch",
+		"unlinkInfo": "Unlink this study from the board? The study and the board are kept; only the link is removed.",
+		"joinsClass": "This study also joins {{class}}, so its teachers can follow it."
 	}
 }

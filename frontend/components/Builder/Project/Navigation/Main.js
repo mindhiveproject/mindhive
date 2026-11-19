@@ -303,6 +303,8 @@ export default function Navigation({
           user={user}
           study={studyForNav}
           project={mode === "project" ? project : undefined}
+          area={area}
+          hasStudyChanged={hasStudyChanged}
           linkSection={
             mode === "project" && tab === "board"
               ? "study"

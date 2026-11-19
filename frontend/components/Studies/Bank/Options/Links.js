@@ -3,13 +3,12 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import LinkClass from "../../../Builder/Project/Navigation/ConnectStudy/LinkClass";
-import StudyDropdown from "../../../Projects/StudyConnector/StudyDropdown";
 import Button from "../../../DesignSystem/Button";
-import Modal from "../../../DesignSystem/Modal";
-import { LinkOffIcon } from "../../../DesignSystem/Icons";
+import Chip from "../../../DesignSystem/Chip";
+import DropdownSelect from "../../../DesignSystem/DropdownSelect";
+import MessageCard from "../../../DesignSystem/MessageCard";
 import { UPDATE_PROJECT_BOARD } from "../../../Mutations/Proposal";
 import { UPDATE_STUDY } from "../../../Mutations/Study";
-import { GET_PROJECT_STUDY, PROPOSAL_QUERY } from "../../../Queries/Proposal";
 import { MY_STUDY, STUDY_PROPOSALS_QUERY } from "../../../Queries/Study";
 
 const SECTION_STYLE = { display: "flex", flexDirection: "column", gap: 8 };
@@ -47,8 +46,50 @@ const sameIds = (a, b) => {
   return x.length === y.length && x.every((id, i) => id === y[i]);
 };
 
-// Read-only by default: the user first reads what the link does, then opts in
-// to edit, and the change is only saved when they confirm it.
+const ROW_STYLE = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 8,
+  minWidth: 0,
+};
+const ROW_TEXT_STYLE = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 2,
+  minWidth: 0,
+};
+const ROW_LABEL_STYLE = {
+  color: "var(--MH-Theme-Neutrals-Dark, #6a6a6a)",
+};
+const ROW_VALUE_STYLE = { overflowWrap: "anywhere" };
+// Row actions sit next to the value: tighter than the default text button.
+export const ROW_BUTTON_STYLE = { padding: "8px 12px" };
+
+// One "Label / value  [Change]" line of the builder's Settings popover.
+export function SettingRow({ label, value, actionLabel, onAction, actions }) {
+  return (
+    <div style={ROW_STYLE}>
+      <div style={ROW_TEXT_STYLE}>
+        <span className="MH-Type-Label-Small" style={ROW_LABEL_STYLE}>
+          {label}
+        </span>
+        <span className="MH-Type-Body-Base" style={ROW_VALUE_STYLE} title={value}>
+          {value}
+        </span>
+      </div>
+      {actions ||
+        (actionLabel && (
+          <Button variant="text" style={ROW_BUTTON_STYLE} onClick={onAction}>
+            {actionLabel}
+          </Button>
+        ))}
+    </div>
+  );
+}
+
+// Read-only by default: the user opts in to edit, and the change is only
+// saved when they confirm it.
 export function LinkedClass({ study }) {
   const { t } = useTranslation("builder");
   const [editing, setEditing] = useState(false);
@@ -88,40 +129,29 @@ export function LinkedClass({ study }) {
     }
   };
 
-  const explanation = t("studyOptions.linkedClassInfo", {}, {
-    default:
-      "Linking this study to a class shares it with that class: the class's teachers can follow and review it, and the class's settings (such as available data sources) apply to it. Removing the class takes the study out of that class.",
-  });
-
   return (
     <div style={SECTION_STYLE}>
-      <h2 className="MH-Type-Title-Small" style={TITLE_STYLE}>
-        {t("connectStudyModal.linkedClass", {}, { default: "Linked class" })}
-      </h2>
+      <SettingRow
+        label={t("studyOptions.class", {}, { default: "Class" })}
+        value={
+          classes.length
+            ? classes.map((cl) => cl.title).join(", ")
+            : t("studyOptions.none", {}, { default: "None" })
+        }
+        actionLabel={
+          editing || !study?.id
+            ? null
+            : t("studyOptions.change", {}, { default: "Change" })
+        }
+        onAction={startEditing}
+      />
 
-      {!editing ? (
-        <>
-          <p className="MH-Type-Body-Base" style={{ margin: 0 }}>
-            {classes.length
-              ? classes.map((cl) => cl.title).join(", ")
-              : t("linkClass.notLinked", {}, {
-                  default: "Not linked to a class",
-                })}
-          </p>
-          <Button
-            variant="subtle"
-            disabled={!study?.id}
-            onClick={startEditing}
-          >
-            {t("studyOptions.changeLinkedClass", {}, {
-              default: "Change linked class",
-            })}
-          </Button>
-        </>
-      ) : (
+      {editing && (
         <>
           <p className="MH-Type-Body-Small" style={NOTE_STYLE}>
-            {explanation}
+            {t("studyOptions.classShort", {}, {
+              default: "The class's teachers can follow and review this study.",
+            })}
           </p>
           <LinkClass
             study={{ classes: draft }}
@@ -157,13 +187,17 @@ export function LinkedClass({ study }) {
 /* ------------------------------------------------------------------ */
 
 const BOARD_STUDY_LINK = gql`
-  query BOARD_STUDY_LINK($id: ID!) {
+  query BOARD_STUDY_LINK($id: ID!, $userId: ID!) {
     proposalBoard(where: { id: $id }) {
       id
+      title
       author {
         id
       }
       creator {
+        id
+      }
+      collaborators {
         id
       }
       study {
@@ -175,6 +209,7 @@ const BOARD_STUDY_LINK = gql`
       }
       usedInClass {
         id
+        title
         creator {
           id
         }
@@ -186,8 +221,39 @@ const BOARD_STUDY_LINK = gql`
         }
       }
     }
+    # The viewer's studies, plus those of the classes they teach.
+    studies(
+      where: {
+        isHidden: { equals: false }
+        OR: [
+          { author: { id: { equals: $userId } } }
+          { collaborators: { some: { id: { equals: $userId } } } }
+          { classes: { some: { creator: { id: { equals: $userId } } } } }
+        ]
+      }
+      orderBy: [{ createdAt: desc }]
+    ) {
+      id
+      title
+      classes {
+        id
+      }
+      proposal {
+        id
+        title
+      }
+    }
   }
 `;
+
+const BOARD_LINK_REFETCH = [
+  "BOARD_STUDY_LINK",
+  "PROPOSAL_QUERY",
+  "GET_PROJECT_STUDY",
+  "STUDY_LINKED_BOARD",
+  "STUDY_PROPOSALS_QUERY",
+  "STUDY_LINKED_BOARD_PEOPLE",
+];
 
 const isClassStaff = (cls, userId) =>
   !!cls &&
@@ -203,104 +269,257 @@ export const canManageBoardStudy = (board, userId) =>
     board?.creator?.id === userId ||
     isClassStaff(board?.usedInClass, userId));
 
+// Class boards are usually created by the teacher with the students as
+// collaborators, so a board's members may change its study too.
+export const canChangeBoardStudy = (board, userId) =>
+  canManageBoardStudy(board, userId) ||
+  (board?.collaborators || []).some((p) => p?.id === userId);
+
+const BOARD_ACTIONS_STYLE = { display: "flex", gap: 4, flexShrink: 0 };
+const ROW_ACTIONS_STYLE = { display: "flex", gap: 8, justifyContent: "flex-end" };
+const OPTION_STYLE = { display: "flex", flexDirection: "column", gap: 6 };
+const OPTION_CHIPS_STYLE = { display: "flex", flexWrap: "wrap", gap: 4 };
+const OPTION_CHIP_STYLE = { pointerEvents: "none" };
+
 export function LinkedStudy({ user, project }) {
   const { t } = useTranslation("builder");
+  const [mode, setMode] = useState(null); // "change" | "unlink" | null
+  const [pickedId, setPickedId] = useState("");
   const [pending, setPending] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const { data } = useQuery(BOARD_STUDY_LINK, {
-    variables: { id: project?.id },
-    skip: !project?.id,
+    variables: { id: project?.id, userId: user?.id },
+    skip: !project?.id || !user?.id,
   });
-  const [updateBoard] = useMutation(UPDATE_PROJECT_BOARD, {
-    refetchQueries: [
-      { query: BOARD_STUDY_LINK, variables: { id: project?.id } },
-      { query: PROPOSAL_QUERY, variables: { id: project?.id } },
-      { query: GET_PROJECT_STUDY, variables: { id: project?.id } },
-    ],
-  });
+  const [updateBoard] = useMutation(UPDATE_PROJECT_BOARD);
+  const [updateStudy] = useMutation(UPDATE_STUDY);
 
   const board = data?.proposalBoard;
   if (!board) return null;
   const study = board.study;
-  const canManage = canManageBoardStudy(board, user?.id);
+  const canChange = canChangeBoardStudy(board, user?.id);
+  const untitledStudy = t("linkedBoard.untitledStudy", {}, {
+    default: "Untitled study",
+  });
+  const untitledBoard = t("linkedBoard.untitledBoard", {}, {
+    default: "Untitled project board",
+  });
 
-  const unlink = async () => {
+  const studies = (data.studies || []).filter((s) => s.id !== study?.id);
+  const picked = studies.find((s) => s.id === pickedId);
+  const pickedOtherBoards = (picked?.proposal || []).filter(
+    (p) => p.id !== board.id
+  );
+  const boardClass = board.usedInClass;
+  const pickedJoinsClass =
+    picked && boardClass && !picked.classes.some((c) => c.id === boardClass.id);
+
+  const close = () => {
+    setMode(null);
+    setPickedId("");
+  };
+
+  const run = async (work) => {
     setPending(true);
     try {
-      await updateBoard({
-        variables: {
-          id: board.id,
-          input: {
-            study: { disconnect: true },
-            ...(board.studyMain?.id === study.id && {
-              studyMain: { disconnect: true },
-            }),
-          },
-        },
-      });
+      await work();
+      close();
     } catch (err) {
       alert(err?.message);
     } finally {
       setPending(false);
-      setConfirmOpen(false);
     }
   };
 
+  const change = () =>
+    run(async () => {
+      if (pickedJoinsClass) {
+        await updateStudy({
+          variables: {
+            id: picked.id,
+            input: { classes: { connect: [{ id: boardClass.id }] } },
+          },
+        });
+      }
+      await updateBoard({
+        variables: {
+          id: board.id,
+          input: {
+            study: { connect: { id: picked.id } },
+            ...(study?.id &&
+              board.studyMain?.id === study.id && {
+                studyMain: { connect: { id: picked.id } },
+              }),
+          },
+        },
+        refetchQueries: BOARD_LINK_REFETCH,
+        awaitRefetchQueries: true,
+      });
+    });
+
+  const unlink = () =>
+    run(() =>
+      updateBoard({
+        variables: {
+          id: board.id,
+          input: {
+            study: { disconnect: true },
+            ...(board.studyMain?.id === study?.id && {
+              studyMain: { disconnect: true },
+            }),
+          },
+        },
+        refetchQueries: BOARD_LINK_REFETCH,
+        awaitRefetchQueries: true,
+      })
+    );
+
+  const actionButtons =
+    canChange && !mode ? (
+      <span style={BOARD_ACTIONS_STYLE}>
+        <Button variant="text" style={ROW_BUTTON_STYLE} onClick={() => setMode("change")}>
+          {study?.id
+            ? t("studyOptions.change", {}, { default: "Change" })
+            : t("linkedBoard.connect", {}, { default: "Connect" })}
+        </Button>
+        {study?.id && (
+          <Button variant="text" style={ROW_BUTTON_STYLE} onClick={() => setMode("unlink")}>
+            {t("studyOptions.unlink", {}, { default: "Unlink" })}
+          </Button>
+        )}
+      </span>
+    ) : null;
+
   return (
     <div style={SECTION_STYLE}>
-      <h2 className="MH-Type-Title-Small" style={TITLE_STYLE}>
-        {t("studyOptions.linkedStudy", {}, { default: "Linked study" })}
-      </h2>
-      {canManage ? (
+      <SettingRow
+        label={t("studyOptions.linkedStudy", {}, { default: "Linked study" })}
+        value={
+          study?.id
+            ? study.title || untitledStudy
+            : t("studyOptions.none", {}, { default: "None" })
+        }
+        actions={actionButtons}
+      />
+
+      {mode === "unlink" && (
         <>
-          <StudyDropdown user={user} project={{ ...project, study }} />
-          {study?.id && (
-            <Button
-              variant="subtle"
-              disabled={pending}
-              leadingIcon={<LinkOffIcon style={ICON} />}
-              onClick={() => setConfirmOpen(true)}
-            >
-              {t("studyOptions.unlinkStudy", {}, {
-                default: "Unlink study from this board",
-              })}
-            </Button>
-          )}
-        </>
-      ) : (
-        <p className="MH-Type-Body-Base" style={{ margin: 0 }}>
-          {study?.title ||
-            t("project.noStudyConnected", {}, {
-              default: "No study connected",
+          <MessageCard
+            variant="warning"
+            showIcon={false}
+            message={t("linkedBoard.unlinkInfo", {}, {
+              default:
+                "Unlink this study from the board? The study and the board are kept; only the link is removed.",
             })}
-        </p>
-      )}
-      <Modal
-        open={confirmOpen}
-        onClose={() => !pending && setConfirmOpen(false)}
-        title={t("studyOptions.unlinkStudy", {}, {
-          default: "Unlink study from this board",
-        })}
-        actions={
-          <>
-            <Button
-              variant="outline"
-              disabled={pending}
-              onClick={() => setConfirmOpen(false)}
-            >
+          />
+          <div style={ROW_ACTIONS_STYLE}>
+            <Button variant="text" disabled={pending} onClick={close}>
               {t("project.cancel", {}, { default: "Cancel" })}
             </Button>
             <Button variant="filled" disabled={pending} onClick={unlink}>
               {t("studyOptions.unlink", {}, { default: "Unlink" })}
             </Button>
-          </>
-        }
-      >
-        {t("studyOptions.unlinkStudyConfirm", { study: study?.title || "" }, {
-          default: `Unlink "${study?.title || ""}" from this board? The study and the board are kept; only the link between them is removed.`,
-        })}
-      </Modal>
+          </div>
+        </>
+      )}
+
+      {mode === "change" && (
+        <>
+          {studies.length === 0 ? (
+            <p className="MH-Type-Body-Small" style={NOTE_STYLE}>
+              {t("linkedBoard.noOtherStudies", {}, {
+                default: "You have no other study.",
+              })}
+            </p>
+          ) : (
+            <DropdownSelect
+              portal
+              value={pickedId}
+              onChange={setPickedId}
+              searchableSingle
+              searchPlaceholder={t("linkedBoard.searchStudies", {}, {
+                default: "Search studies",
+              })}
+              placeholder={t("linkedBoard.chooseStudy", {}, {
+                default: "Choose a study",
+              })}
+              ariaLabel={t("linkedBoard.chooseStudy", {}, {
+                default: "Choose a study",
+              })}
+              options={studies.map((s) => ({
+                value: s.id,
+                labelText: s.title || untitledStudy,
+                searchText: s.proposal
+                  .map((p) => p.title)
+                  .filter(Boolean)
+                  .join(" "),
+                label: (
+                  <span style={OPTION_STYLE}>
+                    <span>{s.title || untitledStudy}</span>
+                    {s.proposal.length > 0 && (
+                      <span style={OPTION_CHIPS_STYLE}>
+                        {s.proposal.map((p) => (
+                          <Chip
+                            key={p.id}
+                            variant="static"
+                            tone="default"
+                            style={OPTION_CHIP_STYLE}
+                            label={t(
+                              "linkedBoard.onBoard",
+                              { board: p.title || untitledBoard },
+                              { default: `On ${p.title || untitledBoard}` }
+                            )}
+                          />
+                        ))}
+                      </span>
+                    )}
+                  </span>
+                ),
+              }))}
+            />
+          )}
+          {pickedOtherBoards.length > 0 && (
+            <MessageCard
+              variant="warning"
+              showIcon={false}
+              message={t(
+                "linkedBoard.onOtherBoardWarning",
+                {
+                  board: pickedOtherBoards
+                    .map((p) => p.title || untitledBoard)
+                    .join(", "),
+                },
+                {
+                  default: `This study is already on another board (${pickedOtherBoards
+                    .map((p) => p.title || untitledBoard)
+                    .join(", ")}). It will be on both.`,
+                }
+              )}
+            />
+          )}
+          {pickedJoinsClass && (
+            <p className="MH-Type-Body-Small" style={NOTE_STYLE}>
+              {t("linkedBoard.joinsClass", { class: boardClass.title }, {
+                default: `This study also joins ${boardClass.title}, so its teachers can follow it.`,
+              })}
+            </p>
+          )}
+          <div style={ROW_ACTIONS_STYLE}>
+            <Button variant="text" disabled={pending} onClick={close}>
+              {t("project.cancel", {}, { default: "Cancel" })}
+            </Button>
+            <Button
+              variant="filled"
+              disabled={pending || !picked}
+              onClick={change}
+            >
+              {study?.id
+                ? t("linkedBoard.switchConfirm", {}, { default: "Switch" })
+                : t("linkedBoard.connect", {}, { default: "Connect" })}
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
