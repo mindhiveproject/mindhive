@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import useSWR from "swr";
 import useTranslation from "next-translate/useTranslation";
 
-import { STUDY_SUMMARY_RESULTS } from "../../../../Queries/SummaryResult";
+import { DATASOURCE_STUDY_ROWS } from "../../../../Queries/SummaryResult";
 import buildAggregateColumns from "../../../../../lib/yqParticipantAggregates";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -200,15 +200,17 @@ export default function useDatasourceData({ datasource, user }) {
     datasource || {};
 
   const isStudyLike = dataOrigin === "STUDY" || dataOrigin === "TEMPLATE";
-  const studyIdToUse = isStudyLike ? study?.id : null;
+  const loadsStudyRows = isStudyLike && Boolean(study?.id) && Boolean(id);
 
+  // Study rows come through the dataset, so anyone who may read it (a class it
+  // was shared with, public) gets them, not only the study's researchers.
   const {
     data: studyData,
     loading: studyLoading,
     error: studyError,
-  } = useQuery(STUDY_SUMMARY_RESULTS, {
-    variables: { studyId: studyIdToUse },
-    skip: !studyIdToUse,
+  } = useQuery(DATASOURCE_STUDY_ROWS, {
+    variables: { datasourceId: id },
+    skip: !loadsStudyRows,
   });
 
   const modAddr =
@@ -302,17 +304,10 @@ export default function useDatasourceData({ datasource, user }) {
         }
       }
 
-      const studyObj = studyData?.study || {};
-      const studyDatasets = studyObj?.datasets || [];
-      const includedTokens = studyDatasets
-        .filter((d) => d?.isIncluded)
-        .map((d) => d?.token);
-      const summaryResults =
-        studyObj?.summaryResults?.filter((s) =>
-          includedTokens.includes(s?.metadataId)
-        ) || [];
-      const emptyReason =
-        includedTokens.length === 0 ? "noneIncluded" : null;
+      // already limited to included runs on the server
+      const studyObj = studyData?.datasourceStudyRows || {};
+      const summaryResults = studyObj?.summaryResults || [];
+      const emptyReason = studyObj?.includedCount ? null : "noneIncluded";
 
       const components = [];
       const findComponents = ({ flow, conditionLabel }) => {

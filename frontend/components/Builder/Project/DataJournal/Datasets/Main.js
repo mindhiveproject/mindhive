@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 
 import {
   buildDatasourcesWhereForScope,
+  TESTER_ONLY_DATASET_SCOPES,
   isTesterUser,
   sortDatasourcesByMostRecent,
 } from "../../../../../lib/dataJournalDatasources";
@@ -35,13 +36,13 @@ const SCOPE_INTRO_KEYS = {
 };
 
 const SCOPE_INTRO_DEFAULTS = {
-  me: "All datasets you can see — study, uploaded, shared with you, from your class, class network, or public.",
+  me: "All datasets you can see: your own, those from studies and projects you work on, those your teacher shared with your class, and public ones.",
   uploaded: "Datasets you uploaded.",
-  sharedWithMe: "Datasets others shared with you as a collaborator.",
-  myClass: "Datasets linked to studies or projects in your classes.",
+  sharedWithMe: "Datasets from studies and projects you collaborate on.",
+  myClass: "Datasets your teacher shared with your class.",
   classNetwork:
-    "Datasets on this project or study from classes in your class networks.",
-  public: "Datasets from public journal templates.",
+    "Under construction (visible to testers only). Datasets on this project or study from classes in your class networks.",
+  public: "Datasets anyone signed in can use.",
   simulated:
     "Sham datasets generated from a study design.",
 };
@@ -59,8 +60,8 @@ const SCOPE_EMPTY_KEYS = {
 const SCOPE_EMPTY_DEFAULTS = {
   me: "No datasets available to you yet.",
   uploaded: "No uploaded datasets yet.",
-  sharedWithMe: "No datasets have been shared with you.",
-  myClass: "No datasets from your classes yet.",
+  sharedWithMe: "No datasets from studies or projects you collaborate on yet.",
+  myClass: "Your teacher hasn't shared any datasets with your class yet.",
   classNetwork:
     "No datasets from your class network for this project or study.",
   public: "No public datasets found.",
@@ -85,7 +86,9 @@ export default function Datasets() {
 
   const isTester = isTesterUser(user);
   useEffect(() => {
-    if (datasetScope === "simulated" && !isTester) setDatasetScope("me");
+    if (TESTER_ONLY_DATASET_SCOPES.includes(datasetScope) && !isTester) {
+      setDatasetScope("me");
+    }
   }, [datasetScope, isTester, setDatasetScope]);
 
   const datasourcesWhere = useMemo(

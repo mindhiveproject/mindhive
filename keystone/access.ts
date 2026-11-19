@@ -4,6 +4,10 @@ import { permissionsList } from "./schemas/fields";
 import { ListAccessArgs, Session } from "./types";
 import { Prisma } from "@prisma/client";
 import { requestScope } from "./lib/requestScope";
+const {
+  canSeeSimulatedDatasets,
+  datasourceReadWhere,
+} = require("./lib/datasourceAccess");
 
 export function isSignedIn({ session }: ListAccessArgs) {
   return !!session; // if undefinened, return false
@@ -328,6 +332,31 @@ async function memberClassIds(context: any): Promise<string[]> {
     studentClassIds(context),
   ]);
   return [...new Set([...staff, ...student])];
+}
+
+/**
+ * Data Journal datasets (Datasource) the session user may read: public ones,
+ * ones shared with a class they belong to, and their own through authorship,
+ * a study they research or a board they work on. See lib/datasourceAccess.js.
+ */
+export async function datasourceQueryFilter({
+  session,
+  context,
+}: ListAccessArgs) {
+  if (!session?.itemId) return false;
+  if (isAdmin({ session })) return true;
+  const [studyIds, staffIds, memberIds] = await Promise.all([
+    researcherStudyIds(context),
+    staffClassIds(context),
+    memberClassIds(context),
+  ]);
+  return datasourceReadWhere({
+    me: String(session.itemId),
+    studyIds,
+    staffClassIds: staffIds,
+    memberClassIds: memberIds,
+    canSeeSimulated: canSeeSimulatedDatasets(session),
+  });
 }
 
 /**

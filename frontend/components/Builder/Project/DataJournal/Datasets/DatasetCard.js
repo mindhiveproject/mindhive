@@ -6,6 +6,8 @@ import Chip from "../../../../DesignSystem/Chip";
 import CompactActionButton from "../../../../DesignSystem/CompactActionButton";
 import Tooltip from "../../../../DesignSystem/Tooltip";
 import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
+import ShareWithClassModal from "./ShareWithClassModal";
+import { useUserDatasetClassContext } from "../Hooks/useUserDatasetClassContext";
 import { DELETE_DATASOURCE } from "../../../../Mutations/Datasource";
 import {
   canRenameDatasource,
@@ -18,6 +20,7 @@ import { StyledDatasetCard } from "../styles/StyledDataJournal";
 const INCLUSION_ICON_SRC = {
   workspace: "/assets/icons/project.svg",
   viaPart: "/assets/icons/link.svg",
+  classShared: "/assets/icons/education.svg",
   yourLibrary: "/assets/icons/user.svg",
   other: "/assets/icons/info.svg",
 };
@@ -33,6 +36,16 @@ function inclusionLabelAndTooltip(t, kind) {
           default: "This dataset is linked to a Data Journal you own.",
         }),
         iconSrc: INCLUSION_ICON_SRC.workspace,
+      };
+    case "classShared":
+      return {
+        label: t("dataJournal.datasets.inclusion.classSharedLabel", {}, {
+          default: "Shared with your class",
+        }),
+        tooltip: t("dataJournal.datasets.inclusion.classSharedTooltip", {}, {
+          default: "A teacher shared this dataset with a class you belong to.",
+        }),
+        iconSrc: INCLUSION_ICON_SRC.classShared,
       };
     case "viaPart":
       return {
@@ -81,6 +94,13 @@ export default function DatasetCard({
   const { t } = useTranslation("builder");
   const [deleteDatasource, { loading }] = useMutation(DELETE_DATASOURCE);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const { staffClasses } = useUserDatasetClassContext();
+  const canShare = staffClasses.length > 0;
+  const staffClassIds = new Set(staffClasses.map((cl) => cl.id));
+  const sharedWithMyClassesCount = (datasource?.sharedWithClasses || []).filter(
+    (cl) => staffClassIds.has(cl?.id),
+  ).length;
 
   const handleEdit = () => {
     if (onEdit) onEdit(datasource);
@@ -184,6 +204,9 @@ export default function DatasetCard({
   const deleteLabel = t("dataJournal.datasets.deleteLabel", {}, {
     default: "Delete",
   });
+  const shareLabel = t("dataJournal.datasets.share.button", {}, {
+    default: "Share with class",
+  });
 
   const deleteButton = (
     <CompactActionButton
@@ -215,6 +238,25 @@ export default function DatasetCard({
               })}
           </h4>
           <div className="dataset-actions" onClick={(e) => e.stopPropagation()}>
+            {canShare ? (
+              <CompactActionButton
+                icon={
+                  <img
+                    src="/assets/icons/share.svg"
+                    alt=""
+                    aria-hidden
+                    width={20}
+                    height={20}
+                  />
+                }
+                ariaLabel={shareLabel}
+                title={shareLabel}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShareOpen(true);
+                }}
+              />
+            ) : null}
             {renameDisabled ? (
               <Tooltip content={renameTooltip} side="top">
                 <span
@@ -320,6 +362,30 @@ export default function DatasetCard({
                 />
               </span>
             </Tooltip>
+            {canShare && sharedWithMyClassesCount > 0 ? (
+              <Chip
+                label={t(
+                  "dataJournal.datasets.share.sharedCount",
+                  { count: sharedWithMyClassesCount },
+                  {
+                    default:
+                      sharedWithMyClassesCount === 1
+                        ? "Shared with 1 class"
+                        : "Shared with {{count}} classes",
+                  },
+                )}
+                leading={
+                  <img
+                    src="/assets/icons/education.svg"
+                    alt=""
+                    aria-hidden
+                    width={20}
+                    height={20}
+                  />
+                }
+                style={{ opacity: 0.8 }}
+              />
+            ) : null}
           </div>
           <div className="dataset-info">
             <span className="author">{authorLine}</span>
@@ -337,6 +403,16 @@ export default function DatasetCard({
           </div>
         </div>
       </div>
+      {canShare ? (
+        <div onClick={(e) => e.stopPropagation()}>
+          <ShareWithClassModal
+            open={shareOpen}
+            onClose={() => setShareOpen(false)}
+            datasource={datasource}
+            staffClasses={staffClasses}
+          />
+        </div>
+      ) : null}
       <DeleteConfirmModal
         open={deleteConfirmOpen}
         title={t("dataJournal.datasets.deleteLabel", {}, { default: "Delete" })}

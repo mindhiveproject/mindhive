@@ -65,6 +65,11 @@ import {
   readableDatasetTokens,
 } from "./dataFileAccess";
 import {
+  backfillPublicDatasources,
+  setDatasourceClassSharing,
+} from "./datasourceClassSharing";
+const { loadDatasourceStudyRows } = require("../lib/datasourceStudyRows");
+import {
   deleteDoeData,
   doeExportPerson,
   doeExportSchool,
@@ -535,6 +540,17 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         seedMissingMilestones: [Milestone!]!
         # Backfill ProposalBoard.milestoneStatus from legacy columns.
         backfillMilestoneStatus(limit: Int, dryRun: Boolean): Int!
+        # Share Data Journal datasets with a class, or stop sharing them.
+        # Class staff (or admins) only; only datasets the caller can read.
+        # Returns how many datasets changed.
+        setDatasourceClassSharing(
+          datasourceIds: [ID!]!
+          classId: ID!
+          shared: Boolean!
+        ): Int!
+        # Admins: flag datasets of public template journals as isPublic.
+        # Dry run by default; returns the affected dataset ids.
+        backfillPublicDatasources(dryRun: Boolean): [ID!]!
         backfillLinkActionCardsToMilestones(limit: Int, dryRun: Boolean): Int!
         # One-shot: lowercase Milestone.key/reviewStage and any
         # FormDefinition.key that starts with review_*. Dry-run by
@@ -852,6 +868,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # The DOE retention switches. canRunRetention only.
         doeRetentionSettings: JSON
         canReadDatasourceFile(datasourceId: ID!, token: String!): Boolean!
+        # The included participant rows of a study dataset, for whoever may
+        # read the dataset (lib/datasourceStudyRows.js). Null when the caller
+        # cannot read it or it does not read a study.
+        datasourceStudyRows(datasourceId: ID!): JSON
         guestForRun(publicId: String!): JSON
         # Counts of DOE data in a scope: all DOE classes, one school (DBN)
         # or one person. canManageUsers only; no names or ids.
@@ -948,6 +968,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         classDeidentificationNotices,
         doeRetentionSettings: retentionSettings,
         canReadDatasourceFile,
+        datasourceStudyRows: (_root: unknown, { datasourceId }: any, context: any) =>
+          loadDatasourceStudyRows(context, datasourceId),
         guestForRun,
         doeDataSummary,
         doeExportPerson,
@@ -1029,6 +1051,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         seedMilestones,
         seedMissingMilestones,
         backfillMilestoneStatus,
+        setDatasourceClassSharing,
+        backfillPublicDatasources,
         backfillLinkActionCardsToMilestones,
         backfillLowercaseKeys,
         backfillTicketPermissions,

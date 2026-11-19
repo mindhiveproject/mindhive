@@ -32,6 +32,10 @@ export const GET_DATASOURCES = gql`
           id
         }
       }
+      isPublic
+      sharedWithClasses {
+        id
+      }
       journal {
         id
         isPublic
@@ -60,6 +64,10 @@ export const GET_DATASOURCE_CONTENT = gql`
       collaborators {
         id
         username
+      }
+      isPublic
+      sharedWithClasses {
+        id
       }
       journal {
         id

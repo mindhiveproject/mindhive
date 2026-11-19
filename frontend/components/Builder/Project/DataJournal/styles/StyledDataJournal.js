@@ -396,23 +396,45 @@ export const StyledTopNavigation = styled.div`
   border-bottom: 1px solid #e6e6e6;
   background: white;
   padding: 8px;
+  /* Datasets area: the Journals/Datasets tabs and "Add dataset" on the first
+     row; the library filters on their own full-width row below, so they
+     never wrap or clip. */
   &.withDatasetScopes {
     height: auto;
     min-height: 56px;
-    align-items: flex-start;
+    grid-template-rows: auto auto;
+    row-gap: 14px;
     padding-top: 8px;
     padding-bottom: 8px;
+    .leftIconNav {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .datasetAddSlot {
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: start;
+      display: flex;
+      align-items: center;
+    }
+    .buttons {
+      grid-column: 3;
+      grid-row: 1;
+    }
     .centerColumn {
+      grid-column: 1 / -1;
+      grid-row: 2;
       min-width: 0;
       display: flex;
       align-items: center;
       overflow-x: auto;
-      ${hideScrollbars}
+      padding: 0 4px 2px;
+      scrollbar-width: thin;
     }
     .datasetScopeNavWithAdd {
       display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
+      flex-wrap: nowrap;
+      gap: 16px;
       align-items: center;
       min-width: 0;
     }
@@ -421,10 +443,11 @@ export const StyledTopNavigation = styled.div`
     }
     .datasetScopeNav {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 12px;
       align-items: center;
       min-width: 0;
+      white-space: nowrap;
     }
   }
   .buttons {
