@@ -7,6 +7,8 @@ import {
   checkbox,
   select,
 } from "@keystone-6/core/fields";
+import { datasourceQueryFilter, isAdmin, studyUpdateWhere } from "../access";
+const { canSeeSimulatedDatasets } = require("../lib/datasourceAccess");
 
 function addConnectIds(
   ids: Set<string>,
@@ -21,14 +23,6 @@ function addConnectIds(
   }
 }
 
-const SIMULATED_DATASET_ROLES = ["TESTER", "ADMIN"];
-
-function canUseSimulatedDatasets(session: any) {
-  return !!session?.data?.permissions?.some((role: { name?: string }) =>
-    SIMULATED_DATASET_ROLES.includes(role?.name ?? "")
-  );
-}
-
 export const Datasource = list({
   access: {
     operation: {
@@ -37,15 +31,13 @@ export const Datasource = list({
       update: ({ session }) => !!session?.itemId,
       delete: ({ session }) => !!session?.itemId,
     },
+    // Who sees which dataset: lib/datasourceAccess.js. A filter rather than a
+    // closed list, so anything that links to a datasource just sees none.
+    // Nobody may change or delete a dataset they cannot see.
     filter: {
-      query: ({ session }) => {
-        // Data Journals are for signed-in users; a filter rather than a closed
-        // list, so anything that links to a datasource just sees none.
-        if (!session?.itemId) return { id: { in: [] } };
-        return canUseSimulatedDatasets(session)
-          ? true
-          : { dataOrigin: { not: { equals: "SIMULATED" } } };
-      },
+      query: datasourceQueryFilter,
+      update: datasourceQueryFilter,
+      delete: datasourceQueryFilter,
     },
     item: {
       update: async ({ session, item, context }) => {
@@ -67,11 +59,39 @@ export const Datasource = list({
     },
   },
   hooks: {
-    validateInput({ operation, resolvedData, context, addValidationError }) {
+    async validateInput({
+      operation,
+      inputData,
+      resolvedData,
+      context,
+      addValidationError,
+    }) {
       if (operation !== "create" && operation !== "update") return;
+      // A study dataset hands its participant rows to everyone who may read
+      // it (lib/datasourceStudyRows.js), so only the study's researchers may
+      // link a dataset to a study.
+      const studyId = inputData?.study?.connect?.id;
+      const session = context.session;
+      if (studyId && !isAdmin({ session } as any)) {
+        const allowed = session?.itemId
+          ? await context.sudo().query.Study.count({
+              where: {
+                AND: [
+                  { id: { equals: String(studyId) } },
+                  studyUpdateWhere(String(session.itemId)),
+                ],
+              },
+            })
+          : 0;
+        if (!allowed) {
+          addValidationError(
+            "Only people working on this study can link a dataset to it."
+          );
+        }
+      }
       if (
         resolvedData?.dataOrigin === "SIMULATED" &&
-        !canUseSimulatedDatasets(context.session)
+        !canSeeSimulatedDatasets(context.session)
       ) {
         addValidationError(
           "Only testers can create simulated datasets."
@@ -178,6 +198,26 @@ export const Datasource = list({
     }),
     project: relationship({
       ref: "ProposalBoard.datasources",
+    }),
+    // Visible to every signed-in user. Admins only, for now.
+    isPublic: checkbox({
+      defaultValue: false,
+      isFilterable: true,
+      access: {
+        create: ({ session }) => isAdmin({ session }),
+        update: ({ session }) => isAdmin({ session }),
+      },
+    }),
+    // Classes whose members (students and staff) may read this dataset.
+    // Set only through setDatasourceClassSharing, which checks that the
+    // caller staffs the class.
+    sharedWithClasses: relationship({
+      ref: "Class.sharedDatasources",
+      many: true,
+      access: {
+        create: () => false,
+        update: () => false,
+      },
     }),
     dataOrigin: select({
       options: [

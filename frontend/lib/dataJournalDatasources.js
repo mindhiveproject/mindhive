@@ -16,7 +16,7 @@ export function isTesterUser(user) {
   );
 }
 
-/** Atomic scopes that compose {@link DatasetScope} `"me"` (everything the user can see). */
+/** Library tabs after "me" (everything the user can see). "classNetwork" is shown to testers only. */
 /** @type {Exclude<DatasetScope, "me">[]} */
 export const DATASET_ATOMIC_SCOPES = [
   "uploaded",
@@ -28,6 +28,22 @@ export const DATASET_ATOMIC_SCOPES = [
 
 /** @type {DatasetScope[]} */
 export const DATASET_SCOPES = ["me", ...DATASET_ATOMIC_SCOPES];
+
+/** Tabs only testers see: simulated data, and class network (under construction). */
+export const TESTER_ONLY_DATASET_SCOPES = ["classNetwork", "simulated"];
+
+/**
+ * Library tabs for this user, in display order.
+ * @param {{ permissions?: Array<{ name?: string | null }> | null } | null | undefined} user
+ * @returns {DatasetScope[]}
+ */
+export function visibleDatasetScopes(user) {
+  const tester = isTesterUser(user);
+  const scopes = [...DATASET_SCOPES, "simulated"];
+  return tester
+    ? scopes
+    : scopes.filter((scope) => !TESTER_ONLY_DATASET_SCOPES.includes(scope));
+}
 
 /**
  * Newest-first by `updatedAt`, falling back to `createdAt`.
@@ -44,31 +60,22 @@ export function sortDatasourcesByMostRecent(datasources) {
 }
 
 /**
- * Sentinel where-clauses used when a scope has no matching class context.
- * @param {Record<string, unknown> | null | undefined} where
- */
-function isEmptyScopeSentinel(where) {
-  const idEquals = where?.id?.equals;
-  return typeof idEquals === "string" && idEquals.startsWith("__no_matching");
-}
-
-/**
  * @param {string[]} classIds
  * @returns {Record<string, unknown> | null}
  */
 function studyOrProjectInClassesWhere(classIds) {
   if (!classIds?.length) return null;
-  const or = [
-    { study: { classes: { some: { id: { in: classIds } } } } },
-    { project: { usedInClass: { id: { in: classIds } } } },
-    {
-      project: {
-        templateForClasses: { some: { id: { in: classIds } } },
+  return {
+    OR: [
+      { study: { classes: { some: { id: { in: classIds } } } } },
+      { project: { usedInClass: { id: { in: classIds } } } },
+      {
+        project: {
+          templateForClasses: { some: { id: { in: classIds } } },
+        },
       },
-    },
-  ];
-  if (or.length === 1) return or[0];
-  return { OR: or };
+    ],
+  };
 }
 
 /**
@@ -85,6 +92,37 @@ function attachedToCurrentContextWhere({ projectId, studyId }) {
 }
 
 /**
+ * Datasets reached through a study or project board `userId` works on (author
+ * or collaborator of the study, or of a board linked to it). A display
+ * grouping only: the server decides what is readable
+ * (keystone/lib/datasourceAccess.js).
+ * @param {string} userId
+ */
+function studyOrBoardTeamWhere(userId) {
+  const team = {
+    OR: [
+      { author: { id: { equals: userId } } },
+      { collaborators: { some: { id: { equals: userId } } } },
+    ],
+  };
+  return {
+    OR: [
+      {
+        study: {
+          OR: [...team.OR, { proposal: { some: team } }],
+        },
+      },
+      { project: team },
+    ],
+  };
+}
+
+/**
+ * Where-clause for one dataset library tab. The server already limits every
+ * query to the datasets the user may read (public, shared with their class,
+ * or theirs through authorship, a study or a board), so these clauses only
+ * group that set into tabs.
+ *
  * @param {{
  *   scope: DatasetScope,
  *   projectId?: string | null,
@@ -93,7 +131,7 @@ function attachedToCurrentContextWhere({ projectId, studyId }) {
  *   directClassIds?: string[],
  *   networkClassIds?: string[],
  * }} params
- * @returns {Record<string, unknown> | null}
+ * @returns {Record<string, unknown>}
  */
 export function buildDatasourcesWhereForScope({
   scope,
@@ -103,38 +141,13 @@ export function buildDatasourcesWhereForScope({
   directClassIds = [],
   networkClassIds = [],
 }) {
-  const scopeParams = {
-    projectId,
-    studyId,
-    userId,
-    directClassIds,
-    networkClassIds,
-  };
-
   switch (scope) {
-    case "me": {
-      // Union of authored datasets (any origin, including STUDY), current
-      // study/project attachments, and every visibility path the user can see.
-      const or = [];
-      if (userId) {
-        or.push({ author: { id: { equals: userId } } });
-      }
-      const attached = attachedToCurrentContextWhere({ projectId, studyId });
-      if (attached) or.push(attached);
-      DATASET_ATOMIC_SCOPES.forEach((atomicScope) => {
-        const where = buildDatasourcesWhereForScope({
-          ...scopeParams,
-          scope: atomicScope,
-        });
-        if (where && !isEmptyScopeSentinel(where)) or.push(where);
-      });
-      if (or.length === 0) return null;
-      if (or.length === 1) return or[0];
-      return { OR: or };
-    }
+    case "me":
+      // everything the server lets this user read
+      return {};
 
     case "uploaded":
-      if (!userId) return null;
+      if (!userId) return { id: { equals: "__no_matching_user__" } };
       return {
         AND: [
           { author: { id: { equals: userId } } },
@@ -143,20 +156,25 @@ export function buildDatasourcesWhereForScope({
       };
 
     case "sharedWithMe":
-      if (!userId) return null;
+      if (!userId) return { id: { equals: "__no_matching_user__" } };
       return {
         AND: [
-          { collaborators: { some: { id: { equals: userId } } } },
           { author: { id: { not: { equals: userId } } } },
+          studyOrBoardTeamWhere(userId),
         ],
       };
 
-    case "myClass": {
-      const classFilter = studyOrProjectInClassesWhere(directClassIds);
-      return classFilter ?? { id: { equals: "__no_matching_classes__" } };
-    }
+    case "myClass":
+      // only what a teacher explicitly shared with one of the user's classes
+      if (!directClassIds.length) {
+        return { id: { equals: "__no_matching_classes__" } };
+      }
+      return {
+        sharedWithClasses: { some: { id: { in: directClassIds } } },
+      };
 
     case "classNetwork": {
+      // testers only, under construction
       const contextFilter = attachedToCurrentContextWhere({ projectId, studyId });
       const networkFilter = studyOrProjectInClassesWhere(networkClassIds);
       if (!contextFilter || !networkFilter) {
@@ -165,29 +183,14 @@ export function buildDatasourcesWhereForScope({
       return { AND: [contextFilter, networkFilter] };
     }
 
-    case "simulated": {
-      const meWhere = buildDatasourcesWhereForScope({
-        ...scopeParams,
-        scope: "me",
-      });
-      const simulated = { dataOrigin: { equals: "SIMULATED" } };
-      return meWhere ? { AND: [meWhere, simulated] } : simulated;
-    }
+    case "simulated":
+      return { dataOrigin: { equals: "SIMULATED" } };
 
     case "public":
-      return {
-        journal: {
-          some: {
-            AND: [
-              { isPublic: { equals: true } },
-              { isTemplate: { equals: true } },
-            ],
-          },
-        },
-      };
+      return { isPublic: { equals: true } };
 
     default:
-      return buildDatasourcesWhere({ projectId, studyId, userId });
+      return {};
   }
 }
 
@@ -227,7 +230,8 @@ export function collectDatasourceLinkedClassIds(datasource) {
  *   collaborators?: Array<{ id?: string | null }> | null,
  *   project?: { id?: string | null, usedInClass?: { id?: string | null } | null, templateForClasses?: Array<{ id?: string | null }> | null } | null,
  *   study?: { id?: string | null, classes?: Array<{ id?: string | null }> | null } | null,
- *   journal?: Array<{ isPublic?: boolean | null, isTemplate?: boolean | null }> | null,
+ *   isPublic?: boolean | null,
+ *   sharedWithClasses?: Array<{ id?: string | null }> | null,
  * }} datasource
  * @param {{
  *   userId?: string | null,
@@ -258,21 +262,17 @@ export function getDatasourceVisibilityScopes(datasource, context) {
     matched.push("uploaded");
   }
 
-  if (
-    userId &&
-    datasource?.author?.id !== userId &&
-    (datasource?.collaborators || []).some((c) => c?.id === userId)
-  ) {
-    matched.push("sharedWithMe");
-  }
-
-  const linkedClassIds = collectDatasourceLinkedClassIds(datasource);
+  const sharedClassIds = (datasource?.sharedWithClasses || [])
+    .map((c) => c?.id)
+    .filter(Boolean);
   if (
     directClassIds.length > 0 &&
-    linkedClassIds.some((id) => directClassIds.includes(id))
+    sharedClassIds.some((id) => directClassIds.includes(id))
   ) {
     matched.push("myClass");
   }
+
+  const linkedClassIds = collectDatasourceLinkedClassIds(datasource);
 
   const inCurrentContext =
     (projectId != null &&
@@ -287,9 +287,7 @@ export function getDatasourceVisibilityScopes(datasource, context) {
     matched.push("classNetwork");
   }
 
-  if (
-    (datasource?.journal || []).some((j) => j?.isPublic && j?.isTemplate)
-  ) {
+  if (datasource?.isPublic) {
     matched.push("public");
   }
 
@@ -297,59 +295,12 @@ export function getDatasourceVisibilityScopes(datasource, context) {
 }
 
 /**
- * Broad list filter (journal attach modal, legacy). Prefer {@link buildDatasourcesWhereForScope} in dataset library tabs.
- * @param {{ projectId?: string | null, studyId?: string | null, userId?: string | null }} params
- * @returns {Record<string, unknown> | null}
+ * Datasource list for the journal attach window: the same set as the
+ * library's "me" tab, i.e. everything the server lets the user read.
+ * @returns {Record<string, unknown>}
  */
-export function buildDatasourcesWhere({ projectId, studyId, userId }) {
-  const or = [];
-
-  if (projectId && studyId) {
-    or.push({ project: { id: { equals: projectId } } });
-    or.push({ study: { id: { equals: studyId } } });
-  } else if (projectId) {
-    or.push({ project: { id: { equals: projectId } } });
-  } else if (studyId) {
-    or.push({ study: { id: { equals: studyId } } });
-  }
-
-  const vizJournalScope = [];
-  if (projectId) {
-    vizJournalScope.push({ project: { id: { equals: projectId } } });
-  }
-  if (studyId) {
-    vizJournalScope.push({ study: { id: { equals: studyId } } });
-  }
-  if (vizJournalScope.length > 0) {
-    or.push({
-      journal: {
-        some: {
-          vizJournal: {
-            OR: vizJournalScope,
-          },
-        },
-      },
-    });
-  }
-
-  if (userId) {
-    or.push({ author: { id: { equals: userId } } });
-  }
-
-  or.push({
-    journal: {
-      some: {
-        AND: [
-          { isPublic: { equals: true } },
-          { isTemplate: { equals: true } },
-        ],
-      },
-    },
-  });
-
-  if (or.length === 0) return null;
-  if (or.length === 1) return or[0];
-  return { OR: or };
+export function buildDatasourcesWhere() {
+  return buildDatasourcesWhereForScope({ scope: "me" });
 }
 
 /**
@@ -494,7 +445,7 @@ export function getSharingRecipientEntries(study, project, excludeUserId) {
  *   author?: { id?: string | null } | null,
  * }} datasource
  * @param {{ projectId?: string | null, studyId?: string | null, userId?: string | null }} context
- * @returns {"workspace" | "viaPart" | "yourLibrary" | "other"}
+ * @returns {"workspace" | "classShared" | "viaPart" | "yourLibrary" | "other"}
  */
 export function getDatasourceListInclusionKind(datasource, context) {
   const { projectId, studyId, userId } = context || {};
@@ -505,6 +456,13 @@ export function getDatasourceListInclusionKind(datasource, context) {
     (studyId != null && studyId !== "" && sid === studyId);
 
   if (inWorkspace) return "workspace";
+
+  if (
+    (datasource?.sharedWithClasses?.length ?? 0) > 0 &&
+    (!userId || datasource?.author?.id !== userId)
+  ) {
+    return "classShared";
+  }
 
   const journalCount = datasource?.journal?.length ?? 0;
   if (journalCount > 0) return "viaPart";
