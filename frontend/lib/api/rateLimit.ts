@@ -50,7 +50,14 @@ export function createRateLimiter({ windowMs, max }: { windowMs: number; max: nu
 }
 
 export const generalApiLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 100 });
-export const saveDataLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 300 });
+// Lab.js posts one incremental save per trial, and a classroom shares one
+// address: at 300 a single Gambling Task run could exhaust the window and the
+// rest of the session's saves were dropped with 429s. Measured from the raw
+// archive (Nov 2026): one study peaked at 605 saves / 15 min, and the studies
+// one class ran side by side on 2026-11-04 summed to ~1,260. 3000 leaves ~2x
+// headroom over that. Every save is still gated by a server-issued run token,
+// so the cap only needs to stop floods.
+export const saveDataLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 3000 });
 // jsPsych and p5 runs post a batch every few seconds while they run, and a
 // classroom shares one address, so this route gets more room than /api/save.
 export const runtimeSaveLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 1200 });
