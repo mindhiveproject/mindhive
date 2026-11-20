@@ -19,15 +19,16 @@ const BrowserFlowEngine = dynamic(() => import("./FlowEngine"), {
 });
 
 /**
- * Which canvas to draw the study on while both exist: the React Flow canvas
- * when the URL has ?canvas=flow or NEXT_PUBLIC_STUDY_CANVAS is "flow";
- * ?canvas=storm always opens the Storm canvas. Both save the design in the
- * same format, so a study can be opened in either.
+ * Which canvas to draw the study on while both exist. The React Flow canvas
+ * is the default; ?canvas=storm opens the classic Storm canvas (the fallback
+ * to give users who hit issues), and NEXT_PUBLIC_STUDY_CANVAS=storm switches
+ * a whole deployment back. Both save the design in the same format, so a
+ * study can be opened in either.
  */
 export function isFlowCanvas(query) {
   if (query?.canvas === "storm") return false;
   if (query?.canvas === "flow") return true;
-  return process.env.NEXT_PUBLIC_STUDY_CANVAS === "flow";
+  return process.env.NEXT_PUBLIC_STUDY_CANVAS !== "storm";
 }
 
 export default function Router({
