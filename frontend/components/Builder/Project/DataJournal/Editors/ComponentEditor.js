@@ -62,7 +62,11 @@ export default function ComponentEditor({
       ? activeComponent.content
       : null;
 
-  const { slice, sliceReady } = useResolvedJournalSlice(activeContentForSlice);
+  const {
+    slice,
+    sliceReady,
+    status: sliceStatus,
+  } = useResolvedJournalSlice(activeContentForSlice);
 
   useEffect(() => {
     if (!pyodide || !sliceReady || !slice) return;
@@ -263,6 +267,17 @@ export default function ComponentEditor({
     }
   };
 
+  const datasetPicker = DATA_COMPONENT_TYPES.has(type) ? (
+    <DatasetSourceSelect
+      journalDatasources={journalDatasources}
+      content={content}
+      onChangeId={handleDatasetSourceChange}
+    />
+  ) : null;
+  // When the component has no dataset of the journal, ask for one first.
+  const datasetPickerFirst =
+    sliceStatus === "missing" || sliceStatus === "unassigned";
+
   return (
     <StyledComponentEditor>
       <EditorHeader
@@ -277,14 +292,9 @@ export default function ComponentEditor({
         disableSaveFigureToMedia={!canSaveFigureToMedia}
         onSaveFigureToMedia={handleSaveFigureToMedia}
       />
+      {datasetPickerFirst ? datasetPicker : null}
       <div className="editorPanelBody">{renderEditor()}</div>
-      {DATA_COMPONENT_TYPES.has(type) ? (
-        <DatasetSourceSelect
-          journalDatasources={journalDatasources}
-          content={content}
-          onChangeId={handleDatasetSourceChange}
-        />
-      ) : null}
+      {datasetPickerFirst ? null : datasetPicker}
       {showSaveFigureModal ? (
         <MediaLibraryModal
           open={saveFigureModalOpen}

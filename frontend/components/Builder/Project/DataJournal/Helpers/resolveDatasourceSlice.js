@@ -1,27 +1,9 @@
 /**
- * Resolve which datasource slice a component uses (per-component dataset selection).
+ * The loaded data of the dataset a component names (lib/componentDatasource.js).
+ * A component never borrows another dataset: when its own is missing the
+ * slice is null and `status` says why.
  */
-
-/**
- * @param {Array<{ id?: string | null }> | null | undefined} journalDatasources
- * @returns {string | null}
- */
-function getDefaultDatasourceId(journalDatasources) {
-  const list = Array.isArray(journalDatasources) ? journalDatasources : [];
-  const first = list.find((d) => d?.id);
-  return first?.id ?? null;
-}
-
-/**
- * @param {{ datasourceId?: string | null } | null | undefined} content
- * @param {Array<{ id?: string | null }> | null | undefined} journalDatasources
- * @returns {string | null}
- */
-export function getEffectiveDatasourceId(content, journalDatasources) {
-  const explicit = content?.datasourceId;
-  if (typeof explicit === "string" && explicit.trim()) return explicit.trim();
-  return getDefaultDatasourceId(journalDatasources);
-}
+import { componentDatasourceStatus } from "../../../../../lib/componentDatasource";
 
 /**
  * @param {{
@@ -29,7 +11,12 @@ export function getEffectiveDatasourceId(content, journalDatasources) {
  *   journalDatasources?: Array<{ id?: string | null }> | null;
  *   sourceDataByDatasourceId?: Record<string, { data?: unknown[]; variables?: unknown[]; settings?: Record<string, unknown> }>;
  * }} params
- * @returns {{ slice: { data?: unknown[]; variables?: unknown[]; settings?: Record<string, unknown> } | null; sliceReady: boolean }}
+ * @returns {{
+ *   slice: { data?: unknown[]; variables?: unknown[]; settings?: Record<string, unknown> } | null;
+ *   sliceReady: boolean;
+ *   status: "ok" | "noDatasets" | "unassigned" | "missing" | "none";
+ *   datasourceId: string | null;
+ * }}
  */
 export function resolveDatasourceSourceSlice({
   content,
@@ -37,40 +24,24 @@ export function resolveDatasourceSourceSlice({
   sourceDataByDatasourceId,
 }) {
   if (content == null || typeof content !== "object") {
+    return { slice: null, sliceReady: false, status: "none", datasourceId: null };
+  }
+
+  const { status, datasourceId } = componentDatasourceStatus(
+    content,
+    journalDatasources,
+  );
+  if (status !== "ok") {
+    // No datasets: widgets render their empty state. Unassigned or missing:
+    // the widget frame shows a "pick a dataset" notice instead.
     return {
       slice: null,
-      sliceReady: false,
+      sliceReady: status === "noDatasets",
+      status,
+      datasourceId,
     };
   }
 
-  const map =
-    sourceDataByDatasourceId && typeof sourceDataByDatasourceId === "object"
-      ? sourceDataByDatasourceId
-      : {};
-  const dsList = Array.isArray(journalDatasources) ? journalDatasources : [];
-
-  if (dsList.length === 0) {
-    return {
-      slice: null,
-      sliceReady: true,
-    };
-  }
-
-  let resolvedId = getEffectiveDatasourceId(content, journalDatasources);
-  if (!resolvedId) {
-    return { slice: null, sliceReady: false };
-  }
-
-  if (!map[resolvedId]) {
-    resolvedId = getDefaultDatasourceId(dsList);
-  }
-  if (!resolvedId) {
-    return { slice: null, sliceReady: false };
-  }
-
-  const slice = map[resolvedId];
-  return {
-    slice: slice || null,
-    sliceReady: Boolean(slice),
-  };
+  const slice = sourceDataByDatasourceId?.[datasourceId] || null;
+  return { slice, sliceReady: Boolean(slice), status, datasourceId };
 }

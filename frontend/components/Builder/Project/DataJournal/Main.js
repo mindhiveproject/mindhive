@@ -45,9 +45,6 @@ export default function DataJournals({ user, query, tab }) {
         initialProps={{
           // Pass defaults or fetched data as needed
           workspace: { layout: [], vizSections: [] },
-          initData: [],
-          initVariables: [],
-          initSettings: {},
           pyodide: null, // Will be set asynchronously by PyodideWrapper
           selectedJournal: null,
           selectedWorkspace: null,

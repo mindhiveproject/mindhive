@@ -12,6 +12,9 @@ import Code from "./types/Code/Code";
 import HypVis from "./types/HypVis/HypVis";
 import { useDataJournal } from "../Context/DataJournalContext";
 import { WidgetSizeProvider } from "./WidgetSizeContext";
+import DatasetMissingNotice from "./DatasetMissingNotice";
+import useResolvedJournalSlice from "../Hooks/useResolvedJournalSlice";
+import { isDataComponentType } from "../../../../../lib/componentDatasource";
 
 // Styled container for the widget
 const WidgetContainer = styled.div`
@@ -48,6 +51,9 @@ function Widget({
     widgetResizeTicks,
   } = useDataJournal();
   const gridResizeTick = widgetResizeTicks[id] || 0;
+  const { status: datasetStatus } = useResolvedJournalSlice(
+    isDataComponentType(type) ? content : null,
+  );
 
   const containerRef = useRef(null);
   const [widgetSize, setWidgetSize] = useState({
@@ -170,8 +176,12 @@ function Widget({
   );
 
   // Render content based on component type
-  // Note: pyodide, data, variables, settings are accessed via context in child components (Table, Graph)
+  // Data components read their own dataset (useResolvedJournalSlice); one
+  // whose dataset is not in the journal shows a notice instead.
   const renderContent = () => {
+    if (datasetStatus === "missing" || datasetStatus === "unassigned") {
+      return <DatasetMissingNotice status={datasetStatus} />;
+    }
     switch (type) {
       case "PARAGRAPH":
         return (

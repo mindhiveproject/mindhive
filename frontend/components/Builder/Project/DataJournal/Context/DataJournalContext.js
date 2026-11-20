@@ -19,15 +19,6 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     initialProps.workspace || { id: null, layout: [], vizSections: [] },
   );
 
-  // Merged data from datasources
-  const [data, setData] = useState(initialProps.initData || []);
-
-  // Variables (columns) from data
-  const [variables, setVariables] = useState(initialProps.initVariables || []);
-
-  // Settings (e.g., filters)
-  const [settings, setSettings] = useState(initialProps.initSettings || {});
-
   // Pyodide instance
   const [pyodide, setPyodide] = useState(initialProps.pyodide || null);
 
@@ -72,7 +63,10 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
   /** Journal datasource list (id + title) for per-component dataset pickers. */
   const [journalDatasources, setJournalDatasources] = useState([]);
 
-  /** Latest loaded slice per datasource id (from DatasourceDataLoader). */
+  /**
+   * Latest loaded slice per datasource id (from DatasourceDataLoader). Each
+   * component reads the slice of the dataset it names (useResolvedJournalSlice).
+   */
   const [sourceDataByDatasourceId, setSourceDataByDatasourceId] = useState({});
 
   /** Live canvas element + width for canva PDF export (registered by Grid.js). */
@@ -187,16 +181,10 @@ export const DataJournalProvider = ({ children, initialProps = {} }) => {
     workspace,
     setWorkspace,
     updateWorkspace,
-    data,
-    setData,
-    variables,
-    setVariables,
     journalDatasources,
     setJournalDatasources,
     sourceDataByDatasourceId,
     setSourceDataByDatasourceId,
-    settings,
-    setSettings,
     pyodide,
     setPyodide,
     selectedJournal,
