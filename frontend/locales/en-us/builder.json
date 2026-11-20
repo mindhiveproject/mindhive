@@ -309,7 +309,13 @@
 				"ariaLabel": "Choose dataset",
 				"label": "Dataset",
 				"optionFallback": "{{origin}} · {{idSuffix}}",
-				"placeholder": "Select a dataset"
+				"placeholder": "Select a dataset",
+				"missingTitle": "This component's dataset is no longer in the journal",
+				"missingBody": "Open the component and choose a dataset, or add its dataset back to the journal.",
+				"unassignedTitle": "No dataset chosen",
+				"unassignedBody": "Open the component and choose which dataset it reads.",
+				"missingHint": "The dataset this component used is no longer in the journal. Choose one to show it again.",
+				"unassignedHint": "Choose which dataset this component reads."
 			},
 			"delete": "Delete",
 			"deleteConfirm": "Are you sure you want to delete this component?",

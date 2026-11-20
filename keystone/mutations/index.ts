@@ -68,6 +68,7 @@ import {
   backfillPublicDatasources,
   setDatasourceClassSharing,
 } from "./datasourceClassSharing";
+import { backfillComponentDatasources } from "./componentDatasourceBackfill";
 const { loadDatasourceStudyRows } = require("../lib/datasourceStudyRows");
 import {
   deleteDoeData,
@@ -551,6 +552,10 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # Admins: flag datasets of public template journals as isPublic.
         # Dry run by default; returns the affected dataset ids.
         backfillPublicDatasources(dryRun: Boolean): [ID!]!
+        # Admins: write into every Data Journal component the dataset it
+        # shows today, so none falls back to another. Dry run by default;
+        # returns counts and a sample of changes.
+        backfillComponentDatasources(dryRun: Boolean): JSON!
         backfillLinkActionCardsToMilestones(limit: Int, dryRun: Boolean): Int!
         # One-shot: lowercase Milestone.key/reviewStage and any
         # FormDefinition.key that starts with review_*. Dry-run by
@@ -1053,6 +1058,7 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         backfillMilestoneStatus,
         setDatasourceClassSharing,
         backfillPublicDatasources,
+        backfillComponentDatasources,
         backfillLinkActionCardsToMilestones,
         backfillLowercaseKeys,
         backfillTicketPermissions,

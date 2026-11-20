@@ -1,6 +1,6 @@
 // components/DataJournal/Journal.js
 import { useQuery } from "@apollo/client";
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useEffect, useCallback, useRef, useMemo } from "react";
 
 import { GET_DATA_JOURNAL } from "../../../Queries/DataJournal";
 import { sortDatasourcesByMostRecent } from "../../../../lib/dataJournalDatasources";
@@ -22,9 +22,6 @@ export default function Journal({
   const {
     selectedWorkspace,
     setSelectedWorkspace,
-    setData,
-    setVariables,
-    setSettings,
     setJournalDatasources,
     setSourceDataByDatasourceId,
     sourceDataByDatasourceId,
@@ -51,8 +48,6 @@ export default function Journal({
   const datasourceIds = datasources.map((ds) => ds?.id).filter(Boolean);
   const datasourceIdsKey = datasourceIds.join(",");
 
-  const [registered, setRegistered] = useState(false);
-  const registerRunIdRef = useRef(0);
 
   const handleSourceData = useCallback(
     (sourceData) => {
@@ -79,7 +74,6 @@ export default function Journal({
   }, [datasources, setJournalDatasources]);
 
   useEffect(() => {
-    setRegistered(false);
     setSourceDataByDatasourceId((prev) => {
       const next = {};
       datasourceIds.forEach((id) => {
@@ -92,51 +86,6 @@ export default function Journal({
   const allSlicesReady =
     datasources.length === 0 ||
     datasourceIds.every((id) => sourceDataByDatasourceId[id] != null);
-
-  useEffect(() => {
-    const runId = registerRunIdRef.current + 1;
-    registerRunIdRef.current = runId;
-    let isCancelled = false;
-
-    async function registerData() {
-      if (!allSlicesReady) return;
-      if (isCancelled || registerRunIdRef.current !== runId) return;
-
-      const firstId = datasourceIds[0];
-      const firstSlice = firstId ? sourceDataByDatasourceId[firstId] : null;
-
-      if (isCancelled || registerRunIdRef.current !== runId) return;
-
-      if (firstSlice) {
-        setData(Array.isArray(firstSlice.data) ? firstSlice.data : []);
-        setVariables(
-          Array.isArray(firstSlice.variables) ? firstSlice.variables : [],
-        );
-        setSettings(
-          firstSlice.settings && typeof firstSlice.settings === "object"
-            ? firstSlice.settings
-            : {},
-        );
-      } else {
-        setData([]);
-        setVariables([]);
-        setSettings({});
-      }
-      setRegistered(true);
-    }
-
-    registerData();
-    return () => {
-      isCancelled = true;
-    };
-  }, [
-    allSlicesReady,
-    datasourceIdsKey,
-    sourceDataByDatasourceId,
-    setData,
-    setVariables,
-    setSettings,
-  ]);
 
   const chapterIdsKey = (journal?.vizChapters || [])
     .map((w) => w?.id)
@@ -210,7 +159,7 @@ export default function Journal({
     return <div>Error loading journal</div>;
   }
 
-  const workspaceReady = !queryLoading && allSlicesReady && registered;
+  const workspaceReady = !queryLoading && allSlicesReady;
 
   return (
     <StyledDataJournal>

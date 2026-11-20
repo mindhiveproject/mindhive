@@ -11,6 +11,10 @@ import { ADD_VIZPART } from "../../../../Mutations/VizPart";
 import { CREATE_DATASOURCE } from "../../../../Mutations/Datasource";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 import { VIZPART_TEMPLATES } from "../../../../Queries/VizPart";
+import {
+  isDataComponentType,
+  legacyDatasourceId,
+} from "../../../../../lib/componentDatasource";
 
 import {
   StyledModalOverlay,
@@ -150,19 +154,6 @@ export default function JournalTemplateModal({
         return;
       }
 
-      const vizChapters = (template.vizChapters || []).map((chapter) => ({
-        title: chapter?.title,
-        description: chapter?.description,
-        vizSections: {
-          create: (chapter?.vizSections || []).map((section) => ({
-            type: section?.type,
-            title: section?.title,
-            description: section?.description,
-            content: section?.content,
-          })),
-        },
-      }));
-
       const clonedDatasourceIds = await Promise.all(
         (template.datasources || []).map(async (ds) => {
           const datasourceInput = {
@@ -188,6 +179,37 @@ export default function JournalTemplateModal({
       const datasourceConnect = clonedDatasourceIds
         .filter(Boolean)
         .map((id) => ({ id }));
+
+      // Copied components read the copied datasets: each one keeps the dataset
+      // it showed in the template, now under the copy's id.
+      const copiedIdByTemplateId = new Map(
+        (template.datasources || []).map((ds, i) => [
+          ds?.id,
+          clonedDatasourceIds[i] || null,
+        ]),
+      );
+      const copyContent = (type, content) => {
+        if (!isDataComponentType(type) || !content || typeof content !== "object")
+          return content;
+        const templateId = legacyDatasourceId(content, template.datasources);
+        const copiedId = templateId ? copiedIdByTemplateId.get(templateId) : null;
+        if (!copiedId) return content;
+        return { ...content, datasourceId: copiedId };
+      };
+
+      const vizChapters = (template.vizChapters || []).map((chapter) => ({
+        title: chapter?.title,
+        description: chapter?.description,
+        vizSections: {
+          create: (chapter?.vizSections || []).map((section) => ({
+            type: section?.type,
+            title: section?.title,
+            description: section?.description,
+            content: copyContent(section?.type, section?.content),
+          })),
+        },
+      }));
+
 
       const input = {
         title:
