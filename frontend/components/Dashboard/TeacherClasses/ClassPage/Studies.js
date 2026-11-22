@@ -14,7 +14,6 @@ import Chip from "../../../DesignSystem/Chip";
 import DropdownSelect from "../../../DesignSystem/DropdownSelect";
 import { AddIcon } from "../../../DesignSystem/Icons";
 import { getClassTemplateBoards } from "../../../../lib/classTemplateBoards";
-import { UPDATE_PROJECT_BOARD } from "../../../Mutations/Proposal";
 import OwnedItemsShowcase from "./utils/OwnedItemsShowcase";
 import { filterOwnedClassItems } from "./utils/ownedClassItems";
 import { useClassTablePrefs } from "./useClassTablePrefs";
@@ -26,7 +25,7 @@ import StudyCollaboratorsModal from "./StudyCollaboratorsModal";
 import useRefetchOnFocus from "./useRefetchOnFocus";
 import StudyMentorsModal from "./StudiesTab/StudyMentorsModal";
 import NewStudyModal from "./StudiesTab/NewStudyModal";
-import LinkStudyProjectModal from "./StudiesTab/LinkStudyProjectModal";
+import StudyBoardLinksModal from "../../../Builder/shared/StudyBoardLinks/Modal";
 import {
   studyRefetchQueries,
   useClassStudyProjects,
@@ -171,10 +170,6 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
     [readOnly, mentorIds, staff]
   );
 
-  const [updateProject] = useMutation(UPDATE_PROJECT_BOARD, {
-    refetchQueries: studyRefetchQueries(myclass),
-  });
-
   // Submit/finish/reopen/participation, on the study and every board linked
   // to it (keystone/lib/studyDataCollection.js).
   const [setDataCollection] = useMutation(SET_STUDY_DATA_COLLECTION, {
@@ -307,36 +302,6 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
         ),
       ].join(", "),
     [mentorSet]
-  );
-
-  const unlinkProject = useCallback(
-    async (project, study) => {
-      if (
-        !window.confirm(
-          t(
-            "studies.unlinkProject.confirm",
-            { study: study.title, project: project.title },
-            {
-              default:
-                "Unlink “{{study}}” from the project “{{project}}”? The study and its collaborators are kept.",
-            }
-          )
-        )
-      ) {
-        return;
-      }
-      try {
-        await updateProject({
-          variables: {
-            id: project.id,
-            input: { study: { disconnect: true } },
-          },
-        });
-      } catch (error) {
-        alert(error?.message);
-      }
-    },
-    [t, updateProject]
   );
 
   const openLinkProject = useCallback((study) => setLinkStudyId(study.id), []);
@@ -506,7 +471,6 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
             cellRenderer: StudyActionsCell,
             cellRendererParams: {
               onLinkProject: openLinkProject,
-              onUnlinkProject: unlinkProject,
               onDataCollection: runDataCollection,
             },
             filter: false,
@@ -529,7 +493,6 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
     getMentors,
     openLinkProject,
     runDataCollection,
-    unlinkProject,
   ]);
 
   return (
@@ -689,11 +652,12 @@ export default function Studies({ myclass, user, query, readOnly = false }) {
         />
       )}
       {linkStudyId && (
-        <LinkStudyProjectModal
-          myclass={myclass}
-          study={studies.find((s) => s?.id === linkStudyId)}
-          projects={projects}
+        <StudyBoardLinksModal
+          open
           onClose={() => setLinkStudyId(null)}
+          user={user}
+          studyId={linkStudyId}
+          refetchQueries={studyRefetchQueries(myclass)}
         />
       )}
       {dialogFor && (

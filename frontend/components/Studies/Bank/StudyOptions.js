@@ -5,8 +5,9 @@ import useTranslation from "next-translate/useTranslation";
 import Authorship from "./Options/Authorship";
 import Archive from "./Options/Archive";
 import Delete from "./Options/Delete";
-import { LinkedClass, LinkedStudy } from "./Options/Links";
-import LinkedBoard from "./Options/LinkedBoard";
+import { LinkedClass } from "./Options/Links";
+import LinksSummaryRow from "../../Builder/shared/StudyBoardLinks/SummaryRow";
+import StudyBoardLinksModal from "../../Builder/shared/StudyBoardLinks/Modal";
 import Button from "../../DesignSystem/Button";
 import IconButton from "../../DesignSystem/IconButton";
 import PanelHeader from "../../DesignSystem/PanelHeader";
@@ -38,6 +39,13 @@ export default function StudyOptions({
   const { t } = useTranslation("common");
   const { t: tBuilder } = useTranslation("builder");
   const [open, setOpen] = useState(false);
+  // The Links panel ({ boardId } or { studyId }), opened from a Settings row.
+  // Rendered outside the popover so closing the popover keeps it open.
+  const [links, setLinks] = useState(null);
+  const openLinks = (context) => {
+    setOpen(false);
+    setLinks(context);
+  };
   const settingsRef = useRef(null);
 
   const close = useCallback(() => {
@@ -81,7 +89,10 @@ export default function StudyOptions({
           <div style={BODY_STYLE}>
             {linkSection === "study" && project?.id && (
               <>
-                <LinkedStudy user={user} project={project} />
+                <LinksSummaryRow
+                  boardId={project.id}
+                  onManage={() => openLinks({ boardId: project.id })}
+                />
                 <hr style={{ border: 0, borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)", margin: "4px 0", width: "100%" }} />
               </>
             )}
@@ -90,12 +101,16 @@ export default function StudyOptions({
                 {linkSection === "class" && (
                   <>
                     <LinkedClass study={study} />
-                    <LinkedBoard
-                      user={user}
-                      study={study}
-                      project={project}
-                      area={area}
-                      hasStudyChanged={hasStudyChanged}
+                    <LinksSummaryRow
+                      boardId={area === "projects" ? project?.id : undefined}
+                      studyId={study.id}
+                      onManage={() =>
+                        openLinks(
+                          area === "projects" && project?.id
+                            ? { boardId: project.id }
+                            : { studyId: study.id }
+                        )
+                      }
                     />
                     <hr style={{ border: 0, borderTop: "1px solid var(--MH-Theme-Neutrals-Light, #e6e6e6)", margin: "4px 0", width: "100%" }} />
                   </>
@@ -136,6 +151,16 @@ export default function StudyOptions({
             )}
           </div>
         </Popover>
+        <StudyBoardLinksModal
+          open={!!links}
+          onClose={() => setLinks(null)}
+          user={user}
+          boardId={links?.boardId}
+          studyId={links?.studyId}
+          hasUnsavedChanges={hasStudyChanged}
+          // The builder shows the board's study: reload on the new one.
+          onContextBoardChanged={() => window.location.reload()}
+        />
       </>
     );
   }

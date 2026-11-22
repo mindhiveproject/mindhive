@@ -3209,5 +3209,44 @@
 		"switchConfirm": "Switch",
 		"unlinkInfo": "Unlink this study from the board? The study and the board are kept; only the link is removed.",
 		"joinsClass": "This study also joins {{class}}, so its teachers can follow it."
+	},
+	"studyBoardLinks": {
+		"title": "Study and project boards",
+		"rowLabel": "Project boards",
+		"manage": "Manage",
+		"onBoards": "On {{count}} board(s)",
+		"alsoOnStudy": "Also on this study ({{count}} boards)",
+		"noOtherBoards": "No other board uses this study.",
+		"projectBoards": "Project boards ({{count}})",
+		"noBoards": "This study is not on any project board.",
+		"studyPeople": "People on this study",
+		"viaBoard": "Via board · {{boards}}",
+		"you": "(you)",
+		"open": "Open ↗",
+		"addPeople": "+ Add people",
+		"addToStudy": "Also add to the study's collaborators:",
+		"markedAsMain": "Marked as main",
+		"connectBoard": "+ Connect a board",
+		"connectAnother": "+ Connect another board",
+		"noLinkableBoards": "There is no other board you can connect.",
+		"studentNotice": "Something look out of place? Reach out to your teacher.",
+		"unlinkTitle": "Unlink “{{study}}” from “{{board}}”?",
+		"thisWill": "This will:",
+		"role": {
+			"owner": "Owner",
+			"creator": "Creator",
+			"collaborator": "Collaborator"
+		},
+		"unlinkConsequence": {
+			"kept": "Remove the study from this board. The study and the board are both kept.",
+			"studyMain": "Clear the board's main study.",
+			"loseAccess": "Remove study edit access for: {{people}} (on this board, not study collaborators).",
+			"mainProject": "This board stays its students' main project, without a study.",
+			"datasets": "{{count}} data journal dataset(s) on this board keep reading this study's data.",
+			"dataCollection": "The study's data-collection stage stays as it is. If this board was its only supervised link, a teacher can reopen it."
+		},
+		"boardPeopleTitle": "Collaborators of “{{title}}”",
+		"studyPeopleTitle": "Collaborators of “{{title}}”",
+		"viaBoardHeader": "Access through a linked project board"
 	}
 }

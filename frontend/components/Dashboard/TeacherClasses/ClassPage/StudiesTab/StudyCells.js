@@ -8,7 +8,6 @@ import {
   ArrowDropDownIcon,
   CheckIcon,
   LinkIcon,
-  LinkOffIcon,
   OpenInNewIcon,
   PauseIcon,
   PlayIcon,
@@ -398,7 +397,6 @@ function dataCollectionItems(t, data, onDataCollection) {
 export function StudyActionsCell({
   data,
   onLinkProject,
-  onUnlinkProject,
   onDataCollection,
 }) {
   const { t } = useTranslation("classes");
@@ -407,22 +405,12 @@ export function StudyActionsCell({
     ...dataCollectionItems(t, data, onDataCollection),
     {
       key: "link",
-      label: t("studies.linkProject.action", {}, {
-        default: "Link to a project…",
+      label: t("studies.projectBoards.action", {}, {
+        default: "Project boards…",
       }),
       icon: <LinkIcon />,
       onClick: () => onLinkProject?.(data),
     },
-    ...(data.linkedProjects || []).map((project) => ({
-      key: `unlink:${project.id}`,
-      label: t("studies.unlinkProject.action", { project: project.title }, {
-        default: "Unlink from “{{project}}”",
-      }),
-      // Unlinking keeps the study, so not the menu's default trash icon.
-      icon: <LinkOffIcon />,
-      onClick: () => onUnlinkProject?.(project, data),
-      danger: true,
-    })),
   ];
   return (
     <div style={BUTTON_CELL}>
