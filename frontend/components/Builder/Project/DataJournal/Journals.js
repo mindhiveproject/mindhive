@@ -35,15 +35,19 @@ export default function Journals({ user, projectId, studyId }) {
 
   const journalCollections = data?.vizJournals || [];
 
+  // Open the first journal unless the selected one is still in the list (a
+  // journal picked elsewhere, e.g. right after attaching a dataset to it).
+  const journalIdsKey = dataJournals.map((j) => j?.id).join(",");
   useEffect(() => {
-    function initJournal() {
-      const j = dataJournals[0]; // set the first journal as the current one
-      setSelectedJournal(j);
+    if (!dataJournals.length) return;
+    if (
+      selectedJournal?.id &&
+      dataJournals.some((j) => j?.id === selectedJournal.id)
+    ) {
+      return;
     }
-    if (dataJournals && dataJournals.length) {
-      initJournal();
-    }
-  }, [dataJournals.length, setSelectedJournal]);
+    setSelectedJournal(dataJournals[0]);
+  }, [journalIdsKey, selectedJournal?.id, setSelectedJournal]);
 
   const selectJournalById = ({ id }) => {
     const journal = dataJournals.find((j) => j?.id === id);

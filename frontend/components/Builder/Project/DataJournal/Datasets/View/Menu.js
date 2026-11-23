@@ -147,7 +147,6 @@ export default function Menu({
   writeMode,
   canCopy = false,
   onRequestCopy,
-  copyJournalTitle = null,
   copyModalOpen,
   onCopyModalClose,
   onConfirmCopy,
@@ -356,25 +355,10 @@ export default function Menu({
         open={copyModalOpen}
         title=""
         message={
-          copyJournalTitle !== null
-            ? t(
-                "dataJournal.datasets.copyConfirm.linkedMessage",
-                {
-                  journal:
-                    copyJournalTitle ||
-                    t("dataJournal.datasets.copyConfirm.untitledJournal", {}, {
-                      default: "your journal",
-                    }),
-                },
-                {
-                  default:
-                    "A copy of this dataset, including any changes you made, will be created and attached to the journal “{{journal}}”. It is yours alone unless you share it with your team below.",
-                },
-              )
-            : t("dataJournal.datasets.copyConfirm.unlinkedMessage", {}, {
-                default:
-                  "A copy of this dataset, including any changes you made, will be created. It is not attached to a journal (you have none, or several): add it from a journal's data sources. It is yours alone unless you share it with your team below.",
-              })
+          t("dataJournal.datasets.copyConfirm.unattachedMessage", {}, {
+            default:
+              "A copy of this dataset, including any changes you made, will be created. It is yours alone unless you share it with your team below. Next, you can add it to a journal.",
+          })
         }
         confirmLabel={t("dataJournal.datasets.copyConfirm.confirm", {}, {
           default: "Save copy",

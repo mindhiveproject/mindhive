@@ -6,11 +6,9 @@ import {
   useCallback,
 } from "react";
 import debounce from "lodash.debounce";
-import { useQuery } from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 
 import { getDatasourceWriteMode } from "../../../../../../lib/dataJournalDatasources";
-import { GET_DATA_JOURNALS } from "../../../../../Queries/DataArea";
 import { useDataJournal } from "../../Context/DataJournalContext";
 import { StyledDatasetView } from "../../styles/StyledDatasetView";
 
@@ -31,31 +29,6 @@ export default function DatasetView({ dataset, user, onSaved, onCopied }) {
   const { user: ctxUser, projectId, studyId } =
     useDataJournal();
   const effectiveUser = user || ctxUser;
-
-  // The journals of this study/board (the same query as the journal list, so
-  // usually cached). A copy is attached to the journal only when there is
-  // exactly one; with several it is left unattached for the student to link.
-  const journalsWhere =
-    projectId && studyId
-      ? {
-          OR: [
-            { project: { id: { equals: projectId } } },
-            { study: { id: { equals: studyId } } },
-          ],
-        }
-      : projectId
-        ? { project: { id: { equals: projectId } } }
-        : studyId
-          ? { study: { id: { equals: studyId } } }
-          : null;
-  const { data: journalsData } = useQuery(GET_DATA_JOURNALS, {
-    variables: { where: journalsWhere },
-    skip: !journalsWhere,
-  });
-  const journalParts = (journalsData?.vizJournals || []).flatMap(
-    (vj) => vj?.vizParts || [],
-  );
-  const copyJournal = journalParts.length === 1 ? journalParts[0] : null;
 
   const writeMode = useMemo(
     () =>
@@ -168,7 +141,6 @@ export default function DatasetView({ dataset, user, onSaved, onCopied }) {
     dataset,
     content,
     writeMode,
-    currentVizPartId: copyJournal?.id ?? null,
     projectId,
     studyId,
     onSaved,
@@ -333,7 +305,6 @@ export default function DatasetView({ dataset, user, onSaved, onCopied }) {
               (writeMode === "editable" &&
                 dataset?.author?.id !== effectiveUser?.id)
             }
-            copyJournalTitle={copyJournal ? copyJournal.title || "" : null}
             onRequestCopy={openCopyModal}
             copyModalOpen={copyModalOpen}
             onCopyModalClose={handleCopyModalClose}

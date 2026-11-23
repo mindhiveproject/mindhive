@@ -16,7 +16,7 @@ export default function AddDataset({
   onCancel,
   onCreate,
 }) {
-  const { selectedJournal, user } = useDataJournal();
+  const { user } = useDataJournal();
   const [datasetName, setDatasetName] = useState("");
   const [dataOrigin, setDataOrigin] = useState("");
   const [file, setFile] = useState(null);
@@ -38,13 +38,8 @@ export default function AddDataset({
   const [createDatasource, { loading, error }] = useMutation(
     CREATE_DATASOURCE,
     {
-      // The new datasource is connected to the selected journal, so the
-      // journal queries (grid data + side-nav counts) must refresh too.
-      refetchQueries: [
-        "GET_DATASOURCES",
-        "GET_DATA_JOURNAL",
-        "GET_DATA_JOURNALS",
-      ],
+      // Created unattached; the attach step (AttachToJournalModal) links it.
+      refetchQueries: ["GET_DATASOURCES"],
       awaitRefetchQueries: true,
       onError: (mutationError) => {
         console.error("Mutation error:", mutationError);
@@ -76,7 +71,6 @@ export default function AddDataset({
       studyLoading={studyLoading}
       studyError={studyError}
       projectBoardForSharing={boardSharingData?.proposalBoard}
-      selectedVizPartId={selectedJournal?.id}
       currentUserId={user?.id}
       canSimulate={isTesterUser(user)}
       loading={loading}
