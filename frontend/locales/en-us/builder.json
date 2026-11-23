@@ -541,11 +541,8 @@
 			"cancel": "Cancel",
 			"copyConfirm": {
 				"confirm": "Save copy",
-				"message": "A new dataset you own will be created with your changes and linked to this journal. You can choose whether collaborators may edit the copy.",
-				"linkedMessage": "A copy of this dataset, including any changes you made, will be created and attached to the journal “{{journal}}”. It is yours alone unless you share it with your team below.",
-				"unlinkedMessage": "A copy of this dataset, including any changes you made, will be created. It is not attached to a journal (you have none, or several): add it from a journal's data sources. It is yours alone unless you share it with your team below.",
-				"untitledJournal": "your journal",
-				"nameLabel": "Name of your copy"
+				"nameLabel": "Name of your copy",
+				"unattachedMessage": "A copy of this dataset, including any changes you made, will be created. It is yours alone unless you share it with your team below. Next, you can add it to a journal."
 			},
 			"copyOnSave": {
 				"successAlert": "We made a copy you own. You're now editing the copy.",
@@ -623,7 +620,6 @@
 			},
 			"sharing": {
 				"allowEditingLabel": "Allow journal collaborators to edit this dataset",
-				"journalOnlyTooltip": "Collaborators from this journal’s study or project will be connected when you create the dataset.",
 				"roles": {
 					"projectAuthor": "Project author",
 					"projectCollaborator": "Project collaborator",
@@ -632,7 +628,6 @@
 				},
 				"rolesSeparator": ", ",
 				"summary": "Everyone working on this study or project can see this dataset. {{count}} of them will be added as collaborators.",
-				"summaryJournalOnly": "This dataset will be linked to your current journal; collaborators may be added automatically.",
 				"tooltipRow": "{{name}} — {{roles}}",
 				"whoTooltipAria": "Who will receive access",
 				"shareWithTeamOnCopyLabel": "Add the people working on this study and board as collaborators"
@@ -1324,6 +1319,19 @@
 		"workspaceArea": {
 			"error": "Could not load workspace: {{message}}",
 			"loading": "Loading workspace…"
+		},
+		"attachDataset": {
+			"title": "Add this dataset to a journal?",
+			"intro": "“{{title}}” is saved. Add it to a journal to analyze it there, or leave it unattached: you can add it from a journal's data sources later.",
+			"groupLabel": "Journal",
+			"newJournal": "A new journal",
+			"newJournalName": "Journal name",
+			"untitledJournal": "Unnamed journal",
+			"loading": "Loading journals…",
+			"skip": "Leave unattached",
+			"attach": "Add to journal",
+			"createAndAttach": "Create journal and add",
+			"error": "The dataset could not be attached. It is saved, unattached."
 		}
 	},
 	"dataJournals": "Journals",

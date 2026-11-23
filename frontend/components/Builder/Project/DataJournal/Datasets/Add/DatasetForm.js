@@ -121,7 +121,6 @@ export default function DatasetForm({
   studyLoading,
   studyError,
   projectBoardForSharing,
-  selectedVizPartId,
   currentUserId,
   canSimulate = false,
   loading,
@@ -255,9 +254,6 @@ export default function DatasetForm({
       payload.collaborators = {
         connect: sharingIds.map((id) => ({ id })),
       };
-    }
-    if (selectedVizPartId) {
-      payload.journal = { connect: [{ id: selectedVizPartId }] };
     }
     return payload;
   };
@@ -662,7 +658,7 @@ export default function DatasetForm({
         ) : null}
       </fieldset>
 
-      {(sharingIds.length > 0 || selectedVizPartId) && (
+      {sharingIds.length > 0 && (
         <div
           className="MH-Type-Body-Base"
           style={{
@@ -691,19 +687,14 @@ export default function DatasetForm({
           <InfoPopover
             content={
               <span style={{ display: "block", maxWidth: 320 }}>
-                {sharingIds.length > 0
-                  ? t(
-                      "dataJournal.datasets.sharing.summary",
-                      { count: sharingIds.length },
-                      {
-                        default:
-                          "Everyone working on this study or project can see this dataset. {{count}} of them will be added as collaborators.",
-                      },
-                    )
-                  : t("dataJournal.datasets.sharing.summaryJournalOnly", {}, {
-                      default:
-                        "This dataset will be linked to your current journal; collaborators may be added automatically.",
-                    })}
+                {t(
+                  "dataJournal.datasets.sharing.summary",
+                  { count: sharingIds.length },
+                  {
+                    default:
+                      "Everyone working on this study or project can see this dataset. {{count}} of them will be added as collaborators.",
+                  },
+                )}
                 {sharingRecipientsTooltip ? (
                   <span style={{ display: "block", marginTop: 6 }}>
                     {sharingRecipientsTooltip}

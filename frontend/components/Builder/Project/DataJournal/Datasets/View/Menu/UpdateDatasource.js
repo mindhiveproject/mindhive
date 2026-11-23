@@ -99,7 +99,6 @@ export function useDatasetSaveOrCopy({
   dataset,
   content,
   writeMode,
-  currentVizPartId,
   projectId,
   studyId,
   onSaved,
@@ -124,8 +123,6 @@ export function useDatasetSaveOrCopy({
   onCopiedRef.current = onCopied;
   const tAlertsRef = useRef(tAlerts);
   tAlertsRef.current = tAlerts;
-  const currentVizPartIdRef = useRef(currentVizPartId);
-  currentVizPartIdRef.current = currentVizPartId;
   const projectIdRef = useRef(projectId);
   projectIdRef.current = projectId;
   const studyIdRef = useRef(studyId);
@@ -282,9 +279,6 @@ export function useDatasetSaveOrCopy({
         uploaded: { address },
         modified: { address, metadata },
       },
-      ...(currentVizPartIdRef.current && {
-        journal: { connect: [{ id: currentVizPartIdRef.current }] },
-      }),
       ...(projectIdRef.current && {
         project: { connect: { id: projectIdRef.current } },
       }),
@@ -329,7 +323,9 @@ export function useDatasetSaveOrCopy({
       await onSavedRef.current();
     }
     if (newId && typeof onCopiedRef.current === "function") {
-      await onCopiedRef.current(newId);
+      // The caller opens the copy and offers to add it to a journal.
+      await onCopiedRef.current(newId, copyTitle);
+      return;
     }
     alert(
       alerts?.copySuccess ??
@@ -357,7 +353,6 @@ export function useDatasetSave({ dataset, content, onSaved }) {
     dataset,
     content,
     writeMode: "editable",
-    currentVizPartId: null,
     projectId: null,
     studyId: null,
     onSaved,

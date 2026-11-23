@@ -24,6 +24,7 @@ import AddDataset from "./AddDataset";
 import DatasetCard from "./DatasetCard";
 import EditDataset from "./EditDataset";
 import DatasetView from "./View/Main";
+import AttachToJournalModal from "./AttachToJournalModal";
 
 import {
   StyledDatasetsRoot,
@@ -86,6 +87,8 @@ export default function Datasets() {
     setDatasetScope,
     datasetsListNavNonce,
     datasetsAddRequestNonce,
+    setArea,
+    setSelectedJournal,
   } = useDataJournal();
 
   const { directClassIds, networkClassIds, loading: classesLoading } =
@@ -134,6 +137,8 @@ export default function Datasets() {
   const [showAddDataset, setShowAddDataset] = useState(false);
   const [editingDataset, setEditingDataset] = useState(null);
   const [viewingDatasetId, setViewingDatasetId] = useState(null);
+  /** A dataset just created or copied, waiting on the attach-to-journal step. */
+  const [attachPrompt, setAttachPrompt] = useState(null);
 
   const lastDatasetsListNavNonceRef = useRef(datasetsListNavNonce);
   const lastDatasetScopeRef = useRef(datasetScope);
@@ -198,22 +203,9 @@ export default function Datasets() {
     setViewingDatasetId(null);
   };
 
-  /** Current tab is guaranteed to include the newly created dataset. */
-  const currentScopeShowsCreatedDataset = (createdDataOrigin) => {
-    if (datasetScope === "me") return true;
-    if (datasetScope === "uploaded" && createdDataOrigin === "UPLOADED") {
-      return true;
-    }
-    if (datasetScope === "simulated" && createdDataOrigin === "SIMULATED") {
-      return true;
-    }
-    return false;
-  };
-
-  const handleCreate = async (_createdDatasource, createdDataOrigin) => {
-    const switchToMe = !currentScopeShowsCreatedDataset(createdDataOrigin);
-
-    if (switchToMe) {
+  /** Shows the dataset list on the "Me" tab, which lists every new dataset. */
+  const showMeList = async () => {
+    if (datasetScope !== "me") {
       const meWhere = buildDatasourcesWhereForScope({
         scope: "me",
         projectId,
@@ -235,10 +227,35 @@ export default function Datasets() {
     } else {
       await refetch();
     }
-
     setShowAddDataset(false);
     setEditingDataset(null);
     setViewingDatasetId(null);
+  };
+
+  // A new dataset is attached to no journal: the user picks one (or a new
+  // one) in the attach step, or leaves it unattached.
+  const handleCreate = async (createdDatasource) => {
+    setAttachPrompt({
+      dataset: {
+        id: createdDatasource?.id,
+        title: createdDatasource?.title || "",
+      },
+      kind: "created",
+    });
+  };
+
+  const handleAttachDone = async (journal) => {
+    const prompt = attachPrompt;
+    setAttachPrompt(null);
+    if (journal?.id) {
+      // Open the journal the dataset now sits in.
+      setSelectedJournal(journal);
+      setArea("journals");
+      return;
+    }
+    // A copy stays open for editing; a new dataset shows in the "Me" list.
+    if (prompt?.kind === "copied") return;
+    await showMeList();
   };
 
   const handleEdit = (dataset) => {
@@ -253,9 +270,14 @@ export default function Datasets() {
     setViewingDatasetId(dataset?.id || null);
   };
 
-  const handleDatasetCopied = async (newId) => {
+  const handleDatasetCopied = async (newId, newTitle) => {
     await refetch();
-    if (newId) setViewingDatasetId(newId);
+    if (!newId) return;
+    setViewingDatasetId(newId);
+    setAttachPrompt({
+      dataset: { id: newId, title: newTitle || "" },
+      kind: "copied",
+    });
   };
 
   const isListLoading =
@@ -282,6 +304,10 @@ export default function Datasets() {
 
   return (
     <StyledDatasetsRoot>
+      <AttachToJournalModal
+        dataset={attachPrompt?.dataset || null}
+        onDone={handleAttachDone}
+      />
       {!showAddDataset && !editingDataset && !viewingDatasetId ? (
         <div className="datasets">
           <p className="datasets-list-intro">{scopeIntro}</p>
