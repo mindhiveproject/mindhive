@@ -1,15 +1,18 @@
 import { useRef } from "react";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { customAlphabet } from "nanoid";
 
 import {
   CREATE_DATASOURCE,
   UPDATE_DATASOURCE,
 } from "../../../../../../Mutations/Datasource";
+import { GET_DATASOURCE_COLLABORATOR_CANDIDATES } from "../../../../../../Queries/Datasource";
 
 const nanoid = customAlphabet("0123456789abcdefghijklmnopqrstuvwxyz", 7);
 
-async function postDataFile({ year, month, day, content }) {
+// `datasourceId` names the dataset being saved in place: the server lets only
+// its editors replace a file it already has (pages/api/journal-data.ts).
+async function postDataFile({ year, month, day, content, datasourceId }) {
   const metadata = {
     id: content.token,
     payload: "modified",
@@ -25,14 +28,20 @@ async function postDataFile({ year, month, day, content }) {
     data: content.data,
   };
 
-  const res = await fetch(`/api/journal-data?y=${year}&m=${month}&d=${day}`, {
-    method: "POST",
-    body: JSON.stringify(dataFile),
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+  const datasourceParam = datasourceId
+    ? `&datasource=${encodeURIComponent(datasourceId)}`
+    : "";
+  const res = await fetch(
+    `/api/journal-data?y=${year}&m=${month}&d=${day}${datasourceParam}`,
+    {
+      method: "POST",
+      body: JSON.stringify(dataFile),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
   return { res, metadata };
 }
 
@@ -44,6 +53,9 @@ function resolveSaveAddress(dataset) {
   const isTemplateData =
     dataset?.dataOrigin === "TEMPLATE" &&
     !dataset?.content?.isTemplateModified;
+  // A dataset cloned from a template journal still points at the template's
+  // files until its first save, which must go to a file of its own.
+  const usesSourceFiles = Boolean(dataset?.content?.filesFromSource);
 
   if (
     address &&
@@ -51,7 +63,8 @@ function resolveSaveAddress(dataset) {
     address?.month != null &&
     address?.day != null &&
     address?.token &&
-    !isTemplateData
+    !isTemplateData &&
+    !usesSourceFiles
   ) {
     return {
       year: address.year,
@@ -61,6 +74,11 @@ function resolveSaveAddress(dataset) {
     };
   }
 
+  return freshSaveAddress();
+}
+
+/** A new file address: today's date and a new token. */
+function freshSaveAddress() {
   const curDate = new Date();
   return {
     year: parseInt(curDate.getFullYear(), 10),
@@ -88,6 +106,7 @@ export function useDatasetSaveOrCopy({
   onCopied,
   tAlerts,
 }) {
+  const client = useApolloClient();
   const [updateDatasource, { loading: updateLoading }] =
     useMutation(UPDATE_DATASOURCE);
   const [createDatasource, { loading: createLoading }] =
@@ -117,19 +136,28 @@ export function useDatasetSaveOrCopy({
     const currentContent = contentRef.current;
     const alerts = tAlertsRef.current;
 
-    const { year, month, day, token } = resolveSaveAddress(currentDataset);
-
-    const { res, metadata } = await postDataFile({
-      year,
-      month,
-      day,
-      content: {
-        token,
-        variables: currentContent?.modified?.variables,
-        settings: currentContent?.modified?.settings,
-        data: currentContent?.modified?.data,
-      },
+    const fileContent = {
+      variables: currentContent?.modified?.variables,
+      settings: currentContent?.modified?.settings,
+      data: currentContent?.modified?.data,
+    };
+    let address = resolveSaveAddress(currentDataset);
+    let { res, metadata } = await postDataFile({
+      ...address,
+      datasourceId: currentDataset?.id,
+      content: { ...fileContent, token: address.token },
     });
+    // Refused: the file is shared with a dataset this editor may not change
+    // (an older template copy still reading its template's file). Save to a
+    // file of this dataset's own instead.
+    if (res?.status === 403) {
+      address = freshSaveAddress();
+      ({ res, metadata } = await postDataFile({
+        ...address,
+        content: { ...fileContent, token: address.token },
+      }));
+    }
+    const { year, month, day, token } = address;
 
     if (!res?.ok) {
       alert(
@@ -142,6 +170,7 @@ export function useDatasetSaveOrCopy({
     const prevContent = currentDataset?.content || {};
     const nextContent = {
       ...prevContent,
+      filesFromSource: false,
       isModified: true,
       isTemplateModified: currentDataset?.dataOrigin === "TEMPLATE",
       modified: {
@@ -187,12 +216,12 @@ export function useDatasetSaveOrCopy({
   };
 
   /**
-   * Create a new datasource (copy) with uploaded modified file; connects to current journal part.
+   * Create a fresh dataset owned by the caller: a snapshot of what is on
+   * screen, written to a file of its own, connected to the current journal
+   * part. Nothing is shared with the source — not its files, not its
+   * collaborators. A study dataset becomes an uploaded one (frozen rows).
    */
-  const saveAsCopy = async ({
-    copyTitle,
-    collaboratorsCanEdit = true,
-  }) => {
+  const saveAsCopy = async ({ copyTitle, shareWithTeam = false }) => {
     const currentDataset = datasetRef.current;
     const currentContent = contentRef.current;
     const alerts = tAlertsRef.current;
@@ -203,13 +232,25 @@ export function useDatasetSaveOrCopy({
     const day = parseInt(curDate.getDate(), 10);
     const token = nanoid();
 
+    const sourceOrigin = currentDataset?.dataOrigin;
+    const copyOrigin = sourceOrigin === "SIMULATED" ? "SIMULATED" : "UPLOADED";
+    const isStudyLike =
+      sourceOrigin === "STUDY" || sourceOrigin === "TEMPLATE";
+    // Study columns are grouped by task components, which a snapshot no
+    // longer has: keep them all as plain columns, user columns as they are.
+    const variables = isStudyLike
+      ? (currentContent?.modified?.variables || []).map((v) =>
+          v?.type === "user" ? v : { ...v, type: "general" },
+        )
+      : currentContent?.modified?.variables;
+
     const { res, metadata } = await postDataFile({
       year,
       month,
       day,
       content: {
         token,
-        variables: currentContent?.modified?.variables,
+        variables,
         settings: currentContent?.modified?.settings,
         data: currentContent?.modified?.data,
       },
@@ -223,30 +264,24 @@ export function useDatasetSaveOrCopy({
       return;
     }
 
-    const prevContent = currentDataset?.content || {};
-    const collaboratorIds = (currentDataset?.collaborators || [])
-      .map((c) => c?.id)
-      .filter(Boolean);
-
+    const address = { year, month, day, token };
     const createInput = {
       title: copyTitle,
-      dataOrigin: currentDataset?.dataOrigin,
+      description: currentDataset?.description ?? undefined,
+      dataOrigin: copyOrigin,
       settings: currentDataset?.settings ?? undefined,
-      collaboratorsCanEdit,
+      // Private to its maker whatever study or board it sits in: the team
+      // rule is off and no collaborators are added (keystone Datasource).
+      sharedWithTeam: false,
+      // listed under "Me", not "Uploaded"
+      isCopy: true,
+      // Only the copy's own file: the reader takes uploaded.address, later
+      // saves take modified.address, and both point here.
       content: {
-        ...prevContent,
         isModified: true,
-        isTemplateModified: currentDataset?.dataOrigin === "TEMPLATE",
-        modified: {
-          address: { year, month, day, token },
-          metadata,
-        },
+        uploaded: { address },
+        modified: { address, metadata },
       },
-      ...(collaboratorIds.length > 0 && {
-        collaborators: {
-          connect: collaboratorIds.map((id) => ({ id })),
-        },
-      }),
       ...(currentVizPartIdRef.current && {
         journal: { connect: [{ id: currentVizPartIdRef.current }] },
       }),
@@ -262,6 +297,34 @@ export function useDatasetSaveOrCopy({
       variables: { data: createInput },
     });
     const newId = createData?.createDatasource?.id;
+    // Sharing with the team, if asked, puts the study's and board's people on
+    // the copy's collaborator list — the same list its author edits later.
+    if (newId && shareWithTeam) {
+      try {
+        const { data: candidatesData } = await client.query({
+          query: GET_DATASOURCE_COLLABORATOR_CANDIDATES,
+          variables: { id: newId },
+          fetchPolicy: "network-only",
+        });
+        const people = candidatesData?.datasourceCollaboratorCandidates || [];
+        if (people.length) {
+          await updateDatasource({
+            variables: {
+              id: newId,
+              data: {
+                collaborators: { connect: people.map((p) => ({ id: p.id })) },
+              },
+            },
+          });
+        }
+      } catch (err) {
+        // the copy exists and stays private; say so rather than fail silently
+        alert(
+          alerts?.shareError?.(err?.message) ??
+            `Your copy was made, but your team could not be added: ${err?.message || ""}`,
+        );
+      }
+    }
     if (typeof onSavedRef.current === "function") {
       await onSavedRef.current();
     }

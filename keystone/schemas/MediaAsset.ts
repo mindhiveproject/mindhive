@@ -17,7 +17,7 @@ function hasManageUsersPermission(session: any) {
 }
 
 /**
- * Reusable images scoped to a board.
+ * Reusable images scoped to a board (or another createdIn* owner, e.g. a task).
  *
  * `settings` JSON (expected shape):
  * {
@@ -93,6 +93,7 @@ export const MediaAsset = list({
         "createdInStudy",
         "createdInAssignment",
         "createdInProfile",
+        "createdInTask",
       ];
 
       const getResolvedOwnerState = (
@@ -143,6 +144,7 @@ export const MediaAsset = list({
             createdInStudy { id }
             createdInAssignment { id }
             createdInProfile { id }
+            createdInTask { id }
           `,
         });
 
@@ -218,6 +220,10 @@ export const MediaAsset = list({
     createdInProfile: relationship({
       ref: "Profile",
     }),
+    /** Task/survey whose editor uploaded this media (e.g. Survey Builder text blocks). */
+    createdInTask: relationship({
+      ref: "Task",
+    }),
     author: relationship({
       ref: "Profile.authoredMediaAssets",
       hooks: {
@@ -257,6 +263,10 @@ export const MediaAsset = list({
     }),
     usedInAssignments: relationship({
       ref: "Assignment.mediaAssetsUsed",
+      many: true,
+    }),
+    usedInTasks: relationship({
+      ref: "Task.mediaAssetsUsed",
       many: true,
     }),
     usedInProfiles: relationship({

@@ -444,7 +444,8 @@
 				"saveAsCopy": "Save as copy…",
 				"saving": "Saving…",
 				"showAll": "",
-				"showAllVariables": "Show all variables"
+				"showAllVariables": "Show all variables",
+				"makeCopy": "Make a copy"
 			},
 			"addColumnModal": {
 				"aria": {
@@ -504,7 +505,7 @@
 				"reverse": "Reverse",
 				"reverseScore": "Reverse score"
 			},
-			"readOnlyToolbarHint": "Open this journal from a workspace to edit or copy this dataset.",
+			"readOnlyToolbarHint": "Sign in to make your own copy of this dataset and edit it.",
 			"sections": {
 				"generalVariables": "General variables",
 				"originalVariables": "Original variables",
@@ -540,10 +541,16 @@
 			"cancel": "Cancel",
 			"copyConfirm": {
 				"confirm": "Save copy",
-				"message": "A new dataset you own will be created with your changes and linked to this journal. You can choose whether collaborators may edit the copy."
+				"message": "A new dataset you own will be created with your changes and linked to this journal. You can choose whether collaborators may edit the copy.",
+				"linkedMessage": "A copy of this dataset, including any changes you made, will be created and attached to the journal “{{journal}}”. It is yours alone unless you share it with your team below.",
+				"unlinkedMessage": "A copy of this dataset, including any changes you made, will be created. It is not attached to a journal (you have none, or several): add it from a journal's data sources. It is yours alone unless you share it with your team below.",
+				"untitledJournal": "your journal",
+				"nameLabel": "Name of your copy"
 			},
 			"copyOnSave": {
-				"successAlert": "We made a copy you own. You're now editing the copy."
+				"successAlert": "We made a copy you own. You're now editing the copy.",
+				"errorAlert": "The copy could not be made: {{message}}",
+				"shareErrorAlert": "Your copy was made, but your team could not be added: {{message}}"
 			},
 			"copyTitlePrefix": "Copy of ",
 			"deleteConfirm": "Are you sure you want to delete this dataset?",
@@ -627,7 +634,8 @@
 				"summary": "Everyone working on this study or project can see this dataset. {{count}} of them will be added as collaborators.",
 				"summaryJournalOnly": "This dataset will be linked to your current journal; collaborators may be added automatically.",
 				"tooltipRow": "{{name}} — {{roles}}",
-				"whoTooltipAria": "Who will receive access"
+				"whoTooltipAria": "Who will receive access",
+				"shareWithTeamOnCopyLabel": "Add the people working on this study and board as collaborators"
 			},
 			"untitled": "Untitled Dataset",
 			"view": {
@@ -658,6 +666,25 @@
 				"studyWarningCopies": "Students can download the data or save their own copy. Unsharing later does not remove those.",
 				"studyWarningConsent": "Only share if your participants' consent allows their data to be shown to these classes.",
 				"studyConfirm": "I understand these classes will see this participant data."
+			},
+			"audience": {
+				"privateLabel": "Only you",
+				"privateTooltip": "Only you can see this dataset. Edit it to add collaborators from your study and board team.",
+				"teamLabel": "Study & board team",
+				"teamTooltip": "Everyone working on this dataset's study and project board can see it.",
+				"collaboratorsLabel": "{{count}} collaborators",
+				"collaboratorsTooltip": "Its author and the collaborators they picked can see and edit this dataset.",
+				"collaboratorsLabel_one": "1 collaborator",
+				"collaboratorsLabel_other": "{{count}} collaborators"
+			},
+			"collaborators": {
+				"addWholeTeam": "Add the whole team",
+				"help": "Collaborators can see and edit this dataset. Only people working on its study or project board can be added.",
+				"loading": "Loading the team…",
+				"noTeam": "This dataset is not linked to a study or project board, so it stays private to you.",
+				"notOnTeam": "(no longer on the team)",
+				"title": "Collaborators",
+				"noOneElse": "Nobody else works on this dataset's study or project board yet, so there is no one to add."
 			}
 		},
 		"export": {
@@ -1075,7 +1102,8 @@
 				"newCollectionTitle": "Unnamed journal collection",
 				"queryError": "Error loading templates: {{message}}",
 				"title": "Choose a journal template",
-				"useTemplate": "Use template"
+				"useTemplate": "Use template",
+				"liveDataBlocked": "Uses live study data, so it can't be copied yet. Only templates with static datasets can be used."
 			},
 			"workspaceMore": "Workspace options"
 		},
@@ -3209,5 +3237,47 @@
 		"switchConfirm": "Switch",
 		"unlinkInfo": "Unlink this study from the board? The study and the board are kept; only the link is removed.",
 		"joinsClass": "This study also joins {{class}}, so its teachers can follow it."
+	},
+	"studyBoardLinks": {
+		"title": "Study and project boards",
+		"rowLabel": "Project boards",
+		"manage": "Manage",
+		"onBoards": "On {{count}} board(s)",
+		"alsoOnStudy": "Also on this study ({{count}} boards)",
+		"noOtherBoards": "No other board uses this study.",
+		"projectBoards": "Project boards ({{count}})",
+		"noBoards": "This study is not on any project board.",
+		"studyPeople": "People on this study",
+		"viaBoard": "Via board · {{boards}}",
+		"you": "(you)",
+		"open": "Open ↗",
+		"addPeople": "+ Add people",
+		"addToStudy": "Also add to the study's collaborators:",
+		"markedAsMain": "Marked as main",
+		"connectBoard": "+ Connect a board",
+		"connectAnother": "+ Connect another board",
+		"noLinkableBoards": "There is no other board you can connect.",
+		"studentNotice": "Something look out of place? Reach out to your teacher.",
+		"unlinkTitle": "Unlink “{{study}}” from “{{board}}”?",
+		"thisWill": "This will:",
+		"role": {
+			"owner": "Owner",
+			"creator": "Creator",
+			"collaborator": "Collaborator"
+		},
+		"unlinkConsequence": {
+			"kept": "Remove the study from this board. The study and the board are both kept.",
+			"studyMain": "Clear the board's main study.",
+			"loseAccess": "Remove study edit access for: {{people}} (on this board, not study collaborators).",
+			"mainProject": "This board stays its students' main project, without a study.",
+			"datasets": "{{count}} data journal dataset(s) on this board keep reading this study's data.",
+			"dataCollection": "The study's data-collection stage stays as it is. If this board was its only supervised link, a teacher can reopen it."
+		},
+		"boardPeopleTitle": "Collaborators of “{{title}}”",
+		"studyPeopleTitle": "Collaborators of “{{title}}”",
+		"viaBoardHeader": "Access through a linked project board",
+		"thisBoard": "This board",
+		"peopleButton": "People and links",
+		"openStudentPage": "Click to open student page"
 	}
 }

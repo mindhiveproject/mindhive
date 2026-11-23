@@ -12,6 +12,8 @@ export default function DynamicExperimentWindow(props) {
   return (
     <>
       <DynamicLabjs {...props} />
+      {/* Media library images in survey text blocks: keep them inside the screen. */}
+      <style>{`[data-labjs-section="main"] img { max-width: 100%; height: auto; }`}</style>
       <div className="container fullscreen" data-labjs-section="main">
         <main className="content-vertical-center content-horizontal-center">
           <div>

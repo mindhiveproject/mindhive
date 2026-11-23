@@ -2,6 +2,8 @@ import { useQuery } from "@apollo/client";
 import { GET_USER } from "../../Queries/User";
 import Link from "next/link";
 
+import CopyButton from "../../DesignSystem/CopyButton";
+
 import StyledProfile from "../../styles/StyledProfile";
 
 import Participated from "./Participated";
@@ -35,7 +37,14 @@ export default function StudentPage({ query, user }) {
       <div className="headerProfile">
         <div>
           <h1>{profile?.publicReadableId}</h1>
-          <p>{profile?.email}</p>
+          {profile?.email && (
+            <CopyButton
+              value={profile.email}
+              ariaLabel={t("studentPage.copyEmail", {}, { default: "Copy email address" })}
+            >
+              {profile.email}
+            </CopyButton>
+          )}
         </div>
         <div>
           <img

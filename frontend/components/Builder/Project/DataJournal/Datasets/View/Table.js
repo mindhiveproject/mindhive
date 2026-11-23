@@ -86,8 +86,17 @@ export default function ProcessMain({
     }
   };
 
+  // A cell edit goes through the same path as every other change: saved in
+  // place for editors, the copy prompt for everyone else. The grid has
+  // already written the value into the row; a new array tells React.
+  const onCellValueChanged = () => {
+    if (readOnly) return;
+    updateDataset({ updatedData: [...data] });
+  };
+
   const gridOptions = {
     onFilterChanged: onFilterChanged,
+    onCellValueChanged: onCellValueChanged,
     onGridReady: onGridReady,
     suppressFieldDotNotation: true,
   };

@@ -42,37 +42,30 @@ const DATASET_SCOPE_META = {
   me: {
     i18nKey: "dataJournal.datasets.scopes.me",
     defaultLabel: "Me",
-    iconSrc: "/assets/icons/user.svg",
   },
   uploaded: {
     i18nKey: "dataJournal.datasets.scopes.uploaded",
     defaultLabel: "Uploaded",
-    iconSrc: "/assets/icons/uploaded.svg",
   },
   sharedWithMe: {
     i18nKey: "dataJournal.datasets.scopes.sharedWithMe",
     defaultLabel: "Shared with me",
-    iconSrc: "/assets/icons/share.svg",
   },
   myClass: {
     i18nKey: "dataJournal.datasets.scopes.myClass",
     defaultLabel: "My class",
-    iconSrc: "/assets/icons/education.svg",
   },
   classNetwork: {
     i18nKey: "dataJournal.datasets.scopes.classNetwork",
     defaultLabel: "Class network",
-    iconSrc: "/assets/icons/group.svg",
   },
   public: {
     i18nKey: "dataJournal.datasets.scopes.public",
     defaultLabel: "Public",
-    iconSrc: "/assets/icons/status/publicTemplate.svg",
   },
   simulated: {
     i18nKey: "dataJournal.datasets.scopes.simulated",
     defaultLabel: "Simulated",
-    iconSrc: "/assets/icons/code.svg",
   },
 };
 
@@ -102,7 +95,6 @@ export default function TopNavigation() {
       return {
         value: scope,
         label: tBuilder(meta.i18nKey, {}, { default: meta.defaultLabel }),
-        icon: <img src={meta.iconSrc} alt="" width="18" height="18" />,
       };
     });
 

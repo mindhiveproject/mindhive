@@ -13,6 +13,7 @@ import {
   canRenameDatasource,
   getDatasourceDeleteDisabledReason,
   getDatasourceListInclusionKind,
+  getDatasourceTeamAudience,
 } from "../../../../../lib/dataJournalDatasources";
 import { getLastUpdatedDate } from "../../../../../lib/dataJournalTimestamps";
 import { StyledDatasetCard } from "../styles/StyledDataJournal";
@@ -198,6 +199,53 @@ export default function DatasetCard({
         { default: "by {{author}}" },
       );
 
+  // Who besides classes/public can see it. A private dataset only shows its
+  // chip to its author: anyone else sees it through a class or public chip.
+  const teamAudience = getDatasourceTeamAudience(datasource);
+  const collaboratorCount = (datasource?.collaborators || []).length;
+  const audienceChip =
+    teamAudience === "team"
+      ? {
+          label: t("dataJournal.datasets.audience.teamLabel", {}, {
+            default: "Study & board team",
+          }),
+          tooltip: t("dataJournal.datasets.audience.teamTooltip", {}, {
+            default:
+              "Everyone working on this dataset's study and project board can see it.",
+          }),
+          iconSrc: "/assets/icons/group.svg",
+        }
+      : teamAudience === "collaborators"
+        ? {
+            label: t(
+              "dataJournal.datasets.audience.collaboratorsLabel",
+              { count: collaboratorCount },
+              {
+                default:
+                  collaboratorCount === 1
+                    ? "1 collaborator"
+                    : "{{count}} collaborators",
+              },
+            ),
+            tooltip: t("dataJournal.datasets.audience.collaboratorsTooltip", {}, {
+              default:
+                "Its author and the collaborators they picked can see and edit this dataset.",
+            }),
+            iconSrc: "/assets/icons/share.svg",
+          }
+        : authorIsUser
+          ? {
+              label: t("dataJournal.datasets.audience.privateLabel", {}, {
+                default: "Only you",
+              }),
+              tooltip: t("dataJournal.datasets.audience.privateTooltip", {}, {
+                default:
+                  "Only you can see this dataset. Edit it to add collaborators from your study and board team.",
+              }),
+              iconSrc: "/assets/icons/user.svg",
+            }
+          : null;
+
   const editLabel = t("dataJournal.datasets.editLabel", {}, {
     default: "Edit dataset",
   });
@@ -362,6 +410,25 @@ export default function DatasetCard({
                 />
               </span>
             </Tooltip>
+            {audienceChip ? (
+              <Tooltip content={audienceChip.tooltip} side="top">
+                <span style={{ display: "inline-flex" }}>
+                  <Chip
+                    label={audienceChip.label}
+                    leading={
+                      <img
+                        src={audienceChip.iconSrc}
+                        alt=""
+                        aria-hidden
+                        width={20}
+                        height={20}
+                      />
+                    }
+                    style={{ opacity: 0.8 }}
+                  />
+                </span>
+              </Tooltip>
+            ) : null}
             {canShare && sharedWithMyClassesCount > 0 ? (
               <Chip
                 label={t(

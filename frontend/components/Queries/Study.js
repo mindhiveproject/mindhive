@@ -669,46 +669,6 @@ export const GET_BLOCK_AGGVAR = gql`
   }
 `;
 
-// The study's author and the people on the project boards linked to it, who
-// can edit the study through their board (Connect modals).
-export const STUDY_LINKED_BOARD_PEOPLE = gql`
-  query STUDY_LINKED_BOARD_PEOPLE($id: ID!) {
-    study(where: { id: $id }) {
-      id
-      author {
-        id
-        username
-      }
-      proposal {
-        id
-        title
-        author {
-          ...LinkedBoardPerson
-        }
-        collaborators {
-          ...LinkedBoardPerson
-        }
-      }
-    }
-  }
-
-  # Avatar fields read by the Connect facepile (ConnectFacepile photoUrl).
-  fragment LinkedBoardPerson on Profile {
-    id
-    username
-    image {
-      id
-      keystoneImage {
-        id
-        url
-      }
-      image {
-        publicUrlTransformed
-      }
-    }
-  }
-`;
-
 // A study's data-collection lifecycle: whether a class milestone supervises
 // it, its stage, who shares it and what the viewer may change
 // (keystone/lib/studyDataCollection.js).

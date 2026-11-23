@@ -5,11 +5,38 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { saveDataLimiter } from "../../lib/api/rateLimit";
 import { validatePathSegment, assertWithinBase } from "../../lib/api/paths";
 import { isAuthenticated } from "../../lib/api/auth";
+import {
+  backendGraphqlAsCaller,
+  CAN_WRITE_DATASOURCE_FILE,
+} from "../../lib/api/graphql";
 
 // Data Journal file store: CSV/JSON uploads ("upload") and edited copies
 // ("modified"). Lab.js run results go through /api/save, which only accepts
 // server-issued run tokens. Files land where /api/data/[y]/[m]/[d]/[token]
 // reads them back.
+//
+// Writing a new file (a fresh token) only needs a signed-in user. Replacing
+// anything in an existing file folder needs ?datasource=<id> naming a dataset
+// that points at it and that the caller edits in place (its author, or a
+// collaborator while collaboratorsCanEdit is on) —
+// keystone/mutations/dataFileAccess.ts canWriteDatasourceFile.
+
+async function callerMayReplace(
+  req: NextApiRequest,
+  token: string,
+  datasourceId: string | null
+) {
+  if (!datasourceId || !req.headers.cookie) return false;
+  try {
+    const data = await backendGraphqlAsCaller(req, CAN_WRITE_DATASOURCE_FILE, {
+      datasourceId,
+      token,
+    });
+    return data?.canWriteDatasourceFile === true;
+  } catch {
+    return false;
+  }
+}
 
 export const config = {
   api: {
@@ -58,6 +85,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: "Invalid path parameters." });
   }
   const filePath = path.join(dir, `${payload}.json`);
+
+  const folderExists = await fs.promises
+    .stat(dir)
+    .then((st) => st.isDirectory())
+    .catch(() => false);
+  if (folderExists) {
+    const datasourceId =
+      typeof req.query.datasource === "string" ? req.query.datasource : null;
+    if (!(await callerMayReplace(req, id, datasourceId))) {
+      return res
+        .status(403)
+        .json({ error: "You cannot change this dataset's data." });
+    }
+  }
 
   try {
     await fs.promises.mkdir(dir, { recursive: true });

@@ -152,6 +152,8 @@ export function buildDatasourcesWhereForScope({
         AND: [
           { author: { id: { equals: userId } } },
           { dataOrigin: { equals: "UPLOADED" } },
+          // copies (of a teacher's or a template's dataset) sit under "Me"
+          { isCopy: { equals: false } },
         ],
       };
 
@@ -257,7 +259,8 @@ export function getDatasourceVisibilityScopes(datasource, context) {
   if (
     userId &&
     datasource?.author?.id === userId &&
-    datasource?.dataOrigin === "UPLOADED"
+    datasource?.dataOrigin === "UPLOADED" &&
+    !datasource?.isCopy
   ) {
     matched.push("uploaded");
   }
@@ -332,6 +335,38 @@ export function isDatasourceDeleteDisabled(datasource, userId) {
 }
 
 /**
+ * A live dataset reads its rows from a study as they come in (study and
+ * template origins); everything else is a static file. Only static datasets
+ * can be copied with a template journal for now: a copy cannot keep a live
+ * link to a study its maker does not work on.
+ * @param {{ dataOrigin?: string | null } | null | undefined} datasource
+ */
+export function isLiveDatasource(datasource) {
+  return (
+    datasource?.dataOrigin === "STUDY" || datasource?.dataOrigin === "TEMPLATE"
+  );
+}
+
+/**
+ * Who reaches a dataset besides classes and public (keystone/lib/
+ * datasourceAccess.js): "team" when the people on its study or project board
+ * can read it; otherwise "collaborators" when its author named some; otherwise
+ * "private" (its author alone — a fresh copy, or nothing to share with).
+ * @param {{ sharedWithTeam?: boolean | null, study?: { id?: string | null } | null, project?: { id?: string | null } | null, collaborators?: unknown[] | null } | null | undefined} datasource
+ * @returns {"team" | "collaborators" | "private"}
+ */
+export function getDatasourceTeamAudience(datasource) {
+  if (
+    datasource?.sharedWithTeam !== false &&
+    (datasource?.study?.id || datasource?.project?.id)
+  ) {
+    return "team";
+  }
+  if ((datasource?.collaborators || []).length > 0) return "collaborators";
+  return "private";
+}
+
+/**
  * @param {{ collaboratorsCanEdit?: boolean | null, collaborators?: Array<{ id?: string | null }> | null, author?: { id?: string | null } | null }} datasource
  * @param {string | undefined | null} userId
  */
@@ -342,16 +377,19 @@ export function isDatasourceEditableCollaborator(datasource, userId) {
 
 /**
  * @param {object} datasource
- * @param {{ userId?: string | null, currentVizPartId?: string | null }} context
+ * @param {{ userId?: string | null }} context
  * @returns {"editable" | "copyOnWrite" | "readOnly"}
  */
 export function getDatasourceWriteMode(datasource, context) {
-  const { userId, currentVizPartId } = context || {};
+  const { userId } = context || {};
   if (!userId) return "readOnly";
   if (datasource?.author?.id === userId) return "editable";
+  // Collaborators edit in place, shared dataset or not (they may still make a
+  // copy); everyone else edits a copy (mirrors the Datasource update rule).
   if (isDatasourceEditableCollaborator(datasource, userId)) return "editable";
-  if (currentVizPartId) return "copyOnWrite";
-  return "readOnly";
+  // Anyone else signed in edits a copy of their own, journal or not: a copy
+  // is attached to a journal only when the board has exactly one.
+  return "copyOnWrite";
 }
 
 /**

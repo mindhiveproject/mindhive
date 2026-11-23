@@ -34,10 +34,10 @@ To make this tutorial a bit easier to follow, we've broken it down into multiple
 
 #### Environmental variables
 ---
-5. (Optional) In the frontend folder, copy `.env.example` to `.env` to customize endpoints or add a `NOTION_KEY` — the defaults work for local development without any `.env` file.
-6. In the backend folder, copy [.env.example](./keystone/.env.example) to a `.env` file in that folder and fill in the values.
-7. Go to the keystone folder and run `npm run dev` The server should run on [http://localhost:4444](http://localhost:4444/).
-8. Go to the frontend folder and run `npm run dev`. The frontend should run on [http://localhost:3000](http://localhost:3000/)
+4. (Optional) In the frontend folder, copy `.env.example` to `.env` to customize endpoints or add a `NOTION_KEY` — the defaults work for local development without any `.env` file.
+5. In the backend folder, copy [.env.example](./keystone/.env.example) to a `.env` file in that folder and fill in the values.
+6. Go to the keystone folder and run `npm run dev` The server should run on [http://localhost:4444](http://localhost:4444/).
+7. Go to the frontend folder and run `npm run dev`. The frontend should run on [http://localhost:3000](http://localhost:3000/)
 
 
 ### Production

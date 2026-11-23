@@ -2522,17 +2522,6 @@
 			"create": "Create study",
 			"creating": "Creating"
 		},
-		"linkProject": {
-			"action": "Link to a project…",
-			"title": "Link “{{title}}” to a project",
-			"hint": "The project's students and mentors are added to the study as collaborators.",
-			"link": "Link study",
-			"replacesStudy": "This project is linked to “{{title}}”. Linking replaces it; that study is kept."
-		},
-		"unlinkProject": {
-			"action": "Unlink from “{{project}}”",
-			"confirm": "Unlink “{{study}}” from the project “{{project}}”? The study and its collaborators are kept."
-		},
 		"mentorsColumn": "Mentors",
 		"addMentors": "Add mentors",
 		"manageMentors": "Manage mentors",
@@ -2606,6 +2595,9 @@
 			"offStaysLocked": "{{count}} submitted or finished studies stay locked, with nothing supervising them. Reopening one makes it self-managed.",
 			"offSelfManaged": "{{count}} studies become self-managed: students label them freely and nothing locks.",
 			"offReconnect": "You can turn it back on at any time. Locked studies pick up where they were, and studies labelled Collecting data or Finished are carried over again. Activity is kept."
+		},
+		"projectBoards": {
+			"action": "Project boards…"
 		}
 	},
 	"studiesTab": "Studies",
@@ -2685,6 +2677,14 @@
 		"title": "Featured studies",
 		"visible": "Visible",
 		"visibleCount": "{{visible}} of {{total}} visible"
+	},
+	"studentCollaborators": {
+		"title": "Collaborators on student work",
+		"description": "Students can add and remove collaborators on their own project boards and studies.",
+		"enabledLabel": "Students can manage collaborators",
+		"disabledLabel": "Only teachers and mentors manage collaborators",
+		"hint": "Teachers and mentors can always manage collaborators. Turning this off does not remove collaborators already added.",
+		"updateError": "Failed to update the collaborators setting"
 	},
 	"taskSharing": {
 		"title": "Sharing between students",

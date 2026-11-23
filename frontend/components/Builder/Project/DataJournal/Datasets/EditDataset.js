@@ -5,6 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import Button from "../../../../DesignSystem/Button";
 import Tooltip from "../../../../DesignSystem/Tooltip";
 import DeleteConfirmModal from "../Helpers/DeleteConfirmModal";
+import CollaboratorPicker from "./CollaboratorPicker";
 import {
   UPDATE_DATASOURCE,
   DELETE_DATASOURCE,
@@ -17,6 +18,13 @@ import {
 export default function EditDataset({ dataset, user, onCancel, refetchDatasources }) {
   const { t } = useTranslation("builder");
   const [title, setTitle] = useState(dataset.title || "");
+  const initialCollaboratorIds = (dataset.collaborators || [])
+    .map((c) => c?.id)
+    .filter(Boolean);
+  const [collaboratorIds, setCollaboratorIds] = useState(initialCollaboratorIds);
+  const collaboratorsChanged =
+    collaboratorIds.length !== initialCollaboratorIds.length ||
+    collaboratorIds.some((id) => !initialCollaboratorIds.includes(id));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -39,13 +47,16 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
 
   const handleUpdate = () => {
     if (renameDisabled) return;
-    if (!title || title === dataset.title) return;
+    if (!title) return;
+    const data = {};
+    if (title !== dataset.title) data.title = title;
+    if (collaboratorsChanged) {
+      data.collaborators = { set: collaboratorIds.map((id) => ({ id })) };
+    }
+    if (!Object.keys(data).length) return;
     setLoading(true);
     updateDatasource({
-      variables: {
-        id: dataset.id,
-        data: { title },
-      },
+      variables: { id: dataset.id, data },
     }).finally(() => setLoading(false));
   };
 
@@ -85,7 +96,10 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
   };
 
   const saveDisabled =
-    renameDisabled || loading || !title || title === dataset.title;
+    renameDisabled ||
+    loading ||
+    !title ||
+    (title === dataset.title && !collaboratorsChanged);
 
   return (
     <div
@@ -116,7 +130,7 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
           color: "#4a5568",
         }}
       >
-        Update this dataset’s name or delete it if you no longer need it.
+        Update this dataset’s name and collaborators, or delete it if you no longer need it.
       </p>
 
       {error && (
@@ -197,6 +211,22 @@ export default function EditDataset({ dataset, user, onCancel, refetchDatasource
         >
           This name is shown in the dataset list and analysis views.
         </p>
+      </div>
+
+      {/* Who else can see and edit it: people picked from its team */}
+      <div style={{ marginBottom: "20px" }}>
+        <CollaboratorPicker
+          datasourceId={dataset.id}
+          current={dataset.collaborators || []}
+          selected={collaboratorIds}
+          onChange={setCollaboratorIds}
+          disabled={renameDisabled}
+          linked={Boolean(
+            dataset.study?.id ||
+              dataset.project?.id ||
+              (dataset.journal || []).length,
+          )}
+        />
       </div>
 
       {loading && (

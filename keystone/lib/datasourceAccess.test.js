@@ -73,7 +73,8 @@ function same(actual, expected) {
 function visibleTo(viewer) {
   const where = datasourceReadWhere(viewer);
   return Object.values(datasets)
-    .filter((row) => matches(row, where))
+    // every stored row has sharedWithTeam (NOT NULL DEFAULT true)
+    .filter((row) => matches({ sharedWithTeam: true, ...row }, where))
     .map((row) => row.id)
     .sort();
 }
@@ -142,4 +143,35 @@ test("only TESTER and ADMIN roles see simulated datasets", () => {
   assert.equal(canSeeSimulatedDatasets(role("ADMIN")), true);
   assert.equal(canSeeSimulatedDatasets(role("TEACHER")), false);
   assert.equal(canSeeSimulatedDatasets(undefined), false);
+});
+
+test("a private copy is visible to its author only, not the study or board team", () => {
+  const where = (viewer) => datasourceReadWhere(viewer);
+  const copy = {
+    id: "copy",
+    author: { id: "S1" },
+    sharedWithTeam: false,
+    study: { id: "st1" },
+    project: { author: { id: "S1" }, collaborators: [{ id: "S4" }] },
+  };
+  assert.equal(matches(copy, where({ me: "S1", studyIds: ["st1"] })), true);
+  // T researches st1 as class staff; S4 is on the board
+  assert.equal(matches(copy, where({ me: "T", studyIds: ["st1"] })), false);
+  assert.equal(matches(copy, where({ me: "S4" })), false);
+  // turned on, the team reaches it again
+  const shared = { ...copy, sharedWithTeam: true };
+  assert.equal(matches(shared, where({ me: "T", studyIds: ["st1"] })), true);
+  assert.equal(matches(shared, where({ me: "S4" })), true);
+});
+
+test("a named collaborator sees the dataset, even a private copy", () => {
+  const copy = {
+    id: "copy",
+    author: { id: "S1" },
+    sharedWithTeam: false,
+    project: { author: { id: "S1" }, collaborators: [{ id: "S4" }] },
+    collaborators: [{ id: "S4" }],
+  };
+  assert.equal(matches(copy, datasourceReadWhere({ me: "S4" })), true);
+  assert.equal(matches(copy, datasourceReadWhere({ me: "S2" })), false);
 });

@@ -9,17 +9,30 @@ import { UPDATE_PROJECT_BOARD } from "../../../../../Mutations/Proposal";
 import { OVERVIEW_PROPOSAL_BOARD_QUERY } from "../../../../../Queries/Proposal";
 import SecondMainWarning from "./SecondMainWarning";
 
+// Manages the collaborators of a board by default. Other objects (a study,
+// from the Links panel) pass `classIds` (whose members can be picked) and
+// `saveCollaborators({ connect, disconnect })`; `proposal` then only needs
+// `id` and `collaborators`.
 export default function AddCollaboratorModal({
   proposal,
   user,
   onClose,
   refetchQueries = [],
+  classIds: classIdsProp,
+  saveCollaborators,
+  title,
+  showMainWarning = true,
+  // Opened over a DesignSystem Modal (z-index 20050): raise the backdrop.
+  aboveModal = false,
 }) {
   const { t } = useTranslation("builder");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState([]);
 
-  const classId = proposal?.usedInClass?.id;
+  const classIds = (
+    classIdsProp || [proposal?.usedInClass?.id]
+  ).filter(Boolean);
+  const classId = classIds[0];
   const currentCollaborators = proposal?.collaborators || [];
 
   // Check if user is a student, mentor, or teacher
@@ -48,10 +61,10 @@ export default function AddCollaboratorModal({
   // while teachers/mentors still intersect with their own classes below.
   const proposalClassWhere = {
     OR: [
-      { studentIn: { some: { id: { equals: classId } } } },
-      { teacherIn: { some: { id: { equals: classId } } } },
-      { teachingTeamIn: { some: { id: { equals: classId } } } },
-      { mentorIn: { some: { id: { equals: classId } } } },
+      { studentIn: { some: { id: { in: classIds } } } },
+      { teacherIn: { some: { id: { in: classIds } } } },
+      { teachingTeamIn: { some: { id: { in: classIds } } } },
+      { mentorIn: { some: { id: { in: classIds } } } },
     ],
   };
 
@@ -106,6 +119,7 @@ export default function AddCollaboratorModal({
       (u) =>
         (!search || u.username.toLowerCase().includes(search.toLowerCase())) &&
         !selected.includes(u.id) &&
+        u.id !== proposal?.author?.id && // The owner is not a collaborator
         u.id !== user?.id // Always exclude current user from add options
     ) || [];
 
@@ -171,17 +185,24 @@ export default function AddCollaboratorModal({
         })
         .map((id) => ({ id }));
 
-      await updateProposalBoard({
-        variables: {
-          id: proposal?.id,
-          input: {
-            collaborators: {
-              connect: connectCollaborators,
-              disconnect: disconnectCollaborators,
+      if (saveCollaborators) {
+        await saveCollaborators({
+          connect: connectCollaborators,
+          disconnect: disconnectCollaborators,
+        });
+      } else {
+        await updateProposalBoard({
+          variables: {
+            id: proposal?.id,
+            input: {
+              collaborators: {
+                connect: connectCollaborators,
+                disconnect: disconnectCollaborators,
+              },
             },
           },
-        },
-      });
+        });
+      }
       onClose();
     } catch (err) {
       alert(
@@ -231,6 +252,7 @@ export default function AddCollaboratorModal({
       style={{ borderRadius: "12px", overflow: "hidden" }}
       closeOnDimmerClick
       closeOnEscape
+      {...(aboveModal && { dimmer: { style: { zIndex: 20100 } } })}
     >
       <Modal.Header
         className="MH-Type-Title-Large"
@@ -239,7 +261,7 @@ export default function AddCollaboratorModal({
           borderBottom: "1px solid #e0e0e0",
         }}
       >
-        {t("header.addCollaborator", "Add Collaborator")}
+        {title || t("header.addCollaborator", "Add Collaborator")}
       </Modal.Header>
       <Modal.Content scrolling style={{ background: "#ffffff", padding: "24px" }}>
         {(!userHasClasses || !classId) ? (
@@ -400,15 +422,17 @@ export default function AddCollaboratorModal({
               </div>
             )}
 
-            <div style={{ marginTop: "16px" }}>
-              <SecondMainWarning
-                boardId={proposal?.id}
-                classId={classId}
-                newIds={selected.filter(
-                  (id) => !currentCollaborators.some((c) => c.id === id)
-                )}
-              />
-            </div>
+            {showMainWarning && (
+              <div style={{ marginTop: "16px" }}>
+                <SecondMainWarning
+                  boardId={proposal?.id}
+                  classId={classId}
+                  newIds={selected.filter(
+                    (id) => !currentCollaborators.some((c) => c.id === id)
+                  )}
+                />
+              </div>
+            )}
 
             {error && (
               <div

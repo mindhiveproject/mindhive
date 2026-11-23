@@ -25,6 +25,8 @@ const DATASOURCE_LIST_FIELDS = gql`
       id
     }
     isPublic
+    sharedWithTeam
+    isCopy
     sharedWithClasses {
       id
     }
@@ -117,6 +119,7 @@ export const GET_DATASOURCE_CONTENT = gql`
         username
       }
       isPublic
+      sharedWithTeam
       sharedWithClasses {
         id
       }
@@ -128,5 +131,14 @@ export const GET_DATASOURCE_CONTENT = gql`
       createdAt
       updatedAt
     }
+  }
+`;
+
+// The people who may be added as collaborators on a dataset: its study's and
+// board's team, without its author, as [{ id, username }]
+// (keystone/lib/datasourceTeam.ts).
+export const GET_DATASOURCE_COLLABORATOR_CANDIDATES = gql`
+  query GET_DATASOURCE_COLLABORATOR_CANDIDATES($id: ID!) {
+    datasourceCollaboratorCandidates(datasourceId: $id)
   }
 `;

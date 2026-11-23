@@ -19,7 +19,13 @@ const ArrowDownIcon = () => (
   />
 );
 
-export default function Page({ items, timeout, hideContinueBtn, onChange }) {
+export default function Page({
+  items,
+  timeout,
+  hideContinueBtn,
+  onChange,
+  mediaProps,
+}) {
   const { t } = useTranslation("builder");
   const updateProps = ({ page, timeout, hideContinueBtn }) => {
     onChange({ page, timeout, hideContinueBtn });
@@ -217,6 +223,7 @@ export default function Page({ items, timeout, hideContinueBtn, onChange }) {
               totalItems={items.length}
               addNewOption={addNewOption}
               deleteOption={deleteOption}
+              mediaProps={mediaProps}
               t={t}
             />
           ))}
@@ -240,6 +247,7 @@ function Item({
   totalItems,
   addNewOption,
   deleteOption,
+  mediaProps,
   t,
 }) {
   const {
@@ -514,6 +522,8 @@ function Item({
             }
             isEditable
             toolbarVisible
+            mediaLibraryId={mediaProps?.mediaLibraryId || null}
+            mediaLibrarySource={mediaProps?.mediaLibrarySource || null}
           />
         )}
       </div>

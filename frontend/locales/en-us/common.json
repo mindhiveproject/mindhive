@@ -548,5 +548,8 @@
 	},
 	"share": {
 		"cardAction": "Share a copy"
+	},
+	"studentPage": {
+		"copyEmail": "Copy email address"
 	}
 }

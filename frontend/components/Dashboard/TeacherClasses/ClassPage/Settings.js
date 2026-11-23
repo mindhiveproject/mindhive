@@ -50,6 +50,13 @@ function getStudentTaskSharing(settings) {
   return settings?.allowStudentTaskSharing === true;
 }
 
+// Students may add and remove collaborators on their own project boards and
+// studies only once a teacher turns it on; unset means off
+// (frontend/lib/studyBoardLinks.js reads the same key).
+function getStudentsManageCollaborators(settings) {
+  return settings?.studentsManageCollaborators === true;
+}
+
 function getPhysiologicalDataEnabled(settings) {
   return settings?.physiologicalDataEnabled === true;
 }
@@ -93,6 +100,8 @@ export default function Settings({ myclass, user }) {
   const [studentTaskSharing, setStudentTaskSharing] = useState(() =>
     getStudentTaskSharing(myclass?.settings)
   );
+  const [studentsManageCollaborators, setStudentsManageCollaborators] =
+    useState(() => getStudentsManageCollaborators(myclass?.settings));
   const [physiologicalDataEnabled, setPhysiologicalDataEnabled] = useState(() =>
     getPhysiologicalDataEnabled(myclass?.settings)
   );
@@ -111,6 +120,12 @@ export default function Settings({ myclass, user }) {
   useEffect(() => {
     setStudentTaskSharing(getStudentTaskSharing(myclass?.settings));
   }, [myclass?.settings?.allowStudentTaskSharing]);
+
+  useEffect(() => {
+    setStudentsManageCollaborators(
+      getStudentsManageCollaborators(myclass?.settings)
+    );
+  }, [myclass?.settings?.studentsManageCollaborators]);
 
   useEffect(() => {
     setPhysiologicalDataEnabled(
@@ -229,6 +244,31 @@ export default function Settings({ myclass, user }) {
         err?.message ||
           t("passwordResetEmailUpdateError", {}, {
             default: "Failed to update password reset email setting",
+          })
+      );
+    });
+  };
+
+  const updateStudentsManageCollaborators = (enabled) => {
+    const previousValue = studentsManageCollaborators;
+    setStudentsManageCollaborators(enabled);
+    const existingSettings =
+      myclass?.settings && typeof myclass.settings === "object"
+        ? myclass.settings
+        : {};
+    updateClassSettings({
+      variables: {
+        settings: {
+          ...existingSettings,
+          studentsManageCollaborators: enabled,
+        },
+      },
+    }).catch((err) => {
+      setStudentsManageCollaborators(previousValue);
+      alert(
+        err?.message ||
+          t("studentCollaborators.updateError", {}, {
+            default: "Failed to update the collaborators setting",
           })
       );
     });
@@ -559,6 +599,12 @@ export default function Settings({ myclass, user }) {
     {
       id: "settings-task-sharing",
       label: t("taskSharing.title", {}, { default: "Sharing between students" }),
+    },
+    {
+      id: "settings-student-collaborators",
+      label: t("studentCollaborators.title", {}, {
+        default: "Collaborators on student work",
+      }),
     },
     {
       id: "settings-studies",
@@ -976,6 +1022,49 @@ export default function Settings({ myclass, user }) {
                 {t("taskSharing.hint", {}, {
                   default:
                     "Teachers and mentors can always share with the class. Turning this off does not remove copies students already added.",
+                })}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="settingsSection" id="settings-student-collaborators">
+          <div className="settingsSectionHeader">
+            <h3>
+              {t("studentCollaborators.title", {}, {
+                default: "Collaborators on student work",
+              })}
+            </h3>
+            <p>
+              {t("studentCollaborators.description", {}, {
+                default:
+                  "Students can add and remove collaborators on their own project boards and studies.",
+              })}
+            </p>
+          </div>
+          <div className="informationBlock">
+            <div className="block curriculumTypeBlock">
+              <ToggleSwitch
+                checked={studentsManageCollaborators}
+                loading={updatingSettings}
+                onChange={updateStudentsManageCollaborators}
+                label={
+                  studentsManageCollaborators
+                    ? t("studentCollaborators.enabledLabel", {}, {
+                        default: "Students can manage collaborators",
+                      })
+                    : t("studentCollaborators.disabledLabel", {}, {
+                        default: "Only teachers and mentors manage collaborators",
+                      })
+                }
+                aria-label={t("studentCollaborators.title", {}, {
+                  default: "Collaborators on student work",
+                })}
+              />
+              <p className="classDescriptionSettingsHint">
+                {t("studentCollaborators.hint", {}, {
+                  default:
+                    "Teachers and mentors can always manage collaborators. Turning this off does not remove collaborators already added.",
                 })}
               </p>
             </div>

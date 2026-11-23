@@ -235,7 +235,14 @@ export default function useDatasourceData({ datasource, user }) {
   const isUploadLike =
     !isInlineSimulated &&
     (dataOrigin === "UPLOADED" || dataOrigin === "SIMULATED");
-  const uploadedAddr = isUploadLike ? content?.uploaded?.address : null;
+  // An edited file lives at modified.address. Saving in place the first time
+  // writes next to the upload, so for most datasets both match; a copy has
+  // its own address, which reading uploaded.address used to miss.
+  const uploadedAddr = isUploadLike
+    ? (content?.isModified && content?.modified?.address?.token
+        ? content.modified.address
+        : content?.uploaded?.address)
+    : null;
   const uploadType = content?.isModified
     ? "modified"
     : dataOrigin === "SIMULATED"

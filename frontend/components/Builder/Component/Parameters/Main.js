@@ -5,6 +5,7 @@ import ArrayParameter from "./Types/Array";
 import useTranslation from "next-translate/useTranslation";
 import Chip from "../../../DesignSystem/Chip";
 import { assetParameterDefinitions } from "../../../../lib/runtime/runtimeAsset";
+import { taskMediaLibraryProps } from "../../../Mutations/MediaAsset";
 
 function isEmptySurveyValue(value) {
   if (value == null || value === "") return true;
@@ -20,6 +21,11 @@ export default function TaskParameters({
   isInStudyBuilder,
 }) {
   const { t } = useTranslation("builder");
+  // Survey text blocks can insert images from the user's media library.
+  const mediaProps = taskMediaLibraryProps({
+    userId: user?.id,
+    taskId: task?.id,
+  });
   // The runtime asset's definitions: a Lab.js template or a jsPsych version.
   const templateParameters = assetParameterDefinitions(task);
   const rawParameters = task?.parameters?.length
@@ -104,6 +110,7 @@ export default function TaskParameters({
             name={name}
             content={value}
             onChange={handleParameterChange}
+            mediaProps={mediaProps}
           />
         );
       case "array":

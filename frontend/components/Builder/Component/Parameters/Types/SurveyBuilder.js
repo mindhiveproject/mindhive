@@ -125,7 +125,7 @@ function parseSurveyPages(content) {
 }
 
 // it holds all pages and displays the currently active page on the screen with surveyPageBuilder
-export default function SurveyBuilder({ name, content, onChange }) {
+export default function SurveyBuilder({ name, content, onChange, mediaProps }) {
   const { t } = useTranslation("builder");
   const [pages, setPages] = useState(() => parseSurveyPages(content));
   const [currentPageNumber, setCurrentPageNumber] = useState(0);
@@ -255,6 +255,7 @@ export default function SurveyBuilder({ name, content, onChange }) {
           timeout={pages[currentPageNumber]?.timeout || undefined}
           hideContinueBtn={pages[currentPageNumber]?.hideContinueBtn || false}
           onChange={updatePages}
+          mediaProps={mediaProps}
         />
       )}
     </div>

@@ -179,6 +179,8 @@ function useJustJoined(presence) {
 export default function ConnectFacepile({
   collaborators = [],
   presence = null,
+  // Avatars shown before a "+N" chip for the rest.
+  max = 5,
   children,
 }) {
   const { t } = useTranslation("builder");
@@ -191,11 +193,13 @@ export default function ConnectFacepile({
         ...collaborators.filter((c) => !isHere(c)),
       ]
     : collaborators;
+  const shown = ordered.slice(0, max);
+  const hidden = ordered.slice(max);
 
   return (
     <div className="connectFacepile" style={WRAPPER_STYLE}>
       <style dangerouslySetInnerHTML={{ __html: FACEPILE_CSS }} />
-      {ordered.map((collaborator, index) => {
+      {shown.map((collaborator, index) => {
         const src = photoUrl(collaborator);
         const here = presence?.[collaborator?.id];
         const ringed = here && !here.self;
@@ -222,7 +226,7 @@ export default function ConnectFacepile({
               flexShrink: 0,
               marginRight: -CONNECT_FACEPILE_OVERLAP_PX,
               // with presence the people here sit on top, so their rings show
-              zIndex: presence ? ordered.length - index : index + 1,
+              zIndex: presence ? shown.length - index : index + 1,
               position: "relative",
             }}
           >
@@ -251,7 +255,27 @@ export default function ConnectFacepile({
           </span>
         );
       })}
-      <span style={{ position: "relative", zIndex: ordered.length + 1 }}>
+      {hidden.length > 0 && (
+        <span
+          style={{
+            display: "inline-flex",
+            flexShrink: 0,
+            marginRight: -CONNECT_FACEPILE_OVERLAP_PX,
+            zIndex: shown.length + 1,
+            position: "relative",
+          }}
+        >
+          <Tooltip
+            content={hidden.map((c) => c?.username).filter(Boolean).join(", ")}
+            side="bottom"
+          >
+            <span className="connectFacepileAvatar" style={AVATAR_BASE_STYLE}>
+              +{hidden.length}
+            </span>
+          </Tooltip>
+        </span>
+      )}
+      <span style={{ position: "relative", zIndex: shown.length + 2 }}>
         {children}
       </span>
     </div>
