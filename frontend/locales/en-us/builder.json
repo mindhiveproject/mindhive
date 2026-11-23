@@ -3247,6 +3247,8 @@
 		},
 		"boardPeopleTitle": "Collaborators of “{{title}}”",
 		"studyPeopleTitle": "Collaborators of “{{title}}”",
-		"viaBoardHeader": "Access through a linked project board"
+		"viaBoardHeader": "Access through a linked project board",
+		"thisBoard": "This board",
+		"peopleButton": "People and links"
 	}
 }

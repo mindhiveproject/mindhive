@@ -88,6 +88,48 @@ export const canActOnStudy = (study, user) =>
   isOnStudy(study, user?.id) || isStudyStaff(study, user);
 
 /**
+ * Whether a class lets its students manage the collaborators of their own
+ * boards and studies. A class setting comes next; until then only staff do.
+ */
+// eslint-disable-next-line no-unused-vars
+export const classLetsStudentsManagePeople = (classIds) => false;
+
+/**
+ * May the user add or remove collaborators on a board or study? Class staff
+ * always; people on it when it has no class, or when its class allows it.
+ */
+export function canManagePeople({ kind, object, user }) {
+  if (kind === "board") {
+    if (isBoardStaff(object, user)) return true;
+    if (!isOnBoard(object, user?.id)) return false;
+    const classId = object?.usedInClass?.id;
+    return !classId || classLetsStudentsManagePeople([classId]);
+  }
+  if (isStudyStaff(object, user)) return true;
+  if (!isOnStudy(object, user?.id)) return false;
+  const classIds = [...studyClassIds(object)];
+  return !classIds.length || classLetsStudentsManagePeople(classIds);
+}
+
+/**
+ * Who the header facepile shows. On a board: its author and collaborators.
+ * On a study: everyone who edits it as author, collaborator or through a
+ * linked board (class staff are assumed and left out). Each person once.
+ */
+export function facepilePeople({ board, study }) {
+  const people = board
+    ? [board.author, ...(board.collaborators || [])]
+    : [
+        study?.author,
+        ...(study?.collaborators || []),
+        ...(study?.proposal || []).flatMap((b) => [b?.author, ...(b?.collaborators || [])]),
+      ];
+  return people.filter(
+    (p, i, all) => p?.id && all.findIndex((x) => x?.id === p.id) === i
+  );
+}
+
+/**
  * One list for an object's people, each once with its roles:
  * "owner" (author), "creator" (only when not the author) and "collaborator".
  */

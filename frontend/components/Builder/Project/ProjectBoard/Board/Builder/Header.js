@@ -12,16 +12,14 @@ import exportPDF from "../PDF/exportPDF";
 
 import Button from "../../../../../DesignSystem/Button";
 import ButtonGroup from "../../../../../DesignSystem/ButtonGroup";
-import Chip from "../../../../../DesignSystem/Chip";
 import IconButton from "../../../../../DesignSystem/IconButton";
 import Tooltip from "../../../../../DesignSystem/Tooltip";
 import MainProjectChip from "./MainProjectChip";
-import { AddIcon, PencilIcon } from "../../../../../DesignSystem/Icons";
+import { LinkIcon, LinkOffIcon, PencilIcon } from "../../../../../DesignSystem/Icons";
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 
-import AddCollaboratorModal from "./AddCollaboratorModal";
 import { isClassTemplateBoard } from "../../../../../Utils/proposalBoard";
 
 // Inlined so it inherits the Button label color via currentColor (the imported
@@ -45,6 +43,7 @@ const ListViewIcon = (
 );
 
 const NEUTRAL_LABEL_COLOR = "var(--MH-Theme-Neutrals-Black, #171717)";
+const STUDY_LINK_ICON = { width: 20, height: 20 };
 
 export default function ProposalHeader({
   user,
@@ -63,10 +62,8 @@ export default function ProposalHeader({
   const client = useApolloClient();
   const titleInputRef = useRef(null);
   const isLinked = !!proposal?.study?.id;
-  const collaborators = proposal?.collaborators || [];
   const proposalId = proposal?.id;
   const [isTitleEditing, setIsTitleEditing] = useState(false);
-  const [showCollaboratorModal, setShowCollaboratorModal] = useState(false);
 
   // save and edit the study information
   const { inputs, handleChange, toggleBoolean, toggleSettingsBoolean } =
@@ -126,19 +123,6 @@ export default function ProposalHeader({
         selectedAssignedUsers,
         router.locale
       );
-    }
-  };
-
-  const handleAddCollaboratorClick = () => {
-    // Show modal if user has classes and proposal has a class
-    const userHasClasses = 
-      (user?.studentIn?.length > 0) ||
-      (user?.mentorIn?.length > 0) ||
-      (user?.teacherIn?.length > 0) ||
-      (user?.teachingTeamIn?.length > 0);
-    
-    if (userHasClasses) {
-      setShowCollaboratorModal(true);
     }
   };
 
@@ -290,12 +274,11 @@ export default function ProposalHeader({
                   })}
                 >
                   <div className="studyLinkChipContent">
-                    <img
-                      src={isLinked ? "/assets/icons/project/builder.svg" : "/assets/icons/unlink.svg"}
-                      alt=""
-                      aria-hidden="true"
-                      className="studyLinkIcon"
-                    />
+                    {isLinked ? (
+                      <LinkIcon aria-hidden="true" className="studyLinkIcon" style={STUDY_LINK_ICON} />
+                    ) : (
+                      <LinkOffIcon aria-hidden="true" className="studyLinkIcon" style={STUDY_LINK_ICON} />
+                    )}
                     <span>
                       {isLinked
                         ? t("header.studyLinked", {}, { default: "Linked" })
@@ -305,33 +288,6 @@ export default function ProposalHeader({
                 </button>
                 <MainProjectChip proposalId={proposal?.id} user={user} />
 
-                <div className="collaboratorArray">
-                  {collaborators.map((collab) => (
-                    <Chip
-                      key={collab?.id}
-                      variant="static"
-                      tone="neutral"
-                      label={collab?.username || ""}
-                      title={collab?.username || ""}
-                    />
-                  ))}
-                  {(() => {
-                    const userHasClasses = 
-                      (user?.studentIn?.length > 0) ||
-                      (user?.mentorIn?.length > 0) ||
-                      (user?.teacherIn?.length > 0) ||
-                      (user?.teachingTeamIn?.length > 0);
-                    
-                    return userHasClasses ? (
-                      <IconButton
-                        variant="text"
-                        icon={<AddIcon style={{ color: NEUTRAL_LABEL_COLOR, width: "18px", height: "18px" }} />}
-                        ariaLabel={t("header.addCollaborator", {}, { default: "Add collaborator" })}
-                        onClick={handleAddCollaboratorClick}
-                      />
-                    ) : null;
-                  })()}
-                </div>
               </div>
             </div>
 
@@ -498,14 +454,6 @@ export default function ProposalHeader({
           </div>
         )}
       </div>
-      {showCollaboratorModal && (
-        <AddCollaboratorModal
-          proposal={proposal}
-          user={user}
-          onClose={() => setShowCollaboratorModal(false)}
-          refetchQueries={refetchQueries}
-        />
-      )}
     </div>
   );
 }

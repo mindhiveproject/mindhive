@@ -4,6 +4,17 @@ const PERSON = gql`
   fragment StudyBoardLinksPerson on Profile {
     id
     username
+    # Avatar fields read by the header facepile (ConnectFacepile photoUrl).
+    image {
+      id
+      keystoneImage {
+        id
+        url
+      }
+      image {
+        publicUrlTransformed
+      }
+    }
   }
 `;
 
@@ -181,7 +192,6 @@ export const STUDY_BOARD_LINKS_REFETCH = [
   "LINKABLE_STUDIES",
   "STUDY_CLASSES",
   "STUDY_PROPOSALS_QUERY",
-  "STUDY_LINKED_BOARD_PEOPLE",
   "GET_PROJECT_STUDY",
   "PROPOSAL_QUERY",
   "MY_STUDY",

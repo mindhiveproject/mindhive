@@ -16,12 +16,14 @@ import {
   canActOnBoard,
   canActOnLink,
   canActOnStudy,
+  canManagePeople,
   isBoardStaff,
   isOnBoard,
   isOnStudy,
   isStudyStaff,
   peopleWithRoles,
   staffedStudyClassIds,
+  studyClassIds,
   unlinkConsequences,
   viaBoardPeople,
 } from "../../../../lib/studyBoardLinks";
@@ -66,6 +68,9 @@ export default function StudyBoardLinksPanel({
   user,
   studyId: studyIdProp,
   boardId,
+  // Study view inside a board's builder: that board, whose "Open" goes to it
+  // in this tab instead of a new one.
+  currentBoardId,
   // Called after the context board's study changed (switched or unlinked),
   // e.g. so the builder reloads on it.
   onContextBoardChanged,
@@ -157,11 +162,11 @@ export default function StudyBoardLinksPanel({
   // Put `targetStudy` on `board` (replacing its study, if any). The study
   // joins the board's class, the picked people join the study, and the
   // board's main study follows the switch.
-  const link = ({ board, targetStudy, studyClassIds, peopleIds }) =>
+  const link = ({ board, targetStudy, targetClassIds, peopleIds }) =>
     run(
       async () => {
         const classId = board.usedInClass?.id;
-        const joinsClass = classId && !studyClassIds.includes(classId);
+        const joinsClass = classId && !targetClassIds.includes(classId);
         if (joinsClass || peopleIds.length) {
           await updateStudy({
             variables: {
@@ -230,16 +235,30 @@ export default function StudyBoardLinksPanel({
     </div>
   );
 
+  // Whose members the collaborator modal offers: the object's class(es) —
+  // for staff, the ones they teach — or, without a class, the viewer's own.
+  const peopleClassIds = ({ kind, object }) => {
+    if (kind === "board" && object.usedInClass?.id) return [object.usedInClass.id];
+    if (kind === "study") {
+      const staffed = staffedStudyClassIds(object, user);
+      if (staffed.length) return staffed;
+      const own = [...studyClassIds(object)];
+      if (own.length) return own;
+    }
+    return [
+      ...(user?.studentIn || []),
+      ...(user?.teacherIn || []),
+      ...(user?.teachingTeamIn || []),
+      ...(user?.mentorIn || []),
+    ].map((c) => c?.id).filter(Boolean);
+  };
+
   const peopleModal = peopleFor ? (
     <AddCollaboratorModal
       proposal={peopleFor.object}
       user={user}
       onClose={() => setPeopleFor(null)}
-      classIds={
-        peopleFor.kind === "board"
-          ? [peopleFor.object.usedInClass?.id].filter(Boolean)
-          : staffedStudyClassIds(study, user)
-      }
+      classIds={peopleClassIds(peopleFor)}
       showMainWarning={peopleFor.kind === "board"}
       aboveModal
       title={
@@ -291,7 +310,15 @@ export default function StudyBoardLinksPanel({
           {!action && (
             <span className="itemActions">
               {canOpen && board.id !== boardId && (
-                <Button variant="text" style={ROW_BUTTON} onClick={() => window.open(boardHref(board.id), "_blank", "noopener")}>
+                <Button
+                  variant="text"
+                  style={ROW_BUTTON}
+                  onClick={() =>
+                    board.id === currentBoardId
+                      ? window.location.assign(boardHref(board.id))
+                      : window.open(boardHref(board.id), "_blank", "noopener")
+                  }
+                >
                   {t("studyBoardLinks.open", {}, { default: "Open ↗" })}
                 </Button>
               )}
@@ -303,7 +330,7 @@ export default function StudyBoardLinksPanel({
             </span>
           )}
         </div>
-        {people({ kind: "board", object: board, canManage: isBoardStaff(board, user) })}
+        {people({ kind: "board", object: board, canManage: canManagePeople({ kind: "board", object: board, user }) })}
         {isActive("unlink", key) && (
           <Confirm
             title={t(
@@ -350,7 +377,7 @@ export default function StudyBoardLinksPanel({
 
   const connectBoardButton =
     study && canActOnStudy(study, user) && !action ? (
-      <Button variant="primary" onClick={() => setAction({ type: "connectBoard", key: "connect" })}>
+      <Button variant="filled" onClick={() => setAction({ type: "connectBoard", key: "connect" })}>
         {boards.length
           ? t("studyBoardLinks.connectAnother", {}, { default: "+ Connect another board" })
           : t("studyBoardLinks.connectBoard", {}, { default: "+ Connect a board" })}
@@ -371,7 +398,7 @@ export default function StudyBoardLinksPanel({
           link({
             board,
             targetStudy: study,
-            studyClassIds: study.classes.map((c) => c.id),
+            targetClassIds: study.classes.map((c) => c.id),
             peopleIds,
           })
         }
@@ -396,7 +423,7 @@ export default function StudyBoardLinksPanel({
           link({
             board: contextBoard,
             targetStudy,
-            studyClassIds: targetStudy.classes.map((c) => c.id),
+            targetClassIds: targetStudy.classes.map((c) => c.id),
             peopleIds,
           })
         }
@@ -406,6 +433,24 @@ export default function StudyBoardLinksPanel({
 
     return (
       <StyledPanel>
+        <section>
+          <h3 className="MH-Type-Title-Small">
+            {t("studyBoardLinks.thisBoard", {}, { default: "This board" })}
+          </h3>
+          <div className="item">
+            <div className="itemTitle">
+              {boardTitle(contextBoard)}
+              {boardChips(contextBoard).length > 0 && (
+                <span className="chips">{boardChips(contextBoard)}</span>
+              )}
+            </div>
+            {people({
+              kind: "board",
+              object: contextBoard,
+              canManage: canManagePeople({ kind: "board", object: contextBoard, user }),
+            })}
+          </div>
+        </section>
         <section>
           <h3 className="MH-Type-Title-Small">
             {t("studyOptions.linkedStudy", {}, { default: "Linked study" })}
@@ -450,7 +495,7 @@ export default function StudyBoardLinksPanel({
                   </span>
                 )}
               </div>
-              {people({ kind: "study", object: study, canManage: isStudyStaff(study, user) })}
+              {people({ kind: "study", object: study, canManage: canManagePeople({ kind: "study", object: study, user }) })}
               {changeForm}
               {contextLinked && isActive("unlink", `unlink:${boardId}`) && (
                 <Confirm
@@ -535,7 +580,7 @@ export default function StudyBoardLinksPanel({
         <h3 className="MH-Type-Title-Small">
           {t("studyBoardLinks.studyPeople", {}, { default: "People on this study" })}
         </h3>
-        {people({ kind: "study", object: study, canManage: isStudyStaff(study, user) })}
+        {people({ kind: "study", object: study, canManage: canManagePeople({ kind: "study", object: study, user }) })}
         {via.length > 0 && (
           <p className="MH-Type-Label-Small note subhead">
             {t("studyBoardLinks.viaBoardHeader", {}, {

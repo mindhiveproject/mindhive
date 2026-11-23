@@ -5,9 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
 import useTranslation from "next-translate/useTranslation";
 
-import ConnectProject from "./Connect/Main";
-import ConnectStudy from "./ConnectStudy/Main";
-import ConnectStudyOnly from "../../Study/Navigation/Connect/Main";
+import PeopleButton from "../../shared/StudyBoardLinks/PeopleButton";
 
 import { PROPOSAL_QUERY } from "../../../Queries/Proposal";
 import { MY_STUDY } from "../../../Queries/Study";
@@ -277,25 +275,27 @@ export default function Navigation({
           </span>
         )}
 
+        {/* People: the board's on the board tab, the study's elsewhere
+            (lib/studyBoardLinks.js facepilePeople). */}
         {mode === "project" &&
-          (tab === "board" ? (
-            <ConnectProject project={project} user={user} />
+          (tab === "board" || !project?.study?.id ? (
+            <PeopleButton user={user} boardId={project?.id} hasUnsavedChanges={hasStudyChanged} />
           ) : (
-            <ConnectStudy
-              study={project?.study}
+            <PeopleButton
               user={user}
-              projectId={project?.id}
+              studyId={project.study.id}
+              currentBoardId={project.id}
               presence={presence}
+              hasUnsavedChanges={hasStudyChanged}
             />
           ))}
 
         {mode === "study" && (
-          <ConnectStudyOnly
-            study={study}
+          <PeopleButton
             user={user}
-            modalOpen={connectModalOpen}
-            onModalOpenChange={onConnectModalOpenChange}
+            studyId={study?.id}
             presence={presence}
+            hasUnsavedChanges={hasStudyChanged}
           />
         )}
 
@@ -308,10 +308,15 @@ export default function Navigation({
           linkSection={
             mode === "project" && tab === "board"
               ? "study"
-              : ["builder", "page", "collect"].includes(tab)
+              : ["builder", "page", "collect"].includes(tab) ||
+                // the study builder's own board tab ("Connect to class")
+                (mode === "study" && tab === "board") ||
+                connectModalOpen
               ? "class"
               : null
           }
+          classEditRequest={!!connectModalOpen}
+          onClassEditHandled={() => onConnectModalOpenChange?.(false)}
           variant="popover"
         />
 
