@@ -145,11 +145,16 @@ export default function Menu({
   updateDataset,
   onVariableChange,
   writeMode,
+  canCopy = false,
+  onRequestCopy,
+  copyJournalTitle = null,
   copyModalOpen,
   onCopyModalClose,
   onConfirmCopy,
-  collaboratorsCanEditOnCopy,
-  onCollaboratorsCanEditOnCopyChange,
+  shareWithTeamOnCopy,
+  onShareWithTeamOnCopyChange,
+  copyTitle = "",
+  onCopyTitleChange,
   saving,
 }) {
   const { t } = useTranslation("builder");
@@ -341,7 +346,7 @@ export default function Menu({
     {},
     {
       default:
-        "Open this journal from a workspace to edit or copy this dataset.",
+        "Sign in to make your own copy of this dataset and edit it.",
     },
   );
 
@@ -350,10 +355,27 @@ export default function Menu({
       <DeleteConfirmModal
         open={copyModalOpen}
         title=""
-        message={t("dataJournal.datasets.copyConfirm.message", {}, {
-          default:
-            "A new dataset you own will be created with your changes and linked to this journal. Journal collaborators can be given access below.",
-        })}
+        message={
+          copyJournalTitle !== null
+            ? t(
+                "dataJournal.datasets.copyConfirm.linkedMessage",
+                {
+                  journal:
+                    copyJournalTitle ||
+                    t("dataJournal.datasets.copyConfirm.untitledJournal", {}, {
+                      default: "your journal",
+                    }),
+                },
+                {
+                  default:
+                    "A copy of this dataset, including any changes you made, will be created and attached to the journal “{{journal}}”. It is yours alone unless you share it with your team below.",
+                },
+              )
+            : t("dataJournal.datasets.copyConfirm.unlinkedMessage", {}, {
+                default:
+                  "A copy of this dataset, including any changes you made, will be created. It is not attached to a journal (you have none, or several): add it from a journal's data sources. It is yours alone unless you share it with your team below.",
+              })
+        }
         confirmLabel={t("dataJournal.datasets.copyConfirm.confirm", {}, {
           default: "Save copy",
         })}
@@ -362,6 +384,29 @@ export default function Menu({
         onClose={onCopyModalClose}
         onConfirm={onConfirmCopy}
         extraContent={
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <label
+            className="MH-Type-Label-Base"
+            style={{ display: "flex", flexDirection: "column", gap: 6 }}
+          >
+            <span>
+              {t("dataJournal.datasets.copyConfirm.nameLabel", {}, {
+                default: "Name of your copy",
+              })}
+            </span>
+            <input
+              className="MH-Type-Body-Base"
+              type="text"
+              value={copyTitle}
+              onChange={(e) => onCopyTitleChange?.(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "8px 10px",
+                borderRadius: "6px",
+                border: "1px solid #cbd5e0",
+              }}
+            />
+          </label>
           <label
             className="MH-Type-Label-Base"
             style={{
@@ -373,17 +418,19 @@ export default function Menu({
           >
             <input
               type="checkbox"
-              checked={collaboratorsCanEditOnCopy}
+              checked={shareWithTeamOnCopy}
               onChange={(e) =>
-                onCollaboratorsCanEditOnCopyChange(e.target.checked)
+                onShareWithTeamOnCopyChange(e.target.checked)
               }
             />
             <span>
-              {t("dataJournal.datasets.sharing.allowEditingLabel", {}, {
-                default: "Allow journal collaborators to edit this copy",
+              {t("dataJournal.datasets.sharing.shareWithTeamOnCopyLabel", {}, {
+                default:
+                  "Add the people working on this study and board as collaborators",
               })}
             </span>
           </label>
+          </div>
         }
       />
 
@@ -467,6 +514,19 @@ export default function Menu({
           variables={variables}
           updateDataset={updateDataset}
         />
+        {canCopy ? (
+          <button
+            type="button"
+            className="toolbarChip"
+            onClick={onRequestCopy}
+          >
+            <span>
+              {t("dataJournal.datasetMenu.actions.makeCopy", {}, {
+                default: "Make a copy",
+              })}
+            </span>
+          </button>
+        ) : null}
         <button
           type="button"
           className="toolbarChip"

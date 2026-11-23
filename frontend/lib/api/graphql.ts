@@ -70,6 +70,12 @@ export const READABLE_DATASET_TOKENS = `
   }
 `;
 
+export const CAN_WRITE_DATASOURCE_FILE = `
+  query CAN_WRITE_DATASOURCE_FILE($datasourceId: ID!, $token: String!) {
+    canWriteDatasourceFile(datasourceId: $datasourceId, token: $token)
+  }
+`;
+
 export const CAN_READ_DATASOURCE_FILE = `
   query CAN_READ_DATASOURCE_FILE($datasourceId: ID!, $token: String!) {
     canReadDatasourceFile(datasourceId: $datasourceId, token: $token)

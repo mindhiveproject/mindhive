@@ -62,12 +62,14 @@ import classDashboardStudies from "./classDashboardStudies";
 import classDeidentificationNotices from "./classDeidentificationNotices";
 import {
   canReadDatasourceFile,
+  canWriteDatasourceFile,
   readableDatasetTokens,
 } from "./dataFileAccess";
 import {
   backfillPublicDatasources,
   setDatasourceClassSharing,
 } from "./datasourceClassSharing";
+import { datasourceCollaboratorCandidates } from "../lib/datasourceTeam";
 import { backfillComponentDatasources } from "./componentDatasourceBackfill";
 const { loadDatasourceStudyRows } = require("../lib/datasourceStudyRows");
 import {
@@ -873,6 +875,13 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         # The DOE retention switches. canRunRetention only.
         doeRetentionSettings: JSON
         canReadDatasourceFile(datasourceId: ID!, token: String!): Boolean!
+        # Whether the caller may replace that file: they edit the dataset in
+        # place (author, or collaborator while collaboratorsCanEdit is on).
+        canWriteDatasourceFile(datasourceId: ID!, token: String!): Boolean!
+        # The people who may be added as collaborators on a dataset: its
+        # study's and board's team, without its author, as [{ id, username }].
+        # The dataset's author only (lib/datasourceTeam.ts).
+        datasourceCollaboratorCandidates(datasourceId: ID!): JSON!
         # The included participant rows of a study dataset, for whoever may
         # read the dataset (lib/datasourceStudyRows.js). Null when the caller
         # cannot read it or it does not read a study.
@@ -973,6 +982,8 @@ export const extendGraphqlSchema = (schema: GraphQLSchema) =>
         classDeidentificationNotices,
         doeRetentionSettings: retentionSettings,
         canReadDatasourceFile,
+        canWriteDatasourceFile,
+        datasourceCollaboratorCandidates,
         datasourceStudyRows: (_root: unknown, { datasourceId }: any, context: any) =>
           loadDatasourceStudyRows(context, datasourceId),
         guestForRun,

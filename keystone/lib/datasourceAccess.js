@@ -8,7 +8,9 @@
 //   - shared with a class they belong to: `sharedWithClasses`, which only that
 //     class's staff may set (mutations/datasourceClassSharing.ts). Classmates
 //     never see each other's datasets through class links alone;
-//   - theirs: they authored it (uploaded, created, simulated), or they work on
+//   - theirs: they authored it (uploaded, created, simulated), they are on its
+//     collaborator list (people the author picked from its study/board team,
+//     lib/datasourceTeam.ts), or — while `sharedWithTeam` is on — they work on
 //     its study (the study's researchers — studyUpdateWhere in access.ts: the
 //     study author and collaborators, the author and collaborators of every
 //     project board linked to the study, and staff of the study's classes), or
@@ -16,7 +18,8 @@
 //     board's class).
 // Simulated datasets stay hidden from everyone but testers and admins.
 //
-// Edit rights are separate (Datasource item access) and unchanged.
+// Edit rights are separate (Datasource item access): the author, and
+// collaborators while collaboratorsCanEdit is on.
 
 const SIMULATED_DATASET_ROLES = ["TESTER", "ADMIN"];
 
@@ -43,15 +46,28 @@ function datasourceReadWhere({
       { isPublic: { equals: true } },
       { journal: { some: { isTemplate: { equals: true } } } },
       { author: { id: { equals: me } } },
-      { study: { id: { in: studyIds } } },
+      // named collaborators, picked by the author from the study/board team
+      { collaborators: { some: { id: { equals: me } } } },
+      // the study and board team reach a dataset only while its author keeps
+      // it shared with them (`sharedWithTeam`, off on fresh copies)
       {
-        project: {
-          OR: [
-            { author: { id: { equals: me } } },
-            { collaborators: { some: { id: { equals: me } } } },
-            { usedInClass: { id: { in: staffClassIds } } },
-          ],
-        },
+        AND: [
+          { sharedWithTeam: { equals: true } },
+          {
+            OR: [
+              { study: { id: { in: studyIds } } },
+              {
+                project: {
+                  OR: [
+                    { author: { id: { equals: me } } },
+                    { collaborators: { some: { id: { equals: me } } } },
+                    { usedInClass: { id: { in: staffClassIds } } },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
       },
       { sharedWithClasses: { some: { id: { in: memberClassIds } } } },
     ],

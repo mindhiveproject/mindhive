@@ -515,6 +515,53 @@ export function journalParentGuard(list: JournalList) {
 }
 
 /**
+ * How many of the given journal parts (VizPart) the session user may change:
+ * their team's journals, the same rule as VizPart updates.
+ */
+export async function countWritableVizParts(
+  context: any,
+  vizPartIds: string[]
+): Promise<number> {
+  const ids = [...new Set(vizPartIds.filter(Boolean).map(String))];
+  if (!ids.length) return 0;
+  const team = await teamJournalIds(context);
+  return context.sudo().query.VizPart.count({
+    where: {
+      AND: [{ id: { in: ids } }, journalListFilters(team).VizPart.write],
+    },
+  });
+}
+
+/**
+ * Whether the session user works on a project board: its author or a
+ * collaborator, or staff of the class it is used in or a template for. The
+ * same rule as adding a journal collection to a board.
+ */
+export async function worksOnBoard(
+  context: any,
+  projectId: string
+): Promise<boolean> {
+  const me = context.session?.itemId ? String(context.session.itemId) : null;
+  if (!me || !projectId) return false;
+  const staffIds = await staffClassIds(context);
+  const n = await context.sudo().query.ProposalBoard.count({
+    where: {
+      AND: [
+        { id: { equals: String(projectId) } },
+        {
+          OR: [
+            ...authorOrCollaboratorWhere(me).OR,
+            { usedInClass: { id: { in: staffIds } } },
+            { templateForClasses: { some: { id: { in: staffIds } } } },
+          ],
+        },
+      ],
+    },
+  });
+  return n > 0;
+}
+
+/**
  * Ids of class networks the session user is connected to: creator, admin,
  * member profile, public networks, and networks of their classes.
  */

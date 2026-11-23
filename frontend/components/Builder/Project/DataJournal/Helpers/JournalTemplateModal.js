@@ -11,6 +11,7 @@ import { ADD_VIZPART } from "../../../../Mutations/VizPart";
 import { CREATE_DATASOURCE } from "../../../../Mutations/Datasource";
 import { GET_DATA_JOURNALS } from "../../../../Queries/DataArea";
 import { VIZPART_TEMPLATES } from "../../../../Queries/VizPart";
+import { isLiveDatasource } from "../../../../../lib/dataJournalDatasources";
 import {
   isDataComponentType,
   legacyDatasourceId,
@@ -115,6 +116,7 @@ export default function JournalTemplateModal({
   const close = () => onOpenChange(false);
 
   const selectTemplate = async (template) => {
+    if ((template?.datasources || []).some(isLiveDatasource)) return;
     setCopyingId(template.id);
     try {
       let currentJournal = journalCollection;
@@ -160,8 +162,14 @@ export default function JournalTemplateModal({
             title: ds?.title,
             description: ds?.description,
             dataOrigin: ds?.dataOrigin,
+            // a copy of the template's dataset: listed under "Me"
+            isCopy: true,
             settings: ds?.settings,
-            content: ds?.content,
+            // Same files as the template until the first save, which then
+            // writes a file of the copy's own (UpdateDatasource.js).
+            content: ds?.content
+              ? { ...ds.content, filesFromSource: true }
+              : ds?.content,
             ...(projectId && { project: { connect: { id: projectId } } }),
             ...(studyId && { study: { connect: { id: studyId } } }),
           };
@@ -317,6 +325,9 @@ export default function JournalTemplateModal({
             <StyledDataSourceList>
               {templates.map((template) => {
                 const n = template?.datasources?.length ?? 0;
+                const hasLiveData = (template?.datasources || []).some(
+                  isLiveDatasource,
+                );
                 const datasetsLabel =
                   n === 0
                     ? t(
@@ -344,11 +355,23 @@ export default function JournalTemplateModal({
                         <p>{template.description}</p>
                       ) : null}
                       <div className="meta">{datasetsLabel}</div>
+                      {hasLiveData ? (
+                        <div className="meta">
+                          {t(
+                            "dataJournal.sideNav.templateModal.liveDataBlocked",
+                            {},
+                            {
+                              default:
+                                "Uses live study data, so it can't be copied yet. Only templates with static datasets can be used.",
+                            },
+                          )}
+                        </div>
+                      ) : null}
                     </TemplateBody>
                     <StyledModalButton
                       type="button"
                       className="save"
-                      disabled={!!copyingId}
+                      disabled={!!copyingId || hasLiveData}
                       onClick={() => selectTemplate(template)}
                     >
                       {copyingId === template.id
