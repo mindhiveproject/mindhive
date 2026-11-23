@@ -145,6 +145,9 @@ function resolveCreatedInConnection(mediaLibrarySource) {
   if (sourceType === "profile") {
     return { createdInProfile: { connect: { id: sourceId } } };
   }
+  if (sourceType === "task") {
+    return { createdInTask: { connect: { id: sourceId } } };
+  }
 
   return {};
 }
@@ -171,6 +174,21 @@ export function assignmentMediaLibraryProps({ userId, assignmentId }) {
     mediaLibraryId: userId,
     mediaLibrarySource: assignmentId
       ? { sourceType: "assignment", sourceId: assignmentId, createdWith: "upload" }
+      : { sourceType: "profile", sourceId: userId, createdWith: "upload" },
+  };
+}
+
+/**
+ * TipTap media-library props for task/survey editors (Survey Builder text
+ * blocks). Uploads are attributed to the task when it is saved, otherwise to
+ * the user's profile (a task being created has no id yet).
+ */
+export function taskMediaLibraryProps({ userId, taskId }) {
+  if (!userId) return { mediaLibraryId: null, mediaLibrarySource: null };
+  return {
+    mediaLibraryId: userId,
+    mediaLibrarySource: taskId
+      ? { sourceType: "task", sourceId: taskId, createdWith: "upload" }
       : { sourceType: "profile", sourceId: userId, createdWith: "upload" },
   };
 }

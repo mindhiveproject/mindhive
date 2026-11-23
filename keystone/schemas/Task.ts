@@ -157,6 +157,11 @@ export const Task = list({
         },
       }),
     }),
+    /** Media library images shown in this task's content (Survey Builder text blocks). */
+    mediaAssetsUsed: relationship({
+      ref: "MediaAsset.usedInTasks",
+      many: true,
+    }),
     hiddenInClasses: relationship({
       ref: "Class.hiddenTasks",
       many: true,
