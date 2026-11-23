@@ -16,12 +16,14 @@ import {
   canActOnBoard,
   canActOnLink,
   canActOnStudy,
+  isAdminUser,
   canManagePeople,
   isBoardStaff,
   isOnBoard,
   isOnStudy,
   isStudyStaff,
   peopleWithRoles,
+  staffClassIds,
   staffedStudyClassIds,
   studyClassIds,
   unlinkConsequences,
@@ -206,23 +208,63 @@ export default function StudyBoardLinksPanel({
 
   const isActive = (type, key) => action?.type === type && action?.key === key;
 
+  // Teachers and mentors of a student's class (and admins) open the
+  // student's page from their chip.
+  const viewerStaffClasses = staffClassIds(user);
+  const studentHref = (person) =>
+    person.id !== userId &&
+    person.publicId &&
+    (isAdminUser(user) ||
+      (person.studentIn || []).some((c) => viewerStaffClasses.has(c.id)))
+      ? `/dashboard/students/${person.publicId}`
+      : null;
+
+  const personChip = (person, label, tooltip) => {
+    const href = studentHref(person);
+    const chip = <Chip variant="static" tone="neutral" label={label} />;
+    return (
+      <Tooltip
+        key={person.id}
+        content={
+          href ? (
+            <>
+              {tooltip}
+              <br />
+              {t("studyBoardLinks.openStudentPage", {}, { default: "Click to open student page" })}
+            </>
+          ) : (
+            tooltip
+          )
+        }
+      >
+        {href ? (
+          <button
+            type="button"
+            className="chipLink"
+            onClick={() => window.open(href, "_blank", "noopener")}
+          >
+            {chip}
+          </button>
+        ) : (
+          chip
+        )}
+      </Tooltip>
+    );
+  };
+
   // One list of the object's people with their role tags. Staff manage the
   // collaborators in the collaborator modal ("+ Add people").
   const people = ({ kind, object, canManage }) => (
     <div className="people">
-      {peopleWithRoles(object).map(({ person, roles }) => (
-        <Tooltip key={person.id} content={roles.map(roleLabel).join(" · ")}>
-          <Chip
-            variant="static"
-            tone="neutral"
-            label={
-              person.id === userId
-                ? `${person.username} ${t("studyBoardLinks.you", {}, { default: "(you)" })}`
-                : person.username
-            }
-          />
-        </Tooltip>
-      ))}
+      {peopleWithRoles(object).map(({ person, roles }) =>
+        personChip(
+          person,
+          person.id === userId
+            ? `${person.username} ${t("studyBoardLinks.you", {}, { default: "(you)" })}`
+            : person.username,
+          roles.map(roleLabel).join(" · ")
+        )
+      )}
       {canManage && !action && (
         <button
           type="button"
@@ -590,18 +632,17 @@ export default function StudyBoardLinksPanel({
         )}
         {via.length > 0 && (
           <div className="people">
-            {via.map(({ person, boards: viaBoards }) => (
-              <Tooltip
-                key={person.id}
-                content={t(
+            {via.map(({ person, boards: viaBoards }) =>
+              personChip(
+                person,
+                person.username,
+                t(
                   "studyBoardLinks.viaBoard",
                   { boards: viaBoards.map((b) => b.title || untitledBoard).join(", ") },
                   { default: "Via board · {{boards}}" }
-                )}
-              >
-                <Chip variant="static" tone="neutral" label={person.username} />
-              </Tooltip>
-            ))}
+                )
+              )
+            )}
           </div>
         )}
       </section>
@@ -976,6 +1017,22 @@ const StyledPanel = styled.div`
     display: inline-flex;
     align-items: center;
     gap: 4px;
+  }
+
+  .chipLink {
+    border: 0;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  .chipLink .DesignSystem-Chip {
+    cursor: pointer !important;
+  }
+
+  .chipLink:hover .DesignSystem-Chip {
+    background: var(--MH-Theme-Neutrals-Light, #e6e6e6);
   }
 
   .linkButton {

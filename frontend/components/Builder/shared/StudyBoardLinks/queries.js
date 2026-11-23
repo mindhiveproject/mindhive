@@ -4,6 +4,11 @@ const PERSON = gql`
   fragment StudyBoardLinksPerson on Profile {
     id
     username
+    # The student page link (/dashboard/students/:publicId) for their staff.
+    publicId
+    studentIn {
+      id
+    }
     # Avatar fields read by the header facepile (ConnectFacepile photoUrl).
     image {
       id

@@ -3249,6 +3249,7 @@
 		"studyPeopleTitle": "Collaborators of “{{title}}”",
 		"viaBoardHeader": "Access through a linked project board",
 		"thisBoard": "This board",
-		"peopleButton": "People and links"
+		"peopleButton": "People and links",
+		"openStudentPage": "Click to open student page"
 	}
 }
