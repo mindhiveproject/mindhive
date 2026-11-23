@@ -18,10 +18,12 @@ const PERSON = gql`
   }
 `;
 
-// A class with its staff (who keep study access whatever the boards).
+// A class with its staff (who keep study access whatever the boards) and
+// its settings (studentsManageCollaborators, read by canManagePeople).
 const STAFF = gql`
   fragment StudyBoardLinksStaff on Class {
     id
+    settings
     creator {
       id
     }
@@ -54,6 +56,7 @@ export const STUDY_BOARD_LINKS_BOARD = gql`
     usedInClass {
       id
       title
+      settings
     }
     clonedFrom {
       id

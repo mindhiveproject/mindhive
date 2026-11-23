@@ -41,12 +41,20 @@ export const isOnStudy = (study, userId) =>
  * and the classes its author and collaborators are students in (as in
  * studyUpdateWhere).
  */
+export function studyClasses(study) {
+  const all = [
+    ...(study?.classes || []),
+    ...(study?.author?.studentIn || []),
+    ...(study?.collaborators || []).flatMap((p) => p?.studentIn || []),
+  ];
+  return all.filter(
+    (c, i) => c?.id && all.findIndex((x) => x?.id === c.id) === i
+  );
+}
+
+/** Ids of studyClasses(study). */
 export function studyClassIds(study) {
-  return new Set([
-    ...ids(study?.classes),
-    ...ids(study?.author?.studentIn),
-    ...(study?.collaborators || []).flatMap((p) => ids(p?.studentIn)),
-  ]);
+  return new Set(ids(studyClasses(study)));
 }
 
 /** Staff of the board's class. */
@@ -87,12 +95,26 @@ export const canActOnBoard = (board, user) =>
 export const canActOnStudy = (study, user) =>
   isOnStudy(study, user?.id) || isStudyStaff(study, user);
 
+const classSettings = (cls) => {
+  const settings = cls?.settings;
+  if (typeof settings !== "string") return settings || {};
+  try {
+    return JSON.parse(settings) || {};
+  } catch {
+    return {};
+  }
+};
+
 /**
- * Whether a class lets its students manage the collaborators of their own
- * boards and studies. A class setting comes next; until then only staff do.
+ * Whether the classes let their students manage the collaborators of their
+ * own boards and studies: true when any of them has
+ * Class.settings.studentsManageCollaborators on (off unless set to true;
+ * toggled in the teacher class page's Settings tab).
  */
-// eslint-disable-next-line no-unused-vars
-export const classLetsStudentsManagePeople = (classIds) => false;
+export const classLetsStudentsManagePeople = (classes) =>
+  (classes || []).some(
+    (cls) => classSettings(cls).studentsManageCollaborators === true
+  );
 
 /**
  * May the user add or remove collaborators on a board or study? Class staff
@@ -102,13 +124,13 @@ export function canManagePeople({ kind, object, user }) {
   if (kind === "board") {
     if (isBoardStaff(object, user)) return true;
     if (!isOnBoard(object, user?.id)) return false;
-    const classId = object?.usedInClass?.id;
-    return !classId || classLetsStudentsManagePeople([classId]);
+    const cls = object?.usedInClass;
+    return !cls?.id || classLetsStudentsManagePeople([cls]);
   }
   if (isStudyStaff(object, user)) return true;
   if (!isOnStudy(object, user?.id)) return false;
-  const classIds = [...studyClassIds(object)];
-  return !classIds.length || classLetsStudentsManagePeople(classIds);
+  const classes = studyClasses(object);
+  return !classes.length || classLetsStudentsManagePeople(classes);
 }
 
 /**

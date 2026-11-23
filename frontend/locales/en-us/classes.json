@@ -2678,6 +2678,14 @@
 		"visible": "Visible",
 		"visibleCount": "{{visible}} of {{total}} visible"
 	},
+	"studentCollaborators": {
+		"title": "Collaborators on student work",
+		"description": "Students can add and remove collaborators on their own project boards and studies.",
+		"enabledLabel": "Students can manage collaborators",
+		"disabledLabel": "Only teachers and mentors manage collaborators",
+		"hint": "Teachers and mentors can always manage collaborators. Turning this off does not remove collaborators already added.",
+		"updateError": "Failed to update the collaborators setting"
+	},
 	"taskSharing": {
 		"title": "Sharing between students",
 		"description": "Students can share a copy of their tasks, surveys and blocks with classmates and with this class’s teachers and mentors. Each person gets their own copy, so nobody can change someone else’s work.",
