@@ -3,9 +3,9 @@ import { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
 import IconButton from "../../../DesignSystem/IconButton";
+import { GroupIcon } from "../../../DesignSystem/Icons";
 import ConnectFacepile, {
   CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE,
-  ConnectFacepileChevron,
 } from "../../Project/Navigation/ConnectFacepile";
 import { facepilePeople } from "../../../../lib/studyBoardLinks";
 import StudyBoardLinksModal from "./Modal";
@@ -56,7 +56,7 @@ export default function PeopleButton({
           elevated={false}
           ariaLabel={label}
           title={label}
-          icon={<ConnectFacepileChevron />}
+          icon={<GroupIcon viewBox="1 4 22 16" style={{ width: 18, height: 18, flexShrink: 0 }} />}
           style={CONNECT_FACEPILE_CHEVRON_BUTTON_STYLE}
           onClick={() => setOpen(true)}
         />

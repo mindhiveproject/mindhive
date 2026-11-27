@@ -196,7 +196,18 @@ export async function startRun(
   const assetAuthorId = runtime.asset.author?.id || null;
   const taskAuthorId = task.author?.id || null;
   if (!assetAuthorId || !taskAuthorId) {
-    throw new Error("Runtime asset and Task authorship must be configured");
+    // Name the exact row(s) without an author so a participant's console
+    // screenshot is enough to find and repair it.
+    const missing = [
+      !taskAuthorId && `Task ${task.id}`,
+      !assetAuthorId &&
+        `${runtime.runtimeType} ${runtime.assetField} ${runtime.asset.id}`,
+    ].filter(Boolean);
+    const message = `Runtime asset and Task authorship must be configured: no author on ${missing.join(
+      " and ",
+    )} (study ${study.id})`;
+    console.error(`[startRun] ${message}`);
+    throw new Error(message);
   }
 
   const dataset = await context.sudo().query.Dataset.createOne({

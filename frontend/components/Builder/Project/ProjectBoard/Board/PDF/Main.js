@@ -5,7 +5,10 @@ import {
   PROPOSAL_LIST_VIEW_SYNC_QUERY,
 } from "../../../../../Queries/Proposal";
 import { useBoardMilestones } from "../../../../../../lib/useBoardMilestones";
-import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
+import {
+  buildSubmitStatuses,
+  isLockedMilestoneStatus,
+} from "../../../../../../lib/milestoneStatus";
 import {
   cardIncludedInReviewStep,
   getMilestoneFromCard,
@@ -214,9 +217,9 @@ export default function ProposalPDF({
       )
       .map((card) => {
         const isLocked =
-          submissionStatus === "SUBMITTED" ||
-          card?.settings?.includeInReviewSteps?.some(
-            (step) => submitStatuses[step] === "SUBMITTED"
+          isLockedMilestoneStatus(submissionStatus) ||
+          card?.settings?.includeInReviewSteps?.some((step) =>
+            isLockedMilestoneStatus(submitStatuses[step])
           );
         const cardContent = isLocked
           ? card?.revisedContent || card?.content
@@ -272,9 +275,9 @@ export default function ProposalPDF({
       .map((card) => ({
         ...card,
         isLocked:
-          submissionStatus === "SUBMITTED" ||
-          card?.settings?.includeInReviewSteps?.some(
-            (step) => submitStatuses[step] === "SUBMITTED"
+          isLockedMilestoneStatus(submissionStatus) ||
+          card?.settings?.includeInReviewSteps?.some((step) =>
+            isLockedMilestoneStatus(submitStatuses[step])
           ),
       }));
     return filteredCards;

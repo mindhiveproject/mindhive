@@ -16,6 +16,7 @@ import { CLASS_TEMPLATE_PROJECTS_QUERY } from "../../../Queries/Proposal";
 import { isStudyStatusMilestone } from "../../../../lib/milestones";
 import { getClassTemplateBoards } from "../../../../lib/classTemplateBoards";
 import BoardMilestonesSync from "../../BoardMilestonesSync";
+import { classFollowsDataCollection } from "../../../../lib/classDataCollection";
 
 function reviewHref(selector, classId) {
   if (!selector) return "/dashboard/review";
@@ -61,6 +62,7 @@ export default function Overview({ query, user }) {
         id,
         title: cl?.title,
         code: cl?.code,
+        settings: cl?.settings,
         templateProposal: cl?.templateProposal,
         classTemplateBoards: cl?.classTemplateBoards,
       };
@@ -134,7 +136,25 @@ export default function Overview({ query, user }) {
     return steps;
   }, [templateBoards, milestonesByBoard]);
 
-  const feedbackTabs = buildClassTemplateTabs(classTemplateSteps, t);
+  // A class that supervises data collection itself (its own milestone, with
+  // or without a project board template) gets the Collecting data tab too.
+  const classFollows = classFollowsDataCollection(selectedClass);
+  const feedbackTabs = useMemo(() => {
+    const tabs = buildClassTemplateTabs(classTemplateSteps, t);
+    if (!classFollows || tabs.some((tab) => tab.selector === "collectingdata")) {
+      return tabs;
+    }
+    return [
+      ...tabs,
+      {
+        selector: "collectingdata",
+        milestoneKey: "data_collection",
+        labelKey: "review.collectingDataMenu",
+        label: t("review.collectingDataMenu", {}, { default: "Collecting data" }),
+        isCustom: false,
+      },
+    ];
+  }, [classTemplateSteps, classFollows, t]);
 
   useEffect(() => {
     let currentTour = null;

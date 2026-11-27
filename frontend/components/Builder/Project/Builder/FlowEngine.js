@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
-import { useApolloClient } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { ReactFlowProvider } from "@xyflow/react";
 import uniqid from "uniqid";
 import * as Y from "yjs";
@@ -13,7 +13,7 @@ import StudyFlowCanvas, { newId } from "./Flow/StudyFlowCanvas";
 import { CanvasActionsProvider } from "./Flow/CanvasActions";
 import useStudyGraph, { SEED_ORIGIN } from "./Flow/useStudyGraph";
 import usePresence, { presenceByNode } from "./Flow/presence";
-import { CollaborationStatus } from "./Flow/Collaborators";
+import { CollaborationStatus, ReopenedNotice } from "./Flow/Collaborators";
 import { BuilderLoading } from "./Loading";
 import {
   NODE_TYPES,
@@ -32,6 +32,18 @@ import { MY_TASK_VERSION_USAGE, TASK_OWNERSHIP } from "../../../Queries/Task";
 import { COPY_TASK_FOR_STUDY } from "../../../Mutations/Task";
 import { STUDY_DATA_SOURCES } from "../../../Queries/DataSourceBlock";
 import { UPDATE_STUDY_DATA_SOURCE } from "../../../Mutations/DataSourceBlock";
+
+// A study is locked (submitted) and reopened from elsewhere: check its status
+// now and then so an open builder locks, or reloads to edit together, on its own
+const STUDY_LOCK_STATUS = gql`
+  query STUDY_LOCK_STATUS($id: ID!) {
+    study(where: { id: $id }) {
+      id
+      dataCollectionStatus
+    }
+  }
+`;
+const LOCK_POLL_MS = 15000;
 
 // Size of a block, used to place new blocks around a point
 const BLOCK_WIDTH = 378;
@@ -148,6 +160,65 @@ export default function FlowEngine(props) {
     if (session.status === "unavailable" && mode !== "local") setMode("local");
   }, [session.status, session.provider]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Watch for the study being locked or reopened elsewhere (see
+  // STUDY_LOCK_STATUS): a submit locks this canvas within seconds
+  const isLocked = isStudyLocked(study);
+  const watchLock = isCollaborative;
+  const { refetch: refetchLock } = useQuery(STUDY_LOCK_STATUS, {
+    variables: { id: study?.id },
+    skip: !watchLock,
+    pollInterval: LOCK_POLL_MS,
+    fetchPolicy: "network-only",
+  });
+  useEffect(() => {
+    if (!watchLock) return undefined;
+    // check again as soon as this tab is back in front
+    const onVisible = () => {
+      if (document.visibilityState === "visible") refetchLock().catch(() => {});
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, [watchLock]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Pass a lock change on at once: the page that sees it first (the one that
+  // submitted, usually) writes it to the shared document, and every other
+  // builder on it checks the status straight away instead of at its next poll
+  const lockDoc = session.provider?.document || null;
+  const lastLockRef = useRef(isLocked);
+  useEffect(() => {
+    if (!lockDoc) return undefined;
+    const info = meta(lockDoc);
+    const onChange = (event, transaction) => {
+      if (transaction.local || !event.keysChanged.has("lockStatus")) return;
+      refetchLock().catch(() => {});
+    };
+    info.observe(onChange);
+    return () => info.unobserve(onChange);
+  }, [lockDoc]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (lastLockRef.current === isLocked) return;
+    lastLockRef.current = isLocked;
+    const { provider } = session;
+    if (!lockDoc || !provider || provider.authorizedScope === "readonly") return;
+    lockDoc.transact(() => {
+      meta(lockDoc).set("lockStatus", study?.dataCollectionStatus || null);
+    }, SEED_ORIGIN);
+  }, [isLocked]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Reopened while open here: the collab server gave this page a read-only
+  // connection, so the builder reloads (after a short countdown, see
+  // ReopenedNotice) to open with live editing for everyone. Until then the
+  // canvas stays locked, so nobody edits alone.
+  const wasLockedRef = useRef(isLocked);
+  const [reopened, setReopened] = useState(false);
+  useEffect(() => {
+    if (isLocked) {
+      wasLockedRef.current = true;
+      return;
+    }
+    if (wasLockedRef.current && isCollaborative) setReopened(true);
+  }, [isLocked]); // eslint-disable-line react-hooks/exhaustive-deps
+
   if (isCollaborative && !mode) return <BuilderLoading />;
 
   const shared = mode === "shared" && session.provider;
@@ -160,6 +231,7 @@ export default function FlowEngine(props) {
       provider={shared ? session.provider : null}
       connected={!!shared && session.connected}
       workingAlone={isCollaborative && !shared}
+      reopened={reopened}
     />
   );
 }
@@ -178,12 +250,14 @@ function FlowEditor({
   provider,
   connected,
   workingAlone,
+  reopened,
 }) {
   const { t } = useTranslation("builder");
   const apolloClient = useApolloClient();
 
   // Lock the canvas once the study is submitted
-  const isCanvasLocked = isStudyLocked(study);
+  // (and while the reopened study counts down to its reload)
+  const isCanvasLocked = isStudyLocked(study) || !!reopened;
   const isCanvasLockedRef = useRef(isCanvasLocked);
   isCanvasLockedRef.current = isCanvasLocked;
   // A study that does not exist yet (new, clone, project without a study) is
@@ -757,6 +831,21 @@ function FlowEditor({
   // ---- saving -----------------------------------------------------------
 
   saveDesignRef.current = async ({ createVersion = false } = {}) => {
+    // the study may have been submitted elsewhere since the last check: ask
+    // first, and drop the save if it is locked now (the answer updates the
+    // cached study, which locks this canvas)
+    if (study?.id) {
+      try {
+        const { data } = await apolloClient.query({
+          query: STUDY_LOCK_STATUS,
+          variables: { id: study.id },
+          fetchPolicy: "network-only",
+        });
+        if (isStudyLocked(data?.study)) return null;
+      } catch {
+        // could not check: save as before
+      }
+    }
     const { flow, diagram } = getDiagramState();
     const includeSettings = !store.isShared || settingsChangedRef.current;
     settingsChangedRef.current = false;
@@ -882,7 +971,18 @@ function FlowEditor({
         onPanelNodeChange={onPanelNodeChange}
         topBarExtras={
           <>
-            {provider ? (
+            {reopened ? (
+              <ReopenedNotice />
+            ) : isCanvasLocked && (provider || workingAlone) ? (
+              // also when it was locked while open here, still connected
+              <CollaborationStatus
+                connected={false}
+                tone="neutral"
+                message={t("collaboration.disabledLocked", {}, {
+                  default: "Live collaboration disabled, Study Builder locked",
+                })}
+              />
+            ) : provider ? (
               <CollaborationStatus connected={connected} />
             ) : workingAlone ? (
               <CollaborationStatus

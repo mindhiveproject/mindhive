@@ -8,6 +8,7 @@ import { StyledBuilder } from "../styles/StyledBuilder";
 import { UserContext } from "./Authorized";
 import FullScreenLoading from "../DesignSystem/FullScreenLoading";
 import { loginHrefWithNext } from "../../lib/safeNextPath";
+import Button from "../DesignSystem/Button";
 
 export default function Dashboard({ children }) {
   const { user, loading: authLoading } = useContext(UserContext);
@@ -25,11 +26,14 @@ export default function Dashboard({ children }) {
   // user comes back to the same study/tab instead of /dashboard.
   if (!user) {
     return (
-      <div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
         <p>{t('pleaseLogin', 'Please first log in!')}</p>
-        <Link href={loginHrefWithNext(router.asPath)}>
+        <Button 
+          variant="filled" 
+          onClick={() => router.push(loginHrefWithNext(router.asPath))}
+        >
           {t('pleaseLoginLink', 'Log in to continue')}
-        </Link>
+        </Button>
       </div>
     );
   }

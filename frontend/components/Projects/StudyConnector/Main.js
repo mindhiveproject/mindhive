@@ -9,6 +9,7 @@ import Chip from "../../DesignSystem/Chip";
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
 
 import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal";
+import { UPDATE_STUDY } from "../../Mutations/Study";
 import { GET_PROJECT_STUDY } from "../../Queries/Proposal";
 import { STUDY_CONNECTOR_OPTIONS } from "../../Queries/Study";
 
@@ -20,6 +21,7 @@ export default function StudyConnector({ user, project }) {
   const classId = project?.usedInClass?.id;
   const hasClassLink = Boolean(classId);
 
+  const [updateStudy] = useMutation(UPDATE_STUDY);
   const [updateProject, { loading }] = useMutation(UPDATE_PROJECT_BOARD, {
     refetchQueries: [
       {
@@ -29,15 +31,29 @@ export default function StudyConnector({ user, project }) {
     ],
   });
 
+  // The viewer's own studies, plus every study linked to the board's class so
+  // a teacher can pick a student study they are not a collaborator on.
+  const studyWhere = useMemo(
+    () => ({
+      isHidden: { equals: false },
+      OR: [
+        { author: { id: { equals: user?.id } } },
+        { collaborators: { some: { id: { equals: user?.id } } } },
+        ...(classId ? [{ classes: { some: { id: { equals: classId } } } }] : []),
+      ],
+    }),
+    [user?.id, classId]
+  );
+
   const { data } = useQuery(STUDY_CONNECTOR_OPTIONS, {
-    variables: { userId: user?.id, projectId: project?.id },
+    variables: { studyWhere, projectId: project?.id },
     skip: !user?.id || !project?.id,
   });
 
-  // Each study row carries chips for its classes and for the people it shares
-  // with this board (board author/collaborators, minus the viewer), so a member
-  // can spot the study that belongs with this project. Studies shared with the
-  // board's members are listed first.
+  // Each study row carries chips for its classes and for everyone on the study
+  // (author and collaborators, minus the viewer), so the viewer knows who they
+  // would connect this board with. Studies shared with the board's members are
+  // listed first.
   const studyOptions = useMemo(() => {
     const board = data?.proposalBoard;
     const boardMemberIds = new Set(
@@ -51,7 +67,8 @@ export default function StudyConnector({ user, project }) {
         (person, i, all) =>
           person?.id && all.findIndex((p) => p?.id === person.id) === i
       );
-      const sharedPeople = people.filter((person) =>
+      const otherPeople = people.filter((person) => person.id !== user?.id);
+      const sharedPeople = otherPeople.filter((person) =>
         boardMemberIds.has(person.id)
       );
       const classes = (study?.classes || []).filter((c) => c?.id);
@@ -72,7 +89,7 @@ export default function StudyConnector({ user, project }) {
           label: (
             <OptionContent>
               <OptionTitle>{title}</OptionTitle>
-              {(classes.length > 0 || sharedPeople.length > 0) && (
+              {(classes.length > 0 || otherPeople.length > 0) && (
                 <OptionChips>
                   {classes.map((c) => (
                     <Chip
@@ -83,11 +100,13 @@ export default function StudyConnector({ user, project }) {
                       style={CHIP_STYLE}
                     />
                   ))}
-                  {sharedPeople.map((person) => (
+                  {otherPeople.map((person) => (
                     <Chip
                       key={`person-${person.id}`}
                       variant="static"
-                      tone="default"
+                      tone={
+                        boardMemberIds.has(person.id) ? "default" : "neutral"
+                      }
                       label={person?.username}
                       style={CHIP_STYLE}
                     />
@@ -111,6 +130,18 @@ export default function StudyConnector({ user, project }) {
           default: "Select the study first",
         })
       );
+    }
+    // The study joins the board's class (as when linking one from the links
+    // panel).
+    const picked = (data?.studies || []).find((s) => s?.id === studyId);
+    const inClass = (picked?.classes || []).some((c) => c?.id === classId);
+    if (hasClassLink && !inClass) {
+      await updateStudy({
+        variables: {
+          id: studyId,
+          input: { classes: { connect: [{ id: classId }] } },
+        },
+      });
     }
     await updateProject({
       variables: {

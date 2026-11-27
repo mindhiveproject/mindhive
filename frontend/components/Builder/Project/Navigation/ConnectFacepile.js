@@ -108,21 +108,6 @@ function initial(collaborator) {
   return name.slice(0, 1).toUpperCase() || "?";
 }
 
-export function ConnectFacepileChevron() {
-  return (
-    <svg
-      width="11"
-      height="8"
-      viewBox="0 0 11 8"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-    >
-      <path d="M5.16949 8L0 3H10.339L5.16949 8Z" fill="currentColor" />
-    </svg>
-  );
-}
-
 /**
  * The ids in `presence` that were not there on the previous change, for
  * JOIN_PULSE_MS. The people already here when presence first arrives do not

@@ -9,7 +9,7 @@ export default function Card({ study }) {
   // labelled so (lib/studyLifecycle.js).
   const collecting =
     study?.dataCollectionStatus === "SUBMITTED" ||
-    collecting;
+    study?.status === "COLLECTING_DATA";
 
   let status;
   switch (collecting ? "COLLECTING_DATA" : study?.status) {

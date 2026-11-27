@@ -1,8 +1,10 @@
 import { isActionCard } from "./milestones";
+import { isLockedMilestoneStatus } from "./milestoneStatus";
 
 /**
  * A proposal card is locked once its section's first milestone, or any
- * milestone the card is included in, was submitted. A locked card keeps
+ * milestone the card is included in, was submitted (or finished, for data
+ * collection). A locked card keeps
  * `content` frozen (the original entry) and is edited in `revisedContent`.
  */
 export function isCardLocked(card, sectionCards = [], submitStatuses = {}) {
@@ -12,9 +14,9 @@ export function isCardLocked(card, sectionCards = [], submitStatuses = {}) {
     submitStatuses[submissionStage] ||
     (firstAction?.type && submitStatuses[firstAction.type]);
   const isCardSubmitted = card?.settings?.includeInReviewSteps?.some(
-    (step) => submitStatuses[step] === "SUBMITTED"
+    (step) => isLockedMilestoneStatus(submitStatuses[step])
   );
-  return submissionStatus === "SUBMITTED" || !!isCardSubmitted;
+  return isLockedMilestoneStatus(submissionStatus) || !!isCardSubmitted;
 }
 
 // The field the student currently edits on the card.

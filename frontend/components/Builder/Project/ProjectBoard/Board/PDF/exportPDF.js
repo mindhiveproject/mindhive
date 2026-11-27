@@ -7,6 +7,11 @@ import {
   cardIncludedInReviewStep,
   resolveMilestonesFromQuery,
 } from "../../../../../../lib/milestones";
+import { buildSubmitStatuses } from "../../../../../../lib/milestoneStatus";
+import {
+  editableCardContent,
+  isCardLocked,
+} from "../../../../../../lib/cardPreviousEntries";
 
 // Accept t as optional third argument; filters are optional following arguments
 export default async function exportPDF(
@@ -41,12 +46,9 @@ export default async function exportPDF(
   const sections = proposal?.sections || [];
   const study = proposal?.study || {};
 
-  // Submit statuses from proposal (same as PDF/Main.js)
-  const submitStatuses = {
-    ACTION_SUBMIT: proposal?.submitProposalStatus,
-    ACTION_PEER_FEEDBACK: proposal?.peerFeedbackStatus,
-    ACTION_PROJECT_REPORT: proposal?.projectReportStatus,
-  };
+  // Milestone-aware, dual-keyed statuses (milestone key + action card type),
+  // the same ones the card editor uses to decide whether a card is locked.
+  const submitStatuses = buildSubmitStatuses(proposal, milestones);
 
   // Order sections by position
   const orderedSections = [...sections].sort((a, b) => a.position - b.position);
@@ -54,20 +56,7 @@ export default async function exportPDF(
   // Generate content for PDF using the same filtering logic as PDF/Main.js
   const allCardsContent = orderedSections.map((section) => {
     const orderedCards = [...section.cards].sort((a, b) => a.position - b.position);
-    
-    // Find action cards to determine submission stage (same logic as PDF/Main.js)
-    const actionCards = orderedCards
-      .filter(
-        (card) =>
-          card?.type === "ACTION_SUBMIT" ||
-          card?.type === "ACTION_PEER_FEEDBACK" ||
-          card?.type === "ACTION_COLLECTING_DATA" ||
-          card?.type === "ACTION_PROJECT_REPORT"
-      )
-      .map((c) => c?.type);
-    const submissionStage = actionCards?.length ? actionCards[0] : undefined;
-    const submissionStatus = submitStatuses[submissionStage];
-    
+
     // Filter cards using the same logic as PDF/Main.js
     const filteredCardsWithTitles = orderedCards
       .filter(
@@ -89,16 +78,10 @@ export default async function exportPDF(
             ))
       )
       .map((card) => {
-        // Determine if card is locked (same logic as PDF/Main.js)
-        const isLocked =
-          submissionStatus === "SUBMITTED" ||
-          card?.settings?.includeInReviewSteps?.some(
-            (step) => submitStatuses[step] === "SUBMITTED"
-          );
-        // Use revisedContent for locked cards, content for unlocked cards
-        const cardContent = isLocked
-          ? card?.revisedContent || card?.content
-          : card?.content;
+        // A locked card keeps `content` frozen at submission and is edited in
+        // `revisedContent`: export the field the student is editing.
+        const isLocked = isCardLocked(card, orderedCards, submitStatuses);
+        const cardContent = editableCardContent(card, isLocked);
         return {
           id: card?.id,
           title: card?.title || "",

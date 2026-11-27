@@ -160,6 +160,11 @@ export default function Builder({ query, user, tab }) {
               ? { connect: { id: descriptionInProposalCardId } }
               : null,
             tags: tags?.length ? { connect: tags } : null,
+            // A study created from a class board joins the board's class
+            // (as when linking one from the links panel).
+            ...(projectMode && project?.usedInClass?.id
+              ? { classes: { connect: [{ id: project.usedInClass.id }] } }
+              : {}),
             title: generate().dashed,
             talks: {
               create: [

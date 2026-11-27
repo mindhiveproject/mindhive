@@ -260,6 +260,8 @@ export const STUDY_TO_DISCOVER = gql`
       title
       slug
       settings
+      dataCollectionStatus
+      dataCollectionOpenForParticipation
       collaborators {
         id
       }
@@ -746,17 +748,11 @@ export const SET_STUDY_DATA_COLLECTION = gql`
 // classes and people each one carries, plus the board's own members so the
 // picker can flag studies shared with the board's collaborators.
 export const STUDY_CONNECTOR_OPTIONS = gql`
-  query STUDY_CONNECTOR_OPTIONS($userId: ID!, $projectId: ID!) {
-    studies(
-      where: {
-        isHidden: { equals: false }
-        OR: [
-          { author: { id: { equals: $userId } } }
-          { collaborators: { some: { id: { equals: $userId } } } }
-        ]
-      }
-      orderBy: [{ createdAt: desc }]
-    ) {
+  query STUDY_CONNECTOR_OPTIONS(
+    $studyWhere: StudyWhereInput!
+    $projectId: ID!
+  ) {
+    studies(where: $studyWhere, orderBy: [{ createdAt: desc }]) {
       id
       title
       author {

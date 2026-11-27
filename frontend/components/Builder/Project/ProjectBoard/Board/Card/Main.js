@@ -32,7 +32,6 @@ import {
   actionCardMatchesReviewStep,
   cardIncludedInReviewStep,
   isActionCard,
-  isStudyStatusMilestone,
 } from "../../../../../../lib/milestones";
 import { isMilestoneSubmitted } from "../../../../../../lib/milestoneStatus";
 import { listPreviousEntries } from "../../../../../../lib/cardPreviousEntries";
@@ -206,11 +205,9 @@ export default function ProposalCard({
           return {
             milestone,
             actionCardId: actionCard?.id ?? null,
-            // Data collection is done once the study is submitted (and with
-            // it locked); other milestones once the board submitted them.
-            completed: isStudyStatusMilestone(milestone)
-              ? proposal?.study?.dataCollectionStatus === "SUBMITTED"
-              : isMilestoneSubmitted(proposal, milestone, boardMilestones),
+            // Done once submitted (data collection: the study submitted or
+            // finished, read from the study).
+            completed: isMilestoneSubmitted(proposal, milestone, boardMilestones),
           };
         })
         .filter(({ actionCardId }) => !!actionCardId),

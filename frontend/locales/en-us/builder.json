@@ -212,7 +212,10 @@
 	"cloneAndModify": "Clone & modify a {{taskType}}",
 	"closeButton": "Close",
 	"collaboration": {
-		"hereNow": "{{name}} · here now"
+		"disabledLocked": "Live collaboration disabled, Study Builder locked",
+		"hereNow": "{{name}} · here now",
+		"reopenedCountdown": "Study reopened: live collaboration starts in {{seconds}}s",
+		"startNow": "Start now"
 	},
 	"codeExecution": {
 		"codeRunningMessage": "The code is running.",
@@ -1897,6 +1900,7 @@
 	},
 	"participate": "Participate",
 	"participateAsGuest": "Participate as a guest",
+	"studyClosedForParticipation": "This study has been closed for participation by the researcher.",
 	"partSettings": {
 		"closeWithoutSaving": "Close without saving",
 		"saveAndClose": "Save & Close"
