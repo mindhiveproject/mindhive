@@ -9,6 +9,7 @@ import Chip from "../../DesignSystem/Chip";
 import DropdownSelect from "../../DesignSystem/DropdownSelect";
 
 import { UPDATE_PROJECT_BOARD } from "../../Mutations/Proposal";
+import { UPDATE_STUDY } from "../../Mutations/Study";
 import { GET_PROJECT_STUDY } from "../../Queries/Proposal";
 import { STUDY_CONNECTOR_OPTIONS } from "../../Queries/Study";
 
@@ -20,6 +21,7 @@ export default function StudyConnector({ user, project }) {
   const classId = project?.usedInClass?.id;
   const hasClassLink = Boolean(classId);
 
+  const [updateStudy] = useMutation(UPDATE_STUDY);
   const [updateProject, { loading }] = useMutation(UPDATE_PROJECT_BOARD, {
     refetchQueries: [
       {
@@ -128,6 +130,18 @@ export default function StudyConnector({ user, project }) {
           default: "Select the study first",
         })
       );
+    }
+    // The study joins the board's class (as when linking one from the links
+    // panel).
+    const picked = (data?.studies || []).find((s) => s?.id === studyId);
+    const inClass = (picked?.classes || []).some((c) => c?.id === classId);
+    if (hasClassLink && !inClass) {
+      await updateStudy({
+        variables: {
+          id: studyId,
+          input: { classes: { connect: [{ id: classId }] } },
+        },
+      });
     }
     await updateProject({
       variables: {

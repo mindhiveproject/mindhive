@@ -26,17 +26,62 @@ export const LEGACY_STATUS_FIELDS = {
 
 const DEFAULT_STATUS = "NOT_STARTED";
 
+// Submitted and finished both keep a milestone's cards locked (a finished
+// study stays locked until a teacher reopens it).
+const LOCKED_STATUSES = ["SUBMITTED", "FINISHED"];
+
+export function isLockedMilestoneStatus(status) {
+  return LOCKED_STATUSES.includes(status);
+}
+
+function isStudyTargetMilestone(milestoneKey, milestone) {
+  return (
+    String(milestoneKey || "").toUpperCase() === "DATA_COLLECTION" ||
+    milestone?.statusTarget === "study" ||
+    milestone?.actionCardType === "ACTION_COLLECTING_DATA"
+  );
+}
+
+// A study milestone's status lives on the study (the class Dashboard reads it
+// the same way): the board's own copy goes stale when the board is linked to
+// another study, or unlinked, after a submission. Null when the board was
+// loaded without its study's status, so the board's copy is used instead.
+function statusFromLinkedStudy(board) {
+  if (!board || !("study" in board)) return null;
+  const study = board.study;
+  if (!study) return { status: DEFAULT_STATUS, openForParticipation: false };
+  if (!("dataCollectionStatus" in study)) return null;
+  return {
+    status: study.dataCollectionStatus || DEFAULT_STATUS,
+    openForParticipation: !!study.dataCollectionOpenForParticipation,
+  };
+}
+
 /**
  * Read board status for a milestone key.
- * Stack: (1) board.milestoneStatus JSON, (2) legacy board/study columns.
+ * Study milestones: the linked study's status when the board was loaded with
+ * it. Otherwise: (1) board.milestoneStatus JSON, (2) legacy board/study
+ * columns.
  */
 export function readMilestoneStatus(board, milestoneKey, milestones = []) {
   const fromJson = board?.milestoneStatus?.[milestoneKey];
+  const milestone = getMilestoneByKey(milestoneKey, milestones);
+
+  if (isStudyTargetMilestone(milestoneKey, milestone)) {
+    const fromStudy = statusFromLinkedStudy(board);
+    if (fromStudy) {
+      // Keep who submitted or finished only while the board's copy agrees
+      // with the study (it came from this study's decision).
+      return fromJson?.status === fromStudy.status
+        ? { ...fromJson, ...fromStudy }
+        : fromStudy;
+    }
+  }
+
   if (fromJson && typeof fromJson.status === "string") {
     return fromJson;
   }
 
-  const milestone = getMilestoneByKey(milestoneKey, milestones);
   const legacy =
     LEGACY_STATUS_FIELDS[milestoneKey] ||
     (milestone
@@ -68,7 +113,7 @@ export function readMilestoneStatus(board, milestoneKey, milestones = []) {
 export function isMilestoneSubmitted(board, milestone, milestones = []) {
   const key = typeof milestone === "string" ? milestone : milestone?.key;
   const entry = readMilestoneStatus(board, key, milestones);
-  return entry?.status === "SUBMITTED";
+  return isLockedMilestoneStatus(entry?.status);
 }
 
 export function isOpenForComments(board, milestone, milestones = []) {

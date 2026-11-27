@@ -1900,6 +1900,7 @@
 	},
 	"participate": "Participate",
 	"participateAsGuest": "Participate as a guest",
+	"studyClosedForParticipation": "This study has been closed for participation by the researcher.",
 	"partSettings": {
 		"closeWithoutSaving": "Close without saving",
 		"saveAndClose": "Save & Close"

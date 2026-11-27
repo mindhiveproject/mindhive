@@ -1,4 +1,5 @@
 import { normalizeReviewStepKey } from "../../lib/milestones";
+import { isLockedMilestoneStatus } from "../../lib/milestoneStatus";
 
 /**
  * Utility functions to determine card variants based on card settings and proposal status
@@ -42,8 +43,8 @@ export function getRegularCardVariant(card, submitStatuses = {}) {
   });
 
   // Check if any step is submitted
-  const hasSubmittedStep = reviewStepStatuses.some(
-    (rs) => rs.status === "SUBMITTED"
+  const hasSubmittedStep = reviewStepStatuses.some((rs) =>
+    isLockedMilestoneStatus(rs.status)
   );
 
   // If multiple review steps, create tooltip text: one review step per line.
@@ -58,7 +59,9 @@ export function getRegularCardVariant(card, submitStatuses = {}) {
       .map((rs) => {
         const stepName = stepNames[rs.step] || rs.step;
         const statusText =
-          rs.status === "SUBMITTED"
+          rs.status === "FINISHED"
+            ? "Finished"
+            : rs.status === "SUBMITTED"
             ? "Submitted"
             : rs.status === "IN_PROGRESS"
             ? "In Progress"
@@ -91,7 +94,7 @@ export function getActionCardVariant(
   const statusKey = milestoneKey || cardType;
   const status =
     submitStatuses[statusKey] || submitStatuses[cardType] || "NOT_STARTED";
-  return status === "SUBMITTED"
+  return isLockedMilestoneStatus(status)
     ? "ACTION_SUBMITTED"
     : "ACTION_NOT_SUBMITTED";
 }

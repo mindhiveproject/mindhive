@@ -162,11 +162,13 @@ export const GET_USER_CLASSES = gql`
           title
           code
           createdAt
+          settings
           networks {
             classes {
               id
               title
               code
+              settings
             }
           }
           templateProposal {
@@ -185,11 +187,13 @@ export const GET_USER_CLASSES = gql`
           title
           code
           createdAt
+          settings
           networks {
             classes {
               id
               title
               code
+              settings
             }
           }
           templateProposal {
@@ -206,11 +210,13 @@ export const GET_USER_CLASSES = gql`
           title
           code
           createdAt
+          settings
           networks {
             classes {
               id
               title
               code
+              settings
             }
           }
           templateProposal {
@@ -227,11 +233,13 @@ export const GET_USER_CLASSES = gql`
           title
           code
           createdAt
+          settings
           networks {
             classes {
               id
               title
               code
+              settings
             }
           }
           templateProposal {

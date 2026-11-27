@@ -10,6 +10,7 @@ import StudyInfo from "./StudyInfo";
 import UserPath from "./UserPath";
 import { getStudyImageUrl } from "../../../lib/profileStudyImageUrls";
 import Button from "../../DesignSystem/Button";
+import MessageCard from "../../DesignSystem/MessageCard";
 
 export default function StudyPage({ query, user, study, isDashboard }) {
   const { t } = useTranslation("builder");
@@ -27,6 +28,13 @@ export default function StudyPage({ query, user, study, isDashboard }) {
   const studiesInfo = user?.studiesInfo || {};
   const participantInfo = studiesInfo[study?.id];
   const path = participantInfo?.info?.path || [];
+
+  // A study submitted (or finished) through its class milestone that the
+  // researcher closed: participants see the button disabled. Self-managed
+  // studies are not gated, as their participation flag starts closed.
+  const closedForParticipation =
+    ["SUBMITTED", "FINISHED"].includes(study?.dataCollectionStatus) &&
+    !study?.dataCollectionOpenForParticipation;
 
   const imageURL = getStudyImageUrl(study);
 
@@ -85,6 +93,21 @@ export default function StudyPage({ query, user, study, isDashboard }) {
                     </Button>
                   </div>
                 </Link>
+              ) : closedForParticipation ? (
+                <>
+                  <div className="controlBtns">
+                    <Button variant="filled" disabled>
+                      {t("participate", {}, { default: "Participate" })}
+                    </Button>
+                  </div>
+                  <MessageCard
+                    variant="information"
+                    message={t("studyClosedForParticipation", {}, {
+                      default:
+                        "This study has been closed for participation by the researcher.",
+                    })}
+                  />
+                </>
               ) : (
                 <Link
                   href={{

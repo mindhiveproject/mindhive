@@ -260,6 +260,8 @@ export const STUDY_TO_DISCOVER = gql`
       title
       slug
       settings
+      dataCollectionStatus
+      dataCollectionOpenForParticipation
       collaborators {
         id
       }
